@@ -1,0 +1,139 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Charts QRCodes Barcodes\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-03 13:03+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: PBMod\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.4.0; wp-5.4.2"
+
+#: chartscodes.php:241
+msgid "every week"
+msgstr ""
+
+#: chartscodes.php:330
+msgid "ipflag database updated."
+msgstr ""
+
+#: chartscodes.php:376
+msgid "Settings"
+msgstr ""
+
+#: chartscodes.php:401
+msgid "ipflag database options"
+msgstr ""
+
+#: chartscodes.php:402
+msgid "Enable automatic weekly database update check:"
+msgstr ""
+
+#: chartscodes.php:403
+msgid "Current database status:"
+msgstr ""
+
+#: chartscodes.php:410
+msgid "Here you can control all ipflag database options:"
+msgstr ""
+
+#: chartscodes.php:432
+msgid "Database missing or corrupted, please update"
+msgstr ""
+
+#: chartscodes.php:437
+msgid "Update"
+msgstr ""
+
+#: chartscodes.php:445
+msgid "ipflag database already up to date."
+msgstr ""
+
+#: chartscodes.php:449
+msgid ""
+"Couldn't fetch ipflag database zip file. Fetching remote content not "
+"supported or remote server is down."
+msgstr ""
+
+#: chartscodes.php:458
+msgid ""
+"Couldn't write ipflag database zip file to local file system. Please check "
+"permissions."
+msgstr ""
+
+#: chartscodes.php:462
+msgid ""
+"Couldn't unzip ipflag database zip file to local file system. Please check "
+"permissions and your server unzip capabilities."
+msgstr ""
+
+#: chartscodes.php:468
+msgid ""
+"Couldn't write ipflag database version file to local file system. Please "
+"check permissions."
+msgstr ""
+
+#: chartscodes.php:538
+msgid ""
+"Couldn't read ipflag database file from local file system. Please check "
+"permissions."
+msgstr ""
+
+#: chartscodes.php:550
+msgid "Remote ipflag database version not readable."
+msgstr ""
+
+#: includes/pb-setting.php:31
+msgid "Settings Admin"
+msgstr ""
+
+#. Name of the plugin
+#: includes/pb-setting.php:32
+msgid "Charts QR-Barcodes"
+msgstr ""
+
+#: includes/pb-setting.php:56
+msgid "Bar and Piecharts"
+msgstr ""
+
+#: includes/pb-setting.php:61
+msgid "Default Pie Chart"
+msgstr ""
+
+#: includes/pb-setting.php:69
+msgid "Doughnut Pie Chart"
+msgstr ""
+
+#: includes/pb-setting.php:75
+msgid "Polar Pie Chart"
+msgstr ""
+
+#: includes/pb-setting.php:82
+msgid "Bar Graph Chart"
+msgstr ""
+
+#: includes/pb-setting.php:90 includes/pb-setting.php:98
+msgid "Horizontal Bar Graph Chart"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Shortcodes for bar and pie charts, barcodes, QRcodes and ipflags. Pie Chart, "
+"Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG "
+"Shortcode and variable resolves IP address to ISO 3166-1a2 country code and "
+"name and displays country flag image"
+msgstr ""
+
+#. Author of the plugin
+msgid "PBMod und Andere"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://wp.pbcs.de/"
+msgstr ""
