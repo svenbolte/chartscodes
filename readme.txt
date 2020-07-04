@@ -26,35 +26,35 @@ Flags and Country name and code can be shown by shortcode [ipflag]
 
 
 == Shortcodes for pies and bnars and last post barchart ==
-= Defaults Atts: =
+ = Defaults Atts = 
 	* title = '', // Optional
 	* absolute = '' // optional, if set to "1" given values must be absolute, percents calculated automatically, if not set they must be percent values 
 	* values = '', // * in percentage (%) ( should be seperated by comma (','). ie: 60, 40 )
 	* labels = '', // * ( should be seperated by comma (','). ie: Design, Development )
 	* colors = '' // Optional till 10 elements else * ( should be seperated by ','. ie: #E6E6FA, #E0FFFF )
 
-= Alt Atts for Pie Charts only: =
-	* fontfamily = 'ariel', // Optional, you can change the defult font family
+ = Alt Atts for Pie Charts only = 
+	* fontfamily = 'arial', // Optional, you can change the defult font family
 	* fontstyle = 'italic', // Optional, you can change the defult font style to normal or bold
 
- = Default Piechart Shortcode: =
- 	[TP_PIEBUILDER title="Pie Chart" values="20, 30, 50" labels="Design, Development, Production" colors="#E6E6FA, #E0FFFF, #F8B4BC"]
+ = Default Piechart Shortcode = 
+ 	[chartscodes absolute="1" title="Pie Chart" values="20, 30, 50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
 
- = Doughnut Piechart Shortcode: =
- 	[TP_PIEBUILDER_DOUGHNUT title="Pie Chart" values="20, 30, 50" labels="Design, Development, Production" colors="#E6E6FA, #E0FFFF, #F8B4BC"]
+ = Doughnut Piechart Shortcode = 
+	[chartscodes_donut title="Donut Pie Chart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
+	
+ = Polar Piechart Shortcode = 
+ 	[chartscodes_polar title="Polar Chart mit Segmenten" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
 
- = Polar Piechart Shortcode: =
- 	[TP_PIEBUILDER_POLAR title="Pie Chart" values="20, 30, 50" labels="Design, Development, Production" colors="#E6E6FA, #E0FFFF, #F8B4BC"]
+ = Bar Graph Shortcode = 
+ 	[chartscodes_bar title="Balkenchart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
 
- = Bar Graph Shortcode: =
- 	[TP_PIEBUILDER_BAR title="Pie Chart" values="20, 30, 50" labels="Design, Development, Production" colors="#E6E6FA, #E0FFFF, #F8B4BC"]
+ = Horizontal Bar Graph Shortcode = 
+ 	[chartscodes_horizontal_bar title="Balken horizontal" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
 
- = Horizontal Bar Graph Shortcode: =
- 	[TP_PIEBUILDER_HORIZONTAL_BAR title="Pie Chart" values="20, 30, 50" labels="Design, Development, Production" colors="#E6E6FA, #E0FFFF, #F8B4BC"]
-
- = Bar chart of number of wordpress posts per month for last 12 months =
-    [posts_per_month_last]
-
+ = Bar chart of number of wordpress posts per month for last 1-12 months =
+	[posts_per_month_last months=x]
+	
 ==================================  Barcodes and CRCodes Usage =============================================
 = How to use &#91;barcode&#93; =
 
@@ -115,16 +115,16 @@ You can use something like this:
 // Query database with following IP address
 $ip_address = '123.123.123.123';
 
-global $quick_flag;
-if(isset($quick_flag) && is_object($quick_flag)){
-    if(($info = $quick_flag->get_info($ip_address)) != false){
+global $ipflag;
+if(isset($ipflag) && is_object($ipflag)){
+    if(($info = $ipflag->get_info($ip_address)) != false){
         $version = $info->version;      // IPFflag version (float): 2.00
-        $ip = $info->ip;                // IP address (string): 123.123.123.123
-        $code = $info->code;            // Country code (string): HR
-        $name = $info->name;            // Country name (string): Croatia
+        $ip = $info->ip;                // IP address (string): 122.122.122.0
+        $code = $info->code;            // Country code (string): LL
+        $name = $info->name;            // Country name (string): Lummerland
         $latitude = $info->latitude;    // Country latitude (float): 45.1667
         $longitude = $info->longitude;  // Country longitude (float): 15.5
-        $flag = $quick_flag->get_flag($info, 'my-own-css-class'); // CSS class is optional, 'ipflag' by default
+        $flag = $ipflag->get_flag($info, 'my-own-css-class'); // CSS class is optional, 'ipflag' by default
     }
 }
 `
