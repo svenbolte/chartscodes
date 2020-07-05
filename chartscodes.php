@@ -2,9 +2,10 @@
 /**
  * Plugin Name: Charts QR-Barcodes
  * Description: Shortcodes for bar and pie charts, barcodes, QRcodes and ipflags. Pie Chart, Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG Shortcode and variable resolves IP address to ISO 3166-1a2 country code and name and displays country flag image
- * Version: 11.1.6
+ * Version: 11.1.8
  * Author: PBMod und Andere
- * Author URI: https://wp.pbcs.de/
+ * Plugin URI: https://github.com/svenbolte/chartcodes
+ * Author URI: https://github.com/svenbolte/chartcodes
  * License: GPLv3
  * Tags: Barcode, QRCode, Shortcode, Piechart, Barchart, Donutchart,IPflags
  * Requires at least: 4.5

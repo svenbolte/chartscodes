@@ -23,12 +23,10 @@ class PB_ChartsCodes_Shortcode {
 		/*
 		 * Default Pie Chart Shortcode Function
 		 */
+
 		$colorli = '';
-		$colval = array("AA","66","99","CC","ff","55");
-		for ($farbb = 0; $farbb <= 5; ++$farbb) {
-			for ($farbc = 0; $farbc <= 5; ++$farbc) {
-				$colorli .= "#00".$colval[$farbb].$colval[$farbc].",";
-			}
+		for ($row = 0; $row < 50; ++$row) {
+			$colorli .= sprintf('#%06X', mt_rand(0xAAAAAA, 0xEEEEEE)) . ',';
 		}
 		$colorli = rtrim($colorli,",");
 		
@@ -55,7 +53,7 @@ class PB_ChartsCodes_Shortcode {
 		?>
 		<div class="tp-piebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
 			<h3 class="pie-title"><?php echo esc_html( $title ); ?></h3>
-			<canvas id="<?php echo esc_attr( $id ); ?>" width="600" height="400">
+			<canvas id="<?php echo esc_attr( $id ); ?>" width="600" height="370" style="width:100%;height:100%">
 			</canvas>
 		</div>
 		<?php  
@@ -90,11 +88,8 @@ class PB_ChartsCodes_Shortcode {
 		 */
 		
 		$colorli = '';
-		$colval = array("AA","66","99","CC","ff","55");
-		for ($farbb = 0; $farbb <= 5; ++$farbb) {
-			for ($farbc = 0; $farbc <= 5; ++$farbc) {
-				$colorli .= "#00".$colval[$farbb].$colval[$farbc].",";
-			}
+		for ($row = 0; $row < 50; ++$row) {
+			$colorli .= sprintf('#%06X', mt_rand(0xAAAAAA, 0xEEEEEE)) . ',';
 		}
 		$colorli = rtrim($colorli,",");
 
@@ -123,7 +118,7 @@ class PB_ChartsCodes_Shortcode {
 			<?php if ( ! empty( $title ) ) : ?>
 				<h3 class="pie-title"><?php echo esc_html( $title ); ?></h3>
 			<?php endif; ?>
-			<canvas id="<?php echo esc_attr( $id ); ?>" width="600" height="400">
+			<canvas id="<?php echo esc_attr( $id ); ?>" width="600" height="370" style="width:100%;height:100%">
 			</canvas>
 		</div>
 		<?php  
@@ -151,17 +146,16 @@ class PB_ChartsCodes_Shortcode {
 		return ob_get_clean();
 	}
 
+
 	public function PB_ChartsCodes_polar_shortcode_function( $atts ) 
 	{
 		/*
 		 * Polar Pie Chart Shortcode Function
 		 */
+
 		$colorli = '';
-		$colval = array("AA","66","99","CC","ff","55");
-		for ($farbb = 0; $farbb <= 5; ++$farbb) {
-			for ($farbc = 0; $farbc <= 5; ++$farbc) {
-				$colorli .= "#00".$colval[$farbb].$colval[$farbc].",";
-			}
+		for ($row = 0; $row < 50; ++$row) {
+			$colorli .= sprintf('#%06X', mt_rand(0xAAAAAA, 0xEEEEEE)) . ',';
 		}
 		$colorli = rtrim($colorli,",");
 		
@@ -190,7 +184,7 @@ class PB_ChartsCodes_Shortcode {
 			<?php if ( ! empty( $title ) ) : ?>
 				<h3 class="pie-title"><?php echo esc_html( $title ); ?></h3>
 			<?php endif; ?>
-			<canvas id="<?php echo esc_attr( $id ); ?>" width="600" height="400">
+			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="350" style="width:100%;height:100%">
 			</canvas>
 		</div>
 		<?php  
@@ -225,11 +219,8 @@ class PB_ChartsCodes_Shortcode {
 		 */
 
 		$colorli = '';
-		$colval = array("AA","66","99","CC","ff","55");
-		for ($farbb = 0; $farbb <= 5; ++$farbb) {
-			for ($farbc = 0; $farbc <= 5; ++$farbc) {
-				$colorli .= "#00".$colval[$farbb].$colval[$farbc].",";
-			}
+		for ($row = 0; $row < 50; ++$row) {
+			$colorli .= sprintf('#%06X', mt_rand(0xAAAAAA, 0xEEEEEE)) . ',';
 		}
 		$colorli = rtrim($colorli,",");
 		
@@ -294,17 +285,17 @@ class PB_ChartsCodes_Shortcode {
 		return ob_get_clean();
 	}
 
+
+
 	public function PB_ChartsCodes_horizontal_bar_shortcode_function( $atts ) 
 	{
 		/*
 		 * Horizontal Bar Graph Shortcode Function
 		 */
+
 		$colorli = '';
-		$colval = array("AA","66","99","CC","ff","55");
-		for ($farbb = 0; $farbb <= 5; ++$farbb) {
-			for ($farbc = 0; $farbc <= 5; ++$farbc) {
-				$colorli .= "#00".$colval[$farbb].$colval[$farbc].",";
-			}
+		for ($row = 0; $row < 50; ++$row) {
+			$colorli .= sprintf('#%06X', mt_rand(0xAAAAAA, 0xEEEEEE)) . ',';
 		}
 		$colorli = rtrim($colorli,",");
 		

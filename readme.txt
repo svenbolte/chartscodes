@@ -2,7 +2,7 @@
 Tags: pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, Barcode, QRCode, IPFlag 
 Requires at least: 4.5
 Tested up to: 5.4.2
-Stable tag: 11.1.3
+Stable tag: 11.1.7
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -131,6 +131,10 @@ if(isset($ipflag) && is_object($ipflag)){
 
 
 == Changelog ==
+= 11.1.7 =
+Random color generation of bright tones
+Responsiveness of canvas pies, suitable to selected resolution
+
 = 11.1.6 =
 Integrated IPflag function class and Shortcode, added to documentation
 
