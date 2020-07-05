@@ -20,6 +20,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+add_action( 'plugins_loaded', 'chartscodes_textdomain' );
+function chartscodes_textdomain() {
+	load_plugin_textdomain( 'pb-chartscodes', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}
+
+
 if ( ! class_exists( 'PB_ChartsCodes' ) ) :
 
 	final class PB_ChartsCodes {
@@ -66,8 +72,7 @@ if ( ! class_exists( 'PB_ChartsCodes' ) ) :
 			/*
 			 * Shortcode Page
 			 */
-			include_once('includes/pb-setting.php');
-			include_once('includes/pb-shortcodes.php');
+			include_once('pb-shortcodes.php');
 		}
 
 	}
@@ -168,6 +173,7 @@ $barcode_qrcode_gen2 = new barcode_qrcode_gen2();
 // --------------------------- Nun die ipflag Funktionsklasse registrieren --------------------------------------------
 
 class ipflag{
+
     const version = '9.2.12';
     const name = 'ipflag';
     const slug = 'ipflag';
@@ -368,13 +374,15 @@ public function country_code ($lang = null , $code = null) {
 
 
     public function add_options_page(){
-        add_options_page(self::name, self::name, 'manage_options', __FILE__, array($this, 'options_page'));
+        add_options_page( esc_html__( 'Settings Admin', 'pb-chartscodes' ), 
+		esc_html__( 'Charts QR-Barcodes', 'pb-chartscodes' ),
+		'manage_options', __FILE__, array($this, 'options_page'));
         add_filter('plugin_action_links', array($this, 'action_links'), 10, 2);
     }
 
     public function action_links($links, $file){
         if ($file == plugin_basename(__FILE__)) {
-            $settings_link = '<a href="' . get_bloginfo('wpurl') . '/wp-admin/admin.php?page='.self::slug.'/'.self::slug.'.php">'.__('Settings', 'pb-chartscodes').'</a>';
+            $settings_link = '<a href="' . get_bloginfo('wpurl') . '/wp-admin/admin.php?page=chartscodes/chartscodes.php">'.__('Settings', 'pb-chartscodes').'</a>';
             $links[] = $settings_link;
         }
 
@@ -382,6 +390,7 @@ public function country_code ($lang = null , $code = null) {
     }
 
     public function options_page(){
+	// für Charts, QR-Codes und Settings der IP-Datenbank
     ?>
         <div class="wrap">
             <div class="icon32" id="icon-options-general"><br></div>
@@ -394,6 +403,65 @@ public function country_code ($lang = null , $code = null) {
             </p>
             </form>
         </div>
+		
+        <div class="wrap">
+            <div class="img-wrap">
+                <h2>Barcodes und QRCodes generieren</h2>
+				<p><tt>erstellt Barcodes oder QR-Codes als Shortcode an der Cursorposition (Doku siehe Readme)<br>
+                    <code>[qrcode text=tel:00492307299607 height=100 width=100]</code><br>
+					<code>[barcode text=4930127000019 height=100 wdith=2 transparency=1]</code>
+                </tt></p>                    
+            </div>
+
+			<div class="img-wrap">
+				<h2><?php esc_html_e( 'Bar and Piecharts', 'pb-chartscodes' ); ?></h2>
+				<p><tt>Shortcode Parameter: absolute="1" wenn keine Prozentwerte mitgegeben werden, sondern absolute Werte<br>
+					fontfamily="Armata" fontstyle="bold". Für die PieCharts dürfen maximal 10 Werte angegeben werden, bei den Bar Charts bis zu 50<br>
+					Bar Charts: bei absoluten Werten wird größter Wert in der Folge 100%, Werte werden angezeigt wenn >0<br> 
+					</tt></p>
+				<img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-1.png' ?>"  alt="<?php esc_attr_e( 'Default Pie Chart', 'pb-chartscodes' ); ?>">
+                <p><tt>
+                    <code>[chartscodes absolute="1" title="Pie Chart" values="20, 30, 50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
+                </tt></p>                    
+            </div>
+
+            <br>
+            <div class="img-wrap">
+                <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-2.png' ?>"  alt="<?php esc_attr_e( 'Doughnut Pie Chart', 'pb-chartscodes' ); ?>">
+                <p><tt>
+                    <code>[chartscodes_donut title="Donut Pie Chart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>                </tt></p>
+			</div>
+            <br>
+            <div class="img-wrap">
+                <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-3.png' ?>"  alt="<?php esc_attr_e( 'Polar Pie Chart', 'pb-chartscodes' ); ?>">
+                <p><tt>
+                    <code>[chartscodes_polar title="Polar Chart mit Segmenten" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
+                </tt></p>                    
+            </div>
+            <br>
+            <div class="img-wrap">
+                <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-4.png' ?>"  alt="<?php esc_attr_e( 'Bar Graph Chart', 'pb-chartscodes' ); ?>">
+                <p>
+                    <code>[chartscodes_bar title="Balkenchart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
+                </tt></p>                    
+            </div>
+
+            <br>
+            <div class="img-wrap">
+                <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-5.png' ?>"  alt="<?php esc_attr_e( 'Horizontal Bar Graph Chart', 'pb-chartscodes' ); ?>">
+                <p><tt>
+                    <code>[chartscodes_horizontal_bar title="Balken horizontal" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
+                </tt></p>                    
+            </div>
+			<br>
+
+			<div class="img-wrap">
+                <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-6.png' ?>"  alt="<?php esc_attr_e( 'Horizontal Bar Graph Chart', 'pb-chartscodes' ); ?>">
+				<p><tt> Zeigt die letzen 1-12 Monate Posts per Month als Bargraph an, wenn Months nicht angegeben für 12 Monate</tt><br>
+                  <code>[posts_per_month_last months=x]</code></p>                    
+            </div>
+        </div>
+		
     <?php
     }
 

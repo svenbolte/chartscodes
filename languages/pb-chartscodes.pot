@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Charts QRCodes Barcodes\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-03 13:03+0000\n"
+"POT-Creation-Date: 2020-07-05 15:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PBMod\n"
 "Language-Team: \n"
@@ -23,103 +23,103 @@ msgstr ""
 msgid "ipflag database updated."
 msgstr ""
 
-#: chartscodes.php:376
+#: chartscodes.php:370
+msgid "Settings Admin"
+msgstr ""
+
+#. Name of the plugin
+#: chartscodes.php:371
+msgid "Charts QR-Barcodes"
+msgstr ""
+
+#: chartscodes.php:378
 msgid "Settings"
 msgstr ""
 
-#: chartscodes.php:401
+#: chartscodes.php:410
+msgid "Bar and Piecharts"
+msgstr ""
+
+#: chartscodes.php:415
+msgid "Default Pie Chart"
+msgstr ""
+
+#: chartscodes.php:423
+msgid "Doughnut Pie Chart"
+msgstr ""
+
+#: chartscodes.php:429
+msgid "Polar Pie Chart"
+msgstr ""
+
+#: chartscodes.php:436
+msgid "Bar Graph Chart"
+msgstr ""
+
+#: chartscodes.php:444 chartscodes.php:452
+msgid "Horizontal Bar Graph Chart"
+msgstr ""
+
+#: chartscodes.php:463
 msgid "ipflag database options"
 msgstr ""
 
-#: chartscodes.php:402
+#: chartscodes.php:464
 msgid "Enable automatic weekly database update check:"
 msgstr ""
 
-#: chartscodes.php:403
+#: chartscodes.php:465
 msgid "Current database status:"
 msgstr ""
 
-#: chartscodes.php:410
+#: chartscodes.php:472
 msgid "Here you can control all ipflag database options:"
 msgstr ""
 
-#: chartscodes.php:432
+#: chartscodes.php:494
 msgid "Database missing or corrupted, please update"
 msgstr ""
 
-#: chartscodes.php:437
+#: chartscodes.php:499
 msgid "Update"
 msgstr ""
 
-#: chartscodes.php:445
+#: chartscodes.php:507
 msgid "ipflag database already up to date."
 msgstr ""
 
-#: chartscodes.php:449
+#: chartscodes.php:511
 msgid ""
 "Couldn't fetch ipflag database zip file. Fetching remote content not "
 "supported or remote server is down."
 msgstr ""
 
-#: chartscodes.php:458
+#: chartscodes.php:520
 msgid ""
 "Couldn't write ipflag database zip file to local file system. Please check "
 "permissions."
 msgstr ""
 
-#: chartscodes.php:462
+#: chartscodes.php:524
 msgid ""
 "Couldn't unzip ipflag database zip file to local file system. Please check "
 "permissions and your server unzip capabilities."
 msgstr ""
 
-#: chartscodes.php:468
+#: chartscodes.php:530
 msgid ""
 "Couldn't write ipflag database version file to local file system. Please "
 "check permissions."
 msgstr ""
 
-#: chartscodes.php:538
+#: chartscodes.php:600
 msgid ""
 "Couldn't read ipflag database file from local file system. Please check "
 "permissions."
 msgstr ""
 
-#: chartscodes.php:550
+#: chartscodes.php:612
 msgid "Remote ipflag database version not readable."
-msgstr ""
-
-#: includes/pb-setting.php:31
-msgid "Settings Admin"
-msgstr ""
-
-#. Name of the plugin
-#: includes/pb-setting.php:32
-msgid "Charts QR-Barcodes"
-msgstr ""
-
-#: includes/pb-setting.php:56
-msgid "Bar and Piecharts"
-msgstr ""
-
-#: includes/pb-setting.php:61
-msgid "Default Pie Chart"
-msgstr ""
-
-#: includes/pb-setting.php:69
-msgid "Doughnut Pie Chart"
-msgstr ""
-
-#: includes/pb-setting.php:75
-msgid "Polar Pie Chart"
-msgstr ""
-
-#: includes/pb-setting.php:82
-msgid "Bar Graph Chart"
-msgstr ""
-
-#: includes/pb-setting.php:90 includes/pb-setting.php:98
-msgid "Horizontal Bar Graph Chart"
 msgstr ""
 
 #. Description of the plugin
@@ -130,10 +130,11 @@ msgid ""
 "name and displays country flag image"
 msgstr ""
 
-#. Author of the plugin
-msgid "PBMod und Andere"
+#. URI of the plugin
+#. Author URI of the plugin
+msgid "https://github.com/svenbolte/chartcodes"
 msgstr ""
 
-#. Author URI of the plugin
-msgid "https://wp.pbcs.de/"
+#. Author of the plugin
+msgid "PBMod und Andere"
 msgstr ""
