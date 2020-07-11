@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.01](https://github.com/svenbolte/chartcodes/tree/1.01) (2020-07-11)
+
+[Full Changelog](https://github.com/svenbolte/chartcodes/compare/1.115...1.01)
+
 ## [1.115](https://github.com/svenbolte/chartcodes/tree/1.115) (2020-07-11)
 
 [Full Changelog](https://github.com/svenbolte/chartcodes/compare/1.113...1.115)
