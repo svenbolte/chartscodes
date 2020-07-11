@@ -1,5 +1,5 @@
 # Chartcodes
-Balken und Kuchendiagramme, Bar- und QRCodes, Länderflaggen - alles als Shortcode und lokal gehostet
+Balken und Kuchendiagramme, Bar- und QRCodes, Länderflaggen - alles als Shortcode und lokal gehostet. IP-Adressen sollten um die letzte Stelle gekürzt gespeichert werden 
 
 ## Warum dieses Plugin?
 Ursprungsplugins sind entweder tot oder veraltet. Funktionen sind aber nützlich,
