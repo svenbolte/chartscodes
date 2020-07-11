@@ -1,0 +1,3 @@
+- name: Changelog Generator
+  uses: timfallmk/github-changelog-generator-action@0.0.2
+
