@@ -131,6 +131,9 @@ if(isset($ipflag) && is_object($ipflag)){
 
 
 == Changelog ==
+= 11.1.11 =
+Minor Bugfixes
+
 = 11.1.7 =
 Random color generation of bright tones
 Responsiveness of canvas pies, suitable to selected resolution
