@@ -15,6 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v2
-        - uses: homeday-de/github-action-changelog-generator@v1.0.0
+        - uses: actions/setup-node@v1
           with:
+            node-version: '10.x' 
+        - name: Dependency installer
+          id: changelogDep
+          run: |
+            npm ci
+        - name: Changelog Generator
+          id: changelogGen
+          run: npm run changelog
+          env: 
             token: ${{ secrets.GITHUB_TOKEN }}
