@@ -1,26 +1,20 @@
-name: test
-on: [push]
+name: Changelog Generator
+on:
+  # Trigger the workflow on pull request,
+  # but only for the master branch
+  pull_request:
+    branches:
+      - master
+    types: [opened, reopened, synchronize]
 
 jobs:
-  test:
+  changelog:
+    # Job name is Chanegelog
+    name: Chanegelog Generator
+    # This job runs on Linux
     runs-on: ubuntu-latest
     steps:
-      # To use this repository's private action, you must check out the repository
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Generate changelog
-        id: changelog
-        uses: metcalfc/changelog-generator@master
-        with:
-          myToken: ${{ secrets.GITHUB_TOKEN }}
-          head-ref: 'v0.0.2'
-          base-ref: 'v0.0.1'
-      - name: Get the changelog
-        run: echo "${{ steps.changelog.outputs.changelog }}"
-      - name: Generate changelog from release
-        id: release
-        uses: metcalfc/changelog-generator@master
-        with:
-          myToken: ${{ secrets.GITHUB_TOKEN }}
-      - name: Get the changelog
-        run: echo "${{ steps.release.outputs.changelog }}"
+        - uses: actions/checkout@v2
+        - uses: homeday-de/github-action-changelog-generator@v1.0.0
+          with:
+            token: ${{ secrets.GITHUB_TOKEN }}
