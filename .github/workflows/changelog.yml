@@ -1,49 +1,31 @@
-name: Changelog
+name: Create release
 
 on:
-  pull_request:
-    types: [closed]
-
-  release:
-    types: [published]
-
-  issues:
-    types: [closed, edited]
+  push:
+    tags:
+      - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
-  generate_changelog:
-    runs-on: ubuntu-latest
-
-    name: Generate changelog for master branch
+  build:
+    name: "🚀 Release"
+    runs-on: ubuntu-18.04
     steps:
-
-- name: (Gitflow) Changelog Generator
-  uses: homeday-de/github-action-changelog-generator@v1.0.0
-  with:
-    # As provided by Github Actions
-    token: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: actions/checkout@v1
-      token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Generate changelog
-        uses: charmixer/auto-changelog-action@v1
+      - name: "📥 Check-out"
+        uses: actions/checkout@v1
+      - name: "✏️ Generate changelog"
+        id: generate-changelog
+        uses: heinrichreimer/action-github-changelog-generator@v2.1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Commit files
+          onlyLastTag: "true"
+          stripHeaders: "true"
+          stripGeneratorNotice: "true"
+      - name: "🚀 Create GitHub release"
+        uses: actions/create-release@v1.0.1
         env:
-          CI_USER: ${{ secrets.YOUR_GITHUB_USER }}
-          CI_EMAIL: ${{ secrets.YOUR_GITHUB_EMAIL }}
-        run: |
-          git config --local user.email "$CI_EMAIL"
-          git config --local user.name "$CI_USER"
-          git add CHANGELOG.md && git commit -m 'Updated CHANGELOG.md' && echo ::set-env name=push::1 || echo "No changes to CHANGELOG.md"
-
-      - name: Push changes
-        if: env.push == 1
-        env:
-          CI_USER: ${{ secrets.YOUR_GITHUB_USER }}
-          CI_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git push "https://$CI_USER:$CI_TOKEN@github.com/$GITHUB_REPOSITORY.git" HEAD:master
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: ${{ steps.generate-changelog.outputs.changelog }}
+          draft: true
+          prerelease: false
