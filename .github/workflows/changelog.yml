@@ -13,9 +13,18 @@ on:
 jobs:
   generate_changelog:
     runs-on: ubuntu-latest
+
     name: Generate changelog for master branch
     steps:
+
+- name: (Gitflow) Changelog Generator
+  uses: homeday-de/github-action-changelog-generator@v1.0.0
+  with:
+    # As provided by Github Actions
+    token: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: actions/checkout@v1
+      token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate changelog
         uses: charmixer/auto-changelog-action@v1
