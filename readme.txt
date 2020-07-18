@@ -2,7 +2,7 @@
 Tags: pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, Barcode, QRCode, IPFlag 
 Requires at least: 4.5
 Tested up to: 5.4.2
-Stable tag: 11.1.11
+Stable tag: 11.1.12
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -10,6 +10,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 This Plugin provides you an elegent Bar Graph and Pie Charts with multiple designs and colors. ie. Default Pie Chart, Doughnut Pie Chart and Polar Pie Chart.
 It also adds the functionality to output barcodes and qrcodes by use of the shortcodes.
 Flags and Country name and code can be shown by shortcode [ipflag]
+Color palette for charts can be accentcolor with shares or random (colorful light colors) or given values
 
 == Installation ==
 = Using The WordPress Dashboard =
@@ -32,15 +33,16 @@ Flags and Country name and code can be shown by shortcode [ipflag]
 	* values = '', // * in percentage (%) ( should be seperated by comma (','). ie: 60, 40 )
 	* labels = '', // * ( should be seperated by comma (','). ie: Design, Development )
 	* colors = '' // Optional till 10 elements else * ( should be seperated by ','. ie: #E6E6FA, #E0FFFF )
+	* accentcolor = false     values 0 and 1 can be given by shortcode   to make colorful palette or accent color shades
 
  = Alt Atts for Pie Charts only = 
 	* fontfamily = 'arial', // Optional, you can change the defult font family
 	* fontstyle = 'italic', // Optional, you can change the defult font style to normal or bold
 
  = Default Piechart Shortcode = 
- 	[chartscodes absolute="1" title="Pie Chart" values="20, 30, 50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
+ 	[chartscodes absolute="1" accentcolor=1 title="Pie Chart" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
 
- = Doughnut Piechart Shortcode = 
+ = Donut Piechart Shortcode = 
 	[chartscodes_donut title="Donut Pie Chart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
 	
  = Polar Piechart Shortcode = 
@@ -131,9 +133,6 @@ if(isset($ipflag) && is_object($ipflag)){
 
 
 == Changelog ==
-= 11.1.11 =
-Minor Bugfixes
-
 = 11.1.7 =
 Random color generation of bright tones
 Responsiveness of canvas pies, suitable to selected resolution
