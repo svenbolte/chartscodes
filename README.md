@@ -1,5 +1,5 @@
 # Chartcodes
-Balken und Kuchendiagramme, Bar- und QRCodes, Länderflaggen - alles als Shortcode und lokal gehostet
+Balken und Kuchendiagramme, Bar- und QRCodes, Länderflagge, Länderbezeichnung, Browser und OS-Info, Referer - alles als Shortcode und lokal gehostet, IP-Adressen sind um die letzte Stelle genullt
 
 ## Warum dieses Plugin?
 Ursprungsplugins sind entweder tot oder veraltet. Funktionen sind aber nützlich,
@@ -10,7 +10,7 @@ daher dieses Projekt, dass die Einzelfunktionen zusammen fasst und um viele neue
 
 [QRCode]
 
-[ipflag ip="10.10.10.0"]
+[ipflag ip="10.10.10.0" browser=1 details=1]
 
 [chartscodes absolute="1" title="Pie Chart" values="20, 30, 50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
 
