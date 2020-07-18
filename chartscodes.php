@@ -2,12 +2,12 @@
 /**
  * Plugin Name: Charts QR-Barcodes
  * Description: Shortcodes for bar and pie charts, barcodes, QRcodes and ipflags. Pie Chart, Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG Shortcode and variable resolves IP address to ISO 3166-1a2 country code and name and displays country flag image
- * Version: 11.1.12
+ * Version: 11.1.13
  * Author: PBMod und Andere
  * Plugin URI: https://github.com/svenbolte/chartcodes
  * Author URI: https://github.com/svenbolte/chartcodes
  * License: GPLv3
- * Tags: Barcode, QRCode, Shortcode, Piechart, Barchart, Donutchart,IPflags
+ * Tags: Barcode, QRCode, Shortcode, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
  * Requires at least: 4.5
  * Requires PHP: 5.3
  * Tested up to: 5.4.2
@@ -311,14 +311,138 @@ public function country_code ($lang = null , $code = null) {
         return $flag;
     }
 
-    function shortcode($atts, $content = null, $code = '') {
-        extract(shortcode_atts(array('ip' => null), $atts ));
+	// Browser des Betrachters rausfinden und anzeigen und Referer
+	function getBrowser()
+	{
+		$u_agent = $_SERVER['HTTP_USER_AGENT'];
+		$bname = 'Unknown';
+		$platform = 'Unknown';
+		$version= "";
 
+		//First get the platform?
+		$os_array = array(
+			'/windows nt 10.0/i'    =>  'Windows 10',
+			'/windows nt 6.2/i'     =>  'Windows 8',
+			'/windows nt 6.1/i'     =>  'Windows 7',
+			'/windows nt 6.0/i'     =>  'Windows Vista',
+			'/windows nt 5.2/i'     =>  'Windows Server 2003/XP x64',
+			'/windows nt 5.1/i'     =>  'Windows XP',
+			'/windows xp/i'         =>  'Windows XP',
+			'/windows nt 5.0/i'     =>  'Windows 2000',
+			'/windows me/i'         =>  'Windows ME',
+			'/win98/i'              =>  'Windows 98',
+			'/win95/i'              =>  'Windows 95',
+			'/win16/i'              =>  'Windows 3.11',
+			'/macintosh|mac os x/i' =>  'Mac OS X',
+			'/mac_powerpc/i'        =>  'Mac OS 9',
+			'/linux/i'              =>  'Linux',
+			'/ubuntu/i'             =>  'Ubuntu',
+			'/iphone/i'             =>  'iPhone',
+			'/ipod/i'               =>  'iPod',
+			'/ipad/i'               =>  'iPad',
+			'/android/i'            =>  'Android',
+			'/blackberry/i'         =>  'BlackBerry',
+			'/webos/i'              =>  'Mobile'
+		);
+		foreach ($os_array as $regex => $value) { 
+			if (preg_match($regex, $u_agent)) { $platform    =   $value; }
+		}
+		// Next get the name of the useragent yes seperately and for good reason
+		if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent))
+		{
+			$bname = 'Internet Explorer';
+			$ub = "MSIE";
+		}
+		else if(preg_match('/Trident/i',$u_agent)) {    // this condition is for IE11
+			$bname = 'Internet Explorer';
+			$ub = "rv";
+		}
+		else if(preg_match('/Firefox/i',$u_agent)) {
+			$bname = 'Mozilla Firefox';
+			$ub = "Firefox";
+		}
+		else if(preg_match('/Chrome/i',$u_agent)) {
+			$bname = 'Google Chrome';
+			$ub = "Chrome";
+			if(preg_match('/Edg/i',$u_agent)) {
+					$bname = 'Microsoft Edge';
+					$ub = "Edg";
+				}
+		}
+		else if(preg_match('/Safari/i',$u_agent)) {
+			$bname = 'Apple Safari';
+			$ub = "Safari";
+		}
+		else if(preg_match('/Opera/i',$u_agent)) {
+			$bname = 'Opera';
+			$ub = "Opera";
+		}
+		else if(preg_match('/Netscape/i',$u_agent)) {
+			$bname = 'Netscape';
+			$ub = "Netscape";
+		}
+		// finally get the correct version number
+		// Added "|:"
+		$known = array('Version', $ub, 'other');
+		$pattern = '#(?<browser>' . join('|', $known) .
+		 ')[/|: ]+(?<version>[0-9.|a-zA-Z.]*)#';
+		if (!preg_match_all($pattern, $u_agent, $matches)) {
+			// we have no matching number just continue
+		}
+		// see how many we have
+		$i = count($matches['browser']);
+		if ($i != 1) {
+			//we will have two since we are not using 'other' argument yet
+			//see if version is before or after the name
+			if (strripos($u_agent,"Version") < strripos($u_agent,$ub)){
+				$version= $matches['version'][0];
+			}
+			else {
+				$version= $matches['version'][1];
+			}
+		}
+		else {
+			$version= $matches['version'][0];
+		}
+		// check if we have a number
+		if ($version==null || $version=="") {$version="?";}
+		return array(
+			'userAgent' => $u_agent,
+			'name'      => $bname,
+			'version'   => $version,
+			'platform'  => $platform,
+			'pattern'    => $pattern
+		);
+	}	
+
+	function shortcode($atts, $content = null, $code = '') {
+        extract(shortcode_atts(array(
+			'ip' => null,
+			'details' => 0,
+			'browser' => 0,
+		), $atts ));
+		if ( $details ) {
+			if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+				$ip = $_SERVER['HTTP_CLIENT_IP'];
+			} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+				$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+			} else {
+				$ip = $_SERVER['REMOTE_ADDR'];
+			}
+			// ip anonymisieren wegen dsgvo
+			$ip = long2ip(ip2long($ip) & 0xFFFFFF00);
+		 	$referer = wp_get_referer();
+			$yourdetails = "<br><strong>IP-Netz:</strong> ". $ip . "<br><strong>Herkunft:</strong> " . $referer;
+		}
+		if ( $browser ) {
+			$ua=$this->getBrowser();
+			$yourbrowser= " &nbsp; <strong>Ihr Browser:</strong> " . $ua['name'] . " " . $ua['version'] . " unter " .$ua['platform']  . "<br><small>" . $ua['userAgent']."</small>";
+		}
         if(($info = $this->get_info($ip)) != false)
             $flag = $this->country_code('de',$info->code).' '.$this->get_flag($info).' ';
         else
-            $flag = '<img class="'.$css_class.'" title="privates Netz" src="'.$this->flag_url.'/EUROPEANUNION.gif" />';
-        return $flag;
+            $flag = 'privates Netz <img class="'.$css_class.'" title="privates Netz" src="'.$this->flag_url.'/EUROPEANUNION.gif" />';
+        return $flag . $yourbrowser . $yourdetails;
     }
 
     public function options_validate($input) {
@@ -395,6 +519,11 @@ public function country_code ($lang = null , $code = null) {
         <div class="wrap">
             <div class="icon32" id="icon-options-general"><br></div>
             <h2><?php echo self::name ?></h2>
+			<p><tt>liefert eine Flagge und das Land zu einer IP odr einem IP-Netz. Die letzte IP-Ziffer wird wegen DSGVO anonymisiert<br>
+				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz<br>
+				<code>[ipflag ip="123.20.30.0" details=1 browser=1</code>  
+				</tt>
+			</p>
             <form action="options.php" method="post">
             <?php settings_fields(self::safe_slug.'_options'); ?>
             <?php do_settings_sections(__FILE__); ?>

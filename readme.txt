@@ -9,7 +9,7 @@ License URI: http://www.gnu.org/licenses/gpl-3.0.html
 == Description ==
 This Plugin provides you an elegent Bar Graph and Pie Charts with multiple designs and colors. ie. Default Pie Chart, Doughnut Pie Chart and Polar Pie Chart.
 It also adds the functionality to output barcodes and qrcodes by use of the shortcodes.
-Flags and Country name and code can be shown by shortcode [ipflag]
+Flags and Country name and code can be shown by shortcode [ipflag] - visitor info browser and details optional
 Color palette for charts can be accentcolor with shares or random (colorful light colors) or given values
 
 == Installation ==
@@ -108,7 +108,7 @@ IPFflag resolves IP address to [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki
 
 == Frequently Asked Questions ==
 = How do I test is IPFflag installed properly? =
-You can place `[ipflag]` shortcode to add current IP address country name and flag image to your page or post. To display country name and flag image of IP address other than current you can use this shortcode like  `[ipflag ip="some_ip_address"]`.
+You can place `[ipflag]` shortcode to add current IP address country name and flag image to your page or post. To display country name and flag image of IP address other than current you can use this shortcode like  `[ipflag ip="some_ip_address"]`. For more details to display there are shortcode parameters: details=1 and browser=1, both defaulting to 0
 
 = Can you provide example for fetching country info and flag for imaginary `123.123.123.123` IP address from country Croatia? =
 You can use something like this:
@@ -133,6 +133,9 @@ if(isset($ipflag) && is_object($ipflag)){
 
 
 == Changelog ==
+= 11.1.13 =
+add visitor, browser and os information. For GDPR (DSGVO) the ip-address is masked with the last number set to 0
+
 = 11.1.7 =
 Random color generation of bright tones
 Responsiveness of canvas pies, suitable to selected resolution
