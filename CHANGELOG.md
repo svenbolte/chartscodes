@@ -2,27 +2,7 @@
 
 ## [1.01](https://github.com/svenbolte/chartcodes/tree/1.01) (2020-07-11)
 
-[Full Changelog](https://github.com/svenbolte/chartcodes/compare/1.115...1.01)
-
-## [1.115](https://github.com/svenbolte/chartcodes/tree/1.115) (2020-07-11)
-
-[Full Changelog](https://github.com/svenbolte/chartcodes/compare/1.113...1.115)
-
-## [1.113](https://github.com/svenbolte/chartcodes/tree/1.113) (2020-07-11)
-
-[Full Changelog](https://github.com/svenbolte/chartcodes/compare/1.112...1.113)
-
-## [1.112](https://github.com/svenbolte/chartcodes/tree/1.112) (2020-07-11)
-
-[Full Changelog](https://github.com/svenbolte/chartcodes/compare/1.11...1.112)
-
-## [1.11](https://github.com/svenbolte/chartcodes/tree/1.11) (2020-07-11)
-
-[Full Changelog](https://github.com/svenbolte/chartcodes/compare/1.1...1.11)
-
-## [1.1](https://github.com/svenbolte/chartcodes/tree/1.1) (2020-07-11)
-
-[Full Changelog](https://github.com/svenbolte/chartcodes/compare/1.0...1.1)
+[Full Changelog](https://github.com/svenbolte/chartcodes/compare/1.0...1.01)
 
 ## [1.0](https://github.com/svenbolte/chartcodes/tree/1.0) (2020-07-04)
 
