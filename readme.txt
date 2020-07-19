@@ -133,6 +133,10 @@ if(isset($ipflag) && is_object($ipflag)){
 
 
 == Changelog ==
+= 11.1.14 =
+[webcounter admin=1] Shortcode, schreibt browser, useragent, ip (shortened), land, referer und Datum in eine sitevisitors Tabelle
+mit admin=1 wird administrativen Usern die Statistik gezeigt
+
 = 11.1.13 =
 add visitor, browser and os information. For GDPR (DSGVO) the ip-address is masked with the last number set to 0
 

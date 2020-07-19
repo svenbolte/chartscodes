@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Charts QR-Barcodes
  * Description: Shortcodes for bar and pie charts, barcodes, QRcodes and ipflags. Pie Chart, Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG Shortcode and variable resolves IP address to ISO 3166-1a2 country code and name and displays country flag image
- * Version: 11.1.13
+ * Version: 11.1.14
  * Author: PBMod und Andere
  * Plugin URI: https://github.com/svenbolte/chartcodes
  * Author URI: https://github.com/svenbolte/chartcodes
@@ -201,6 +201,30 @@ class ipflag{
     protected $db_file;
 
     public function __construct() {
+
+		// Webcounterseite für admin erzeugen
+		$new_page_title = 'Webcounter Stats';
+		$slug = 'webcounter';
+		$new_page_content = '[webcounter admin=1]';
+		$new_page_template = ''; //ex. template-custom.php. Leave blank for default
+		$page_check = get_page_by_title($new_page_title);
+		$new_page = array(
+			'post_type' => 'page',
+			'post_name'         =>   $slug,
+			'post_title' => $new_page_title,
+			'post_content' => $new_page_content,
+			'post_status' => 'private',
+			'post_author' => 1,
+			'comment_status' => 'closed',   // if you prefer
+			'ping_status' => 'closed',      // if you prefer
+	   );
+		if(!isset($page_check->ID)){
+			$new_page_id = wp_insert_post($new_page);
+			if(!empty($new_page_template)){
+				update_post_meta($new_page_id, '_wp_page_template', $new_page_template);
+			}
+		}
+
         $this->url = plugin_dir_url(__FILE__ );
         $this->flag_url = $this->url . '/flags';
         $this->path =  dirname(__FILE__ );
@@ -215,6 +239,7 @@ class ipflag{
         add_action('admin_init', array($this, 'settings_init'));
         add_action('admin_menu', array($this, 'add_options_page'));
         add_shortcode('ipflag', array($this, 'shortcode'));
+		add_shortcode( 'webcounter', array($this, 'writevisitortodatabase') );
 
         if(isset($this->options['auto_update'])){
             add_action(self::safe_slug.'_update', array($this, 'do_auto_update'));
@@ -415,6 +440,125 @@ public function country_code ($lang = null , $code = null) {
 		);
 	}	
 
+	// IP-Adresse des Users bekommen
+	function get_the_user_ip() {
+		if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
+			//check ip from share internet
+			$ip = $_SERVER['HTTP_CLIENT_IP'];
+			} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+			//to check ip is pass from proxy
+			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+			} else {
+			$ip = $_SERVER['REMOTE_ADDR'];
+		}
+		// letzte Stelle der IP anonymisieren (0 setzen)	
+		$ip = long2ip(ip2long($ip) & 0xFFFFFF00);
+		return apply_filters( 'wpb_get_ip', $ip );
+	}
+
+	// 
+	//  Besucher in Datenbank schreiben oder als admin auswerten
+	// 
+
+	function writevisitortodatabase($attr) {
+		extract(shortcode_atts(array(
+			'admin'     => 0
+		), $attr));
+		global $wpdb;
+		$table = $wpdb->prefix . "sitevisitors";
+
+		if ( $admin && is_user_logged_in() ) {
+			global $wpdb;
+			$customers = $wpdb->get_results("SELECT * FROM " . $table . " ORDER BY datum desc LIMIT 50 ");
+			$html ='<h4>'.__('last 50 visitors', 'pb-chartscodes').'</h4><table>';
+			foreach($customers as $customer){
+				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
+				$html .= '<tr><td>' . $customer->browser .' ' . $customer->browserver .'</td>';
+				$html .= '<td>' . $customer->platform .'</td><td><img class="'.$css_class.'" title="'.$this->country_code('de',$customer->country).'" src="'.$this->flag_url.'/'.$customer->country.'.gif" />' . '</td>';
+				$html .= '<td>' . $customer->userip .'</td><td><a title="Post aufrufen" href="'.get_post_permalink($customer->postid).'">' . $customer->postid .'</a></td>';
+				$html .= '<td>' . $datum . ' ' . ago(strtotime($customer->datum)).'</td></tr>';
+			}	
+			$html .= '</table>';
+			$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " GROUP BY referer ORDER BY refcount desc LIMIT 20 ");
+			$html .='<h4>'.__('top 20 referers', 'pb-chartscodes').'</h4><table>';
+			foreach($customers as $customer){
+				$html .= '<tr><td>' . $customer->refcount . '</td><td>' . $customer->referer . '</td></tr>';
+			}	
+			$html .= '</table>';
+			$labels="";$values='';
+			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT 50 ");
+			$html .='<h4>'.__('clicks last 50 days', 'pb-chartscodes').'</h4><table>';
+			foreach($customers as $customer){
+				$datum = date('l d.m.Y',strtotime($customer->datum));	
+				// $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
+				$labels.= $datum.',';
+				$values.= $customer->viscount.',';
+			}	
+			$labels = rtrim($labels, ",");
+			$values = rtrim($values, ",");
+			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=0 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+			$html .= '</table>';
+			$labels="";$values='';
+			$customers = $wpdb->get_results("SELECT browser, COUNT(browser) AS bcount FROM " . $table . " GROUP BY browser ORDER BY bcount desc LIMIT 10 ");
+			$html .='<h4>'.__('Top 10 Browsers', 'pb-chartscodes').'</h4><table>';
+			foreach($customers as $customer){
+				// $html .= '<tr><td>' . $customer->bcount . '</td><td>' . $customer->browser . '</td></tr>';
+				$labels.= $customer->browser.',';
+				$values.= $customer->bcount.',';
+			}	
+			$labels = rtrim($labels, ",");
+			$values = rtrim($values, ",");
+			$html .= do_shortcode('[chartscodes accentcolor=0 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+			$html .= '</table>';
+			return $html;
+		} else {
+			// creates visitors in database if not exists
+			$charset_collate = $wpdb->get_charset_collate();
+			$sql = "CREATE TABLE IF NOT EXISTS " . $table . " (
+			id int(11) not null auto_increment,
+			browser varchar(100) not null,
+			browserver varchar(30) not null,
+			platform varchar(100) not null,
+			useragent varchar(300) not null,
+			referer varchar(300) not null,
+			country varchar(90) not null,
+			postid varchar(60) not null,
+			userip varchar(50) not null,
+			datum TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY (`id`) ) $charset_collate;";
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			dbDelta( $sql );
+			// does the inserting, in case the form is filled and submitted
+			$ua=$this->getBrowser();
+			$browser = $ua['name'];
+			$browserver = $ua['version'];
+			$platform = $ua['platform'];
+			$useragent = $ua['userAgent'];
+			$referer = wp_get_referer();
+			$userip = $this->get_the_user_ip();
+				if(($info = $this->get_info($userip)) != false)
+					$country = $info->code;
+				else
+					$country = 'EUROPEANUNION';
+			$postid = get_the_ID();
+			$datum = current_time( "mysql" );
+			$wpdb->insert(
+				$table,
+				array(
+					"browser" => $browser,
+					"browserver" => $browserver,
+					"platform" => $platform,
+					"useragent" => $useragent,
+					"referer" => $referer,
+					"country" => $country,
+					"postid" => $postid,
+					"userip" => $userip,
+					"datum" => $datum
+				)
+			);
+		}
+	}
+
 	function shortcode($atts, $content = null, $code = '') {
         extract(shortcode_atts(array(
 			'ip' => null,
@@ -432,16 +576,16 @@ public function country_code ($lang = null , $code = null) {
 			// ip anonymisieren wegen dsgvo
 			$ip = long2ip(ip2long($ip) & 0xFFFFFF00);
 		 	$referer = wp_get_referer();
-			$yourdetails = "<br><strong>IP-Netz:</strong> ". $ip . "<br><strong>Herkunft:</strong> " . $referer;
+			$yourdetails = "<br><strong>".__('ip network', 'pb-chartscodes').":</strong> ". $ip . "<br><strong>".__('referer', 'pb-chartscodes')."</strong> " . $referer;
 		}
 		if ( $browser ) {
 			$ua=$this->getBrowser();
-			$yourbrowser= " &nbsp; <strong>Ihr Browser:</strong> " . $ua['name'] . " " . $ua['version'] . " unter " .$ua['platform']  . "<br><small>" . $ua['userAgent']."</small>";
+			$yourbrowser= " &nbsp; <strong>".__('browser', 'pb-chartscodes')."</strong> " . $ua['name'] . " " . $ua['version'] . " unter " .$ua['platform']  . "<br><small>" . $ua['userAgent']."</small>";
 		}
         if(($info = $this->get_info($ip)) != false)
             $flag = $this->country_code('de',$info->code).' '.$this->get_flag($info).' ';
         else
-            $flag = 'privates Netz <img class="'.$css_class.'" title="privates Netz" src="'.$this->flag_url.'/EUROPEANUNION.gif" />';
+            $flag = 'privates Netz <img class="'.$css_class.'" title="'.__('private network', 'pb-chartscodes').'" src="'.$this->flag_url.'/EUROPEANUNION.gif" />';
         return $flag . $yourbrowser . $yourdetails;
     }
 
@@ -521,7 +665,8 @@ public function country_code ($lang = null , $code = null) {
             <h2><?php echo self::name ?></h2>
 			<p><tt>liefert eine Flagge und das Land zu einer IP odr einem IP-Netz. Die letzte IP-Ziffer wird wegen DSGVO anonymisiert<br>
 				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz<br>
-				<code>[ipflag ip="123.20.30.0" details=1 browser=1</code>  
+				<code>[ipflag ip="123.20.30.0" details=1 browser=1]</code>  <br>
+				<code>[webcounter] zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten</code>  
 				</tt>
 			</p>
             <form action="options.php" method="post">

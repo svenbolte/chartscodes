@@ -1,173 +1,142 @@
-# Copyright (C) 2020 PBMod
-# This file is distributed under the same license as the plugin package.
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: TP Piebuilder 0.6\n"
-"POT-Creation-Date: 2020-07-19 11:47+0000\n"
+"Project-Id-Version: Charts QRCodes Barcodes\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-19 11:44+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: PBMod\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2020-07-19 11:48+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
 "X-Generator: Loco https://localise.biz/\n"
-"Language: de_DE\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Loco-Version: 2.4.0; wp-5.4.2\n"
-"Report-Msgid-Bugs-To: "
+"X-Loco-Version: 2.4.0; wp-5.4.2"
 
 #: chartscodes.php:273
 msgid "every week"
-msgstr "jede Woche"
+msgstr ""
 
 #: chartscodes.php:473
 msgid "last 50 visitors"
-msgstr "Letzte 50 Besucher"
+msgstr ""
 
 #: chartscodes.php:483
 msgid "top 20 referers"
-msgstr "Top 20 Herkunfts-Seiten"
+msgstr ""
 
 #: chartscodes.php:489
 msgid "clicks last 50 days"
-msgstr "Klicks der letzten 50 Tage"
-
-#: chartscodes.php:568
-msgid "ip network"
-msgstr "IP-Netzwerk"
-
-#: chartscodes.php:568
-msgid "referer"
-msgstr "Herkunft-Seite"
-
-#: chartscodes.php:572
-msgid "browser"
-msgstr "Browser"
+msgstr ""
 
 #: chartscodes.php:577
 msgid "private network"
-msgstr "privates Netzwerk"
+msgstr ""
 
 #: chartscodes.php:594
 msgid "ipflag database updated."
-msgstr "ipflag Datenbank aktualisiert."
+msgstr ""
 
 #: chartscodes.php:634
 msgid "Settings Admin"
-msgstr "Admin Einstellungen"
+msgstr ""
 
 #. Name of the plugin
 #: chartscodes.php:635
 msgid "Charts QR-Barcodes"
-msgstr "Charts QR-Barcodes"
+msgstr ""
 
 #: chartscodes.php:642
 msgid "Settings"
-msgstr "Einstellungen"
+msgstr ""
 
 #: chartscodes.php:680
 msgid "Bar and Piecharts"
-msgstr "Balken und Kuchendiagramme"
+msgstr ""
 
 #: chartscodes.php:687
 msgid "Default Pie Chart"
-msgstr "Stndard Kuchendiagramm"
+msgstr ""
 
 #: chartscodes.php:695
 msgid "Doughnut Pie Chart"
-msgstr "Donut Kuchendiagramm"
+msgstr ""
 
 #: chartscodes.php:701
 msgid "Polar Pie Chart"
-msgstr "Polar Diagramm"
+msgstr ""
 
 #: chartscodes.php:708
 msgid "Bar Graph Chart"
-msgstr "Balkendiagramm"
+msgstr ""
 
 #: chartscodes.php:716 chartscodes.php:724
 msgid "Horizontal Bar Graph Chart"
-msgstr "horizontales Balkendiagramm"
+msgstr ""
 
 #: chartscodes.php:735
 msgid "ipflag database options"
 msgstr ""
-"\n"
-"ipflag Datenbankoptionen"
 
 #: chartscodes.php:736
 msgid "Enable automatic weekly database update check:"
 msgstr ""
-"Aktivieren Sie die automatische wöchentliche Überprüfung der "
-"Datenbankaktualisierung:"
 
 #: chartscodes.php:737
 msgid "Current database status:"
 msgstr ""
-"\n"
-"Aktueller Datenbankstatus:"
 
 #: chartscodes.php:744
 msgid "Here you can control all ipflag database options:"
-msgstr "Hier können Sie alle ipflag-Datenbankoptionen steuern:"
+msgstr ""
 
 #: chartscodes.php:766
 msgid "Database missing or corrupted, please update"
-msgstr "Datenbank fehlt oder ist beschädigt, bitte aktualisieren"
+msgstr ""
 
 #: chartscodes.php:771
 msgid "Update"
-msgstr "Aktualisierung"
+msgstr ""
 
 #: chartscodes.php:779
 msgid "ipflag database already up to date."
-msgstr "ipflag Datenbank bereits aktuell."
+msgstr ""
 
 #: chartscodes.php:783
 msgid ""
 "Couldn't fetch ipflag database zip file. Fetching remote content not "
 "supported or remote server is down."
 msgstr ""
-"Die ipflag-Datenbank-Zip-Datei konnte nicht abgerufen werden. Das Abrufen "
-"von nicht unterstütztem Remote-Inhalt oder Remote-Server ist ausgefallen.\n"
 
 #: chartscodes.php:792
 msgid ""
 "Couldn't write ipflag database zip file to local file system. Please check "
 "permissions."
 msgstr ""
-"Die ipflag-Datenbank-Zip-Datei konnte nicht in das lokale Dateisystem "
-"geschrieben werden. Bitte überprüfen Sie die Berechtigungen."
 
 #: chartscodes.php:796
 msgid ""
 "Couldn't unzip ipflag database zip file to local file system. Please check "
 "permissions and your server unzip capabilities."
 msgstr ""
-"Die ZIP-Datei der ipflag-Datenbank konnte nicht in das lokale Dateisystem "
-"entpackt werden. Bitte überprüfen Sie die Berechtigungen und die "
-"Entpackungsfunktionen Ihres Servers."
 
 #: chartscodes.php:802
 msgid ""
 "Couldn't write ipflag database version file to local file system. Please "
 "check permissions."
 msgstr ""
-"Die ipflag-Datenbankversionsdatei konnte nicht in das lokale Dateisystem "
-"geschrieben werden. Bitte überprüfen Sie die Berechtigungen."
 
 #: chartscodes.php:872
 msgid ""
 "Couldn't read ipflag database file from local file system. Please check "
 "permissions."
 msgstr ""
-"\n"
-"Die ipflag-Datenbankdatei konnte nicht aus dem lokalen Dateisystem gelesen "
-"werden. Bitte überprüfen Sie die Berechtigungen.\n"
 
 #: chartscodes.php:884
 msgid "Remote ipflag database version not readable."
-msgstr "Remote-ipflag-Datenbankversion nicht lesbar."
+msgstr ""
 
 #. Description of the plugin
 msgid ""
@@ -176,17 +145,12 @@ msgid ""
 "Shortcode and variable resolves IP address to ISO 3166-1a2 country code and "
 "name and displays country flag image"
 msgstr ""
-"Shortcodes für Balken- und Kreisdiagramme, Barcodes, QRcodes und ipflags. "
-"Kreisdiagramm, Donut-Kreisdiagramm, Polar-Kreisdiagramm, Balkendiagramm, "
-"horizontales Balkendiagramm. IPFLAG-Shortcode und Variable lösen die IP-"
-"Adresse in ISO 3166-1a2-Ländercode und -Namen auf und zeigen das "
-"Landflaggenbild an"
 
 #. URI of the plugin
 #. Author URI of the plugin
 msgid "https://github.com/svenbolte/chartcodes"
-msgstr "https://github.com/svenbolte/chartcodes"
+msgstr ""
 
 #. Author of the plugin
 msgid "PBMod und Andere"
-msgstr "PBMod und Andere"
+msgstr ""
