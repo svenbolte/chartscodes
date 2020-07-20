@@ -336,10 +336,33 @@ public function country_code ($lang = null , $code = null) {
         return $flag;
     }
 
+	private static function is_bot( $user_agent ) {
+		$user_agent = strtolower( $user_agent );
+
+		$identifiers = array(
+			'bot',
+			'slurp',
+			'crawler',
+			'spider',
+			'curl',
+			'facebook',
+			'fetch',
+			'python',
+			'wget',
+			'monitor',
+		);
+		foreach ( $identifiers as $identifier ) {
+			if ( strpos( $user_agent, $identifier ) !== false ) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	// Browser des Betrachters rausfinden und anzeigen und Referer
 	function getBrowser()
 	{
-		$u_agent = $_SERVER['HTTP_USER_AGENT'];
+		$u_agent = esc_attr(htmlspecialchars(wp_strip_all_tags($_SERVER['HTTP_USER_AGENT'], false)));
 		$bname = 'Unknown';
 		$platform = 'Unknown';
 		$version= "";
@@ -406,8 +429,31 @@ public function country_code ($lang = null , $code = null) {
 			$bname = 'Netscape';
 			$ub = "Netscape";
 		}
+		else if(preg_match('/Semrushbot/i',$u_agent)) {
+			$bname = 'Semrush Bot';
+			$ub = "SemrushBot";
+		}
+		else if(preg_match('/Googlebot/i',$u_agent)) {
+			$bname = 'Google Bot';
+			$ub = "Googlebot";
+		}
+		else if(preg_match('/adscanner/i',$u_agent)) {
+			$bname = 'Seocompany Spider';
+			$ub = "adscanner/)";
+		}
+		else if(preg_match('/YandexBot/i',$u_agent)) {
+			$bname = 'Yandex Bot';
+			$ub = "YandexBot";
+		}
+		else if(preg_match('/bingbot/i',$u_agent)) {
+			$bname = 'MS Bing Bot';
+			$ub = "bingbot";
+		}
+		else if(preg_match('/bot|crawl|slurp|spider|mediapartners/i',$u_agent)) {
+			$bname = 'other Bot/Spider';
+			$ub = "Bot";
+		}
 		// finally get the correct version number
-		// Added "|:"
 		$known = array('Version', $ub, 'other');
 		$pattern = '#(?<browser>' . join('|', $known) .
 		 ')[/|: ]+(?<version>[0-9.|a-zA-Z.]*)#';
@@ -473,9 +519,9 @@ public function country_code ($lang = null , $code = null) {
 			$html ='<h4>'.__('last 50 visitors', 'pb-chartscodes').'</h4><table>';
 			foreach($customers as $customer){
 				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
-				$html .= '<tr><td>' . $customer->browser .' ' . $customer->browserver .'</td>';
+				$html .= '<tr><td><abbr title="'.$customer->useragent.'">' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
 				$html .= '<td>' . $customer->platform .'</td><td><img class="'.$css_class.'" title="'.$this->country_code('de',$customer->country).'" src="'.$this->flag_url.'/'.$customer->country.'.gif" />' . '</td>';
-				$html .= '<td>' . $customer->userip .'</td><td><a title="Post aufrufen" href="'.get_post_permalink($customer->postid).'">' . $customer->postid .'</a></td>';
+				$html .= '<td>' . $customer->userip .'</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . $customer->postid .'</a></td>';
 				$html .= '<td>' . $datum . ' ' . ago(strtotime($customer->datum)).'</td></tr>';
 			}	
 			$html .= '</table>';
@@ -490,30 +536,61 @@ public function country_code ($lang = null , $code = null) {
 			$html .='<h4>'.__('clicks last 50 days', 'pb-chartscodes').'</h4><table>';
 			foreach($customers as $customer){
 				$datum = date('l d.m.Y',strtotime($customer->datum));	
-				// $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
+				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
 				$labels.= $datum.',';
 				$values.= $customer->viscount.',';
 			}	
 			$labels = rtrim($labels, ",");
 			$values = rtrim($values, ",");
-			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=0 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT browser, COUNT(browser) AS bcount FROM " . $table . " GROUP BY browser ORDER BY bcount desc LIMIT 10 ");
 			$html .='<h4>'.__('Top 10 Browsers', 'pb-chartscodes').'</h4><table>';
 			foreach($customers as $customer){
-				// $html .= '<tr><td>' . $customer->bcount . '</td><td>' . $customer->browser . '</td></tr>';
+				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->bcount . '</td><td>' . $customer->browser . '</td></tr>';
 				$labels.= $customer->browser.',';
 				$values.= $customer->bcount.',';
 			}	
 			$labels = rtrim($labels, ",");
 			$values = rtrim($values, ",");
-			$html .= do_shortcode('[chartscodes accentcolor=0 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+			$html .= do_shortcode('[chartscodes accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
+			$labels="";$values='';
+			$customers = $wpdb->get_results("SELECT country, COUNT(country) AS ccount, datum FROM " . $table . " GROUP BY country ORDER BY ccount desc LIMIT 10 ");
+			$html .='<h4>'.__('top 10 countries', 'pb-chartscodes').'</h4><table>';
+			foreach($customers as $customer){
+				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->ccount . '</td><td>' . $this->country_code('de',$customer->country) . '</td></tr>';
+				$labels.= $this->country_code('de',$customer->country) . ',';
+				$values.= $customer->ccount . ',';
+			}	
+			$labels = rtrim($labels, ",");
+			$values = rtrim($values, ",");
+			$html .= do_shortcode('[chartscodes accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+			$html .= '</table>';
+			$labels="";$values='';
+			$customers = $wpdb->get_results("SELECT postid, COUNT(postid) AS pcount, datum FROM " . $table . " GROUP BY postid ORDER BY pcount desc LIMIT 10 ");
+			$html .='<h4>'.__('top 10 posts', 'pb-chartscodes').'</h4><table>';
+			foreach($customers as $customer){
+				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->pcount . '</td><td>' . get_the_title($customer->postid) . '</td></tr>';
+				$labels.= get_the_title($customer->postid).',';
+				$values.= $customer->pcount.',';
+			}	
+			$labels = rtrim($labels, ",");
+			$values = rtrim($values, ",");
+			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+			$html .= '</table>';
+			
 			return $html;
 		} else {
 			// creates visitors in database if not exists
 			$charset_collate = $wpdb->get_charset_collate();
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			
+			// Datenbank bei Bedarf löschen hier
+			//$sql = "DROP TABLE IF EXISTS " . $table;
+			//$wpdb->query($sql);
+			
 			$sql = "CREATE TABLE IF NOT EXISTS " . $table . " (
 			id int(11) not null auto_increment,
 			browser varchar(100) not null,
@@ -526,7 +603,6 @@ public function country_code ($lang = null , $code = null) {
 			userip varchar(50) not null,
 			datum TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (`id`) ) $charset_collate;";
-			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 			dbDelta( $sql );
 			// does the inserting, in case the form is filled and submitted
 			$ua=$this->getBrowser();
@@ -534,28 +610,33 @@ public function country_code ($lang = null , $code = null) {
 			$browserver = $ua['version'];
 			$platform = $ua['platform'];
 			$useragent = $ua['userAgent'];
-			$referer = wp_get_referer();
-			$userip = $this->get_the_user_ip();
-				if(($info = $this->get_info($userip)) != false)
-					$country = $info->code;
-				else
-					$country = 'EUROPEANUNION';
-			$postid = get_the_ID();
-			$datum = current_time( "mysql" );
-			$wpdb->insert(
-				$table,
-				array(
-					"browser" => $browser,
-					"browserver" => $browserver,
-					"platform" => $platform,
-					"useragent" => $useragent,
-					"referer" => $referer,
-					"country" => $country,
-					"postid" => $postid,
-					"userip" => $userip,
-					"datum" => $datum
-				)
-			);
+			// Nur speichern, wenn kein BOT erkannt
+			if ( !$this->is_bot( $useragent ) ) {
+				if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
+					$referer = filter_var( wp_unslash( $_SERVER['HTTP_REFERER'] ), FILTER_SANITIZE_URL );
+				}
+				$userip = $this->get_the_user_ip();
+					if(($info = $this->get_info($userip)) != false)
+						$country = $info->code;
+					else
+						$country = 'EUROPEANUNION';
+				$postid = get_the_ID();
+				$datum = current_time( "mysql" );
+				$wpdb->insert(
+					$table,
+					array(
+						"browser" => $browser,
+						"browserver" => $browserver,
+						"platform" => $platform,
+						"useragent" => $useragent,
+						"referer" => $referer,
+						"country" => $country,
+						"postid" => $postid,
+						"userip" => $userip,
+						"datum" => $datum
+					)
+				);
+			}	
 		}
 	}
 

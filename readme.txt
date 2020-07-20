@@ -1,8 +1,8 @@
 === Charts QR-Barcodes ===
-Tags: pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, Barcode, QRCode, IPFlag 
+Tags: pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, Barcode, QRCode, IPFlag, webcounter 
 Requires at least: 4.5
 Tested up to: 5.4.2
-Stable tag: 11.1.12
+Stable tag: 11.1.15
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -11,6 +11,7 @@ This Plugin provides you an elegent Bar Graph and Pie Charts with multiple desig
 It also adds the functionality to output barcodes and qrcodes by use of the shortcodes.
 Flags and Country name and code can be shown by shortcode [ipflag] - visitor info browser and details optional
 Color palette for charts can be accentcolor with shares or random (colorful light colors) or given values
+[webcounter] shortcode to gather and display stats about visitors (ip shortened for GRPR compliance)
 
 == Installation ==
 = Using The WordPress Dashboard =
@@ -133,7 +134,13 @@ if(isset($ipflag) && is_object($ipflag)){
 
 
 == Changelog ==
+= 11.1.15 =
+Sanitizing of some variables for security
+Stats and graphs for top pages, countries, browsers, countperday (list for one, pie for more)
+
 = 11.1.14 =
+Penguin PBMod Theme integration: auf allen singular posts/pages/custom pages wird webcounter aufgerufen und speichert die Stats, wenn dieses Plugin aktiv ist.
+Plugin erstellt eine private page, die nur für admins erreichbar ist /webcounter zum Abruf der Statistik. Alternativ kann auf einer anderen geschützten page der Shortcode angegeben werden
 [webcounter admin=1] Shortcode, schreibt browser, useragent, ip (shortened), land, referer und Datum in eine sitevisitors Tabelle
 mit admin=1 wird administrativen Usern die Statistik gezeigt
 

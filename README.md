@@ -12,7 +12,7 @@ daher dieses Projekt, dass die Einzelfunktionen zusammen fasst und um viele neue
 
 [ipflag ip="10.10.10.0" details=1 browser=1]
 
-[webcounter]
+[webcounter admin=0]
 
 [chartscodes absolute="1" title="Pie Chart" values="20, 30, 50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
 
@@ -25,6 +25,4 @@ daher dieses Projekt, dass die Einzelfunktionen zusammen fasst und um viele neue
 [chartscodes_horizontal_bar title="Balken horizontal" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
 
 [posts_per_month_last months=x]
-
-
 

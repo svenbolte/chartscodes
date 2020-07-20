@@ -3,15 +3,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TP Piebuilder 0.6\n"
-"POT-Creation-Date: 2020-07-20 08:54+0000\n"
+"POT-Creation-Date: 2020-07-19 11:47+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2020-07-20 08:55+0000\n"
-"Last-Translator: Patrick Baerenfaenger\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2020-07-19 11:48+0000\n"
+"Last-Translator: \n"
+"Language-Team: Deutsch (Sie)\n"
 "X-Generator: Loco https://localise.biz/\n"
-"Language: de_DE\n"
+"Language: de_DE_formal\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Loco-Version: 2.4.0; wp-5.4.2\n"
 "Report-Msgid-Bugs-To: "
@@ -20,122 +20,110 @@ msgstr ""
 msgid "every week"
 msgstr "jede Woche"
 
-#: chartscodes.php:519
+#: chartscodes.php:473
 msgid "last 50 visitors"
 msgstr "Letzte 50 Besucher"
 
-#: chartscodes.php:529
+#: chartscodes.php:483
 msgid "top 20 referers"
 msgstr "Top 20 Herkunfts-Seiten"
 
-#: chartscodes.php:536
+#: chartscodes.php:489
 msgid "clicks last 50 days"
 msgstr "Klicks der letzten 50 Tage"
 
-#: chartscodes.php:549
-msgid "Top 10 Browsers"
-msgstr "Top 10 Internet Browser"
-
-#: chartscodes.php:561
-msgid "top 10 countries"
-msgstr "Top 10 Länder"
-
-#: chartscodes.php:573
-msgid "top 10 posts"
-msgstr "Top 10 Beiträge"
-
-#: chartscodes.php:660
+#: chartscodes.php:568
 msgid "ip network"
 msgstr "IP-Netzwerk"
 
-#: chartscodes.php:660
+#: chartscodes.php:568
 msgid "referer"
 msgstr "Herkunft-Seite"
 
-#: chartscodes.php:664
+#: chartscodes.php:572
 msgid "browser"
 msgstr "Browser"
 
-#: chartscodes.php:669
+#: chartscodes.php:577
 msgid "private network"
 msgstr "privates Netzwerk"
 
-#: chartscodes.php:686
+#: chartscodes.php:594
 msgid "ipflag database updated."
 msgstr "ipflag Datenbank aktualisiert."
 
-#: chartscodes.php:726
+#: chartscodes.php:634
 msgid "Settings Admin"
 msgstr "Admin Einstellungen"
 
 #. Name of the plugin
-#: chartscodes.php:727
+#: chartscodes.php:635
 msgid "Charts QR-Barcodes"
 msgstr "Charts QR-Barcodes"
 
-#: chartscodes.php:734
+#: chartscodes.php:642
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: chartscodes.php:772
+#: chartscodes.php:680
 msgid "Bar and Piecharts"
 msgstr "Balken und Kuchendiagramme"
 
-#: chartscodes.php:779
+#: chartscodes.php:687
 msgid "Default Pie Chart"
 msgstr "Stndard Kuchendiagramm"
 
-#: chartscodes.php:787
+#: chartscodes.php:695
 msgid "Doughnut Pie Chart"
 msgstr "Donut Kuchendiagramm"
 
-#: chartscodes.php:793
+#: chartscodes.php:701
 msgid "Polar Pie Chart"
 msgstr "Polar Diagramm"
 
-#: chartscodes.php:800
+#: chartscodes.php:708
 msgid "Bar Graph Chart"
 msgstr "Balkendiagramm"
 
-#: chartscodes.php:808 chartscodes.php:816
+#: chartscodes.php:716 chartscodes.php:724
 msgid "Horizontal Bar Graph Chart"
 msgstr "horizontales Balkendiagramm"
 
-#: chartscodes.php:827
+#: chartscodes.php:735
 msgid "ipflag database options"
 msgstr ""
 "\n"
 "ipflag Datenbankoptionen"
 
-#: chartscodes.php:828
+#: chartscodes.php:736
 msgid "Enable automatic weekly database update check:"
 msgstr ""
 "Aktivieren Sie die automatische wöchentliche Überprüfung der "
 "Datenbankaktualisierung:"
 
-#: chartscodes.php:829
+#: chartscodes.php:737
 msgid "Current database status:"
 msgstr ""
 "\n"
 "Aktueller Datenbankstatus:"
 
-#: chartscodes.php:836
+#: chartscodes.php:744
 msgid "Here you can control all ipflag database options:"
 msgstr "Hier können Sie alle ipflag-Datenbankoptionen steuern:"
 
-#: chartscodes.php:858
+#: chartscodes.php:766
 msgid "Database missing or corrupted, please update"
 msgstr "Datenbank fehlt oder ist beschädigt, bitte aktualisieren"
 
-#: chartscodes.php:863
+#: chartscodes.php:771
 msgid "Update"
 msgstr "Aktualisierung"
 
-#: chartscodes.php:871
+#: chartscodes.php:779
 msgid "ipflag database already up to date."
 msgstr "ipflag Datenbank bereits aktuell."
 
-#: chartscodes.php:875
+#: chartscodes.php:783
 msgid ""
 "Couldn't fetch ipflag database zip file. Fetching remote content not "
 "supported or remote server is down."
@@ -143,7 +131,7 @@ msgstr ""
 "Die ipflag-Datenbank-Zip-Datei konnte nicht abgerufen werden. Das Abrufen "
 "von nicht unterstütztem Remote-Inhalt oder Remote-Server ist ausgefallen.\n"
 
-#: chartscodes.php:884
+#: chartscodes.php:792
 msgid ""
 "Couldn't write ipflag database zip file to local file system. Please check "
 "permissions."
@@ -151,7 +139,7 @@ msgstr ""
 "Die ipflag-Datenbank-Zip-Datei konnte nicht in das lokale Dateisystem "
 "geschrieben werden. Bitte überprüfen Sie die Berechtigungen."
 
-#: chartscodes.php:888
+#: chartscodes.php:796
 msgid ""
 "Couldn't unzip ipflag database zip file to local file system. Please check "
 "permissions and your server unzip capabilities."
@@ -160,7 +148,7 @@ msgstr ""
 "entpackt werden. Bitte überprüfen Sie die Berechtigungen und die "
 "Entpackungsfunktionen Ihres Servers."
 
-#: chartscodes.php:894
+#: chartscodes.php:802
 msgid ""
 "Couldn't write ipflag database version file to local file system. Please "
 "check permissions."
@@ -168,7 +156,7 @@ msgstr ""
 "Die ipflag-Datenbankversionsdatei konnte nicht in das lokale Dateisystem "
 "geschrieben werden. Bitte überprüfen Sie die Berechtigungen."
 
-#: chartscodes.php:964
+#: chartscodes.php:872
 msgid ""
 "Couldn't read ipflag database file from local file system. Please check "
 "permissions."
@@ -177,7 +165,7 @@ msgstr ""
 "Die ipflag-Datenbankdatei konnte nicht aus dem lokalen Dateisystem gelesen "
 "werden. Bitte überprüfen Sie die Berechtigungen.\n"
 
-#: chartscodes.php:976
+#: chartscodes.php:884
 msgid "Remote ipflag database version not readable."
 msgstr "Remote-ipflag-Datenbankversion nicht lesbar."
 
