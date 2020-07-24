@@ -279,9 +279,9 @@ class PB_ChartsCodes_Shortcode {
 				?>
 				<div class="outer-box">
 					<div id="<?php echo esc_attr( $id ) . '_' . $i; ?>" class="inner-fill" style="background-color: <?php echo esc_attr( $colors[$i] ); ?>; height: <?php echo $balkhoehe . '%'; ?>">
-						<span class="percent-value"><?php echo $balkenanzeige; ?></span>
+						<div class="percent-value"><?php echo $balkenanzeige; ?></div>
 					</div><!-- .inner-fill -->
-					<?php echo '<span class="tp-axislabels" style="background-color:'.esc_attr( $colors[$i] ).';"> &nbsp; &nbsp;'.esc_html( $labels[$i] ).' </span>'; ?>
+					<?php echo '<span class="tp-axislabels">'.esc_html( substr($labels[$i],0,11) ).' </span>'; ?>
 				</div><!-- .outer-box -->
 				<?php 
 				endfor;  
@@ -341,7 +341,7 @@ class PB_ChartsCodes_Shortcode {
 						if ( $absolute == '1' ){
 							$balkenanzeige = absint( $percentages[$i] / $hundproz * 100 );
 							$balkhoehe = absint( $percentages[$i] / $hundproz * 100 );
-							if ( absint( $percentages[$i]) > 0 ) { $balkenanzeige .= '%|'.absint( $percentages[$i]); }
+							if ( absint( $percentages[$i]) > 0 ) { $balkenanzeige .= '% | '.absint( $percentages[$i]); }
 						} else {
 							$balkenanzeige = absint( $percentages[$i] );
 							$balkhoehe = absint( $percentages[$i] );
@@ -350,8 +350,8 @@ class PB_ChartsCodes_Shortcode {
 					<div class="outer-box">
 						<div id="<?php echo esc_attr( $id ) . '_' . $i; ?>" class="inner-fill" style="background-color: <?php echo esc_attr( $colors[$i] ); ?>; width: <?php echo $balkhoehe . '%'; ?>">
 							<span class="percent-value"><?php echo $balkenanzeige; ?></span>
-						</div><!-- .inner-fill -->
-						<span class="skill-name"><?php echo esc_html( $labels[$i] ); ?></span>
+							<span class="skill-name"><?php echo esc_html( $labels[$i] ); ?></span><!-- .inner-fill -->
+						</div>
 					</div><!-- .outer-box -->
 					<?php 
 					endfor;  

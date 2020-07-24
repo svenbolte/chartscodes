@@ -2,7 +2,7 @@
 Tags: pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, Barcode, QRCode, IPFlag, webcounter 
 Requires at least: 4.5
 Tested up to: 5.4.2
-Stable tag: 11.1.15
+Stable tag: 11.1.16
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -134,6 +134,10 @@ if(isset($ipflag) && is_object($ipflag)){
 
 
 == Changelog ==
+
+= 11.1.16 =
+CSS fixes and beautifying horizontal and vertical bar charts
+
 = 11.1.15 =
 Sanitizing of some variables for security
 Stats and graphs for top pages, countries, browsers, countperday (list for one, pie for more)
