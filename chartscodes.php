@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Charts QR-Barcodes
  * Description: Shortcodes for bar and pie charts, barcodes, QRcodes and ipflags. Pie Chart, Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG Shortcode and variable resolves IP address to ISO 3166-1a2 country code and name and displays country flag image
- * Version: 11.1.14
+ * Version: 11.1.15
  * Author: PBMod und Andere
  * Plugin URI: https://github.com/svenbolte/chartcodes
  * Author URI: https://github.com/svenbolte/chartcodes
@@ -415,6 +415,10 @@ public function country_code ($lang = null , $code = null) {
 			if(preg_match('/Edg/i',$u_agent)) {
 					$bname = 'Microsoft Edge';
 					$ub = "Edg";
+				}
+			if(preg_match('/Edge/i',$u_agent)) {
+					$bname = 'Edge legacy';
+					$ub = "Edge";
 				}
 		}
 		else if(preg_match('/Safari/i',$u_agent)) {
