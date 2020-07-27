@@ -370,6 +370,7 @@ public function country_code ($lang = null , $code = null) {
 		//First get the platform?
 		$os_array = array(
 			'/windows nt 10.0/i'    =>  'Windows 10',
+			'/windows nt 6.3/i'     =>  'Windows 8.1/Server 2012R2',
 			'/windows nt 6.2/i'     =>  'Windows 8',
 			'/windows nt 6.1/i'     =>  'Windows 7',
 			'/windows nt 6.0/i'     =>  'Windows Vista',
