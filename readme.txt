@@ -1,8 +1,8 @@
 === Charts QR-Barcodes ===
-Tags: pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, Barcode, QRCode, IPFlag, webcounter 
+Tags: pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, Barcode, QRCode, IPFlag, webcounter,useragent 
 Requires at least: 4.5
 Tested up to: 5.4.2
-Stable tag: 11.1.16
+Stable tag: 11.1.17
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -134,6 +134,11 @@ if(isset($ipflag) && is_object($ipflag)){
 
 
 == Changelog ==
+
+= 11.1.17 =
+[webcounter] Browser and Operating Systems icons will be displayed on admin page webstats
+/webcounter page: use optional url parameter ?items=xx to display xx items in some of the lists
+translation updates: german and german formal, documentation and screenshots in settings page updated
 
 = 11.1.16 =
 CSS fixes and beautifying horizontal and vertical bar charts

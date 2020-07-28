@@ -259,6 +259,7 @@ class PB_ChartsCodes_Shortcode {
 		$colors 		= explode( ',', str_replace( $quotes, '', $colorli ) );
 		$count 			= count( $labels )-1;
 		$id 			= uniqid( 'tp_bar_', false ); 
+		if ( $count > 12 ) { $barbreite = ' style="min-width:24px;max-width:'.intval(100/($count+3)).'%"'; } else { $barbreite=''; }
 		?>
 		<div class="tp-bar" data-id="tp_bar_data_<?php echo esc_attr( $id ); ?>">
 			<?php if ( ! empty( $title ) ) : ?>
@@ -277,7 +278,7 @@ class PB_ChartsCodes_Shortcode {
 					$balkhoehe = absint( $percentages[$i] );
 				}
 				?>
-				<div class="outer-box">
+				<div class="outer-box" <?php echo $barbreite ?> >
 					<div id="<?php echo esc_attr( $id ) . '_' . $i; ?>" class="inner-fill" style="background-color: <?php echo esc_attr( $colors[$i] ); ?>; height: <?php echo $balkhoehe . '%'; ?>">
 						<div class="percent-value"><?php echo $balkenanzeige; ?></div>
 					</div><!-- .inner-fill -->

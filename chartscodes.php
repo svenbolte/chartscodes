@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Charts QR-Barcodes
  * Description: Shortcodes for bar and pie charts, barcodes, QRcodes and ipflags. Pie Chart, Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG Shortcode and variable resolves IP address to ISO 3166-1a2 country code and name and displays country flag image
- * Version: 11.1.16
+ * Version: 11.1.17
  * Author: PBMod und Andere
  * Plugin URI: https://github.com/svenbolte/chartcodes
  * Author URI: https://github.com/svenbolte/chartcodes
@@ -370,7 +370,7 @@ public function country_code ($lang = null , $code = null) {
 		//First get the platform?
 		$os_array = array(
 			'/windows nt 10.0/i'    =>  'Windows 10',
-			'/windows nt 6.3/i'     =>  'Windows 8.1/Server 2012R2',
+			'/windows nt 6.3/i'     =>  'Windows 8.1/S2012R2',
 			'/windows nt 6.2/i'     =>  'Windows 8',
 			'/windows nt 6.1/i'     =>  'Windows 7',
 			'/windows nt 6.0/i'     =>  'Windows Vista',
@@ -506,6 +506,30 @@ public function country_code ($lang = null , $code = null) {
 		$ip = long2ip(ip2long($ip) & 0xFFFFFF00);
 		return apply_filters( 'wpb_get_ip', $ip );
 	}
+	
+	// Browser und OS icons anzeigen
+	function showbrowosicon($xname) {
+		switch ( $xname ) :
+			case 'Google Chrome' : $xicon = 'Image/chrome.png'; break;
+			case 'Microsoft Edge' : $xicon = 'Image/edgenew.png'; break;
+			case 'Mozilla Firefox' : $xicon = 'Image/firefox.png'; break;
+			case 'Edge legacy' : $xicon = 'Image/edge.png'; break;
+			case 'Internet Explorer' : $xicon = 'Image/msie.png'; break;
+			case 'Apple Safari' : $xicon = 'Image/safari.png'; break;
+			case 'Windows 10' : $xicon = 'Image/win8-10.png'; break;
+			case 'Windows XP' : $xicon = 'Image/winxp.png'; break;
+			case 'Windows 7' : $xicon = 'Image/win7.png'; break;
+			case 'Ubuntu' : $xicon = 'Image/ubuntu.png'; break;
+			case 'Blackberry' : $xicon = 'Image/blackberry.png'; break;
+			case 'Android' : $xicon = 'Image/android.png'; break;
+			case 'MAC OS X' : $xicon = 'Image/mac.png'; break;
+			case 'Windows Server 2003/XP x64' : $xicon = 'Image/winxp.png'; break;
+			case 'Windows 8.1/S2012R2' : $xicon = 'Image/win8-10.png'; break;
+			case 'iPhone' : $xicon = 'Image/iphone.png'; break;
+			default : $xicon = 'Image/surf.png'; break;
+		endswitch;
+		return '<img src="' .PB_ChartsCodes_URL_PATH . $xicon . '">';
+	}
 
 	// 
 	//  Besucher in Datenbank schreiben oder als admin auswerten
@@ -520,25 +544,31 @@ public function country_code ($lang = null , $code = null) {
 
 		if ( $admin && is_user_logged_in() ) {
 			global $wpdb;
-			$customers = $wpdb->get_results("SELECT * FROM " . $table . " ORDER BY datum desc LIMIT 50 ");
-			$html ='<h4>'.__('last 50 visitors', 'pb-chartscodes').'</h4><table>';
+			if (isset($_GET['items'])) {
+			  $items = intval($_GET['items']);
+			} else {
+			  $items=50;
+			}
+			$customers = $wpdb->get_results("SELECT * FROM " . $table . " ORDER BY datum desc LIMIT ".$items);
+			$html ='<h4>'.sprintf(__('last %s visitors', 'pb-chartscodes'),$items).'</h4><table>';
 			foreach($customers as $customer){
 				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
-				$html .= '<tr><td><abbr title="'.$customer->useragent.'">' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
-				$html .= '<td>' . $customer->platform .'</td><td><img class="'.$css_class.'" title="'.$this->country_code('de',$customer->country).'" src="'.$this->flag_url.'/'.$customer->country.'.gif" />' . '</td>';
+				$html .= '<tr><td><abbr title="'.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
+				$html .= '<td>' . $this->showbrowosicon($customer->platform). ' ' . substr($customer->platform,0,19) .'</td><td><img class="'.$css_class.'" title="'.$this->country_code('de',$customer->country).'" src="'.$this->flag_url.'/'.$customer->country.'.gif" />' . '</td>';
 				$html .= '<td>' . $customer->userip .'</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . $customer->postid .'</a></td>';
-				$html .= '<td>' . $datum . ' ' . ago(strtotime($customer->datum)).'</td></tr>';
+				$html .= '<td style="font-size:0.9em">' . $datum . ' ' . ago(strtotime($customer->datum)).'</td></tr>';
 			}	
 			$html .= '</table>';
-			$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " GROUP BY referer ORDER BY refcount desc LIMIT 20 ");
-			$html .='<h4>'.__('top 20 referers', 'pb-chartscodes').'</h4><table>';
+			if ( !isset($_GET['items']) ) { $items=20; }
+			$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " GROUP BY referer ORDER BY refcount desc LIMIT ".$items );
+			$html .='<h4>'.sprintf(__('top %s referers', 'pb-chartscodes'),$items).'</h4><table>';
 			foreach($customers as $customer){
 				$html .= '<tr><td>' . $customer->refcount . '</td><td>' . $customer->referer . '</td></tr>';
 			}	
 			$html .= '</table>';
 			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT 50 ");
-			$html .='<h4>'.__('clicks last 50 days', 'pb-chartscodes').'</h4><table>';
+			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $items);
+			$html .='<h4>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$items).'</h4><table>';
 			foreach($customers as $customer){
 				$datum = date('l d.m.Y',strtotime($customer->datum));	
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
@@ -548,6 +578,18 @@ public function country_code ($lang = null , $code = null) {
 			$labels = rtrim($labels, ",");
 			$values = rtrim($values, ",");
 			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+			$html .= '</table>';
+			$labels="";$values='';
+			$customers = $wpdb->get_results("SELECT SUBSTRING(datum,12,2) AS stunde, COUNT(SUBSTRING(datum,12,2)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,12,2) ORDER BY SUBSTRING(datum,12,2) ");
+			$html .='<h4>'.sprintf(__('clicks by hour', 'pb-chartscodes'),$items).'</h4><table>';
+			foreach($customers as $customer){
+				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
+				$labels.= $customer->stunde.',';
+				$values.= $customer->viscount.',';
+			}	
+			$labels = rtrim($labels, ",");
+			$values = rtrim($values, ",");
+			$html .= do_shortcode('[chartscodes_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT browser, COUNT(browser) AS bcount FROM " . $table . " GROUP BY browser ORDER BY bcount desc LIMIT 10 ");
@@ -748,11 +790,13 @@ public function country_code ($lang = null , $code = null) {
     ?>
         <div class="wrap">
             <div class="icon32" id="icon-options-general"><br></div>
-            <h2><?php echo self::name ?></h2>
-			<p><tt>liefert eine Flagge und das Land zu einer IP odr einem IP-Netz. Die letzte IP-Ziffer wird wegen DSGVO anonymisiert<br>
+            <h2><?php echo esc_attr_e( 'Chartscodes Settings', 'pb-chartscodes' ); ?></h2>
+			<p><tt><code>[ipflag ip="123.20.30.0" details=1 browser=1]</code>
+				liefert eine Flagge und das Land zu einer IP odr einem IP-Netz. Die letzte IP-Ziffer wird wegen DSGVO anonymisiert<br>
 				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz<br>
-				<code>[ipflag ip="123.20.30.0" details=1 browser=1]</code>  <br>
-				<code>[webcounter] zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten</code>  
+				  <br>
+				<code>[webcounter admin=0]</code> zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>
+				Ist die Admin /webcounter-Seite aufgerufen, kann über den optionalen URL-Parameter ?items=x die Ausgabe-Anzahl einiger Listeneinträge verändert werden
 				</tt>
 			</p>
             <form action="options.php" method="post">
@@ -819,8 +863,8 @@ public function country_code ($lang = null , $code = null) {
 
 			<div class="img-wrap">
                 <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-6.png' ?>"  alt="<?php esc_attr_e( 'Horizontal Bar Graph Chart', 'pb-chartscodes' ); ?>">
-				<p><tt> Zeigt die letzen 1-12 Monate Posts per Month als Bargraph an, wenn Months nicht angegeben für 12 Monate</tt><br>
-                  <code>[posts_per_month_last months=x]</code></p>                    
+				<p><code>[posts_per_month_last months=x]</code><tt> zeigt die letzen 1-12 Monate Posts per Month als Bargraph an, wenn Months nicht angegeben für 12 Monate</tt><br>
+                  </p>                    
             </div>
         </div>
 		
