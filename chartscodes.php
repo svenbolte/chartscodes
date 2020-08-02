@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Charts QR-Barcodes
  * Description: Shortcodes for bar and pie charts, barcodes, QRcodes and ipflags. Pie Chart, Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG Shortcode and variable resolves IP address to ISO 3166-1a2 country code and name and displays country flag image
- * Version: 11.1.17
+ * Version: 11.1.18
  * Author: PBMod und Andere
  * Plugin URI: https://github.com/svenbolte/chartcodes
  * Author URI: https://github.com/svenbolte/chartcodes
@@ -363,6 +363,7 @@ public function country_code ($lang = null , $code = null) {
 	function getBrowser()
 	{
 		$u_agent = esc_attr(htmlspecialchars(wp_strip_all_tags($_SERVER['HTTP_USER_AGENT'], false)));
+		$language = esc_attr(htmlspecialchars(wp_strip_all_tags($_SERVER['HTTP_ACCEPT_LANGUAGE'], false)));
 		$bname = 'Unknown';
 		$platform = 'Unknown';
 		$version= "";
@@ -434,26 +435,6 @@ public function country_code ($lang = null , $code = null) {
 			$bname = 'Netscape';
 			$ub = "Netscape";
 		}
-		else if(preg_match('/Semrushbot/i',$u_agent)) {
-			$bname = 'Semrush Bot';
-			$ub = "SemrushBot";
-		}
-		else if(preg_match('/Googlebot/i',$u_agent)) {
-			$bname = 'Google Bot';
-			$ub = "Googlebot";
-		}
-		else if(preg_match('/adscanner/i',$u_agent)) {
-			$bname = 'Seocompany Spider';
-			$ub = "adscanner/)";
-		}
-		else if(preg_match('/YandexBot/i',$u_agent)) {
-			$bname = 'Yandex Bot';
-			$ub = "YandexBot";
-		}
-		else if(preg_match('/bingbot/i',$u_agent)) {
-			$bname = 'MS Bing Bot';
-			$ub = "bingbot";
-		}
 		else if(preg_match('/bot|crawl|slurp|spider|mediapartners/i',$u_agent)) {
 			$bname = 'other Bot/Spider';
 			$ub = "Bot";
@@ -487,7 +468,8 @@ public function country_code ($lang = null , $code = null) {
 			'name'      => $bname,
 			'version'   => $version,
 			'platform'  => $platform,
-			'pattern'    => $pattern
+			'pattern'    => $pattern,
+			'language'    => $language
 		);
 	}	
 
@@ -554,7 +536,8 @@ public function country_code ($lang = null , $code = null) {
 			foreach($customers as $customer){
 				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
 				$html .= '<tr><td><abbr title="'.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
-				$html .= '<td>' . $this->showbrowosicon($customer->platform). ' ' . substr($customer->platform,0,19) .'</td><td><img class="'.$css_class.'" title="'.$this->country_code('de',$customer->country).'" src="'.$this->flag_url.'/'.$customer->country.'.gif" />' . '</td>';
+				$html .= '<td>' . $this->showbrowosicon($customer->platform). ' ' . substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</td>';
+				$html .= '<td><img class="'.$css_class.'" title="'.$this->country_code('de',$customer->country).'" src="'.$this->flag_url.'/'.$customer->country.'.gif" />' . '</td>';
 				$html .= '<td>' . $customer->userip .'</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . $customer->postid .'</a></td>';
 				$html .= '<td style="font-size:0.9em">' . $datum . ' ' . ago(strtotime($customer->datum)).'</td></tr>';
 			}	
@@ -642,6 +625,7 @@ public function country_code ($lang = null , $code = null) {
 			id int(11) not null auto_increment,
 			browser varchar(100) not null,
 			browserver varchar(30) not null,
+			language varchar(80) not null,
 			platform varchar(100) not null,
 			useragent varchar(300) not null,
 			referer varchar(300) not null,
@@ -655,6 +639,7 @@ public function country_code ($lang = null , $code = null) {
 			$ua=$this->getBrowser();
 			$browser = $ua['name'];
 			$browserver = $ua['version'];
+			$language = $ua['language'];
 			$platform = $ua['platform'];
 			$useragent = $ua['userAgent'];
 			// Nur speichern, wenn kein BOT erkannt
@@ -674,6 +659,7 @@ public function country_code ($lang = null , $code = null) {
 					array(
 						"browser" => $browser,
 						"browserver" => $browserver,
+						"language" => $language,
 						"platform" => $platform,
 						"useragent" => $useragent,
 						"referer" => $referer,
@@ -708,7 +694,7 @@ public function country_code ($lang = null , $code = null) {
 		}
 		if ( $browser ) {
 			$ua=$this->getBrowser();
-			$yourbrowser= " &nbsp; <strong>".__('browser', 'pb-chartscodes')."</strong> " . $ua['name'] . " " . $ua['version'] . " unter " .$ua['platform']  . "<br><small>" . $ua['userAgent']."</small>";
+			$yourbrowser= " &nbsp; <strong>".__('browser', 'pb-chartscodes')."</strong> " . $ua['name'] . " " . $ua['version'] . " unter " .$ua['platform']  . " " .substr($ua['language'],0,2) . "<br><small>" . $ua['userAgent']."</small>";
 		}
         if(($info = $this->get_info($ip)) != false)
             $flag = $this->country_code('de',$info->code).' '.$this->get_flag($info).' ';
