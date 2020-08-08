@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Charts QR-Barcodes
  * Description: Shortcodes for bar and pie charts, barcodes, QRcodes and ipflags. Pie Chart, Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG Shortcode and variable resolves IP address to ISO 3166-1a2 country code and name and displays country flag image
- * Version: 11.1.18
+ * Version: 11.1.19
  * Author: PBMod und Andere
  * Plugin URI: https://github.com/svenbolte/chartcodes
  * Author URI: https://github.com/svenbolte/chartcodes
@@ -537,7 +537,7 @@ public function country_code ($lang = null , $code = null) {
 				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
 				$html .= '<tr><td><abbr title="'.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
 				$html .= '<td>' . $this->showbrowosicon($customer->platform). ' ' . substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</td>';
-				$html .= '<td><img class="'.$css_class.'" title="'.$this->country_code('de',$customer->country).'" src="'.$this->flag_url.'/'.$customer->country.'.gif" />' . '</td>';
+				$html .= '<td><img title="'.$this->country_code('de',$customer->country).'" src="'.$this->flag_url.'/'.$customer->country.'.gif" />' . '</td>';
 				$html .= '<td>' . $customer->userip .'</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . $customer->postid .'</a></td>';
 				$html .= '<td style="font-size:0.9em">' . $datum . ' ' . ago(strtotime($customer->datum)).'</td></tr>';
 			}	
@@ -699,7 +699,7 @@ public function country_code ($lang = null , $code = null) {
         if(($info = $this->get_info($ip)) != false)
             $flag = $this->country_code('de',$info->code).' '.$this->get_flag($info).' ';
         else
-            $flag = 'privates Netz <img class="'.$css_class.'" title="'.__('private network', 'pb-chartscodes').'" src="'.$this->flag_url.'/EUROPEANUNION.gif" />';
+            $flag = 'privates Netz <img title="'.__('private network', 'pb-chartscodes').'" src="'.$this->flag_url.'/EUROPEANUNION.gif" />';
         return $flag . $yourbrowser . $yourdetails;
     }
 
