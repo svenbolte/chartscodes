@@ -282,7 +282,13 @@ class PB_ChartsCodes_Shortcode {
 					<div id="<?php echo esc_attr( $id ) . '_' . $i; ?>" class="inner-fill" style="background-color: <?php echo esc_attr( $colors[$i] ); ?>; height: <?php echo $balkhoehe . '%'; ?>">
 						<div class="percent-value"><?php echo $balkenanzeige; ?></div>
 					</div><!-- .inner-fill -->
-					<?php echo '<span class="tp-axislabels">'.esc_html( substr($labels[$i],0,11) ).' </span>'; ?>
+					<?php
+					if (strpos($labels[$i], '<a href') !== false ) {
+						echo '<span class="tp-axislabels">'.( substr($labels[$i],0,100) ).' </span>';
+					} else {
+						echo '<span class="tp-axislabels">'.esc_html( substr($labels[$i],0,15) ).' </span>';
+					}
+					?>
 				</div><!-- .outer-box -->
 				<?php 
 				endfor;  
@@ -364,7 +370,7 @@ class PB_ChartsCodes_Shortcode {
 	}
 
 	//
-	//  Posts und Pages pro Monat für letzte 12 Monate als Chart
+	//  Posts und Pages pro Monat für letzte 12 Monate als Bar Chart (ruft Bar chart shortcode auf)
 	//
 	function wpse60859_shortcode_alt_cb($atts)
 	{
@@ -386,10 +392,13 @@ class PB_ChartsCodes_Shortcode {
 		$valu="";
 		$labl="";
 		$out = '[chartscodes_bar accentcolor='.$accentcolor.' absolute="1" title="Beiträge/Seiten letzte '.$monate.' Monate" ';
+		$nmonth = date('n');
 		foreach($res as $r) {
 			$valu .= isset($r->post_month) ? floor($r->post_count) : 0;
 			$valu .= ',';
-			$labl .= $monnamen[$r->post_month] . ',';
+			if ($r->post_month > $nmonth) { $nyear=date('Y') - 1; } else { $nyear=date('Y'); }
+			$axislink=get_home_url( '/' ).'/'.$nyear.'/'.$r->post_month;
+			$labl .= '<a href='.$axislink.'>'.$monnamen[$r->post_month] .' ' . $nyear . '</a>,';
 		}
 		$labl = rtrim($labl,",");
 		$valu = rtrim($valu,",");

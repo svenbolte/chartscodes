@@ -135,6 +135,10 @@ if(isset($ipflag) && is_object($ipflag)){
 
 == Changelog ==
 
+= 11.1.20 =
+posts last months shortcode x-axis values with archive links to the given month
+minor bug fixes
+
 = 11.1.17 =
 [webcounter] Browser and Operating Systems icons will be displayed on admin page webstats
 /webcounter page: use optional url parameter ?items=xx to display xx items in some of the lists
