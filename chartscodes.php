@@ -679,6 +679,7 @@ public function country_code ($lang = null , $code = null) {
 			'details' => 0,
 			'browser' => 0,
 		), $atts ));
+		$yourdetails='';
 		if ( $details ) {
 			if(!empty($_SERVER['HTTP_CLIENT_IP'])){
 				$ip = $_SERVER['HTTP_CLIENT_IP'];
@@ -692,6 +693,7 @@ public function country_code ($lang = null , $code = null) {
 		 	$referer = wp_get_referer();
 			$yourdetails = "<br><strong>".__('ip network', 'pb-chartscodes').":</strong> ". $ip . "<br><strong>".__('referer', 'pb-chartscodes')."</strong> " . $referer;
 		}
+		$yourbrowser='';
 		if ( $browser ) {
 			$ua=$this->getBrowser();
 			$yourbrowser= " &nbsp; <strong>".__('browser', 'pb-chartscodes')."</strong> " . $ua['name'] . " " . $ua['version'] . " unter " .$ua['platform']  . " " .substr($ua['language'],0,2) . "<br><small>" . $ua['userAgent']."</small>";
