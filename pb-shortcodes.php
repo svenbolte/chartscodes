@@ -294,18 +294,6 @@ class PB_ChartsCodes_Shortcode {
 				endfor;  
 				endif; ?>
 			</div><!-- .skills-bar -->
-
-			<!-- Legende alternativ
-		<ul class="tp-skill-items">
-		<?php if ( $count > 0 ) :
-				for ( $i = 0; $i <= $count; $i++ ) : 
-		?>
-		<li><span class="color" style="background-color: <?php echo esc_attr( $colors[$i] ); ?>"></span><span><?php echo esc_html( $labels[$i] ); ?></span></li>
-		<?php 
-				endfor; 
-				endif; ?>
-		</ul>
-		-->
 		</div>
 		<?php 
 		return ob_get_clean();
