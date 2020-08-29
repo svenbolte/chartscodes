@@ -5,11 +5,11 @@
  * Version: 11.1.22
  * Author: PBMod und Andere
  * Plugin URI: https://github.com/svenbolte/chartcodes
- * Author URI: https://github.com/svenbolte/chartcodes
+ * Author URI: https://github.com/svenbolte
  * License: GPLv3
  * Tags: Barcode, QRCode, Shortcode, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
  * Requires at least: 4.5
- * Requires PHP: 5.3
+ * Requires PHP: 7.0
  * Tested up to: 5.5
  * Text Domain: pb-chartscodes
  * Domain Path: /languages/
@@ -535,7 +535,7 @@ public function country_code ($lang = null , $code = null) {
 			$html ='<h4>'.sprintf(__('last %s visitors', 'pb-chartscodes'),$items).'</h4><table>';
 			foreach($customers as $customer){
 				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
-				$html .= '<tr><td><abbr title="'.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
+				$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
 				$html .= '<td>' . $this->showbrowosicon($customer->platform). ' ' . substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</td>';
 				$html .= '<td><img title="'.$this->country_code('de',$customer->country).'" src="'.$this->flag_url.'/'.$customer->country.'.gif" />' . '</td>';
 				$html .= '<td>' . $customer->userip .'</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . $customer->postid .'</a></td>';
@@ -669,6 +669,9 @@ public function country_code ($lang = null , $code = null) {
 						"datum" => $datum
 					)
 				);
+			// Alte Datensätze älter 30 Tage löschen
+			$dsql = "DELETE FROM " . $table . " WHERE datum < DATE_ADD( NOW(), INTERVAL -30 DAY )";
+			$wpdb->query( $dsql );
 			}	
 		}
 	}

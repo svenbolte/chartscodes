@@ -2,7 +2,6 @@
 Tags: pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, Barcode, QRCode, IPFlag, webcounter,useragent 
 Requires at least: 4.5
 Tested up to: 5.4.2
-Stable tag: 11.1.17
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -134,6 +133,9 @@ if(isset($ipflag) && is_object($ipflag)){
 
 
 == Changelog ==
+
+= 11.1.22 =
+Webcounter: delete entries older 30 days automatically
 
 = 11.1.20 =
 posts last months shortcode x-axis values with archive links to the given month
