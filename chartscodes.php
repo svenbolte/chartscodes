@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Charts QR-Barcodes
  * Description: Shortcodes for bar and pie charts, barcodes, QRcodes and ipflags. Pie Chart, Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG Shortcode and variable resolves IP address to ISO 3166-1a2 country code and name and displays country flag image
- * Version: 11.1.22
+ * Version: 11.1.23
  * Author: PBMod und Andere
  * Plugin URI: https://github.com/svenbolte/chartcodes
  * Author URI: https://github.com/svenbolte
@@ -474,7 +474,7 @@ public function country_code ($lang = null , $code = null) {
 	}	
 
 	// IP-Adresse des Users bekommen
-	function get_the_user_ip() {
+	function cc_get_the_user_ip() {
 		if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
 			//check ip from share internet
 			$ip = $_SERVER['HTTP_CLIENT_IP'];
@@ -647,7 +647,7 @@ public function country_code ($lang = null , $code = null) {
 				if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
 					$referer = filter_var( wp_unslash( $_SERVER['HTTP_REFERER'] ), FILTER_SANITIZE_URL );
 				}
-				$userip = $this->get_the_user_ip();
+				$userip = $this->cc_get_the_user_ip();
 					if(($info = $this->get_info($userip)) != false)
 						$country = $info->code;
 					else

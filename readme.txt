@@ -134,6 +134,9 @@ if(isset($ipflag) && is_object($ipflag)){
 
 == Changelog ==
 
+= 11.1.23 =
+get ip functino renamed to cc_get_user_ip
+
 = 11.1.22 =
 Webcounter: delete entries older 30 days automatically
 
