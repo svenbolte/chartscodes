@@ -1,7 +1,10 @@
 === Charts QR-Barcodes ===
+Version: 11.1.23
+Stable tag: 11.1.23
+Requires at least: 5.1
+Tested up to: 5.5.1
+Requires PHP: 7.2
 Tags: pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, Barcode, QRCode, IPFlag, webcounter,useragent 
-Requires at least: 4.5
-Tested up to: 5.4.2
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 

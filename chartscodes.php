@@ -1,20 +1,20 @@
 <?php
-/**
- * Plugin Name: Charts QR-Barcodes
- * Description: Shortcodes for bar and pie charts, barcodes, QRcodes and ipflags. Pie Chart, Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG Shortcode and variable resolves IP address to ISO 3166-1a2 country code and name and displays country flag image
- * Version: 11.1.23
- * Author: PBMod und Andere
- * Plugin URI: https://github.com/svenbolte/chartcodes
- * Author URI: https://github.com/svenbolte
- * License: GPLv3
- * Tags: Barcode, QRCode, Shortcode, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
- * Requires at least: 4.5
- * Requires PHP: 7.0
- * Tested up to: 5.5
- * Text Domain: pb-chartscodes
- * Domain Path: /languages/
- *
- */
+/*
+Plugin Name: Charts QR-Barcodes
+Description: Shortcodes for bar and pie charts, barcodes, QRcodes and ipflags. Pie Chart, Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG Shortcode and variable resolves IP address to ISO 3166-1a2 country code and name and displays country flag image
+Author: PBMod und Andere
+Plugin URI: https://github.com/svenbolte/chartcodes
+Author URI: https://github.com/svenbolte
+License: GPLv3
+Tags: Barcode, QRCode, Shortcode, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
+Text Domain: pb-chartscodes
+Domain Path: /languages/
+Version: 11.1.23
+Stable tag: 11.1.23
+Requires at least: 5.1
+Tested up to: 5.5.1
+Requires PHP: 7.2
+*/
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
