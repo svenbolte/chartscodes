@@ -1,6 +1,6 @@
 === Charts QR-Barcodes ===
-Version: 11.1.23
-Stable tag: 11.1.23
+Version: 11.1.24
+Stable tag: 11.1.24
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
@@ -136,6 +136,9 @@ if(isset($ipflag) && is_object($ipflag)){
 
 
 == Changelog ==
+
+= 11.1.24 =
+speedup: load jquery pie javascript in footer
 
 = 11.1.23 =
 get ip functino renamed to cc_get_user_ip

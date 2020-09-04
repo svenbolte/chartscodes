@@ -9,8 +9,8 @@ License: GPLv3
 Tags: Barcode, QRCode, Shortcode, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.23
-Stable tag: 11.1.23
+Version: 11.1.24
+Stable tag: 11.1.24
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
@@ -60,7 +60,7 @@ if ( ! class_exists( 'PB_ChartsCodes' ) ) :
             wp_enqueue_style( 'pb-chartscodes-style', PB_ChartsCodes_URL_PATH . 'assets/css/style.min.css' );
 
             // Load Charts QRCodes Barcodes custom js
-	        wp_enqueue_script( 'pb-chartscodes-script', PB_ChartsCodes_URL_PATH . 'assets/js/pie.min.js', array() );
+	        wp_enqueue_script( 'pb-chartscodes-script', PB_ChartsCodes_URL_PATH . 'assets/js/pie.min.js', array(), '1.7', true  );
 
 	        // Load Charts QRCodes Barcodes custom js
 	        wp_register_script( 'pb-chartscodes-initialize', PB_ChartsCodes_URL_PATH . 'assets/js/pie-initialize.min.js', array( 'jquery', 'pb-chartscodes-script' ) );
