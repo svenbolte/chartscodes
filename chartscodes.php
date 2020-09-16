@@ -782,6 +782,7 @@ public function country_code ($lang = null , $code = null) {
         <div class="wrap">
             <div class="icon32" id="icon-options-general"><br></div>
             <h2><?php echo esc_attr_e( 'Chartscodes Settings', 'pb-chartscodes' ); ?></h2>
+			<div class="postbox">
 			<p><tt><code>[ipflag ip="123.20.30.0" details=1 browser=1]</code>
 				liefert eine Flagge und das Land zu einer IP odr einem IP-Netz. Die letzte IP-Ziffer wird wegen DSGVO anonymisiert<br>
 				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz<br>
@@ -793,7 +794,8 @@ public function country_code ($lang = null , $code = null) {
             <form action="options.php" method="post">
             <?php settings_fields(self::safe_slug.'_options'); ?>
             <?php do_settings_sections(__FILE__); ?>
-            <p class="submit">
+				</div>
+			<p class="submit">
                 <input name="Submit" type="submit" class="button-primary" value="<?php esc_attr_e('Save Changes'); ?>" />
             </p>
             </form>
@@ -802,63 +804,57 @@ public function country_code ($lang = null , $code = null) {
         <div class="wrap">
             <div class="img-wrap">
                 <h2>Barcodes und QRCodes generieren</h2>
+			<div class="postbox">
 				<p><tt>erstellt Barcodes oder QR-Codes als Shortcode an der Cursorposition (Doku siehe Readme)<br>
                     <code>[qrcode text=tel:00492307299607 height=100 width=100]</code><br>
 					<code>[barcode text=4930127000019 height=100 wdith=2 transparency=1]</code>
                 </tt></p>                    
             </div>
-
 			<div class="img-wrap">
 				<h2><?php esc_html_e( 'Bar and Piecharts', 'pb-chartscodes' ); ?></h2>
+				<div class="postbox">
 				<p><tt>Shortcode Parameter: absolute="1" wenn keine Prozentwerte mitgegeben werden, sondern absolute Werte<br>
 					fontfamily="Armata" fontstyle="bold". Für die PieCharts dürfen maximal 10 Werte angegeben werden, bei den Bar Charts bis zu 50<br>
 					Bar Charts: bei absoluten Werten wird größter Wert in der Folge 100%, Werte werden angezeigt wenn >0<br> 
 					Bleibt der Parameter "colors" leer, werden bei "accentcolor=0" zufällige bunte helle Farben gewählt, bei "accentcolor=1" Akzentfarben aus der Linkfarbe des Themes bezogen
 					<br> accentcolor=0/1 kann auch für die post per month Statistik und als HTML Widget angewendet werden
 					</tt></p>
+				</div></div>
+			<div class="img-wrap postbox">
 				<img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-1.png' ?>"  alt="<?php esc_attr_e( 'Default Pie Chart', 'pb-chartscodes' ); ?>">
                 <p><tt>
                     <code>[chartscodes accentcolor=false absolute="1" title="Pie Chart" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
                 </tt></p>                    
             </div>
-
-            <br>
-            <div class="img-wrap">
+            <div class="img-wrap postbox">
                 <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-2.png' ?>"  alt="<?php esc_attr_e( 'Doughnut Pie Chart', 'pb-chartscodes' ); ?>">
                 <p><tt>
                     <code>[chartscodes_donut title="Donut Pie Chart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>                </tt></p>
 			</div>
-            <br>
-            <div class="img-wrap">
+            <div class="img-wrap postbox">
                 <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-3.png' ?>"  alt="<?php esc_attr_e( 'Polar Pie Chart', 'pb-chartscodes' ); ?>">
                 <p><tt>
                     <code>[chartscodes_polar title="Polar Chart mit Segmenten" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
                 </tt></p>                    
             </div>
-            <br>
-            <div class="img-wrap">
+            <div class="img-wrap postbox">
                 <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-4.png' ?>"  alt="<?php esc_attr_e( 'Bar Graph Chart', 'pb-chartscodes' ); ?>">
                 <p>
                     <code>[chartscodes_bar title="Balkenchart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
-                </tt></p>                    
+                </p>                    
             </div>
-
-            <br>
-            <div class="img-wrap">
+            <div class="img-wrap postbox">
                 <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-5.png' ?>"  alt="<?php esc_attr_e( 'Horizontal Bar Graph Chart', 'pb-chartscodes' ); ?>">
                 <p><tt>
                     <code>[chartscodes_horizontal_bar title="Balken horizontal" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
                 </tt></p>                    
             </div>
-			<br>
-
-			<div class="img-wrap">
+			<div class="img-wrap postbox">
                 <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-6.png' ?>"  alt="<?php esc_attr_e( 'Horizontal Bar Graph Chart', 'pb-chartscodes' ); ?>">
 				<p><code>[posts_per_month_last months=x]</code><tt> zeigt die letzen 1-12 Monate Posts per Month als Bargraph an, wenn Months nicht angegeben für 12 Monate</tt><br>
                   </p>                    
             </div>
         </div>
-		
     <?php
     }
 
@@ -872,9 +868,7 @@ public function country_code ($lang = null , $code = null) {
 
 
     public function settings_section_database(){
-        echo '<p>';
         echo __('Here you can control all ipflag database options:', 'pb-chartscodes');
-        echo '</p>';
     }
 
 
