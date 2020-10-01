@@ -352,7 +352,7 @@ class PB_ChartsCodes_Shortcode {
 					</div><!-- .outer-box -->
 					<?php 
 					endfor;  
-					echo sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$balksum);
+					echo sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$balksum).' &Oslash; '.number_format_i18n( ($balksum/$count), 2 );
 				endif; ?>
 			</div><!-- .skills-bar -->
 		</div>

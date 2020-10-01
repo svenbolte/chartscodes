@@ -538,7 +538,13 @@ public function country_code ($lang = null , $code = null) {
 			} else {
 			  $items=20;
 			}
-			$html = '<div style="text-align:right"><form name="wcitems" method="get">'.sprintf(__('clicks deleted after %s days', 'pb-chartscodes'),$keepdays).' <input type="text" size="3" id="items" name="items" value="'.$items.'">';
+			$customers = $wpdb->get_results("SELECT MAX(id) as maxid, min(datum) as mindatum FROM " . $table);
+			foreach($customers as $customer){
+				// $totals = $customer->maxid.' Clicks '.strftime("%a %e. %b %G", strtotime($customer->mindatum)).' seit '. human_time_diff( strtotime($customer->mindatum),current_time( 'timestamp' ) );
+				$totals = sprintf(__('%1s clicks since %2s', 'pb-chartscodes'),$customer->maxid,strftime("%a %e. %b %G", strtotime($customer->mindatum)) ).', '.human_time_diff( strtotime($customer->mindatum),current_time( 'timestamp' ) );
+			}
+			$html = '<div style="text-align:right"><form name="wcitems" method="get">'.$totals .'. ';
+			$html.= sprintf(__('clicks deleted after %s days', 'pb-chartscodes'),$keepdays).' <input type="text" size="3" id="items" name="items" value="'.$items.'">';
 			$html.= '</select><input type="submit" value="'.__('show items', 'pb-chartscodes').'" /></form></div>';
 			setlocale (LC_ALL, 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 			$labels="";$values='';
@@ -562,7 +568,7 @@ public function country_code ($lang = null , $code = null) {
 				$xsum += absint($customer->pidcount);
 				$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</a></td></tr>';
 			}	
-			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).'</td></tr></table>';
+			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/$items), 2 ).'</td></tr></table>';
 			
 			$xsum=0;
 			$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$items." DAY ) GROUP BY referer ORDER BY refcount desc LIMIT 10" );
@@ -571,7 +577,7 @@ public function country_code ($lang = null , $code = null) {
 				$xsum += absint($customer->refcount);
 				$html .= '<tr><td>' . $customer->refcount . '</td><td>' . $customer->referer . '</td></tr>';
 			}	
-			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).'</td></tr></table>';
+			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/$items), 2 ).'</td></tr></table>';
 
 			$customers = $wpdb->get_results("SELECT * FROM " . $table . " ORDER BY datum desc LIMIT ".$items);
 			$html .='<h4>'.sprintf(__('last %s visitors', 'pb-chartscodes'),$items).'</h4><table>';
@@ -592,7 +598,7 @@ public function country_code ($lang = null , $code = null) {
 				$xsum += absint($customer->refcount);
 				$html .= '<tr><td>' . $customer->refcount . '</td><td>' . $customer->referer . '</td></tr>';
 			}	
-			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).'</td></tr></table>';
+			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/$items), 2 ).'</td></tr></table>';
 
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT SUBSTRING(datum,12,2) AS stunde, COUNT(SUBSTRING(datum,12,2)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,12,2) ORDER BY SUBSTRING(datum,12,2) ");
