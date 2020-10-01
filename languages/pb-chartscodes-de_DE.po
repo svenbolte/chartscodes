@@ -3,24 +3,33 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TP Piebuilder 0.6\n"
-"POT-Creation-Date: 2020-07-28 10:19+0000\n"
+"POT-Creation-Date: 2020-10-01 11:52+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2020-07-28 10:19+0000\n"
-"Last-Translator: Patrick Baerenfaenger\n"
+"PO-Revision-Date: 2020-10-01 11:53+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "X-Generator: Loco https://localise.biz/\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Loco-Version: 2.4.0; wp-5.4.2\n"
+"X-Loco-Version: 2.4.3; wp-5.5.1\n"
 "Report-Msgid-Bugs-To: "
 
 #: chartscodes.php:273
 msgid "every week"
 msgstr "jede Woche"
 
-#: chartscodes.php:553
+#: chartscodes.php:535
+msgid "show items"
+msgstr "anzeigen"
+
+#: chartscodes.php:539
+#, php-format
+msgid "clicks last %s days"
+msgstr "Klicks der letzten %s Tage"
+
+#: chartscodes.php:552
 #, php-format
 msgid "last %s visitors"
 msgstr "Letzte %s Besucher"
@@ -31,64 +40,59 @@ msgid "top %s referers"
 msgstr "Top %s Herkunftsseiten"
 
 #: chartscodes.php:571
-#, php-format
-msgid "clicks last %s days"
-msgstr "Klicks der letzten %s Tage"
-
-#: chartscodes.php:584
 msgid "clicks by hour"
 msgstr "Klicks nach Uhrzeit (Stunde)"
 
-#: chartscodes.php:596
+#: chartscodes.php:583
 msgid "Top 10 Browsers"
 msgstr "Top 10 Internet Browser"
 
-#: chartscodes.php:608
+#: chartscodes.php:595
 msgid "top 10 countries"
 msgstr "Top 10 Länder"
 
-#: chartscodes.php:620
+#: chartscodes.php:607
 msgid "top 10 posts"
 msgstr "Top 10 Beiträge"
 
-#: chartscodes.php:707
+#: chartscodes.php:701
 msgid "ip network"
 msgstr "IP-Netzwerk"
 
-#: chartscodes.php:707
+#: chartscodes.php:701
 msgid "referer"
 msgstr "Herkunft-Seite"
 
-#: chartscodes.php:711
+#: chartscodes.php:706
 msgid "browser"
 msgstr "Browser"
 
-#: chartscodes.php:716
+#: chartscodes.php:711
 msgid "private network"
 msgstr "privates Netzwerk"
 
-#: chartscodes.php:733
+#: chartscodes.php:728
 msgid "ipflag database updated."
 msgstr "ipflag Datenbank aktualisiert."
 
-#: chartscodes.php:773
+#: chartscodes.php:768
 msgid "Settings Admin"
 msgstr "Admin Einstellungen"
 
 #. Name of the plugin
-#: chartscodes.php:774
+#: chartscodes.php:769
 msgid "Charts QR-Barcodes"
 msgstr "Charts QR-Barcodes"
 
-#: chartscodes.php:781
+#: chartscodes.php:776
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: chartscodes.php:793
+#: chartscodes.php:788
 msgid "Chartscodes Settings"
 msgstr "Chartscodes Einstellungen"
 
-#: chartscodes.php:821
+#: chartscodes.php:818
 msgid "Bar and Piecharts"
 msgstr "Balken und Kuchendiagramme"
 
@@ -96,57 +100,57 @@ msgstr "Balken und Kuchendiagramme"
 msgid "Default Pie Chart"
 msgstr "Stndard Kuchendiagramm"
 
-#: chartscodes.php:836
+#: chartscodes.php:834
 msgid "Doughnut Pie Chart"
 msgstr "Donut Kuchendiagramm"
 
-#: chartscodes.php:842
+#: chartscodes.php:839
 msgid "Polar Pie Chart"
 msgstr "Polar Diagramm"
 
-#: chartscodes.php:849
+#: chartscodes.php:845
 msgid "Bar Graph Chart"
 msgstr "Balkendiagramm"
 
-#: chartscodes.php:857 chartscodes.php:865
+#: chartscodes.php:851 chartscodes.php:857
 msgid "Horizontal Bar Graph Chart"
 msgstr "horizontales Balkendiagramm"
 
-#: chartscodes.php:876
+#: chartscodes.php:867
 msgid "ipflag database options"
 msgstr ""
 "\n"
 "ipflag Datenbankoptionen"
 
-#: chartscodes.php:877
+#: chartscodes.php:868
 msgid "Enable automatic weekly database update check:"
 msgstr ""
 "Aktivieren Sie die automatische wöchentliche Überprüfung der "
 "Datenbankaktualisierung:"
 
-#: chartscodes.php:878
+#: chartscodes.php:869
 msgid "Current database status:"
 msgstr ""
 "\n"
 "Aktueller Datenbankstatus:"
 
-#: chartscodes.php:885
+#: chartscodes.php:875
 msgid "Here you can control all ipflag database options:"
 msgstr "Hier können Sie alle ipflag-Datenbankoptionen steuern:"
 
-#: chartscodes.php:907
+#: chartscodes.php:896
 msgid "Database missing or corrupted, please update"
 msgstr "Datenbank fehlt oder ist beschädigt, bitte aktualisieren"
 
-#: chartscodes.php:912
+#: chartscodes.php:901
 msgid "Update"
 msgstr "Aktualisierung"
 
-#: chartscodes.php:920
+#: chartscodes.php:909
 msgid "ipflag database already up to date."
 msgstr "ipflag Datenbank bereits aktuell."
 
-#: chartscodes.php:924
+#: chartscodes.php:913
 msgid ""
 "Couldn't fetch ipflag database zip file. Fetching remote content not "
 "supported or remote server is down."
@@ -154,7 +158,7 @@ msgstr ""
 "Die ipflag-Datenbank-Zip-Datei konnte nicht abgerufen werden. Das Abrufen "
 "von nicht unterstütztem Remote-Inhalt oder Remote-Server ist ausgefallen.\n"
 
-#: chartscodes.php:933
+#: chartscodes.php:922
 msgid ""
 "Couldn't write ipflag database zip file to local file system. Please check "
 "permissions."
@@ -162,7 +166,7 @@ msgstr ""
 "Die ipflag-Datenbank-Zip-Datei konnte nicht in das lokale Dateisystem "
 "geschrieben werden. Bitte überprüfen Sie die Berechtigungen."
 
-#: chartscodes.php:937
+#: chartscodes.php:926
 msgid ""
 "Couldn't unzip ipflag database zip file to local file system. Please check "
 "permissions and your server unzip capabilities."
@@ -171,7 +175,7 @@ msgstr ""
 "entpackt werden. Bitte überprüfen Sie die Berechtigungen und die "
 "Entpackungsfunktionen Ihres Servers."
 
-#: chartscodes.php:943
+#: chartscodes.php:932
 msgid ""
 "Couldn't write ipflag database version file to local file system. Please "
 "check permissions."
@@ -179,7 +183,7 @@ msgstr ""
 "Die ipflag-Datenbankversionsdatei konnte nicht in das lokale Dateisystem "
 "geschrieben werden. Bitte überprüfen Sie die Berechtigungen."
 
-#: chartscodes.php:1013
+#: chartscodes.php:1002
 msgid ""
 "Couldn't read ipflag database file from local file system. Please check "
 "permissions."
@@ -188,7 +192,7 @@ msgstr ""
 "Die ipflag-Datenbankdatei konnte nicht aus dem lokalen Dateisystem gelesen "
 "werden. Bitte überprüfen Sie die Berechtigungen.\n"
 
-#: chartscodes.php:1025
+#: chartscodes.php:1014
 msgid "Remote ipflag database version not readable."
 msgstr "Remote-ipflag-Datenbankversion nicht lesbar."
 
@@ -206,10 +210,13 @@ msgstr ""
 "Landflaggenbild an"
 
 #. URI of the plugin
-#. Author URI of the plugin
 msgid "https://github.com/svenbolte/chartcodes"
 msgstr "https://github.com/svenbolte/chartcodes"
 
 #. Author of the plugin
 msgid "PBMod und Andere"
 msgstr "PBMod und Andere"
+
+#. Author URI of the plugin
+msgid "https://github.com/svenbolte"
+msgstr "https://github.com/svenbolte"

@@ -139,6 +139,8 @@ if(isset($ipflag) && is_object($ipflag)){
 
 = 11.1.25 =
 Styling with pie charts - font class and sizes
+recording time for webcounter entries can be set in options (min. 30 days, max. 999 days)
+number of displayed entries can be set in gui / sanitation of inputs added
 
 = 11.1.24 =
 speedup: load jquery pie javascript in footer

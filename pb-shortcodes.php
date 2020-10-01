@@ -344,8 +344,7 @@ class PB_ChartsCodes_Shortcode {
 					?>
 					<div class="outer-box">
 						<div id="<?php echo esc_attr( $id ) . '_' . $i; ?>" class="inner-fill" style="background-color: <?php echo esc_attr( $colors[$i] ); ?>; width: <?php echo $balkhoehe . '%'; ?>">
-							<span class="percent-value"><?php echo $balkenanzeige; ?></span>
-							<span class="skill-name"><?php echo esc_html( $labels[$i] ); ?></span><!-- .inner-fill -->
+							<span class="skill-name"><?php echo esc_html( $labels[$i] . ' &nbsp; &nbsp;  &nbsp; ' . $balkenanzeige ); ?></span><!-- .inner-fill -->
 						</div>
 					</div><!-- .outer-box -->
 					<?php 

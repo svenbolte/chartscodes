@@ -154,7 +154,7 @@ ul.tp-skill-items li {
 	background-color: #fff;
     width: 100%;
     height: 22px;
-    margin: 30px 0;
+    margin: 3px 0;
 }
 .tp-skills-horizontalbar .inner-fill {
     background-color: #d91717;
@@ -165,17 +165,6 @@ ul.tp-skill-items li {
     -moz-transition: all 2s ease-in-out;
     -ms-transition: all 2s ease-in-out;
     transition: all 2s ease-in-out;
-}
-.tp-skills-horizontalbar .percent-value {
-    display: block;
-    float: right;
-    position: absolute;
-    left: 70%;
-    min-width: 70px;
-    right: 0;
-    bottom: 20px;
-    color: #000;
-	white-space: nowrap;
 }
 .tp-skills-horizontalbar .skill-name {
     height: 16px;

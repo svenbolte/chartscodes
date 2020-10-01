@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Charts QRCodes Barcodes\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-28 10:19+0000\n"
+"POT-Creation-Date: 2020-10-01 12:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PBMod\n"
 "Language-Team: \n"
@@ -19,42 +19,51 @@ msgstr ""
 msgid "every week"
 msgstr ""
 
-#: chartscodes.php:553
+#: chartscodes.php:539
 #, php-format
-msgid "last %s visitors"
+msgid "clicks deleted after %s days"
 msgstr ""
 
-#: chartscodes.php:564
-#, php-format
-msgid "top %s referers"
+#: chartscodes.php:540
+msgid "show items"
 msgstr ""
 
-#: chartscodes.php:571
+#: chartscodes.php:544
 #, php-format
 msgid "clicks last %s days"
 msgstr ""
 
-#: chartscodes.php:584
+#: chartscodes.php:557
+#, php-format
+msgid "last %s visitors"
+msgstr ""
+
+#: chartscodes.php:569
+#, php-format
+msgid "top %s referers"
+msgstr ""
+
+#: chartscodes.php:576
 msgid "clicks by hour"
 msgstr ""
 
-#: chartscodes.php:596
+#: chartscodes.php:588
 msgid "Top 10 Browsers"
 msgstr ""
 
-#: chartscodes.php:608
+#: chartscodes.php:600
 msgid "top 10 countries"
 msgstr ""
 
-#: chartscodes.php:620
+#: chartscodes.php:612
 msgid "top 10 posts"
 msgstr ""
 
-#: chartscodes.php:707
+#: chartscodes.php:706
 msgid "ip network"
 msgstr ""
 
-#: chartscodes.php:707
+#: chartscodes.php:706
 msgid "referer"
 msgstr ""
 
@@ -91,11 +100,11 @@ msgstr ""
 msgid "Bar and Piecharts"
 msgstr ""
 
-#: chartscodes.php:828
+#: chartscodes.php:831
 msgid "Default Pie Chart"
 msgstr ""
 
-#: chartscodes.php:836
+#: chartscodes.php:837
 msgid "Doughnut Pie Chart"
 msgstr ""
 
@@ -103,73 +112,77 @@ msgstr ""
 msgid "Polar Pie Chart"
 msgstr ""
 
-#: chartscodes.php:849
+#: chartscodes.php:848
 msgid "Bar Graph Chart"
 msgstr ""
 
-#: chartscodes.php:857 chartscodes.php:865
+#: chartscodes.php:854 chartscodes.php:860
 msgid "Horizontal Bar Graph Chart"
 msgstr ""
 
-#: chartscodes.php:876
+#: chartscodes.php:870
 msgid "ipflag database options"
 msgstr ""
 
-#: chartscodes.php:877
+#: chartscodes.php:871
+msgid "delete webhits older than (days):"
+msgstr ""
+
+#: chartscodes.php:872
 msgid "Enable automatic weekly database update check:"
 msgstr ""
 
-#: chartscodes.php:878
+#: chartscodes.php:873
 msgid "Current database status:"
 msgstr ""
 
-#: chartscodes.php:885
-msgid "Here you can control all ipflag database options:"
+#: chartscodes.php:878
+msgid "Here you can control all ipflag and webcounter database options:"
 msgstr ""
 
-#: chartscodes.php:907
+#: chartscodes.php:908
 msgid "Database missing or corrupted, please update"
 msgstr ""
 
-#: chartscodes.php:912
+#: chartscodes.php:913
 msgid "Update"
 msgstr ""
 
-#: chartscodes.php:920
+#: chartscodes.php:921
 msgid "ipflag database already up to date."
 msgstr ""
 
-#: chartscodes.php:924
+#: chartscodes.php:925
 msgid ""
 "Couldn't fetch ipflag database zip file. Fetching remote content not "
 "supported or remote server is down."
 msgstr ""
 
-#: chartscodes.php:933
+#: chartscodes.php:934
 msgid ""
 "Couldn't write ipflag database zip file to local file system. Please check "
 "permissions."
 msgstr ""
 
-#: chartscodes.php:937
+#: chartscodes.php:938
 msgid ""
 "Couldn't unzip ipflag database zip file to local file system. Please check "
 "permissions and your server unzip capabilities."
 msgstr ""
 
-#: chartscodes.php:943
+#: chartscodes.php:944
 msgid ""
 "Couldn't write ipflag database version file to local file system. Please "
 "check permissions."
 msgstr ""
 
-#: chartscodes.php:1013
+#: chartscodes.php:1014
 msgid ""
 "Couldn't read ipflag database file from local file system. Please check "
 "permissions."
 msgstr ""
 
-#: chartscodes.php:1025
+#: chartscodes.php:1026
 msgid "Remote ipflag database version not readable."
 msgstr ""
 
@@ -182,10 +195,13 @@ msgid ""
 msgstr ""
 
 #. URI of the plugin
-#. Author URI of the plugin
 msgid "https://github.com/svenbolte/chartcodes"
 msgstr ""
 
 #. Author of the plugin
 msgid "PBMod und Andere"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://github.com/svenbolte"
 msgstr ""

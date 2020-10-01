@@ -523,16 +523,40 @@ public function country_code ($lang = null , $code = null) {
 		), $attr));
 		global $wpdb;
 		$table = $wpdb->prefix . "sitevisitors";
+		if (isset($this->options['webcounterkeepdays'])) {
+			$keepdays=intval(sanitize_text_field($this->options['webcounterkeepdays']));
+			if ($keepdays < 30) $keepdays = 30;
+		} else {
+			$keepdays=30;
+		}
 
 		if ( $admin && is_user_logged_in() ) {
 			global $wpdb;
 			if (isset($_GET['items'])) {
-			  $items = intval($_GET['items']);
+				$items = intval(sanitize_text_field($_GET['items']));
+				if ($items < 2) $items = 2;
 			} else {
-			  $items=50;
+			  $items=20;
 			}
+			$html = '<div style="text-align:right"><form name="wcitems" method="get">'.sprintf(__('clicks deleted after %s days', 'pb-chartscodes'),$keepdays).' <input type="text" size="3" id="items" name="items" value="'.$items.'">';
+			$html.= '</select><input type="submit" value="'.__('show items', 'pb-chartscodes').'" /></form></div>';
+			setlocale (LC_ALL, 'de_DE@euro', 'de_DE', 'de', 'ge'); 
+			$labels="";$values='';
+			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $items);
+			$html .='<h4>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$items).'</h4><table>';
+			foreach($customers as $customer){
+				// $datum = date('l d.M Y',strtotime($customer->datum));	
+				$datum = strftime("%a %e. %b %G", strtotime($customer->datum));	
+				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
+				$labels.= $datum.',';
+				$values.= $customer->viscount.',';
+			}	
+			$labels = rtrim($labels, ",");
+			$values = rtrim($values, ",");
+			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+			$html .= '</table>';
 			$customers = $wpdb->get_results("SELECT * FROM " . $table . " ORDER BY datum desc LIMIT ".$items);
-			$html ='<h4>'.sprintf(__('last %s visitors', 'pb-chartscodes'),$items).'</h4><table>';
+			$html .='<h4>'.sprintf(__('last %s visitors', 'pb-chartscodes'),$items).'</h4><table>';
 			foreach($customers as $customer){
 				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
 				$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
@@ -548,19 +572,6 @@ public function country_code ($lang = null , $code = null) {
 			foreach($customers as $customer){
 				$html .= '<tr><td>' . $customer->refcount . '</td><td>' . $customer->referer . '</td></tr>';
 			}	
-			$html .= '</table>';
-			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $items);
-			$html .='<h4>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$items).'</h4><table>';
-			foreach($customers as $customer){
-				$datum = date('l d.m.Y',strtotime($customer->datum));	
-				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
-				$labels.= $datum.',';
-				$values.= $customer->viscount.',';
-			}	
-			$labels = rtrim($labels, ",");
-			$values = rtrim($values, ",");
-			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT SUBSTRING(datum,12,2) AS stunde, COUNT(SUBSTRING(datum,12,2)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,12,2) ORDER BY SUBSTRING(datum,12,2) ");
@@ -646,7 +657,7 @@ public function country_code ($lang = null , $code = null) {
 			if ( !$this->is_bot( $useragent ) ) {
 				if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
 					$referer = filter_var( wp_unslash( $_SERVER['HTTP_REFERER'] ), FILTER_SANITIZE_URL );
-				}
+				} else { $referer = 'none'; }
 				$userip = $this->cc_get_the_user_ip();
 					if(($info = $this->get_info($userip)) != false)
 						$country = $info->code;
@@ -669,8 +680,8 @@ public function country_code ($lang = null , $code = null) {
 						"datum" => $datum
 					)
 				);
-			// Alte Datensätze älter 30 Tage löschen
-			$dsql = "DELETE FROM " . $table . " WHERE datum < DATE_ADD( NOW(), INTERVAL -30 DAY )";
+			// Alte Datensätze älter 30 Tage (oder den in den Optionen eingestellten Wert) löschen
+			$dsql = "DELETE FROM " . $table . " WHERE datum < DATE_ADD( NOW(), INTERVAL -".$keepdays." DAY )";
 			$wpdb->query( $dsql );
 			}	
 		}
@@ -788,16 +799,14 @@ public function country_code ($lang = null , $code = null) {
 				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz<br>
 				  <br>
 				<code>[webcounter admin=0]</code> zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>
-				Ist die Admin /webcounter-Seite aufgerufen, kann über den optionalen URL-Parameter ?items=x die Ausgabe-Anzahl einiger Listeneinträge verändert werden
+				Ist die Admin /webcounter-Seite aufgerufen, kann über das Eingabefeld oder den optionalen URL-Parameter ?items=x die Ausgabe-Anzahl einiger Listeneinträge verändert werden.
 				</tt>
 			</p>
             <form action="options.php" method="post">
             <?php settings_fields(self::safe_slug.'_options'); ?>
             <?php do_settings_sections(__FILE__); ?>
-				</div>
-			<p class="submit">
+			</div>
                 <input name="Submit" type="submit" class="button-primary" value="<?php esc_attr_e('Save Changes'); ?>" />
-            </p>
             </form>
         </div>
 		
@@ -861,16 +870,25 @@ public function country_code ($lang = null , $code = null) {
     public function settings_init(){
         register_setting(self::safe_slug.'_options', self::safe_slug.'_options', array($this, 'options_validate'));
         add_settings_section('database_section', __('ipflag database options', 'pb-chartscodes'), array($this, 'settings_section_database'), __FILE__);
+        add_settings_field(self::safe_slug.'_webcounterkeepdays', __('delete webhits older than (days):', 'pb-chartscodes'), array($this, 'settings_field_webcounterkeepdays'), __FILE__, 'database_section');
         add_settings_field(self::safe_slug.'_auto_update', __('Enable automatic weekly database update check:', 'pb-chartscodes'), array($this, 'settings_field_auto_update'), __FILE__, 'database_section');
         add_settings_field(self::safe_slug.'_db_status', __('Current database status:', 'pb-chartscodes'), array($this, 'settings_field_db_status'), __FILE__, 'database_section');
         add_settings_field(self::safe_slug.'_db_update', '', array($this, 'settings_field_db_update'), __FILE__, 'database_section');
     }
 
-
     public function settings_section_database(){
-        echo __('Here you can control all ipflag database options:', 'pb-chartscodes');
+        echo __('Here you can control all ipflag and webcounter database options:', 'pb-chartscodes');
     }
 
+    public function settings_field_webcounterkeepdays(){
+        echo '<input id="'.self::safe_slug.'_webcounterkeepdays" name="'.self::safe_slug.'_options[webcounterkeepdays]" type="text" size="3" ';
+        if(isset($this->options['webcounterkeepdays'])) {
+			echo ' value="'.$this->options['webcounterkeepdays'].'"';
+		} else {
+			echo ' value="30"';
+		}
+	    echo '/>';
+    }
 
     public function settings_field_auto_update(){
         echo '<input id="'.self::safe_slug.'_auto_update" name="'.self::safe_slug.'_options[auto_update]" type="checkbox" value="1" ';
