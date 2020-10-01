@@ -545,7 +545,6 @@ public function country_code ($lang = null , $code = null) {
 			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $items);
 			$html .='<h4>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$items).'</h4><table>';
 			foreach($customers as $customer){
-				// $datum = date('l d.M Y',strtotime($customer->datum));	
 				$datum = strftime("%a %e. %b %G", strtotime($customer->datum));	
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
 				$labels.= $datum.',';
@@ -555,24 +554,46 @@ public function country_code ($lang = null , $code = null) {
 			$values = rtrim($values, ",");
 			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
+
+			$xsum=0;
+			$customers = $wpdb->get_results("SELECT postid, COUNT(*) AS pidcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$items." DAY ) GROUP BY postid ORDER BY pidcount desc LIMIT 10" );
+			$html .='<h4>'.sprintf(__('top 10 pages last %s days', 'pb-chartscodes'),$items).'</h4><table>';
+			foreach($customers as $customer){
+				$xsum += absint($customer->pidcount);
+				$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</a></td></tr>';
+			}	
+			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).'</td></tr></table>';
+			
+			$xsum=0;
+			$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$items." DAY ) GROUP BY referer ORDER BY refcount desc LIMIT 10" );
+			$html .='<h4>'.sprintf(__('top 10 referers last %s days', 'pb-chartscodes'),$items).'</h4><table>';
+			foreach($customers as $customer){
+				$xsum += absint($customer->refcount);
+				$html .= '<tr><td>' . $customer->refcount . '</td><td>' . $customer->referer . '</td></tr>';
+			}	
+			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).'</td></tr></table>';
+
 			$customers = $wpdb->get_results("SELECT * FROM " . $table . " ORDER BY datum desc LIMIT ".$items);
 			$html .='<h4>'.sprintf(__('last %s visitors', 'pb-chartscodes'),$items).'</h4><table>';
 			foreach($customers as $customer){
 				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
-				$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
+				$html .= '<tr style="font-size:0.8em"><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
 				$html .= '<td>' . $this->showbrowosicon($customer->platform). ' ' . substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</td>';
 				$html .= '<td><img title="'.$this->country_code('de',$customer->country).'" src="'.$this->flag_url.'/'.$customer->country.'.gif" />' . '</td>';
-				$html .= '<td>' . $customer->userip .'</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . $customer->postid .'</a></td>';
+				$html .= '<td>' . $customer->userip .'</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</a></td>';
 				$html .= '<td style="font-size:0.9em">' . $datum . ' ' . ago(strtotime($customer->datum)).'</td></tr>';
 			}	
 			$html .= '</table>';
-			if ( !isset($_GET['items']) ) { $items=20; }
+			
+			$xsum=0;
 			$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " GROUP BY referer ORDER BY refcount desc LIMIT ".$items );
 			$html .='<h4>'.sprintf(__('top %s referers', 'pb-chartscodes'),$items).'</h4><table>';
 			foreach($customers as $customer){
+				$xsum += absint($customer->refcount);
 				$html .= '<tr><td>' . $customer->refcount . '</td><td>' . $customer->referer . '</td></tr>';
 			}	
-			$html .= '</table>';
+			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).'</td></tr></table>';
+
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT SUBSTRING(datum,12,2) AS stunde, COUNT(SUBSTRING(datum,12,2)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,12,2) ORDER BY SUBSTRING(datum,12,2) ");
 			$html .='<h4>'.sprintf(__('clicks by hour', 'pb-chartscodes'),$items).'</h4><table>';
@@ -585,6 +606,7 @@ public function country_code ($lang = null , $code = null) {
 			$values = rtrim($values, ",");
 			$html .= do_shortcode('[chartscodes_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
+
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT browser, COUNT(browser) AS bcount FROM " . $table . " GROUP BY browser ORDER BY bcount desc LIMIT 10 ");
 			$html .='<h4>'.__('Top 10 Browsers', 'pb-chartscodes').'</h4><table>';
@@ -597,6 +619,7 @@ public function country_code ($lang = null , $code = null) {
 			$values = rtrim($values, ",");
 			$html .= do_shortcode('[chartscodes accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
+
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT country, COUNT(country) AS ccount, datum FROM " . $table . " GROUP BY country ORDER BY ccount desc LIMIT 10 ");
 			$html .='<h4>'.__('top 10 countries', 'pb-chartscodes').'</h4><table>';
@@ -609,6 +632,7 @@ public function country_code ($lang = null , $code = null) {
 			$values = rtrim($values, ",");
 			$html .= do_shortcode('[chartscodes accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
+
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT postid, COUNT(postid) AS pcount, datum FROM " . $table . " GROUP BY postid ORDER BY pcount desc LIMIT 10 ");
 			$html .='<h4>'.__('top 10 posts', 'pb-chartscodes').'</h4><table>';

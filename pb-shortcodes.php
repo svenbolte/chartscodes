@@ -324,6 +324,7 @@ class PB_ChartsCodes_Shortcode {
 		$colors 		= explode( ',', str_replace( $quotes, '', $colorli ) );
 		$count 			= count( $labels )-1;
 		$id 			= uniqid( 'tp_horizontalbar_', false ); 
+		$balksum = 0;
 		?>
 		<div class="tp-horizontalbar" data-id="tp_horizontalbar_data_<?php echo esc_attr( $id ); ?>">
 			<?php if ( ! empty( $title ) ) : ?>
@@ -336,10 +337,12 @@ class PB_ChartsCodes_Shortcode {
 						if ( $absolute == '1' ){
 							$balkenanzeige = absint( $percentages[$i] / $hundproz * 100 );
 							$balkhoehe = absint( $percentages[$i] / $hundproz * 100 );
+							$balksum += absint($percentages[$i]);
 							if ( absint( $percentages[$i]) > 0 ) { $balkenanzeige .= '% | '.absint( $percentages[$i]); }
 						} else {
 							$balkenanzeige = absint( $percentages[$i] );
 							$balkhoehe = absint( $percentages[$i] );
+							$balksum += $balkhoehe;
 						}
 					?>
 					<div class="outer-box">
@@ -349,6 +352,7 @@ class PB_ChartsCodes_Shortcode {
 					</div><!-- .outer-box -->
 					<?php 
 					endfor;  
+					echo sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$balksum);
 				endif; ?>
 			</div><!-- .skills-bar -->
 		</div>
