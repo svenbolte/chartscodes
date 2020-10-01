@@ -18,15 +18,15 @@ jQuery(function($){
 		    radiusList: radius,//respective data radius
 		    focusPie: 100,//keep the focus pie with the highest radius 
 		    whiteCircle : circle,// width of white circle in pie chart 
-		    fontSize: '18',//px 
+		    fontSize: '15',//px 
 		    fontVarient: fontstyle,
 		    fontFamily: fontfamily,
 		    canvasID: id,
-		    labelColor:'#666',
+		    labelColor:'#333',
 		    percentageColor: '#000',
 		    percentageFontFamily: fontfamily,
-		    percentageFontSize:'12',
-		    percentageFontVarient:'bold'
+		    percentageFontSize:'15',
+		    percentageFontVarient:'700'
 		});     
 	} 
 

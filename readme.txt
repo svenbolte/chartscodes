@@ -1,6 +1,6 @@
 === Charts QR-Barcodes ===
 Version: 11.1.24
-Stable tag: 11.1.24
+Stable tag: 11.1.25
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
@@ -136,6 +136,9 @@ if(isset($ipflag) && is_object($ipflag)){
 
 
 == Changelog ==
+
+= 11.1.25 =
+Styling with pie charts - font class and sizes
 
 = 11.1.24 =
 speedup: load jquery pie javascript in footer

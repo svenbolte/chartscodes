@@ -8,7 +8,7 @@ The Implementation part of this Js
             radiusList: [100, 120, 100],
             focusPie:1,//keep the focus pie with the highest radius 
             fontSize: '18',//px 
-            fontFamily: 'Helvetica',
+            fontFamily: 'Arial, sans-serif',
             canvasID: 'piechart',
             labelColor:'#9b9b9b',
             percentageColor: '#000'
@@ -28,15 +28,15 @@ The Implementation part of this Js
             fontSize: 0,
             fontVarient: '',
             dataLabelList: [],
-            fontFamily: 'ariel',
-            labelColor: '',
+            fontFamily: 'Arial, sans-serif',
+            labelColor: '#000',
             datathresholdDistance: [],
             percentageColor: '#000',
             focusPie: 0,
             whiteCircle: 15,
             changeAdditional: 0,
-            percentageFontFamily: 'ariel',
-            percentageFontSize: '18',
+            percentageFontFamily: 'Arial, sans-serif',
+            percentageFontSize: '14',
             percentageFontVarient: 'bold'
         }
         if (arguments[0] && typeof arguments[0] === "object") {
@@ -60,7 +60,7 @@ The Implementation part of this Js
             //this.options.percentage.push(Math.round((this.options.dataList[i] * 100) / total));
             this.DrawSegment(i);
         }
-        this.DrawSamllCircle(this.options.centerX, this.options.centerY, "#FFF", whiteCircle);
+        this.DrawSamllCircle(this.options.centerX, this.options.centerY, "#fff", whiteCircle);
     }
 
     PieBuilder.prototype.DrawSamllCircle = function (xCor, yCor, color, r) {
