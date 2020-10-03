@@ -583,11 +583,11 @@ public function country_code ($lang = null , $code = null) {
 			$html .='<h4>'.sprintf(__('last %s visitors', 'pb-chartscodes'),$items).'</h4><table>';
 			foreach($customers as $customer){
 				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
-				$html .= '<tr style="font-size:0.8em"><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
+				$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
 				$html .= '<td>' . $this->showbrowosicon($customer->platform). ' ' . substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</td>';
 				$html .= '<td><img title="'.$this->country_code('de',$customer->country).'" src="'.$this->flag_url.'/'.$customer->country.'.gif" />' . '</td>';
 				$html .= '<td>' . $customer->userip .'</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</a></td>';
-				$html .= '<td style="font-size:0.9em">' . $datum . ' ' . ago(strtotime($customer->datum)).'</td></tr>';
+				$html .= '<td>' . $datum . ' ' . ago(strtotime($customer->datum)).'</td></tr>';
 			}	
 			$html .= '</table>';
 			
