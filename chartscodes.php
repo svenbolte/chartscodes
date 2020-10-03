@@ -522,6 +522,7 @@ public function country_code ($lang = null , $code = null) {
 			'admin'     => 0
 		), $attr));
 		global $wpdb;
+		$tage = array("Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag");
 		$table = $wpdb->prefix . "sitevisitors";
 		if (isset($this->options['webcounterkeepdays'])) {
 			$keepdays=intval(sanitize_text_field($this->options['webcounterkeepdays']));
@@ -538,18 +539,25 @@ public function country_code ($lang = null , $code = null) {
 			} else {
 			  $items=20;
 			}
-			$customers = $wpdb->get_results("SELECT MAX(id) as maxid, min(datum) as mindatum FROM " . $table);
+			if (isset($_GET['zeitraum'])) {
+				$zeitraum = intval(sanitize_text_field($_GET['zeitraum']));
+				if ($zeitraum < 2) $zeitraum = 2;
+			} else {
+			  $zeitraum=$keepdays;
+			}
+			$customers = $wpdb->get_results("SELECT MAX(id) as maxid, min(datum) as mindatum, COUNT(*) as stored FROM " . $table);
 			foreach($customers as $customer){
-				// $totals = $customer->maxid.' Clicks '.strftime("%a %e. %b %G", strtotime($customer->mindatum)).' seit '. human_time_diff( strtotime($customer->mindatum),current_time( 'timestamp' ) );
-				$totals = sprintf(__('%1s clicks since %2s', 'pb-chartscodes'),$customer->maxid,strftime("%a %e. %b %G", strtotime($customer->mindatum)) ).', '.human_time_diff( strtotime($customer->mindatum),current_time( 'timestamp' ) );
+				$totals = sprintf(__('%1s clicks total, %2s since %3s', 'pb-chartscodes'),$customer->maxid,$customer->stored,strftime("%a %e. %b %G", strtotime($customer->mindatum)) ).', '.human_time_diff( strtotime($customer->mindatum),current_time( 'timestamp' ) );
 			}
 			$html = '<div style="text-align:right"><form name="wcitems" method="get">'.$totals .'. ';
-			$html.= sprintf(__('clicks deleted after %s days', 'pb-chartscodes'),$keepdays).' <input type="text" size="3" id="items" name="items" value="'.$items.'">';
+			$html .='<input type="text" size="3" style="width:50px" id="zeitraum" name="zeitraum" value="'.$zeitraum.'">/'.$keepdays.' Tg ';
+			$html .='<input type="text" size="3" style="width:50px" id="items" name="items" value="'.$items.'"> Zeilen ';
 			$html.= '</select><input type="submit" value="'.__('show items', 'pb-chartscodes').'" /></form></div>';
 			setlocale (LC_ALL, 'de_DE@euro', 'de_DE', 'de', 'ge'); 
+			//	Klicks pro Tag auf Zeitraum
 			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $items);
-			$html .='<h4>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$items).'</h4><table>';
+			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $zeitraum);
+			$html .='<h4>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h4><table>';
 			foreach($customers as $customer){
 				$datum = strftime("%a %e. %b %G", strtotime($customer->datum));	
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
@@ -560,27 +568,36 @@ public function country_code ($lang = null , $code = null) {
 			$values = rtrim($values, ",");
 			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
-
+			//	Top x Seiten/Beiträge auf Zeitraum
 			$xsum=0;
-			$customers = $wpdb->get_results("SELECT postid, COUNT(*) AS pidcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$items." DAY ) GROUP BY postid ORDER BY pidcount desc LIMIT 10" );
-			$html .='<h4>'.sprintf(__('top 10 pages last %s days', 'pb-chartscodes'),$items).'</h4><table>';
+			$labels="";$values='';
+			$customers = $wpdb->get_results("SELECT postid, COUNT(*) AS pidcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY postid ORDER BY pidcount desc LIMIT ".$items );
+			$html .='<h4>'.sprintf(__('top %1s pages last %2s days', 'pb-chartscodes'),$items,$zeitraum).'</h4><table>';
 			foreach($customers as $customer){
+				$labels.= get_the_title($customer->postid).',';
+				$values.= $customer->pidcount.',';
 				$xsum += absint($customer->pidcount);
-				$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</a></td></tr>';
+				$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a> &nbsp; ';
+				$html .= get_the_date( 'd. F Y', $customer->postid );
+				$html .= sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),get_post_meta( $customer->postid, 'post_views_count', true )) . '</td></tr>';
 			}	
-			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/$items), 2 ).'</td></tr></table>';
-			
+			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr>';
+			$labels = rtrim($labels, ",");
+			$values = rtrim($values, ",");
+			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+			$html .= '</table>';
+			//	Top x Herkunftsseiten auf Zeitraum
 			$xsum=0;
-			$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$items." DAY ) GROUP BY referer ORDER BY refcount desc LIMIT 10" );
-			$html .='<h4>'.sprintf(__('top 10 referers last %s days', 'pb-chartscodes'),$items).'</h4><table>';
+			$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY referer ORDER BY refcount desc LIMIT ".$items );
+			$html .='<h4>'.sprintf(__('top %1s referers last %2s days', 'pb-chartscodes'),$items,$zeitraum).'</h4><table>';
 			foreach($customers as $customer){
 				$xsum += absint($customer->refcount);
 				$html .= '<tr><td>' . $customer->refcount . '</td><td>' . $customer->referer . '</td></tr>';
 			}	
-			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/$items), 2 ).'</td></tr></table>';
-
-			$customers = $wpdb->get_results("SELECT * FROM " . $table . " ORDER BY datum desc LIMIT ".$items);
-			$html .='<h4>'.sprintf(__('last %s visitors', 'pb-chartscodes'),$items).'</h4><table>';
+			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr></table>';
+			//	Top x Besucher mit Details auf Zeitraum
+			$customers = $wpdb->get_results("SELECT * FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ORDER BY datum desc LIMIT ".$items);
+			$html .='<h4>'.sprintf(__('last %1s visitors last %2s days', 'pb-chartscodes'),$items,$zeitraum).'</h4><table>';
 			foreach($customers as $customer){
 				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
 				$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
@@ -590,19 +607,10 @@ public function country_code ($lang = null , $code = null) {
 				$html .= '<td>' . $datum . ' ' . ago(strtotime($customer->datum)).'</td></tr>';
 			}	
 			$html .= '</table>';
-			
-			$xsum=0;
-			$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " GROUP BY referer ORDER BY refcount desc LIMIT ".$items );
-			$html .='<h4>'.sprintf(__('top %s referers', 'pb-chartscodes'),$items).'</h4><table>';
-			foreach($customers as $customer){
-				$xsum += absint($customer->refcount);
-				$html .= '<tr><td>' . $customer->refcount . '</td><td>' . $customer->referer . '</td></tr>';
-			}	
-			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/$items), 2 ).'</td></tr></table>';
-
+			//	Besucher nach Stunde auf Zeitraum
 			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT SUBSTRING(datum,12,2) AS stunde, COUNT(SUBSTRING(datum,12,2)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,12,2) ORDER BY SUBSTRING(datum,12,2) ");
-			$html .='<h4>'.sprintf(__('clicks by hour', 'pb-chartscodes'),$items).'</h4><table>';
+			$customers = $wpdb->get_results("SELECT SUBSTRING(datum,12,2) AS stunde, COUNT(SUBSTRING(datum,12,2)) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY SUBSTRING(datum,12,2) ORDER BY SUBSTRING(datum,12,2) ");
+			$html .='<h4>'.sprintf(__('clicks by hour last %s days', 'pb-chartscodes'),$zeitraum).'</h4><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
 				$labels.= $customer->stunde.',';
@@ -612,10 +620,23 @@ public function country_code ($lang = null , $code = null) {
 			$values = rtrim($values, ",");
 			$html .= do_shortcode('[chartscodes_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
-
+			//	Besucher nach Wochentag auf Zeitraum
 			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT browser, COUNT(browser) AS bcount FROM " . $table . " GROUP BY browser ORDER BY bcount desc LIMIT 10 ");
-			$html .='<h4>'.__('Top 10 Browsers', 'pb-chartscodes').'</h4><table>';
+			$customers = $wpdb->get_results("SELECT WEEKDAY(SUBSTRING(datum,1,10)) AS wotag, COUNT(WEEKDAY(SUBSTRING(datum,1,10))) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY WEEKDAY(SUBSTRING(datum,1,10)) ORDER BY WEEKDAY(SUBSTRING(datum,1,10)) ");
+			$html .='<h4>'.sprintf(__('clicks by weekday last %s days', 'pb-chartscodes'),$zeitraum).'</h4><table>';
+			foreach($customers as $customer){
+				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
+				$labels.= $tage[$customer->wotag].',';
+				$values.= $customer->viscount.',';
+			}	
+			$labels = rtrim($labels, ",");
+			$values = rtrim($values, ",");
+			$html .= do_shortcode('[chartscodes_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+			$html .= '</table>';
+			//	Top x Browser auf Zeitraum
+			$labels="";$values='';
+			$customers = $wpdb->get_results("SELECT browser, COUNT(browser) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY browser ORDER BY bcount desc LIMIT ".$items);
+			$html .='<h4>'.sprintf(__('Top %1s Browsers last %2s days', 'pb-chartscodes'),$items,$zeitraum).'</h4><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->bcount . '</td><td>' . $customer->browser . '</td></tr>';
 				$labels.= $customer->browser.',';
@@ -625,10 +646,10 @@ public function country_code ($lang = null , $code = null) {
 			$values = rtrim($values, ",");
 			$html .= do_shortcode('[chartscodes accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
-
+			//	Top x Länder auf Zeitraum
 			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT country, COUNT(country) AS ccount, datum FROM " . $table . " GROUP BY country ORDER BY ccount desc LIMIT 10 ");
-			$html .='<h4>'.__('top 10 countries', 'pb-chartscodes').'</h4><table>';
+			$customers = $wpdb->get_results("SELECT country, COUNT(country) AS ccount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY country ORDER BY ccount desc LIMIT ".$items);
+			$html .='<h4>'.sprintf(__('Top %1s countries last %2s days', 'pb-chartscodes'),$items,$zeitraum).'</h4><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->ccount . '</td><td>' . $this->country_code('de',$customer->country) . '</td></tr>';
 				$labels.= $this->country_code('de',$customer->country) . ',';
@@ -637,19 +658,6 @@ public function country_code ($lang = null , $code = null) {
 			$labels = rtrim($labels, ",");
 			$values = rtrim($values, ",");
 			$html .= do_shortcode('[chartscodes accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
-			$html .= '</table>';
-
-			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT postid, COUNT(postid) AS pcount, datum FROM " . $table . " GROUP BY postid ORDER BY pcount desc LIMIT 10 ");
-			$html .='<h4>'.__('top 10 posts', 'pb-chartscodes').'</h4><table>';
-			foreach($customers as $customer){
-				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->pcount . '</td><td>' . get_the_title($customer->postid) . '</td></tr>';
-				$labels.= get_the_title($customer->postid).',';
-				$values.= $customer->pcount.',';
-			}	
-			$labels = rtrim($labels, ",");
-			$values = rtrim($values, ",");
-			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
 			
 			return $html;
