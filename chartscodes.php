@@ -25,7 +25,6 @@ function chartscodes_textdomain() {
 	load_plugin_textdomain( 'pb-chartscodes', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 }
 
-
 if ( ! class_exists( 'PB_ChartsCodes' ) ) :
 
 	final class PB_ChartsCodes {

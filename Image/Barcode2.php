@@ -22,6 +22,10 @@
  * @link      http://pear.php.net/package/Image_Barcode2
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 require_once 'Image/Barcode2/Writer.php';
 require_once 'Image/Barcode2/Driver.php';
 require_once 'Image/Barcode2/Exception.php';
