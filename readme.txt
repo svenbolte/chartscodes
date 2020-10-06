@@ -137,6 +137,10 @@ if(isset($ipflag) && is_object($ipflag)){
 
 == Changelog ==
 
+= 11.1.26 =
+webcounter: more statistics, diameter values, totals, time recordes yet (days)
+minor bugfixes
+
 = 11.1.25 =
 Styling with pie charts - font class and sizes
 recording time for webcounter entries can be set in options (min. 30 days, max. 999 days)
