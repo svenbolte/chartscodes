@@ -40,15 +40,15 @@ class PB_ChartsCodes_Shortcode {
 		$colorl = '';
 		if ( $accolor == '1' ) {
 			// Palette in Akzentfarbe
-			for ($row = 0; $row < 30; ++$row) {
-				$colort = get_theme_mod( 'link-color' ) ?:'#666666';
+			$colort = get_theme_mod( 'link-color' ) ?:'#666666';
+			for ($row = 0; $row < 200; ++$row) {
 				$randd = mt_rand(1,100) /100;
 				$colorl .= $this->color_luminance( $colort, $randd ) . ',';
 			}
 		} else {
 			// Bunte Palette
 			$colorli = '';
-			for ($row = 0; $row < 50; ++$row) {
+			for ($row = 0; $row < 200; ++$row) {
 				$colorl .= sprintf('#%06X', mt_rand(0xAAAAAA, 0xEEEEEE)) . ',';
 			}
 		}
