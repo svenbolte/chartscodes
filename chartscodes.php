@@ -521,7 +521,7 @@ public function country_code ($lang = null , $code = null) {
 			'admin'     => 0
 		), $attr));
 		global $wpdb;
-		$tage = array("Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag");
+		$tage = array("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag");
 		$table = $wpdb->prefix . "sitevisitors";
 		if (isset($this->options['webcounterkeepdays'])) {
 			$keepdays=intval(sanitize_text_field($this->options['webcounterkeepdays']));
@@ -544,6 +544,7 @@ public function country_code ($lang = null , $code = null) {
 			} else {
 			  $zeitraum=$keepdays;
 			}
+			$startday = ' - ' . date("d.m.Y", strtotime("-$zeitraum days"));
 			$customers = $wpdb->get_results("SELECT MAX(id) as maxid, min(datum) as mindatum, COUNT(*) as stored FROM " . $table);
 			foreach($customers as $customer){
 				$totals = sprintf(__('%1s clicks total, %2s since %3s', 'pb-chartscodes'),$customer->maxid,$customer->stored,strftime("%a %e. %b %G", strtotime($customer->mindatum)) ).', '.human_time_diff( strtotime($customer->mindatum),current_time( 'timestamp' ) );
@@ -571,7 +572,7 @@ public function country_code ($lang = null , $code = null) {
 			$xsum=0;
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT postid, COUNT(*) AS pidcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY postid ORDER BY pidcount desc LIMIT ".$items );
-			$html .='<h4>'.sprintf(__('top %1s pages last %2s days', 'pb-chartscodes'),$items,$zeitraum).'</h4><table>';
+			$html .='<h4>'.sprintf(__('top %1s pages last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h4><table>';
 			foreach($customers as $customer){
 				$labels.= get_the_title($customer->postid).',';
 				$values.= $customer->pidcount.',';
@@ -583,12 +584,12 @@ public function country_code ($lang = null , $code = null) {
 			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr>';
 			$labels = rtrim($labels, ",");
 			$values = rtrim($values, ",");
-			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
+			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			//	Top x Herkunftsseiten auf Zeitraum
 			$xsum=0;
 			$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY referer ORDER BY refcount desc LIMIT ".$items );
-			$html .='<h4>'.sprintf(__('top %1s referers last %2s days', 'pb-chartscodes'),$items,$zeitraum).'</h4><table>';
+			$html .='<h4>'.sprintf(__('top %1s referers last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h4><table>';
 			foreach($customers as $customer){
 				$xsum += absint($customer->refcount);
 				$html .= '<tr><td>' . $customer->refcount . '</td><td>' . $customer->referer . '</td></tr>';
@@ -596,7 +597,7 @@ public function country_code ($lang = null , $code = null) {
 			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr></table>';
 			//	Top x Besucher mit Details auf Zeitraum
 			$customers = $wpdb->get_results("SELECT * FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ORDER BY datum desc LIMIT ".$items);
-			$html .='<h4>'.sprintf(__('last %1s visitors last %2s days', 'pb-chartscodes'),$items,$zeitraum).'</h4><table>';
+			$html .='<h4>'.sprintf(__('last %1s visitors last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h4><table>';
 			foreach($customers as $customer){
 				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
 				$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
@@ -609,7 +610,7 @@ public function country_code ($lang = null , $code = null) {
 			//	Besucher nach Stunde auf Zeitraum
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT SUBSTRING(datum,12,2) AS stunde, COUNT(SUBSTRING(datum,12,2)) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY SUBSTRING(datum,12,2) ORDER BY SUBSTRING(datum,12,2) ");
-			$html .='<h4>'.sprintf(__('clicks by hour last %s days', 'pb-chartscodes'),$zeitraum).'</h4><table>';
+			$html .='<h4>'.sprintf(__('clicks by hour last %s days', 'pb-chartscodes'),$zeitraum).$startday.'</h4><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
 				$labels.= $customer->stunde.',';
@@ -621,8 +622,8 @@ public function country_code ($lang = null , $code = null) {
 			$html .= '</table>';
 			//	Besucher nach Wochentag auf Zeitraum
 			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT WEEKDAY(SUBSTRING(datum,1,10)) AS wotag, COUNT(WEEKDAY(SUBSTRING(datum,1,10))) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY WEEKDAY(SUBSTRING(datum,1,10)) ORDER BY WEEKDAY(SUBSTRING(datum,1,10)) ");
-			$html .='<h4>'.sprintf(__('clicks by weekday last %s days', 'pb-chartscodes'),$zeitraum).'</h4><table>';
+			$customers = $wpdb->get_results("SELECT WEEKDAY(SUBSTRING(datum,1,10)) AS wotag, COUNT(WEEKDAY(SUBSTRING(datum,1,10))) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY WEEKDAY(SUBSTRING(datum,1,10)) ORDER BY SUBSTRING(datum,1,10) ");
+			$html .='<h4>'.sprintf(__('clicks by weekday last %s days', 'pb-chartscodes'),$zeitraum) . $startday . '</h4><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
 				$labels.= $tage[$customer->wotag].',';
