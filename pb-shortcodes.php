@@ -366,17 +366,24 @@ class PB_ChartsCodes_Shortcode {
 	function wpse60859_shortcode_alt_cb($atts)
 	{
 		$input = shortcode_atts( array(	
+			'fromdate' => date("Y-m-d H:i:s"),                //  NOW() Startdate like: 2020-07-01
 			'months' => 12,
 		    'accentcolor' => false, 
 		), $atts );
 		$accentcolor=$input['accentcolor'];
+		$fromdate = $input['fromdate']; 
+		if ( is_archive() ) {  // If Archiv then show stats from 12 months before the archive month
+			$yearnum  = get_query_var('year');
+			$monthnum = get_query_var('monthnum');
+			$fromdate = $yearnum . '-'. $monthnum.'-01 00:00:00';
+		}
 		$monate = $input['months']-1; 
 		$monnamen = array ("","Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez");
 		global $wpdb;
 		$res = $wpdb->get_results(
-			"SELECT MONTH(post_date) as post_month, COUNT(ID) as post_count " .
+			"SELECT MONTH(post_date) as post_month, YEAR(post_date) as post_year, COUNT(ID) as post_count " .
 			"FROM {$wpdb->posts} " .
-			"WHERE post_date BETWEEN DATE_SUB(NOW(), INTERVAL ".$monate." MONTH) AND NOW() " .
+			"WHERE post_date BETWEEN DATE_SUB('".$fromdate."', INTERVAL ".$monate." MONTH) AND '".$fromdate."' " .
 			"AND post_status = 'publish' AND post_type = 'post' " .
 			"GROUP BY post_month ORDER BY post_date ASC", OBJECT_K
 		);
@@ -387,7 +394,7 @@ class PB_ChartsCodes_Shortcode {
 		foreach($res as $r) {
 			$valu .= isset($r->post_month) ? floor($r->post_count) : 0;
 			$valu .= ',';
-			if ($r->post_month > $nmonth) { $nyear=date('Y') - 1; } else { $nyear=date('Y'); }
+			$nyear = $r->post_year;
 			$axislink=get_home_url( '/' ).'/'.$nyear.'/'.$r->post_month;
 			$labl .= '<a href='.$axislink.'>'.$monnamen[$r->post_month] .' ' . $nyear . '</a>,';
 		}

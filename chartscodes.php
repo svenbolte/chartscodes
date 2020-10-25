@@ -9,8 +9,8 @@ License: GPLv3
 Tags: Barcode, QRCode, Shortcode, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.26
-Stable tag: 11.1.26
+Version: 11.1.27
+Stable tag: 11.1.27
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2

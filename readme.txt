@@ -1,6 +1,6 @@
 === Charts QR-Barcodes ===
-Version: 11.1.24
-Stable tag: 11.1.25
+Version: 11.1.27
+Stable tag: 11.1.27
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
@@ -137,6 +137,10 @@ if(isset($ipflag) && is_object($ipflag)){
 
 == Changelog ==
 
+= 11.1.27 =
+last 12 month post stats x axis year fix
+when on archive page, list 12 months before shown archive month
+
 = 11.1.26 =
 webcounter: more statistics, diameter values, totals, time recordes yet (days)
 minor bugfixes
@@ -150,7 +154,7 @@ number of displayed entries can be set in gui / sanitation of inputs added
 speedup: load jquery pie javascript in footer
 
 = 11.1.23 =
-get ip functino renamed to cc_get_user_ip
+get ip function renamed to cc_get_user_ip
 
 = 11.1.22 =
 Webcounter: delete entries older 30 days automatically
