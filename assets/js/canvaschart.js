@@ -73,25 +73,24 @@
         var xPos = margin.left;
         for (var i = 0; i < data.dataPoints.length; i++) {
             yPos += (i == 0) ? margin.top : yInc;
-            //Draw horizontal lines
-            drawLine(margin.left, yPos, xMax, yPos, '#E8E8E8');
 
-            //y axis labels
-            ctx.font = (data.dataPointFont != null) ? data.dataPointFont : '15px Arial';
-            var txt = Math.round(maxYValue - ((i == 0) ? 0 : yPos / ratio));
-            var txtSize = ctx.measureText(txt);
-            ctx.fillText(txt, margin.left - ((txtSize.width >= 14) ? txtSize.width : 10) - 7, yPos + 4);
-
+            if ( i % 2 == 0  && Math.round(maxYValue - ((i == 0) ? 0 : yPos / ratio)) > 0 ) {
+				//Draw horizontal lines
+				drawLine(margin.left, yPos, xMax, yPos, '#E8E8E8');
+				//y axis labels
+				ctx.font = (data.dataPointFont != null) ? data.dataPointFont : '15px Arial';
+				var txt = Math.round(maxYValue - ((i == 0) ? 0 : yPos / ratio));
+				var txtSize = ctx.measureText(txt);
+				ctx.fillText(txt, margin.left - ((txtSize.width >= 14) ? txtSize.width : 10) - 7, yPos + 4); 
+			}
             //Draw vertical lines
             drawLine(xPos, yMax, xPos, margin.top, '#E8E8E8');
-
             //x axis labels
             txt = data.dataPoints[i].x;
             txtSize = ctx.measureText(txt);
             ctx.fillText(txt, xPos, yMax + (margin.bottom / 3));
             xPos += xInc;
         }
-
         //Vertical line
         drawLine(margin.left, margin.top, margin.left, yMax, 'black');
         //Horizontal Line

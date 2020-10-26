@@ -547,18 +547,21 @@ public function country_code ($lang = null , $code = null) {
 			$html.= '</select><input type="submit" value="'.__('show items', 'pb-chartscodes').'" /></form></div>';
 
 			//	Klicks pro Tag auf Zeitraum
-			$labels="";$values='';
+			$labels="";$values='';$label2="";
 			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $zeitraum);
 			$html .='<h4>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h4><table>';
 			foreach($customers as $customer){
 				$datum = strftime("%a %e. %b %G", strtotime($customer->datum));	
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
-				$labels.= $datum.',';
+				$labels.= $datum .',';
+				$label2.= substr($customer->datum,8,2).',';
 				$values.= $customer->viscount.',';
 			}	
 			$labels = rtrim($labels, ",");
+			$label2 = rtrim($label2, ",");
 			$values = rtrim($values, ",");
-			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+			$html .= do_shortcode('[chartscodes_line accentcolor=1 yaxis="Klicks pro Tag" xaxis="Datum rückwärts" values="'.$values.'" labels="'.$label2.'"]');
+			$html .= do_shortcode('[chartscodes_horizontal_bar absolute="1" accentcolor=1 values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
 
 			//	Top x Seiten/Beiträge auf Zeitraum

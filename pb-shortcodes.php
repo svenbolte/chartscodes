@@ -434,7 +434,7 @@ class PB_ChartsCodes_Shortcode {
 		$colors 		= explode( ',', str_replace( $quotes, '', $colorli ) );
 		$id 			= uniqid( 'tp_line_', false ); 
 		?>
-		<div class="tp-piebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
+		<div class="tp-linebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
 			<h3 class="pie-title"><?php echo esc_html( $title ); ?></h3>
 			<canvas id="<?php echo esc_attr( $id ); ?>" width="910" height="370" style="width:100%;height:100%">
 			</canvas>
