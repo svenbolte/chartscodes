@@ -9,8 +9,8 @@ License: GPLv3
 Tags: Barcode, QRCode, Shortcode, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.27
-Stable tag: 11.1.27
+Version: 11.1.30
+Stable tag: 11.1.30
 Requires at least: 5.1
 Tested up to: 5.5.1
 Requires PHP: 7.2
@@ -26,9 +26,7 @@ function chartscodes_textdomain() {
 }
 
 if ( ! class_exists( 'PB_ChartsCodes' ) ) :
-
 	final class PB_ChartsCodes {
-
 		public function __construct()
 		{
 			$this->PB_ChartsCodes_constant();
@@ -51,33 +49,22 @@ if ( ! class_exists( 'PB_ChartsCodes' ) ) :
 
 		public function PB_ChartsCodes_enqueue()
 		{
-			/*
-			 * Enqueue scripts
-			 */
-
+			// Enqueue scripts
             // Load Charts QRCodes Barcodes style
             wp_enqueue_style( 'pb-chartscodes-style', PB_ChartsCodes_URL_PATH . 'assets/css/style.min.css' );
-
-            // Load Charts QRCodes Barcodes custom js
+            // Load Charts QRCodes Barcodes pie js
 	        wp_enqueue_script( 'pb-chartscodes-script', PB_ChartsCodes_URL_PATH . 'assets/js/pie.min.js', array(), '1.7', true  );
-
-	        // Load Charts QRCodes Barcodes custom js
+	        // Load Charts QRCodes Barcodes custom pie js
 	        wp_register_script( 'pb-chartscodes-initialize', PB_ChartsCodes_URL_PATH . 'assets/js/pie-initialize.min.js', array( 'jquery', 'pb-chartscodes-script' ) );
-
 		}
 
 	    public function PB_ChartsCodes_includes()
 		{
-			/*
-			 * Shortcode Page
-			 */
+			// Shortcode Page
 			include_once('pb-shortcodes.php');
 		}
-
 	}
-
 	new PB_ChartsCodes();
-
 endif;
 
 // -------------------------- Jetzt den Barcode QRCode Generator noch -----------------------------------------------
@@ -873,7 +860,7 @@ public function country_code ($lang = null , $code = null) {
 				<h2><?php esc_html_e( 'Bar and Piecharts', 'pb-chartscodes' ); ?></h2>
 				<div class="postbox">
 				<p><tt>Shortcode Parameter: absolute="1" wenn keine Prozentwerte mitgegeben werden, sondern absolute Werte<br>
-					fontfamily="Armata" fontstyle="bold". Für die PieCharts dürfen maximal 10 Werte angegeben werden, bei den Bar Charts bis zu 50<br>
+					fontfamily="Arial" fontstyle="bold". Für die PieCharts sollten maximal 20 Werte angegeben werden, bei den Bar Charts bis zu 50, beim horizontal Bar 200 und beim Linechart 50<br>
 					Bar Charts: bei absoluten Werten wird größter Wert in der Folge 100%, Werte werden angezeigt wenn >0<br> 
 					Bleibt der Parameter "colors" leer, werden bei "accentcolor=0" zufällige bunte helle Farben gewählt, bei "accentcolor=1" Akzentfarben aus der Linkfarbe des Themes bezogen
 					<br> accentcolor=0/1 kann auch für die post per month Statistik und als HTML Widget angewendet werden
@@ -906,6 +893,12 @@ public function country_code ($lang = null , $code = null) {
                 <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-5.png' ?>"  alt="<?php esc_attr_e( 'Horizontal Bar Graph Chart', 'pb-chartscodes' ); ?>">
                 <p><tt>
                     <code>[chartscodes_horizontal_bar title="Balken horizontal" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
+                </tt></p>                    
+            </div>
+			<div class="img-wrap postbox">
+				<img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-7.png' ?>"  alt="<?php esc_attr_e( 'Default Line Chart', 'pb-chartscodes' ); ?>">
+                <p><tt>
+                    <code>[chartscodes_line accentcolor=1 title="Obst Line Chart" xaxis="Obstsorte" yaxis="Umsatz" values="10,20,10,5,30,20,5" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi,Cranberry,Mango"]</code>
                 </tt></p>                    
             </div>
 			<div class="img-wrap postbox">

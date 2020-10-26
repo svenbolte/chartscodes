@@ -65,7 +65,7 @@ class PB_ChartsCodes_Shortcode {
 				'absolute' => '',
 				'values' 	=> '',
 				'labels'	=> '',
-				'fontfamily' => 'Armata, sans-serif',
+				'fontfamily' => 'Arial, sans-serif',
 				'fontstyle' => 'normal',
 			    'accentcolor' => false, 
 				'colors'	=>  $this->farbpalette('0'),
@@ -123,7 +123,7 @@ class PB_ChartsCodes_Shortcode {
 				'absolute' => '',
 				'values' 	=> '',
 				'labels'	=> '',
-				'fontfamily' => 'Armata, sans-serif',
+				'fontfamily' => 'Arial, sans-serif',
 				'fontstyle' => 'normal',
 			    'accentcolor' => false, 
 				'colors'	=>  $this->farbpalette('0'),
@@ -184,7 +184,7 @@ class PB_ChartsCodes_Shortcode {
 				'absolute' => '',
 				'values' 	=> '',
 				'labels'	=> '',
-				'fontfamily' => 'Armata, sans-serif',
+				'fontfamily' => 'Arial, sans-serif',
 				'fontstyle' => 'normal',
 			    'accentcolor' => false, 
 				'colors'	=>  $this->farbpalette('0'),
@@ -406,6 +406,66 @@ class PB_ChartsCodes_Shortcode {
 	}
 
 
+	//	
+	//	Default Pie Chart Shortcode Function
+	//	
+	public function PB_ChartsCodes_line_shortcode_function( $atts ) 	{
+		ob_start();
+		$input = shortcode_atts( array(
+				'title'		=> '',
+				'xaxis' => 'Einheit',
+				'yaxis' => 'Wert',
+				'values' 	=> '',
+				'labels'	=> '',
+				'fontfamily' => 'Arial, sans-serif',
+				'fontstyle' => 'normal',
+			    'accentcolor' => false, 
+				'colors'	=>  $this->farbpalette('0'),
+			), $atts );
+		$colorli= $input['colors'];
+		$accentcolor=$input['accentcolor'];
+		if ( $accentcolor ) { $colorli= $this->farbpalette(1); }
+		$quotes = array( "\"", "'" );
+		$title 			= $input['title']; 
+		$fontfamily 	= esc_attr( $input['fontfamily'] ); 
+		$fontstyle 		= esc_attr( $input['fontstyle'] ); 
+		$percentages 	= explode( ',', str_replace( $quotes, '', $input['values'] ) );
+		$labels 		= explode( ',', str_replace( "\"", '', $input['labels'] ) );
+		$colors 		= explode( ',', str_replace( $quotes, '', $colorli ) );
+		$id 			= uniqid( 'tp_line_', false ); 
+		?>
+		<div class="tp-piebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
+			<h3 class="pie-title"><?php echo esc_html( $title ); ?></h3>
+			<canvas id="<?php echo esc_attr( $id ); ?>" width="910" height="370" style="width:100%;height:100%">
+			</canvas>
+		</div>
+		<?php  
+		$datapts='[ ';
+		for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
+			$datapts .= "{ x:'".$labels[$i]."', y:".$percentages[$i]."}, ";
+		}
+		$datapts .= ' ]';
+		$tp_pie_data = array(
+			'xaxis'	=> $input['xaxis'], 
+			'yaxis'	=> $input['yaxis'], 
+			'canvas_id'	=> $id,
+			'color'		=> $colors,
+			'datapts'	=> $datapts,
+			'fontfamily' => $fontfamily,
+			);
+
+		// Load Charts QRCodes Barcodes line js
+		wp_enqueue_script( 'pb-chartscodes-line-script', PB_ChartsCodes_URL_PATH . 'assets/js/canvaschart.min.js', array(), '1.8', true  );
+		// Load Charts QRCodes Barcodes custom line js
+		wp_register_script( 'pb-chartscodes-line-initialize', PB_ChartsCodes_URL_PATH . 'assets/js/line-initialize.js', array( 'jquery', 'pb-chartscodes-script' ) );
+		// Fill data
+		wp_localize_script( 'pb-chartscodes-line-initialize', 'tp_pie_data_'.$id, $tp_pie_data );
+		// enqueue bar js
+		wp_enqueue_script( 'pb-chartscodes-line-initialize' );
+		return ob_get_clean();
+	}
+
+
 	public function PB_ChartsCodes_create_shortcode() 
 	{
 		/*
@@ -417,8 +477,7 @@ class PB_ChartsCodes_Shortcode {
 		add_shortcode( 'chartscodes_bar', array( $this, 'PB_ChartsCodes_bar_shortcode_function' ) );
 		add_shortcode( 'chartscodes_horizontal_bar', array( $this, 'PB_ChartsCodes_horizontal_bar_shortcode_function' ) );
 		add_shortcode( 'posts_per_month_last', array( $this, 'wpse60859_shortcode_alt_cb' ) );
+		add_shortcode( 'chartscodes_line', array( $this, 'PB_ChartsCodes_line_shortcode_function' ) );
 	}
-
 }
-
 new PB_ChartsCodes_Shortcode();
