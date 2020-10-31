@@ -1,8 +1,8 @@
 === Charts QR-Barcodes ===
-Version: 11.1.27
-Stable tag: 11.1.27
+Version: 11.1.31
+Stable tag: 11.1.31
 Requires at least: 5.1
-Tested up to: 5.5.1
+Tested up to: 5.5.3
 Requires PHP: 7.2
 Tags: line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, Barcode, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
@@ -131,6 +131,9 @@ if(isset($ipflag) && is_object($ipflag)){
 
 
 == Changelog ==
+
+= 11.1.31 =
+version compatibility WP 5.5.3
 
 = 11.1.30 =
 Added Jquery and shortcode for line chart with x and y-axis labels. Code will be only enqueued when shortcode is used.
