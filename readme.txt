@@ -1,6 +1,6 @@
 === Charts QR-Barcodes ===
-Version: 11.1.31
-Stable tag: 11.1.31
+Version: 11.1.32
+Stable tag: 11.1.32
 Requires at least: 5.1
 Tested up to: 5.5.3
 Requires PHP: 7.2
@@ -131,6 +131,9 @@ if(isset($ipflag) && is_object($ipflag)){
 
 
 == Changelog ==
+
+= 11.1.32 =
+css optimizing, display of percent values monospaced, shadows replaced by silver borders
 
 = 11.1.31 =
 version compatibility WP 5.5.3

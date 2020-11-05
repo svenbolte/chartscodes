@@ -272,7 +272,7 @@ class PB_ChartsCodes_Shortcode {
 				if ( $absolute == '1' ){
 					$balkenanzeige = absint( $percentages[$i] / $hundproz * 100 );
 					$balkhoehe = absint( $percentages[$i] / $hundproz * 100 );
-					if ( absint( $percentages[$i]) > 0 ) { $balkenanzeige .= '% | '.absint( $percentages[$i]); }
+					if ( absint( $percentages[$i]) > 0 ) { $balkenanzeige .= '% '.absint( $percentages[$i]); }
 				} else {
 					$balkenanzeige = absint( $percentages[$i] );
 					$balkhoehe = absint( $percentages[$i] );
@@ -338,7 +338,7 @@ class PB_ChartsCodes_Shortcode {
 							$balkenanzeige = absint( $percentages[$i] / $hundproz * 100 );
 							$balkhoehe = absint( $percentages[$i] / $hundproz * 100 );
 							$balksum += absint($percentages[$i]);
-							if ( absint( $percentages[$i]) > 0 ) { $balkenanzeige .= '% | '.absint( $percentages[$i]); }
+							if ( absint( $percentages[$i]) > 0 ) { $balkenanzeige .= '% &nbsp; '.absint( $percentages[$i]); }
 						} else {
 							$balkenanzeige = absint( $percentages[$i] );
 							$balkhoehe = absint( $percentages[$i] );
@@ -396,7 +396,7 @@ class PB_ChartsCodes_Shortcode {
 			$valu .= ',';
 			$nyear = $r->post_year;
 			$axislink=get_home_url( '/' ).'/'.$nyear.'/'.$r->post_month;
-			$labl .= '<a href='.$axislink.'>'.$monnamen[$r->post_month] .' ' . $nyear . '</a>,';
+			$labl .= '<a href='.$axislink.'>'.$monnamen[$r->post_month] .' ' . substr($nyear,2,2) . '</a>,';
 		}
 		$labl = rtrim($labl,",");
 		$valu = rtrim($valu,",");
@@ -407,7 +407,7 @@ class PB_ChartsCodes_Shortcode {
 
 
 	//	
-	//	Default Pie Chart Shortcode Function
+	//	Chartscodes Line Chart Shortcode Function
 	//	
 	public function PB_ChartsCodes_line_shortcode_function( $atts ) 	{
 		ob_start();
