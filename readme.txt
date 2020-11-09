@@ -1,10 +1,10 @@
 === Charts QR-Barcodes ===
-Version: 11.1.32
-Stable tag: 11.1.32
+Version: 11.1.33
+Stable tag: 11.1.33
 Requires at least: 5.1
 Tested up to: 5.5.3
 Requires PHP: 7.2
-Tags: line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, Barcode, QRCode, IPFlag, webcounter,useragent 
+Tags: line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -29,7 +29,7 @@ Color palette for charts can be accentcolor with shares or random (colorful ligh
 * Activate the plugin in the Plugin dashboard
 
 
-== Shortcodes for pies and bnars and last post barchart ==
+== Shortcodes for pies and bars and last post barchart ==
  = Defaults Atts = 
 	* title = '', // Optional
 	* absolute = '' // optional, if set to "1" given values must be absolute, percents calculated automatically, if not set they must be percent values 
@@ -67,29 +67,11 @@ Color palette for charts can be accentcolor with shares or random (colorful ligh
 ==================================  Barcodes and CRCodes Usage =============================================
 
 In order to output barcodes, [barcode] will be used. Attributes:
- text ... A text that should be in the image barcode. 
- type ... The barcode type: code39, int25, ean13, upca, upce, code128, ean8, and postnet. Default: ean13
- imgtype ... The image type that will be generated: gif, jpg, and png. Default: png
- height ... The image height (px). Default: 60
- width ... The image width. Default: 1
- showText ... The text should be placed under barcode. Default: 1
- rotation ... The rotation angle. Default: 0
- transparency ... The transparent background. Default: 0
- remake ... The barcode will be regenerated every time. Default: 0
- textfilename ... The text value will be the file name. Default: 0
-
- &#91;barcode text=4930127000019 height=100 wdith=2 transparency=1&#93;
-
-In order to output barcodes, [barcode] will be used. Attributes:
  text ... A text that should be in the image qrcode. 
- eclevel ... Error correction level. 0(Level L), 1(Level M), 2(Level Q), and 3(Level H) Default: 3 
- height ... The image height (px). Default: 60
- width ... The image width (px). Default: 60
- transparency ... The transparent background. Default: 0
- remake ... The barcode will be regenerated every time. Default: 0
- textfilename ... The text value will be the file name. Default: 0
+ size ... Size of the qrcode (2 for x2)
+ margin ... margin in pixel 
 
- &#91;qrcode text=4930127000019 height=100 width=100 transparency=1&#93;
+ &#91;qrcode text="tel:4930127000019" size=2 margin=5&#93;
 
 ===================================== IPFflag ===========================================================
 
@@ -112,6 +94,7 @@ You can place `[ipflag]` shortcode to add current IP address country name and fl
 = Can you provide example for fetching country info and flag for imaginary `123.123.123.123` IP address from country Croatia? =
 You can use something like this:
 
+```
 // Query database with following IP address
 $ip_address = '123.123.123.123';
 
@@ -127,10 +110,16 @@ if(isset($ipflag) && is_object($ipflag)){
         $flag = $ipflag->get_flag($info, 'my-own-css-class'); // CSS class is optional, 'ipflag' by default
     }
 }
-`
+```
 
 
 == Changelog ==
+
+= 11.1.33 =
+Barcode libraries removed because of eol of library and because it stored multiple images in upload dir
+QR-Code library and code removed
+New QR-code Library with same shortcode as before added [qrcode text=""]. It generates pictures on the fly and does not store images in upload
+Library doese not require external servers and is up to date.
 
 = 11.1.32 =
 css optimizing, display of percent values monospaced, shadows replaced by silver borders

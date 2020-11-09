@@ -1,14 +1,13 @@
 # Chartcodes
-Liniendiagramme, Balken und Kuchendiagramme, Bar- und QRCodes, Länderflaggen und Besucherstatistik - alles als Shortcode und lokal gehostet, IP-Adressen gekürzt.
+Liniendiagramme, Balken und Kuchendiagramme, QRCodes, Länderflaggen und Besucherstatistik - alles als Shortcode und lokal gehostet, IP-Adressen gekürzt.
 
 ## Warum dieses Plugin?
 Ursprungsplugins sind entweder tot oder veraltet. Funktionen sind aber nützlich,
 daher dieses Projekt, dass die Einzelfunktionen zusammen fasst und um viele neue Funktionen erweitert wurde - siehe readme.txt
 
 ## Shortcodes für die Funktionen
-[Barcode]
 
-[QRCode]
+[qrcode text="https://test.com" size=2 margin=5]
 
 [ipflag ip="10.10.10.0" details=1 browser=1]
 

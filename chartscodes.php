@@ -1,16 +1,16 @@
 <?php
 /*
-Plugin Name: Charts QR-Barcodes
-Description: Shortcodes for bar and pie charts, barcodes, QRcodes and ipflags. Pie Chart, Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG Shortcode and variable resolves IP address to ISO 3166-1a2 country code and name and displays country flag image
-Author: PBMod und Andere
+Plugin Name: Charts QRcodes
+Description: Shortcodes for bar line and pie charts, QRcodes and ipflags. Pie Chart, Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG Shortcode and variable resolves IP address to ISO 3166-1a2 country code and name and displays country flag image
+Author: PBMod und andere
 Plugin URI: https://github.com/svenbolte/chartcodes
 Author URI: https://github.com/svenbolte
 License: GPLv3
-Tags: Barcode, QRCode, Shortcode, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
+Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.32
-Stable tag: 11.1.32
+Version: 11.1.33
+Stable tag: 11.1.33
 Requires at least: 5.1
 Tested up to: 5.5.3
 Requires PHP: 7.2
@@ -50,11 +50,11 @@ if ( ! class_exists( 'PB_ChartsCodes' ) ) :
 		public function PB_ChartsCodes_enqueue()
 		{
 			// Enqueue scripts
-            // Load Charts QRCodes Barcodes style
+            // Load chartcodes style
             wp_enqueue_style( 'pb-chartscodes-style', PB_ChartsCodes_URL_PATH . 'assets/css/style.min.css' );
-            // Load Charts QRCodes Barcodes pie js
+            // Load Charts pie js
 	        wp_enqueue_script( 'pb-chartscodes-script', PB_ChartsCodes_URL_PATH . 'assets/js/pie.min.js', array(), '1.7', true  );
-	        // Load Charts QRCodes Barcodes custom pie js
+	        // Load Charts custom pie js
 	        wp_register_script( 'pb-chartscodes-initialize', PB_ChartsCodes_URL_PATH . 'assets/js/pie-initialize.min.js', array( 'jquery', 'pb-chartscodes-script' ) );
 		}
 
@@ -67,94 +67,71 @@ if ( ! class_exists( 'PB_ChartsCodes' ) ) :
 	new PB_ChartsCodes();
 endif;
 
-// -------------------------- Jetzt den Barcode QRCode Generator noch -----------------------------------------------
+// -------------------------- Jetzt den QRCode Generator noch -----------------------------------------------
 
-class barcode_qrcode_gen2 {
+if ( defined( 'DOQRCODE_V' ) ) { return ; }
+define( 'DOQRCODE_V', '1.2.1' ) ;
 
-	function __construct() {
-		add_shortcode( 'barcode', array(&$this, 'barcode_qrcode_gen2_barcode_add_shortcode') );
-		add_shortcode( 'qrcode', array(&$this, 'barcode_qrcode_gen2_qrcode_add_shortcode') );
-	}
-		
-	function barcode_qrcode_gen2_barcode_add_shortcode($attr) {
-		$uploads = wp_upload_dir();
+! defined( 'DOQRCODE_DIR' ) && define( 'DOQRCODE_DIR', dirname( __FILE__ ) . '/' ) ;// Full absolute path '/usr/local/***/wp-content/plugins/doqrcode/' or MU
 
-		extract(shortcode_atts(array(
-			'text'     => '',
-			'type'     => "ean13",
-			'imgtype'  => 'png',
-			'height'   => 60,
-			'width'    => 1,
-			'showtext' => 1,
-			'rotation' => 0,
-			'transparency' => 0,
-			'remake'       => 0,
-			'textfilename' => 0
-		), $attr));
-		
-		if ( empty($text) ) return;
-		
-		$text = preg_replace( "/[^A-Z0-9]+/", "", strtoupper($text) );
-		
-		if ( $showtext === 'false' ) $showtext = false;
-		$showtext = (bool) $showtext;
-		if ( $transparency === 'false' ) $transparency = false;
-		$transparency = (bool) $transparency;
+/**
+ * Core class
+ */
+defined( 'WPINC' ) || exit ;
 
-		if ( $textfilename ) $filename = $text.'.'.$imgtype;
-		else $filename = sha1($text.$type.$imgtype.$height.$width.$showtext.$rotation.$transparency).'.'.$imgtype;
-		
-		if ( file_exists($uploads['basedir'].'/'.$filename) && empty($remake) )
-			return '<img src="'.esc_attr($uploads['baseurl'].'/'.$filename).'" height="'.esc_attr($height).'" alt="'.esc_attr($text).'" />';
-		
-		$inc =  ini_get('include_path');
-		ini_set('include_path', $inc.':'.dirname(__FILE__));
-		
-		require_once('Image/Barcode2.php');
-		$code = new Image_Barcode2();
-		$img = $code->draw($text, $type, $imgtype, false, $height-20, $width, $showtext, $rotation);
-		if ( !empty($transpacenry) ) imagecolortransparent($img, imagecolorallocate($img, 255, 255, 255));
-		
-		switch ( $imgtype ) :
-			case 'gif' : imagegif($img, $uploads['basedir'].'/'.$filename); break;
-			case 'jpg' : imagejpeg($img, $uploads['basedir'].'/'.$filename); break;
-			case 'png' : imagepng($img, $uploads['basedir'].'/'.$filename); break;
-		endswitch;
-		
-		imagedestroy($img);
-		
-		return '<img src="'.esc_attr($uploads['baseurl'].'/'.$filename).'" height="'.esc_attr($height).'" alt="'.esc_attr($text).'" />';
+class DoQRCode
+{
+	private static $_instance ;
+
+	/**
+	 * Init
+	 */
+	private function __construct()
+	{
+		add_shortcode( 'qrcode', array( $this, 'shortcode_handler' ) ) ;
 	}
 
-	function barcode_qrcode_gen2_qrcode_add_shortcode($attr) {
-		$uploads = wp_upload_dir();
+	/**
+	 * Shortcode handler
+	 */
+	public function shortcode_handler( $atts, $content )
+	{
+		require_once DOQRCODE_DIR . 'phpqrcode.lib.php' ;
 
-		extract(shortcode_atts(array(
-			'text'     => '',
-			'eclevel'  => 3,
-			'height'   => 60,
-			'width'    => 60,
-			'transparency' => 0,
-			'remake'   => 0,
-			'textfilename' => 0
-		), $attr));
-		
-		if ( empty($text) ) return;
+		$size = 3 ;
+		if ( ! empty( $atts[ 'size' ] ) ) {
+			$size = (int) $atts[ 'size' ] ;
+		}
 
-		if ( $textfilename ) $filename = $text.'.png';
-		else $filename = sha1($text.$eclevel.$height.$width.$transparency).'.png';
+		$margin = 3 ;
+		if ( ! empty( $atts[ 'margin' ] ) ) {
+			$margin = (int) $atts[ 'margin' ] ;
+		}
 
-		if ( file_exists($uploads['basedir'].'/'.$filename) && empty($remake) )
-			return '<img src="'.esc_attr($uploads['baseurl'].'/'.$filename).'" height="'.esc_attr($height).'" width="'.esc_attr($width).'" alt="'.esc_attr($text).'" />';
+		if ( ! empty( $atts[ 'text' ] ) ) {
+			$textinput = $atts[ 'text' ] ;
+		} else { $textinput ='no data'; }
 
-		require_once('phpqrcode.php');
-		
-		QRcode::png($text, $uploads['basedir'].'/'.$filename, 3, 3, 4, false, 0xFFFFFF, 0x000000, $height, $width, $transparency);
+		$svg = \WPDO\DoQRCode\QRcode::svg( $textinput, false, false, $size, $margin ) ;
+		$svg = str_replace( "\n", '', $svg ) ;
+		// convert svg to base64
+		$svg = 'data:image/svg+xml;base64,' . base64_encode( $svg ) ;
+		return "<img src='$svg' />" ;
+	}
 
-		return '<img src="'.esc_attr($uploads['baseurl'].'/'.$filename).'" height="'.esc_attr($height).'" width="'.esc_attr($width).'" alt="'.esc_attr($text).'" />';
+
+	/**
+	 * Get the current instance object.
+	 */
+	public static function get_instance()
+	{
+		if ( ! isset( self::$_instance ) ) {
+			self::$_instance = new self() ;
+		}
+		return self::$_instance ;
 	}
 }
-$barcode_qrcode_gen2 = new barcode_qrcode_gen2();
+$__core = DoQRCode::get_instance() ;
 
 // --------------------------- Nun die ipflag Funktionsklasse registrieren --------------------------------------------
 
@@ -813,7 +790,7 @@ public function country_code ($lang = null , $code = null) {
 
     public function add_options_page(){
         add_options_page( esc_html__( 'Settings Admin', 'pb-chartscodes' ), 
-		esc_html__( 'Charts QR-Barcodes', 'pb-chartscodes' ),
+		esc_html__( 'Charts QRcodes', 'pb-chartscodes' ),
 		'manage_options', __FILE__, array($this, 'options_page'));
         add_filter('plugin_action_links', array($this, 'action_links'), 10, 2);
     }
@@ -852,11 +829,10 @@ public function country_code ($lang = null , $code = null) {
 		
         <div class="wrap">
             <div class="img-wrap">
-                <h2>Barcodes und QRCodes generieren</h2>
+                <h2>QRCodes generieren</h2>
 			<div class="postbox">
-				<p><tt>erstellt Barcodes oder QR-Codes als Shortcode an der Cursorposition (Doku siehe Readme)<br>
-                    <code>[qrcode text=tel:00492307299607 height=100 width=100]</code><br>
-					<code>[barcode text=4930127000019 height=100 wdith=2 transparency=1]</code>
+				<p><tt>erstellt QR-Codes als Shortcode an der Cursorposition (Doku siehe Readme)<br>
+                    <code>[qrcode text="tel:00492307299607" size=3 margin=3]</code><br>
                 </tt></p>                    
             </div>
 			<div class="img-wrap">
