@@ -1,6 +1,6 @@
 === Charts QR-Barcodes ===
-Version: 11.1.33
-Stable tag: 11.1.33
+Version: 11.1.34
+Stable tag: 11.1.34
 Requires at least: 5.1
 Tested up to: 5.5.3
 Requires PHP: 7.2
@@ -114,6 +114,9 @@ if(isset($ipflag) && is_object($ipflag)){
 
 
 == Changelog ==
+
+= 11.1.34 =
+add Website facts to count all posts, post-formats, pages, authors, comments, custom post types: list, doodlez, downloads
 
 = 11.1.33 =
 Barcode libraries removed because of eol of library and because it stored multiple images in upload dir

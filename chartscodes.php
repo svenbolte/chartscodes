@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.33
-Stable tag: 11.1.33
+Version: 11.1.34
+Stable tag: 11.1.34
 Requires at least: 5.1
 Tested up to: 5.5.3
 Requires PHP: 7.2
@@ -476,6 +476,39 @@ public function country_code ($lang = null , $code = null) {
 		return '<img src="' .PB_ChartsCodes_URL_PATH . $xicon . '">';
 	}
 
+// Display WP-Stats Admin Page
+function website_display_stats() {
+    global $wpdb;
+    $wsstats = '<div class="wrap"><strong>Website-Fakten</strong> ';
+    $totalposts = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'post' AND post_status = 'publish'");
+    $wsstats .= '&nbsp; Beiträge: '. $totalposts;
+	if ( current_theme_supports( 'post-formats' ) ) {
+		$post_formats = get_theme_support( 'post-formats' );
+		if ( is_array( $post_formats[0] ) ) {
+			foreach ($post_formats[0] as $pf) {
+				$args = array( 'post_type'=> 'post', 'post_status' => 'publish', 'order' => 'DESC', 'tax_query' => array(
+						array( 'taxonomy' => 'post_format','field' => 'slug', 'terms' => array( 'post-format-'.$pf ) ) ) );
+				$asides = get_posts( $args );
+				$wsstats .= '&nbsp; <a href="'.get_site_url().'/type/'.$pf.'">'.get_post_format_string($pf).'</a>: '. count($asides);
+			} 
+		}
+	}
+    $totaldoodle = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'wpdoodle' AND post_status = 'publish'");
+    $wsstats .= '&nbsp; <a href="'.get_site_url().'/wpdoodle/">Termine/Umfragen:</a> '. $totaldoodle;
+    $totalw4pl = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'w4pl' AND post_status = 'publish'");
+    $wsstats .= '&nbsp; <a href="'.get_site_url().'/list/">Listen:</a> '. $totalw4pl;
+    $totaldown = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'dedo_download' AND post_status = 'publish'");
+    $wsstats .= '&nbsp; Downloads: '. $totaldown;
+    $totalpages = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'page' AND post_status = 'publish'");
+    $wsstats .= '&nbsp; Seiten: '. $totalpages;
+    $totalauthors = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->users LEFT JOIN $wpdb->usermeta ON $wpdb->usermeta.user_id = $wpdb->users.ID WHERE $wpdb->users.user_activation_key = '' AND $wpdb->usermeta.meta_key = '".$wpdb->prefix."user_level' AND (meta_value+0.00) > 1");
+    $wsstats .= '&nbsp; Autoren: '. $totalauthors;
+    $totalcomments = (int) $wpdb->get_var("SELECT COUNT(comment_ID) FROM $wpdb->comments WHERE comment_approved = '1'");
+    $wsstats .= '&nbsp; Kommentare: '. $totalcomments;
+    $wsstats .= '</div><br>';
+	return $wsstats;
+}
+
 	// 
 	//  Besucher in Datenbank schreiben oder als admin auswerten
 	// 
@@ -518,10 +551,12 @@ public function country_code ($lang = null , $code = null) {
 			if ($zeitraum > $interval) $zeitraum = $interval;
 			if ($zeitraum < 1) $zeitraum = 1;
 			$startday = ' - ' . date("d.m.Y", strtotime("-$zeitraum days"));
-			$html = '<div style="text-align:right"><form name="wcitems" method="get">'.$totales;
+			// Webseitenstatistik
+			$html  = $this->website_display_stats();
+			$html .= '<div style="text-align:right"><form name="wcitems" method="get">'.$totales;
 			$html .=' &nbsp; <input type="text" size="3" style="width:50px" id="zeitraum" name="zeitraum" value="'.$zeitraum.'">/'.$keepdays.' Tg ';
 			$html .='<input type="text" size="3" style="width:50px" id="items" name="items" value="'.$items.'"> Zeilen ';
-			$html.= '</select><input type="submit" value="'.__('show items', 'pb-chartscodes').'" /></form></div>';
+			$html .= '</select><input type="submit" value="'.__('show items', 'pb-chartscodes').'" /></form></div>';
 
 			//	Klicks pro Tag auf Zeitraum
 			$labels="";$values='';$label2="";
