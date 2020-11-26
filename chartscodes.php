@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.34
-Stable tag: 11.1.34
+Version: 11.1.35
+Stable tag: 11.1.35
 Requires at least: 5.1
 Tested up to: 5.5.3
 Requires PHP: 7.2
@@ -912,7 +912,7 @@ function website_display_stats() {
 			<div class="img-wrap postbox">
 				<img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-7.png' ?>"  alt="<?php esc_attr_e( 'Default Line Chart', 'pb-chartscodes' ); ?>">
                 <p><tt>
-                    <code>[chartscodes_line accentcolor=1 title="Obst Line Chart" xaxis="Obstsorte" yaxis="Umsatz" values="10,20,10,5,30,20,5" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi,Cranberry,Mango"]</code>
+                    <code>[chartscodes_line accentcolor=1 title="Obst Line Chart" xaxis="Obstsorte" yaxis="Umsatz" height="350" values="10,20,10,5,30,20,5" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi,Cranberry,Mango"]</code>
                 </tt></p>                    
             </div>
 			<div class="img-wrap postbox">

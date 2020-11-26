@@ -115,6 +115,9 @@ if(isset($ipflag) && is_object($ipflag)){
 
 == Changelog ==
 
+= 11.1.35 =
+line chart improvements, responsive and sharpen fit canvas. height parameter to set height of line chart (defaults to 350 px)
+
 = 11.1.34 =
 add Website facts to count all posts, post-formats, pages, authors, comments, custom post types: list, doodlez, downloads
 

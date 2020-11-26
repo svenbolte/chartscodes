@@ -415,6 +415,7 @@ class PB_ChartsCodes_Shortcode {
 				'title'		=> '',
 				'xaxis' => 'Einheit',
 				'yaxis' => 'Wert',
+				'height' 	=> '350',
 				'values' 	=> '',
 				'labels'	=> '',
 				'fontfamily' => 'Arial, sans-serif',
@@ -427,6 +428,7 @@ class PB_ChartsCodes_Shortcode {
 		if ( $accentcolor ) { $colorli= $this->farbpalette(1); }
 		$quotes = array( "\"", "'" );
 		$title 			= $input['title']; 
+		$height 			= $input['height']; 
 		$fontfamily 	= esc_attr( $input['fontfamily'] ); 
 		$fontstyle 		= esc_attr( $input['fontstyle'] ); 
 		$percentages 	= explode( ',', str_replace( $quotes, '', $input['values'] ) );
@@ -436,8 +438,14 @@ class PB_ChartsCodes_Shortcode {
 		?>
 		<div class="tp-linebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
 			<h3 class="pie-title"><?php echo esc_html( $title ); ?></h3>
-			<canvas id="<?php echo esc_attr( $id ); ?>" width="910" height="370" style="width:100%;height:100%">
+			<canvas id="<?php echo esc_attr( $id ); ?>" style="width:100%;height:<?php echo $height; ?>px" >
 			</canvas>
+			<script>
+			var canvas =  document.getElementById("<?php echo esc_attr( $id ); ?>");
+			canvas.width = canvas.clientWidth;
+			canvas.height = canvas.clientHeight;
+			var context = canvas.getContext("2d");
+			</script>
 		</div>
 		<?php  
 		$datapts='[ ';

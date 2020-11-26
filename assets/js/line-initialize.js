@@ -12,8 +12,8 @@ jQuery(function($){
 			title: '', 
 			xLabel: xaxis, 
 			yLabel: yaxis,
-			labelFont: '1.2em Arial', 
-			dataPointFont: '1.2em Arial',
+			labelFont: '1em Arial', 
+			dataPointFont: '1em Arial',
 			dataColors : color,
 			renderTypes: [CanvasChart.renderType.lines, CanvasChart.renderType.points],
 			dataPoints: eval(datapts)
