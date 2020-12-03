@@ -529,7 +529,7 @@ function website_display_stats() {
 
 		if ( $admin && is_user_logged_in() ) {
 			global $wpdb;
-			setlocale (LC_ALL, 'de_DE@euro', 'de_DE', 'de', 'ge'); 
+			setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 			$customers = $wpdb->get_results("SELECT MAX(id) as maxid, min(datum) as mindatum, COUNT(id) as xstored FROM " . $table);
 			foreach($customers as $customer){
 				$totales = sprintf(__('%1s clicks total, %2s since %3s', 'pb-chartscodes'),$customer->maxid,$customer->xstored,strftime("%a %e. %b %G", strtotime($customer->mindatum)) ).', '.human_time_diff( strtotime($customer->mindatum),current_time( 'timestamp' ) );
