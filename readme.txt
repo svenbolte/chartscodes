@@ -1,9 +1,9 @@
 === Charts QR-Barcodes ===
-Version: 11.1.34
-Stable tag: 11.1.34
+Version: 11.1.35
+Stable tag: 11.1.35
 Requires at least: 5.1
-Tested up to: 5.5.3
-Requires PHP: 7.2
+Tested up to: 5.6
+Requires PHP: 7.4
 Tags: line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -116,6 +116,7 @@ if(isset($ipflag) && is_object($ipflag)){
 == Changelog ==
 
 = 11.1.35 =
+Fixes div by 0 in charts when only zero values
 line chart improvements, responsive and sharpen fit canvas. height parameter to set height of line chart (defaults to 350 px)
 
 = 11.1.34 =

@@ -152,26 +152,28 @@ class PB_ChartsCodes_Shortcode {
 			</canvas>
 		</div>
 		<?php  
-		if ( $absolute == '1' ){ 
-			$sumperc = array_sum( $percentages );
-			for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
-				$percentages[$i] = round($percentages[$i]/ $sumperc * 100);
+		$sumperc = array_sum( $percentages );
+		if (intval($sumperc) > 0) {
+			if ( $absolute == '1' ){ 
+				for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
+					$percentages[$i] = round($percentages[$i]/ $sumperc * 100);
+				}
 			}
-		}
-		$tp_pie_data = array(
-			'canvas_id'	=> $id,
-			'percent'	=> $percentages,
-			'label'		=> $labels,
-			'color'		=> $colors,
-			'circle'	=> 45,
-			'radius'	=> $radius,
-			'fontstyle'	=> $fontstyle,
-			'fontfamily' => $fontfamily,
-			);
+			$tp_pie_data = array(
+				'canvas_id'	=> $id,
+				'percent'	=> $percentages,
+				'label'		=> $labels,
+				'color'		=> $colors,
+				'circle'	=> 45,
+				'radius'	=> $radius,
+				'fontstyle'	=> $fontstyle,
+				'fontfamily' => $fontfamily,
+				);
 
-		wp_localize_script( 'pb-chartscodes-initialize', 'tp_pie_data_'.$id, $tp_pie_data );
-		// enqueue bar js
-		wp_enqueue_script( 'pb-chartscodes-initialize' );
+			wp_localize_script( 'pb-chartscodes-initialize', 'tp_pie_data_'.$id, $tp_pie_data );
+			// enqueue bar js
+			wp_enqueue_script( 'pb-chartscodes-initialize' );
+		}
 		return ob_get_clean();
 	}
 
@@ -213,27 +215,28 @@ class PB_ChartsCodes_Shortcode {
 			</canvas>
 		</div>
 		<?php  
-		if ( $absolute == '1' ){ 
-			$sumperc = array_sum( $percentages );
-			for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
-				$percentages[$i] = round($percentages[$i]/ $sumperc * 100);
+		$sumperc = array_sum( $percentages );
+		if (intval($sumperc) > 0) {
+			if ( $absolute == '1' ){ 
+				for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
+					$percentages[$i] = round($percentages[$i]/ $sumperc * 100);
+				}
 			}
-		}
-		$tp_pie_data = array(
-			'canvas_id'	=> $id,
-			'percent'	=> $percentages,
-			'label'		=> $labels,
-			'color'		=> $colors,
-			'circle'	=> 15,
-			'radius'	=> $radius,
-			'fontstyle'	=> $fontstyle,
-			'fontfamily' => $fontfamily,
-			);
+			$tp_pie_data = array(
+				'canvas_id'	=> $id,
+				'percent'	=> $percentages,
+				'label'		=> $labels,
+				'color'		=> $colors,
+				'circle'	=> 15,
+				'radius'	=> $radius,
+				'fontstyle'	=> $fontstyle,
+				'fontfamily' => $fontfamily,
+				);
 
-		wp_localize_script( 'pb-chartscodes-initialize', 'tp_pie_data_'.$id, $tp_pie_data );
-			
-		// enqueue bar js
-		wp_enqueue_script( 'pb-chartscodes-initialize' );
+			wp_localize_script( 'pb-chartscodes-initialize', 'tp_pie_data_'.$id, $tp_pie_data );
+			// enqueue bar js
+			wp_enqueue_script( 'pb-chartscodes-initialize' );
+		}	
 		return ob_get_clean();
 	}
 
@@ -403,7 +406,6 @@ class PB_ChartsCodes_Shortcode {
 		$labl = rtrim($labl,",");
 		$valu = rtrim($valu,",");
 		$out .= ' values="'.$valu.'" labels="'.$labl.'"]';
-	// 
 		return do_shortcode($out);
 	}
 
@@ -476,8 +478,7 @@ class PB_ChartsCodes_Shortcode {
 	}
 
 
-	public function PB_ChartsCodes_create_shortcode() 
-	{
+	public function PB_ChartsCodes_create_shortcode() {
 		/*
 		 * Create Shortcodes  für Charts und für die Post per Month Statistik
 		 */

@@ -12,8 +12,8 @@ Domain Path: /languages/
 Version: 11.1.35
 Stable tag: 11.1.35
 Requires at least: 5.1
-Tested up to: 5.5.3
-Requires PHP: 7.2
+Tested up to: 5.6
+Requires PHP: 7.4
 */
 
 if ( ! defined( 'ABSPATH' ) ) {
