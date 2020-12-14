@@ -1,6 +1,6 @@
 === Charts QR-Barcodes ===
-Version: 11.1.35
-Stable tag: 11.1.35
+Version: 11.1.36
+Stable tag: 11.1.36
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
@@ -14,6 +14,7 @@ It also adds the functionality to output barcodes and qrcodes by use of the shor
 Flags and Country name and code can be shown by shortcode [ipflag] - visitor info browser and details optional
 Color palette for charts can be accentcolor with shares or random (colorful light colors) or given values
 [webcounter] shortcode to gather and display stats about visitors (ip shortened for GRPR compliance)
+[wp-timeline] shortcodes shows posts in a timeline, paged, filters are category slug list, post type list
 
 == Installation ==
 = Using The WordPress Dashboard =
@@ -113,7 +114,22 @@ if(isset($ipflag) && is_object($ipflag)){
 ```
 
 
+=========================================== WordPress Posts Timeline ===============================================
+
+Output your WordPress posts or custom post types as a timeline with a few options.
+
+== Description ==
+
+The WordPress Posts Timeline Plugin uses only css to create a vertical timeline for a post category or custom taxonomy. The CSS is very flexible so it should look good in small or large sizes. 
+It will pull uncategorized posts by default.
+
+
 == Changelog ==
+
+= 11.1.36 =
+merged timeline shortcode plugin to insert timelines (of posts and cpt) on cursor position
+timeline: fixed some bugs, removed options and options page, parameters can be given on shortcode:
+timeline: added pagination by 16 posts per page, changed style to show 2 events next to each other
 
 = 11.1.35 =
 Fixes div by 0 in charts when only zero values

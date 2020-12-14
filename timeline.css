@@ -1,0 +1,89 @@
+#timeline ul{
+width:100%;
+margin:0 auto;
+position:relative;
+display:inline-block;
+list-style: none;
+background:url('img/ul-bg.png') center top repeat-y;
+padding: 0;
+}
+#timeline ul li{
+display: inline;
+position: relative;
+width: 50%;
+}
+#timeline ul li .timeline-text{
+float:left;
+font-size:0.8em;
+line-height:1.2em;
+}
+#timeline ul li div{
+min-height:320px;
+height:320px;
+}
+#timeline ul li:nth-child(even){
+float: right;
+}
+#timeline ul li:nth-child(even) > div{
+display: block;
+float:left;
+background:url('img/li-bg.png') left center no-repeat;
+margin-left:-10px;
+padding-left:30px;
+}
+#timeline .timeline-date{
+text-align: right;
+margin-bottom: 1%;
+line-height:1em;
+font-size:0.8em;
+}
+#timeline ul li:nth-child(even) > div .timeline-date{
+text-align: left;
+}
+#timeline ul li:nth-child(odd) > div .timeline-datebild{
+font-size:1.4em;
+background-color:#666;
+border-radius:3px;
+color:#fff;
+padding:3px;
+text-align:center;
+right:-15px;
+position:absolute;
+}
+#timeline ul li:nth-child(even) > div .timeline-datebild{
+display:none;
+}
+#timeline ul li:nth-child(odd){
+float: left;
+text-align: right;
+}
+#timeline ul li:nth-child(odd) > div{
+display:block;
+float:right;
+background:url('img/li-bg.png') right center no-repeat;
+margin-right:-10px;
+padding-right:30px;
+}
+#timeline ul li:nth-child(odd) > div .timeline-text{
+float:right;
+text-align: right;
+margin-left: 0;
+}
+#timeline ul .timeline-image{
+width:100%;
+height: 180px;
+max-height:180px;
+overflow: hidden;
+}
+#timeline ul .timeline-image img {
+width:100%;
+height: 180px;
+max-height:180px;
+}
+#timeline ul li:nth-child(odd) > div .timeline-image {
+float:right;
+}
+#timeline ul li:nth-child(even) > div .timeline-image {
+float:left;
+}
+	

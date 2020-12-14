@@ -477,7 +477,6 @@ class PB_ChartsCodes_Shortcode {
 		return ob_get_clean();
 	}
 
-
 	public function PB_ChartsCodes_create_shortcode() {
 		/*
 		 * Create Shortcodes  für Charts und für die Post per Month Statistik
@@ -492,3 +491,120 @@ class PB_ChartsCodes_Shortcode {
 	}
 }
 new PB_ChartsCodes_Shortcode();
+
+// ========================================== Shortcode Timeline from posts ====================================================
+
+// get shortcode attributes, pass to display function
+function timeline_shortcode($atts){
+	$args = shortcode_atts( array(
+		      'catname' => '', // insert slugs of all post types you want, sep by comma, empty for all types
+		      'type' => 'post,question,wpdoodle',         // separate type slugs by comma
+			  'items' => 1000,     // Maximal 1000 Posts paginiert anzeigen
+			  'dateformat' => 'l, d. M Y, H:i',
+     		), $atts );
+     return display_timeline($args);
+ }
+add_shortcode('wp-timeline', 'timeline_shortcode');
+
+//display the timeline
+function display_timeline($args){
+	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+		$post_args = array(
+			'post_type' => explode( ',', $args['type'] ),
+			'numberposts' => $args['items'],
+			'posts_per_page' => 16,
+			'paged' => $paged,
+			'page' => $paged,
+			'category_name' => $args['catname'],
+			'orderby' => 'post_date',
+			'order' => 'DESC',
+			'post_status' => 'publish',
+		);
+		$tpostarg = array(
+			'numberposts' => -1,
+			'post_type' => explode( ',', $args['type'] ),
+			'category_name' => $args['catname'],
+			'post_status' => 'publish',
+		);
+		$tpostcount = count(get_posts( $tpostarg ));
+		if ( $tpostcount > intval($args['items']) ) $tpostcount = intval($args['items']);
+		$posts = get_posts( $post_args );
+		$out =  '<div id="timeline">';
+		$out .=   '<ul>';
+		foreach ( $posts as $post ) : setup_postdata($post);
+	        $out .=  '<li><div>';
+			$out .=  '<nobr><a href="' . get_permalink($post->ID) . '" title="'.$post->title.'"><h6 class="headline">';
+			$out .=  ' '.get_the_title($post->ID). '</h4></a></nobr>';
+			$out .=  '<span class="timeline-date">';
+			$out .=  get_the_time($args['dateformat'], $post->ID);
+			$out .=  ' vor '. human_time_diff( get_the_time( 'U', $post->ID ), current_time( 'timestamp' ) );
+			$out .=  '</span><br>';
+			$out .=  '<span class="timeline-datebild" style="background-color:'. get_theme_mod( 'link-color', '#777' ) .'">';
+			$out .=  get_the_time( 'd', $post->ID ).'<br><span style="font-size:0.7em">'.get_the_time( 'M', $post->ID );
+			$out .=  '</span></span>';
+			$out .=  '<span class="timeline-image">';
+			if ( has_post_thumbnail( $post->ID ) ) {
+				$out .=  get_the_post_thumbnail( $post->ID, 'large' ) . '</span>';
+			} else {
+				$first_img='';
+				$output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', get_the_content(), $matches);
+				if ($output) { $first_img = '<img src="'. $matches[1][0] . '">'; } else { 
+					if ( has_post_thumbnail() == false ) {
+						if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
+							$cbild = z_taxonomy_image_url($category[0]->term_id);
+							$first_img = '<img src="' . $cbild . '">';	
+						} 
+					} else {
+						$cbild = get_the_post_thumbnail_url();
+						$first_img = '<img src="' . $cbild . '">';	
+					}
+				}
+				$out .= $first_img . '</span>';
+			}	
+			$out .=  '<span class="timeline-text">'.wp_trim_words(get_the_excerpt( $post->ID ), 10 ).'</span>';
+			$out .=  '</div></li>';
+    	endforeach;
+		$out .=  '</ul>';
+		$out .=  '</div> <!-- #timeline -->';
+		$big = 999999999; // need an unlikely integer
+		$out .= paginate_links( array(
+			'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+			'format' => '?paged=%#%',
+			'current' => max( 1, get_query_var('paged') ),
+			'total' => intval($tpostcount / 16),
+		) );
+		wp_reset_postdata();
+		return $out;
+}
+
+//is shortcode active on page? if so, add styles to header
+function has_timeline_shortcode( $posts ) {
+        if ( empty($posts) )
+            return $posts;
+        $shortcode_found = false;
+        foreach ($posts as $post) {
+            if ( !( stripos($post->post_content, '[wp-timeline') === false ) ) {
+                $shortcode_found = true;
+                break;
+            }
+        }
+        if ( $shortcode_found ) {
+            add_timeline_styles();
+        }
+        return $posts;
+    }
+add_action('the_posts', 'has_timeline_shortcode');
+
+//add styles to header
+function add_timeline_styles(){
+	add_action('wp_print_styles', 'timeline_styles');
+}
+function timeline_styles(){
+	wp_register_style($handle = 'timeline', $src = plugins_url('timeline.css', __FILE__), $deps = array(), $ver = '1.0.0', $media = 'all');
+	wp_enqueue_style('timeline');
+}
+
+//do shortcode for get_the_excerpt() && get_the_content()
+add_filter('get_the_content', 'do_shortcode');
+add_filter('get_the_excerpt', 'do_shortcode');
+?>

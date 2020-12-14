@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.35
-Stable tag: 11.1.35
+Version: 11.1.36
+Stable tag: 11.1.36
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
@@ -863,6 +863,17 @@ function website_display_stats() {
         </div>
 		
         <div class="wrap">
+            <div class="img-wrap">
+                <h2>Beitrags-Timeline anzeigen (Shortcode)</h2>
+			<div class="postbox">
+				<p><tt>erstellt eine 2-spaltige Beitrags-Timeline als Shortcode an der Cursorposition (Doku siehe Readme)<br>
+                    <code>[wp-timeline items=100 type="post" catname="software"]</code><br>
+			  'catname' => '' // insert slugs of all post types you want, sep by comma, empty for all types<br>
+		      'type' => 'post,question,wpdoodle'         // separate type slugs by comma<br>
+			  'items' => 1000     // Maximal 1000 Posts paginiert anzeigen<br>
+			  'dateformat' => 'l, d. M Y, H:i'<br>
+                </tt></p>                    
+            </div>
             <div class="img-wrap">
                 <h2>QRCodes generieren</h2>
 			<div class="postbox">
