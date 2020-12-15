@@ -871,7 +871,9 @@ function website_display_stats() {
 			  'catname' => '' // insert slugs of all post types you want, sep by comma, empty for all types<br>
 		      'type' => 'post,question,wpdoodle'         // separate type slugs by comma<br>
 			  'items' => 1000     // Maximal 1000 Posts paginiert anzeigen<br>
-			  'dateformat' => 'l, d. M Y, H:i'<br>
+			  'perpage' => 20,     // posts per page for pagination
+			  'pics' => 1,         // 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)
+			  'dateformat' => 'l, d. M Y, H:i'
                 </tt></p>                    
             </div>
             <div class="img-wrap">

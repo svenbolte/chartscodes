@@ -4,31 +4,24 @@ Stable tag: 11.1.36
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
-Tags: line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
+Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 == Description ==
-This Plugin provides you an elegent Line Charts, Bar Graph and Pie Charts with multiple designs and colors. ie. Default Pie Chart, Doughnut Pie Chart and Polar Pie Chart.
-It also adds the functionality to output barcodes and qrcodes by use of the shortcodes.
-Flags and Country name and code can be shown by shortcode [ipflag] - visitor info browser and details optional
-Color palette for charts can be accentcolor with shares or random (colorful light colors) or given values
+Shortcode collection for creating Line Charts, Bar Graph and Pie Charts (normal, donut, polar) with multiple colors.
+[qrcode] creates qrcodes, [ipflag] shows country name of visitor (IP shortened for GDPR) - visitor info browser and details optional
 [webcounter] shortcode to gather and display stats about visitors (ip shortened for GRPR compliance)
 [wp-timeline] shortcodes shows posts in a timeline, paged, filters are category slug list, post type list
+Color palette for charts can be accentcolor with shares or random (colorful light colors) or given values
 
 == Installation ==
-= Using The WordPress Dashboard =
-* Navigate to the 'Add New' in the plugins dashboard
-* Search for TP PieBuilder
-* Click Install Now
-* Activate the plugin on the Plugin dashboard
 = Uploading in WordPress Dashboard =
 * Navigate to the 'Add New' in the plugins dashboard
 * Navigate to the 'Upload' area
 * Select chartscodes.zip from your computer
 * Click 'Install Now'
 * Activate the plugin in the Plugin dashboard
-
 
 == Shortcodes for pies and bars and last post barchart ==
  = Defaults Atts = 
@@ -65,16 +58,16 @@ Color palette for charts can be accentcolor with shares or random (colorful ligh
 	[posts_per_month_last months=x]
 
 	
-==================================  Barcodes and CRCodes Usage =============================================
+==================================  QRCodes Shortcode Usage ==========================================================
 
 In order to output barcodes, [barcode] will be used. Attributes:
  text ... A text that should be in the image qrcode. 
  size ... Size of the qrcode (2 for x2)
  margin ... margin in pixel 
 
- &#91;qrcode text="tel:4930127000019" size=2 margin=5&#93;
+ [qrcode text="tel:4930127000019" size=2 margin=5]
 
-===================================== IPFflag ===========================================================
+===================================== IPFflag  Usage =================================================================
 
 Resolves IP address to ISO 3166-1 alpha-2 two-letter country code and name and displays country flag image if required.
 IPFflag resolves IP address to [ISO 3166-1 alpha-2](http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) two-letter country code and name using [ip-countryside](http://code.google.com/p/ip-countryside/) generated database and displays country flag if required. In contrast to other IP to country solutions this one allows you to create and update database your self using 5 Regional Internet Registrars (RIR) databases: AFRINIC, APNIC, ARIN, LACNIC and RIPE and ip-countryside open source application that does the work of generating database for you. You can also update IP to country database automatically with single click or schedule weekly automatic updates.
@@ -113,16 +106,20 @@ if(isset($ipflag) && is_object($ipflag)){
 }
 ```
 
-
 =========================================== WordPress Posts Timeline ===============================================
 
-Output your WordPress posts or custom post types as a timeline with a few options.
+Output your WordPress posts or custom post types as a timeline with options.
 
-== Description ==
+== Shortcode usage abnd defaults ==
+[wp-timeline]
+	'catname' => '',     // insert slugs of all post types you want, sep by comma, empty for all types
+	'type' => 'post,question,wpdoodle',         // separate type slugs by comma
+	'items' => 1000,     // Maximal 1000 Posts paginiert anzeigen
+	'perpage' => 20,     // posts per page for pagination
+	'pics' => 1,         // 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)
+	'dateformat' => 'l, d.m.Y H:i',
 
-The WordPress Posts Timeline Plugin uses only css to create a vertical timeline for a post category or custom taxonomy. The CSS is very flexible so it should look good in small or large sizes. 
-It will pull uncategorized posts by default.
-
+=====================================================================================================================
 
 == Changelog ==
 

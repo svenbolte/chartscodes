@@ -497,10 +497,12 @@ new PB_ChartsCodes_Shortcode();
 // get shortcode attributes, pass to display function
 function timeline_shortcode($atts){
 	$args = shortcode_atts( array(
-		      'catname' => '', // insert slugs of all post types you want, sep by comma, empty for all types
+		      'catname' => '',     // insert slugs of all post types you want, sep by comma, empty for all types
 		      'type' => 'post,question,wpdoodle',         // separate type slugs by comma
 			  'items' => 1000,     // Maximal 1000 Posts paginiert anzeigen
-			  'dateformat' => 'l, d. M Y, H:i',
+			  'perpage' => 20,     // posts per page for pagination
+			  'pics' => 1,         // 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)
+			  'dateformat' => 'l, d.m.Y H:i',
      		), $atts );
      return display_timeline($args);
  }
@@ -512,7 +514,7 @@ function display_timeline($args){
 		$post_args = array(
 			'post_type' => explode( ',', $args['type'] ),
 			'numberposts' => $args['items'],
-			'posts_per_page' => 16,
+			'posts_per_page' => $args['perpage'],
 			'paged' => $paged,
 			'page' => $paged,
 			'category_name' => $args['catname'],
@@ -535,34 +537,36 @@ function display_timeline($args){
 	        $out .=  '<li><div>';
 			$out .=  '<nobr><a href="' . get_permalink($post->ID) . '" title="'.$post->title.'"><h6 class="headline">';
 			$out .=  ' '.get_the_title($post->ID). '</h4></a></nobr>';
-			$out .=  '<span class="timeline-date">';
+			$out .=  '<span class="timeline-datebild" style="background-color:'. get_theme_mod( 'link-color', '#777' ) .'">';
+			$out .=  get_the_time( 'D', $post->ID ).'<br><span style="font-size:1.5em">'.get_the_time( 'd', $post->ID ).'</span><br>'.get_the_time( 'M', $post->ID );
+			$out .=  '</span>';
+			if (  $args['pics'] == 1 ) {
+				$out .=  '<div class="timeline-image">';
+				if ( has_post_thumbnail( $post->ID ) ) {
+					$out .=  get_the_post_thumbnail( $post->ID, 'large' );
+				} else {
+					$first_img='';
+					$output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', get_the_content(), $matches);
+					if ($output) { $first_img = '<img src="'. $matches[1][0] . '">'; } else { 
+						if ( has_post_thumbnail() == false ) {
+							if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
+								$cbild = z_taxonomy_image_url($category[0]->term_id);
+								$first_img = '<img src="' . $cbild . '">';	
+							} 
+						} else {
+							$cbild = get_the_post_thumbnail_url();
+							$first_img = '<img src="' . $cbild . '">';	
+						}
+					}
+					$out .= $first_img;
+				}	
+				$out .= '</div>';
+			}
+			$out .= '<span class="timeline-text"><abbr>';
 			$out .=  get_the_time($args['dateformat'], $post->ID);
 			$out .=  ' vor '. human_time_diff( get_the_time( 'U', $post->ID ), current_time( 'timestamp' ) );
-			$out .=  '</span><br>';
-			$out .=  '<span class="timeline-datebild" style="background-color:'. get_theme_mod( 'link-color', '#777' ) .'">';
-			$out .=  get_the_time( 'd', $post->ID ).'<br><span style="font-size:0.7em">'.get_the_time( 'M', $post->ID );
-			$out .=  '</span></span>';
-			$out .=  '<span class="timeline-image">';
-			if ( has_post_thumbnail( $post->ID ) ) {
-				$out .=  get_the_post_thumbnail( $post->ID, 'large' ) . '</span>';
-			} else {
-				$first_img='';
-				$output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', get_the_content(), $matches);
-				if ($output) { $first_img = '<img src="'. $matches[1][0] . '">'; } else { 
-					if ( has_post_thumbnail() == false ) {
-						if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
-							$cbild = z_taxonomy_image_url($category[0]->term_id);
-							$first_img = '<img src="' . $cbild . '">';	
-						} 
-					} else {
-						$cbild = get_the_post_thumbnail_url();
-						$first_img = '<img src="' . $cbild . '">';	
-					}
-				}
-				$out .= $first_img . '</span>';
-			}	
-			$out .=  '<span class="timeline-text">'.wp_trim_words(get_the_excerpt( $post->ID ), 10 ).'</span>';
-			$out .=  '</div></li>';
+			$out .=  '</abbr> &nbsp; '.wp_trim_words(get_the_excerpt( $post->ID ), 15 );
+			$out .=  '</span></div></li>';
     	endforeach;
 		$out .=  '</ul>';
 		$out .=  '</div> <!-- #timeline -->';

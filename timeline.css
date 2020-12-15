@@ -4,7 +4,7 @@ margin:0 auto;
 position:relative;
 display:inline-block;
 list-style: none;
-background:url('img/ul-bg.png') center top repeat-y;
+background:url('Image/ul-bg.png') center top repeat-y;
 padding: 0;
 }
 #timeline ul li{
@@ -14,12 +14,11 @@ width: 50%;
 }
 #timeline ul li .timeline-text{
 float:left;
-font-size:0.8em;
-line-height:1.2em;
-}
-#timeline ul li div{
-min-height:320px;
-height:320px;
+line-height:1.1em;
+height:50px;
+max-height:50px;
+min-height:50px;
+overflow:hidden;
 }
 #timeline ul li:nth-child(even){
 float: right;
@@ -27,7 +26,6 @@ float: right;
 #timeline ul li:nth-child(even) > div{
 display: block;
 float:left;
-background:url('img/li-bg.png') left center no-repeat;
 margin-left:-10px;
 padding-left:30px;
 }
@@ -41,7 +39,8 @@ font-size:0.8em;
 text-align: left;
 }
 #timeline ul li:nth-child(odd) > div .timeline-datebild{
-font-size:1.4em;
+line-height:1.2em;
+font-size:0.9em;
 background-color:#666;
 border-radius:3px;
 color:#fff;
@@ -60,7 +59,6 @@ text-align: right;
 #timeline ul li:nth-child(odd) > div{
 display:block;
 float:right;
-background:url('img/li-bg.png') right center no-repeat;
 margin-right:-10px;
 padding-right:30px;
 }
