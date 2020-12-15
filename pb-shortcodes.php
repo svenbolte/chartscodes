@@ -85,7 +85,7 @@ class PB_ChartsCodes_Shortcode {
 		$id 			= uniqid( 'tp_pie_', false ); 
 		?>
 		<div class="tp-piebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
-			<h3 class="pie-title"><?php echo esc_html( $title ); ?></h3>
+			<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
 			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="370" style="width:100%;height:100%">
 			</canvas>
 		</div>
@@ -146,7 +146,7 @@ class PB_ChartsCodes_Shortcode {
 		?>
 		<div class="tp-piebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
 			<?php if ( ! empty( $title ) ) : ?>
-				<h3 class="pie-title"><?php echo esc_html( $title ); ?></h3>
+				<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
 			<?php endif; ?>
 			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="370" style="width:100%;height:100%">
 			</canvas>
@@ -209,7 +209,7 @@ class PB_ChartsCodes_Shortcode {
 		?>
 		<div class="tp-piebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
 			<?php if ( ! empty( $title ) ) : ?>
-				<h3 class="pie-title"><?php echo esc_html( $title ); ?></h3>
+				<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
 			<?php endif; ?>
 			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="370" style="width:100%;height:100%">
 			</canvas>
@@ -268,7 +268,7 @@ class PB_ChartsCodes_Shortcode {
 		?>
 		<div class="tp-bar" data-id="tp_bar_data_<?php echo esc_attr( $id ); ?>">
 			<?php if ( ! empty( $title ) ) : ?>
-			<h3 class="pie-title"><?php echo esc_html( $title ); ?></h3>
+			<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
 			<?php endif; ?>
 			<div class="tp-skills-bar">
 				<?php if ( $count > 0 ) :
@@ -333,7 +333,7 @@ class PB_ChartsCodes_Shortcode {
 		?>
 		<div class="tp-horizontalbar" data-id="tp_horizontalbar_data_<?php echo esc_attr( $id ); ?>">
 			<?php if ( ! empty( $title ) ) : ?>
-				<h3 class="pie-title"><?php echo esc_html( $title ); ?></h3>
+				<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
 			<?php endif; ?>
 			<div class="tp-skills-horizontalbar">
 				<?php if ( $count > 0 ) :
@@ -441,7 +441,7 @@ class PB_ChartsCodes_Shortcode {
 		$id 			= uniqid( 'tp_line_', false ); 
 		?>
 		<div class="tp-linebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
-			<h3 class="pie-title"><?php echo esc_html( $title ); ?></h3>
+			<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
 			<canvas id="<?php echo esc_attr( $id ); ?>" style="width:100%;height:<?php echo $height; ?>px" >
 			</canvas>
 			<script>

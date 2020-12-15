@@ -561,7 +561,7 @@ function website_display_stats() {
 			//	Klicks pro Tag auf Zeitraum
 			$labels="";$values='';$label2="";
 			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $zeitraum);
-			$html .='<h4>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h4><table>';
+			$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h6><table>';
 			foreach($customers as $customer){
 				$datum = strftime("%a %e. %b %G", strtotime($customer->datum));	
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
@@ -580,7 +580,7 @@ function website_display_stats() {
 			$xsum=0;
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT postid, COUNT(*) AS pidcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY postid ORDER BY pidcount desc LIMIT ".$items );
-			$html .='<h4>'.sprintf(__('top %1s pages last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h4><table>';
+			$html .='<h6>'.sprintf(__('top %1s pages last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h6><table>';
 			foreach($customers as $customer){
 				$labels.= get_the_title($customer->postid).',';
 				$values.= $customer->pidcount.',';
@@ -598,7 +598,7 @@ function website_display_stats() {
 			//	Top x Herkunftsseiten auf Zeitraum
 			$xsum=0;
 			$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY referer ORDER BY refcount desc LIMIT ".$items );
-			$html .='<h4>'.sprintf(__('top %1s referers last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h4><table>';
+			$html .='<h6>'.sprintf(__('top %1s referers last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h6><table>';
 			foreach($customers as $customer){
 				$xsum += absint($customer->refcount);
 				$html .= '<tr><td>' . $customer->refcount . '</td><td>' . $customer->referer . '</td></tr>';
@@ -607,7 +607,7 @@ function website_display_stats() {
 			
 			//	Top x Besucher mit Details auf Zeitraum
 			$customers = $wpdb->get_results("SELECT * FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ORDER BY datum desc LIMIT ".$items);
-			$html .='<h4>'.sprintf(__('last %1s visitors last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h4><table>';
+			$html .='<h6>'.sprintf(__('last %1s visitors last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h6><table>';
 			foreach($customers as $customer){
 				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
 				$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
@@ -621,7 +621,7 @@ function website_display_stats() {
 			//	Besucher nach Stunde auf Zeitraum
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT SUBSTRING(datum,12,2) AS stunde, COUNT(SUBSTRING(datum,12,2)) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY SUBSTRING(datum,12,2) ORDER BY SUBSTRING(datum,12,2) ");
-			$html .='<h4>'.sprintf(__('clicks by hour last %s days', 'pb-chartscodes'),$zeitraum).$startday.'</h4><table>';
+			$html .='<h6>'.sprintf(__('clicks by hour last %s days', 'pb-chartscodes'),$zeitraum).$startday.'</h6><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
 				$labels.= $customer->stunde.',';
@@ -635,7 +635,7 @@ function website_display_stats() {
 			//	Besucher nach Wochentag auf Zeitraum
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT WEEKDAY(SUBSTRING(datum,1,10)) AS wotag, COUNT(WEEKDAY(SUBSTRING(datum,1,10))) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY WEEKDAY(SUBSTRING(datum,1,10)) ORDER BY SUBSTRING(datum,1,10) ");
-			$html .='<h4>'.sprintf(__('clicks by weekday last %s days', 'pb-chartscodes'),$zeitraum) . $startday . '</h4><table>';
+			$html .='<h6>'.sprintf(__('clicks by weekday last %s days', 'pb-chartscodes'),$zeitraum) . $startday . '</h6><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
 				$labels.= $tage[$customer->wotag].',';
@@ -649,7 +649,7 @@ function website_display_stats() {
 			//	Top x Browser auf Zeitraum
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT browser, COUNT(browser) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY browser ORDER BY bcount desc LIMIT ".$items);
-			$html .='<h4>'.sprintf(__('Top %1s Browsers last %2s days', 'pb-chartscodes'),$items,$zeitraum).'</h4><table>';
+			$html .='<h6>'.sprintf(__('Top %1s Browsers last %2s days', 'pb-chartscodes'),$items,$zeitraum).'</h6><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->bcount . '</td><td>' . $customer->browser . '</td></tr>';
 				$labels.= $customer->browser.',';
@@ -663,7 +663,7 @@ function website_display_stats() {
 			//	Top x Länder auf Zeitraum
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT country, COUNT(country) AS ccount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY country ORDER BY ccount desc LIMIT ".$items);
-			$html .='<h4>'.sprintf(__('Top %1s countries last %2s days', 'pb-chartscodes'),$items,$zeitraum).'</h4><table>';
+			$html .='<h6>'.sprintf(__('Top %1s countries last %2s days', 'pb-chartscodes'),$items,$zeitraum).'</h6><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->ccount . '</td><td>' . $this->country_code('de',$customer->country) . '</td></tr>';
 				$labels.= $this->country_code('de',$customer->country) . ',';
@@ -1135,6 +1135,4 @@ function website_display_stats() {
 }
 global $ipflag;
 $ipflag = new ipflag();
-
-
 ?>
