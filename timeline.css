@@ -20,6 +20,14 @@ max-height:50px;
 min-height:50px;
 overflow:hidden;
 }
+#timeline ul li .noimages{
+float:left;
+line-height:1.1em;
+height:70px;
+max-height:70px;
+min-height:70px;
+overflow:hidden;
+}
 #timeline ul li:nth-child(even){
 float: right;
 }
@@ -41,16 +49,28 @@ text-align: left;
 #timeline ul li:nth-child(odd) > div .timeline-datebild{
 line-height:1.2em;
 font-size:0.9em;
-background-color:#666;
-border-radius:3px;
+background-color:#888;
+border-radius:4px;
+border-right:4px solid transparent;
 color:#fff;
 padding:3px;
-text-align:center;
+text-align:left;
 right:-15px;
+top:0;	
 position:absolute;
 }
 #timeline ul li:nth-child(even) > div .timeline-datebild{
-display:none;
+line-height:1.2em;
+font-size:0.9em;
+background-color:#888;
+color:#fff;
+border-radius:4px;
+border-left:4px solid transparent;
+padding:3px;
+text-align:right;
+left:-15px;
+bottom:0;	
+position:absolute;
 }
 #timeline ul li:nth-child(odd){
 float: left;

@@ -502,13 +502,14 @@ function timeline_shortcode($atts){
 			  'items' => 1000,     // Maximal 1000 Posts paginiert anzeigen
 			  'perpage' => 20,     // posts per page for pagination
 			  'pics' => 1,         // 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)
-			  'dateformat' => 'l, d.m.Y H:i',
+			  'dateformat' => 'D d.m.Y H:i',
      		), $atts );
      return display_timeline($args);
  }
 add_shortcode('wp-timeline', 'timeline_shortcode');
 
-//display the timeline
+
+////display the timeline
 function display_timeline($args){
 	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 		$post_args = array(
@@ -533,11 +534,12 @@ function display_timeline($args){
 		$posts = get_posts( $post_args );
 		$out =  '<div id="timeline">';
 		$out .=   '<ul>';
+		$prevdate = '';
 		foreach ( $posts as $post ) : setup_postdata($post);
 	        $out .=  '<li><div>';
 			$out .=  '<nobr><a href="' . get_permalink($post->ID) . '" title="'.$post->title.'"><h6 class="headline">';
 			$out .=  ' '.get_the_title($post->ID). '</h4></a></nobr>';
-			$out .=  '<span class="timeline-datebild" style="background-color:'. get_theme_mod( 'link-color', '#777' ) .'">';
+			$out .=  '<span class="timeline-datebild" style="background-color:'. get_theme_mod( 'link-color', '#888' ) .'">';
 			$out .=  get_the_time( 'D', $post->ID ).'<br><span style="font-size:1.5em">'.get_the_time( 'd', $post->ID ).'</span><br>'.get_the_time( 'M', $post->ID );
 			$out .=  '</span>';
 			if (  $args['pics'] == 1 ) {
@@ -562,11 +564,15 @@ function display_timeline($args){
 				}	
 				$out .= '</div>';
 			}
-			$out .= '<span class="timeline-text"><abbr>';
+			if (  $args['pics'] == 1 ) { $imgon=''; $exwordcount = 15; } else { $imgon ='noimages'; $exwordcount = 30; }
+			$out .= '<span class="timeline-text '.$imgon.'" ><abbr>';
+			if ( !empty($prevdate)) $out .= ' <i title="älter als voriger Beitrag" class="fa fa-arrows-h"></i> '.human_time_diff($prevdate,get_the_time( 'U', $post->ID ));
+			$out .= ' <i class="fa fa-calendar-o"></i> ';
 			$out .=  get_the_time($args['dateformat'], $post->ID);
 			$out .=  ' vor '. human_time_diff( get_the_time( 'U', $post->ID ), current_time( 'timestamp' ) );
-			$out .=  '</abbr> &nbsp; '.wp_trim_words(get_the_excerpt( $post->ID ), 15 );
-			$out .=  '</span></div></li>';
+			$out .=  ' &nbsp; <i class="fa fa-newspaper-o"></i> '.wp_trim_words(get_the_excerpt( $post->ID ), $exwordcount );
+			$out .=  '</abbr></span></div></li>';
+			$prevdate = get_the_time( 'U', $post->ID );
     	endforeach;
 		$out .=  '</ul>';
 		$out .=  '</div> <!-- #timeline -->';
