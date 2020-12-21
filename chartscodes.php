@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Charts QRcodes
-Description: Shortcodes for bar line and pie charts, QRcodes and ipflags. Pie Chart, Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG Shortcode and variable resolves IP address to ISO 3166-1a2 country code and name and displays country flag image
+Description: Webcounter, shortcodes for QRCodes, IP2Flag, post timeline, bar, line and Pie, Donut Pie, Polar Pie, Horizontal Bar, monthly post archive as bar chart, use as html widget too
 Author: PBMod und andere
 Plugin URI: https://github.com/svenbolte/chartcodes
 Author URI: https://github.com/svenbolte
@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.36
-Stable tag: 11.1.36
+Version: 11.1.37
+Stable tag: 11.1.37
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4

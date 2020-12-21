@@ -1,6 +1,6 @@
 === Charts QR-Barcodes ===
-Version: 11.1.36
-Stable tag: 11.1.36
+Version: 11.1.37
+Stable tag: 11.1.37
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
@@ -122,6 +122,9 @@ Output your WordPress posts or custom post types as a timeline with options.
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.37 =
+german translations and description fixed
 
 = 11.1.36 =
 merged timeline shortcode plugin to insert timelines (of posts and cpt) on cursor position

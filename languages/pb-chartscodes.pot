@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Charts QRCodes Barcodes\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-27 16:10+0000\n"
+"POT-Creation-Date: 2020-12-21 09:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PBMod\n"
 "Language-Team: \n"
@@ -15,221 +15,220 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.4.0; wp-5.4.2"
 
-#: chartscodes.php:259
-msgid "every week"
-msgstr ""
-
-#: chartscodes.php:525
+#: chartscodes.php:535
 #, php-format
 msgid "%1s clicks total, %2s since %3s"
 msgstr ""
 
-#: chartscodes.php:547
-msgid "show items"
-msgstr ""
-
-#: chartscodes.php:552
-#, php-format
-msgid "clicks last %s days"
-msgstr ""
-
-#: chartscodes.php:571
-#, php-format
-msgid "top %1s pages last %2s days"
-msgstr ""
-
-#: chartscodes.php:578
+#: chartscodes.php:590
 #, php-format
 msgid ", visitors alltime: %s"
 msgstr ""
 
-#: chartscodes.php:580 chartscodes.php:594
+#: pb-shortcodes.php:360
+#, php-format
+msgid "<strong>%1s</strong> values, <strong>%2s</strong> sum of values"
+msgstr ""
+
+#: chartscodes.php:592 chartscodes.php:606
 #, php-format
 msgid "<strong>%s</strong> sum of values"
 msgstr ""
 
-#: chartscodes.php:589
-#, php-format
-msgid "top %1s referers last %2s days"
+#: chartscodes.php:887
+msgid "Bar and Piecharts"
 msgstr ""
 
-#: chartscodes.php:598
-#, php-format
-msgid "last %1s visitors last %2s days"
+#: chartscodes.php:914
+msgid "Bar Graph Chart"
 msgstr ""
 
-#: chartscodes.php:612
+#: chartscodes.php:765
+msgid "browser"
+msgstr ""
+
+#. Name of the plugin
+#: chartscodes.php:828
+msgid "Charts QRcodes"
+msgstr ""
+
+#: chartscodes.php:847
+msgid "Chartscodes Settings"
+msgstr ""
+
+#: chartscodes.php:624
 #, php-format
 msgid "clicks by hour last %s days"
 msgstr ""
 
-#: chartscodes.php:626
+#: chartscodes.php:638
 #, php-format
 msgid "clicks by weekday last %s days"
 msgstr ""
 
-#: chartscodes.php:640
+#: chartscodes.php:564
 #, php-format
-msgid "Top %1s Browsers last %2s days"
+msgid "clicks last %s days"
 msgstr ""
 
-#: chartscodes.php:654
-#, php-format
-msgid "Top %1s countries last %2s days"
-msgstr ""
-
-#: chartscodes.php:748
-msgid "ip network"
-msgstr ""
-
-#: chartscodes.php:748
-msgid "referer"
-msgstr ""
-
-#: chartscodes.php:753
-msgid "browser"
-msgstr ""
-
-#: chartscodes.php:758
-msgid "private network"
-msgstr ""
-
-#: chartscodes.php:775
-msgid "ipflag database updated."
-msgstr ""
-
-#: chartscodes.php:815
-msgid "Settings Admin"
-msgstr ""
-
-#. Name of the plugin
-#: chartscodes.php:816
-msgid "Charts QR-Barcodes"
-msgstr ""
-
-#: chartscodes.php:823
-msgid "Settings"
-msgstr ""
-
-#: chartscodes.php:835
-msgid "Chartscodes Settings"
-msgstr ""
-
-#: chartscodes.php:863
-msgid "Bar and Piecharts"
-msgstr ""
-
-#: chartscodes.php:873
-msgid "Default Pie Chart"
-msgstr ""
-
-#: chartscodes.php:879
-msgid "Doughnut Pie Chart"
-msgstr ""
-
-#: chartscodes.php:884
-msgid "Polar Pie Chart"
-msgstr ""
-
-#: chartscodes.php:890
-msgid "Bar Graph Chart"
-msgstr ""
-
-#: chartscodes.php:896 chartscodes.php:908
-msgid "Horizontal Bar Graph Chart"
-msgstr ""
-
-#: chartscodes.php:902
-msgid "Default Line Chart"
-msgstr ""
-
-#: chartscodes.php:918
-msgid "ipflag database options"
-msgstr ""
-
-#: chartscodes.php:919
-msgid "delete webhits older than (days):"
-msgstr ""
-
-#: chartscodes.php:920
-msgid "Enable automatic weekly database update check:"
-msgstr ""
-
-#: chartscodes.php:921
-msgid "Current database status:"
-msgstr ""
-
-#: chartscodes.php:926
-msgid "Here you can control all ipflag and webcounter database options:"
-msgstr ""
-
-#: chartscodes.php:956
-msgid "Database missing or corrupted, please update"
-msgstr ""
-
-#: chartscodes.php:961
-msgid "Update"
-msgstr ""
-
-#: chartscodes.php:969
-msgid "ipflag database already up to date."
-msgstr ""
-
-#: chartscodes.php:973
+#: chartscodes.php:997
 msgid ""
 "Couldn't fetch ipflag database zip file. Fetching remote content not "
 "supported or remote server is down."
 msgstr ""
 
-#: chartscodes.php:982
-msgid ""
-"Couldn't write ipflag database zip file to local file system. Please check "
-"permissions."
-msgstr ""
-
-#: chartscodes.php:986
-msgid ""
-"Couldn't unzip ipflag database zip file to local file system. Please check "
-"permissions and your server unzip capabilities."
-msgstr ""
-
-#: chartscodes.php:992
-msgid ""
-"Couldn't write ipflag database version file to local file system. Please "
-"check permissions."
-msgstr ""
-
-#: chartscodes.php:1062
+#: chartscodes.php:1086
 msgid ""
 "Couldn't read ipflag database file from local file system. Please check "
 "permissions."
 msgstr ""
 
-#: chartscodes.php:1074
-msgid "Remote ipflag database version not readable."
-msgstr ""
-
-#: pb-shortcodes.php:355
-#, php-format
-msgid "<strong>%1s</strong> values, <strong>%2s</strong> sum of values"
-msgstr ""
-
-#. Description of the plugin
+#: chartscodes.php:1010
 msgid ""
-"Shortcodes for bar and pie charts, barcodes, QRcodes and ipflags. Pie Chart, "
-"Donut Pie Chart, Polar Pie Chart, Bar Chart, Horizontal Bar Chart. IPFLAG "
-"Shortcode and variable resolves IP address to ISO 3166-1a2 country code and "
-"name and displays country flag image"
+"Couldn't unzip ipflag database zip file to local file system. Please check "
+"permissions and your server unzip capabilities."
+msgstr ""
+
+#: chartscodes.php:1016
+msgid ""
+"Couldn't write ipflag database version file to local file system. Please "
+"check permissions."
+msgstr ""
+
+#: chartscodes.php:1006
+msgid ""
+"Couldn't write ipflag database zip file to local file system. Please check "
+"permissions."
+msgstr ""
+
+#: chartscodes.php:945
+msgid "Current database status:"
+msgstr ""
+
+#: chartscodes.php:980
+msgid "Database missing or corrupted, please update"
+msgstr ""
+
+#: chartscodes.php:926
+msgid "Default Line Chart"
+msgstr ""
+
+#: chartscodes.php:897
+msgid "Default Pie Chart"
+msgstr ""
+
+#: chartscodes.php:943
+msgid "delete webhits older than (days):"
+msgstr ""
+
+#: chartscodes.php:903
+msgid "Doughnut Pie Chart"
+msgstr ""
+
+#: chartscodes.php:944
+msgid "Enable automatic weekly database update check:"
+msgstr ""
+
+#: chartscodes.php:236
+msgid "every week"
+msgstr ""
+
+#: chartscodes.php:950
+msgid "Here you can control all ipflag and webcounter database options:"
+msgstr ""
+
+#: chartscodes.php:920 chartscodes.php:932
+msgid "Horizontal Bar Graph Chart"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://github.com/svenbolte"
 msgstr ""
 
 #. URI of the plugin
 msgid "https://github.com/svenbolte/chartcodes"
 msgstr ""
 
-#. Author of the plugin
-msgid "PBMod und Andere"
+#: chartscodes.php:760
+msgid "ip network"
 msgstr ""
 
-#. Author URI of the plugin
-msgid "https://github.com/svenbolte"
+#: chartscodes.php:993
+msgid "ipflag database already up to date."
+msgstr ""
+
+#: chartscodes.php:942
+msgid "ipflag database options"
+msgstr ""
+
+#: chartscodes.php:787
+msgid "ipflag database updated."
+msgstr ""
+
+#: chartscodes.php:610
+#, php-format
+msgid "last %1s visitors last %2s days"
+msgstr ""
+
+#. Author of the plugin
+msgid "PBMod und andere"
+msgstr ""
+
+#: chartscodes.php:908
+msgid "Polar Pie Chart"
+msgstr ""
+
+#: chartscodes.php:770
+msgid "private network"
+msgstr ""
+
+#: chartscodes.php:760
+msgid "referer"
+msgstr ""
+
+#: chartscodes.php:1098
+msgid "Remote ipflag database version not readable."
+msgstr ""
+
+#: chartscodes.php:835
+msgid "Settings"
+msgstr ""
+
+#: chartscodes.php:827
+msgid "Settings Admin"
+msgstr ""
+
+#: chartscodes.php:559
+msgid "show items"
+msgstr ""
+
+#: chartscodes.php:652
+#, php-format
+msgid "Top %1s Browsers last %2s days"
+msgstr ""
+
+#: chartscodes.php:666
+#, php-format
+msgid "Top %1s countries last %2s days"
+msgstr ""
+
+#: chartscodes.php:583
+#, php-format
+msgid "top %1s pages last %2s days"
+msgstr ""
+
+#: chartscodes.php:601
+#, php-format
+msgid "top %1s referers last %2s days"
+msgstr ""
+
+#: chartscodes.php:985
+msgid "Update"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Webcounter, shortcodes for QRCodes, IP2Flag, post timeline, bar, line and "
+"Pie, Donut Pie, Polar Pie, Horizontal Bar, monthly post archive as bar chart,"
+" use as html widget too"
 msgstr ""
