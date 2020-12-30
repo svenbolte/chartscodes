@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.37
-Stable tag: 11.1.37
+Version: 11.1.38
+Stable tag: 11.1.38
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
@@ -83,46 +83,39 @@ class DoQRCode
 {
 	private static $_instance ;
 
-	/**
-	 * Init
-	 */
+	/** * Init */
 	private function __construct()
 	{
 		add_shortcode( 'qrcode', array( $this, 'shortcode_handler' ) ) ;
 	}
 
-	/**
-	 * Shortcode handler
-	 */
+	/** * Shortcode handler */
 	public function shortcode_handler( $atts, $content )
 	{
-		require_once DOQRCODE_DIR . 'phpqrcode.lib.php' ;
-
-		$size = 3 ;
+		require_once DOQRCODE_DIR . 'barcode.php' ;
+		$symbology = 'qr';
+		if ( ! empty( $atts[ 'type' ] ) ) {
+			$symbology = $atts[ 'type' ] ;
+		}
+		if ( (preg_match('/\bqr\b/', $symbology)) ) { $pb = 0;$th = 0; $size = 3; } else { $pb = 15; $th = 15;$size = 1; }
 		if ( ! empty( $atts[ 'size' ] ) ) {
 			$size = (int) $atts[ 'size' ] ;
 		}
-
-		$margin = 3 ;
+		$margin = 3;
 		if ( ! empty( $atts[ 'margin' ] ) ) {
 			$margin = (int) $atts[ 'margin' ] ;
 		}
-
 		if ( ! empty( $atts[ 'text' ] ) ) {
 			$textinput = $atts[ 'text' ] ;
 		} else { $textinput ='no data'; }
-
-		$svg = \WPDO\DoQRCode\QRcode::svg( $textinput, false, false, $size, $margin ) ;
-		$svg = str_replace( "\n", '', $svg ) ;
-		// convert svg to base64
-		$svg = 'data:image/svg+xml;base64,' . base64_encode( $svg ) ;
-		return "<img src='$svg' />" ;
+		$options =['sf'=>$size,'p'=>$margin,'pb'=>$pb,'th'=>$th];
+		$generator = new barcode_generator();
+		/* Generate SVG markup. */
+		$svg = $generator->render_svg($symbology, $textinput, $options);
+		return $svg;
 	}
 
-
-	/**
-	 * Get the current instance object.
-	 */
+	/** * Get the current instance object. */
 	public static function get_instance()
 	{
 		if ( ! isset( self::$_instance ) ) {
