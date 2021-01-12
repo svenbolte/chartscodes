@@ -1,6 +1,6 @@
 === Charts QR-Barcodes ===
-Version: 11.1.38
-Stable tag: 11.1.38
+Version: 11.1.39
+Stable tag: 11.1.39
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.4
@@ -148,6 +148,7 @@ Output your WordPress posts or custom post types as a timeline with options.
 == Shortcode usage abnd defaults ==
 [wp-timeline]
 	'catname' => '',     // insert slugs of all post types you want, sep by comma, empty for all types
+	'view' => 'calendar',         // set to calendar to show month calendar instead of timeline leave empty for timeline
 	'type' => 'post,question,wpdoodle',         // separate type slugs by comma
 	'items' => 1000,     // Maximal 1000 Posts paginiert anzeigen
 	'perpage' => 20,     // posts per page for pagination
@@ -158,6 +159,8 @@ Output your WordPress posts or custom post types as a timeline with options.
 
 == Changelog ==
 
+= 11.1.39 =
+Timeline can display a calendar with linked posts per day now: Shortvode parameter: view="calendar"
 = 11.1.38 =
 changed barcode and qrcode library for PHP8 compatibility
 Shortcode QRCode can display 2D-Barcodes now as well

@@ -498,9 +498,10 @@ new PB_ChartsCodes_Shortcode();
 function timeline_shortcode($atts){
 	$args = shortcode_atts( array(
 		      'catname' => '',     // insert slugs of all post types you want, sep by comma, empty for all types
-		      'type' => 'post,question,wpdoodle',         // separate type slugs by comma
+		      'type' => 'post,wpdoodle',         // separate type slugs by comma
 			  'items' => 1000,     // Maximal 1000 Posts paginiert anzeigen
 			  'perpage' => 20,     // posts per page for pagination
+			  'view' => '',         // set to "calendar" for calender display instead of timeline 
 			  'pics' => 1,         // 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)
 			  'dateformat' => 'D d.m.Y H:i',
      		), $atts );
@@ -508,8 +509,67 @@ function timeline_shortcode($atts){
  }
 add_shortcode('wp-timeline', 'timeline_shortcode');
 
+// Calendar display month - draws a calendar
+function timeline_calendar( $month,$year,$eventarray ) {
+	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
+	/* days and weeks vars now ... */
+	$calheader = date('Y-m-d',mktime(0,0,0,$month,1,$year));
+	$running_day = date('w',mktime(0,0,0,$month,1,$year));
+	if ( $running_day == 0 ) { $running_day = 7; }
+	$days_in_month = date('t',mktime(0,0,0,$month,1,$year));
+	$days_in_this_week = 1;
+	$day_counter = 0;
+	$dates_array = array();
+	/* draw table */
+	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . strftime('%B %Y', mktime(0,0,0,$month,1,$year) ) . '</th></thead>';
+	/* table headings */
+	$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
+	$calendar.= '<tr><td style="padding:2px;text-align:center">'.implode('</td><td style="padding:2px;text-align:center">',$headings).'</td></tr>';
+	/* row for week one */
+	$calendar.= '<tr class="calendar-row">';
+	/* print "blank" days until the first of the current week */
+	for($x = 1; $x < $running_day; $x++):
+		$calendar.= '<td class="calendar-day-np"></td>';
+		$days_in_this_week++;
+	endfor;
+	/* keep going with days.... */
+	for($list_day = 1; $list_day <= $days_in_month; $list_day++):
+		$calendar.= '<td class="calendar-day">';
+		/* add in the day number */
+		$running_week = date('W',mktime(0,0,0,$month,$list_day,$year));
+		$calendar.= '<div class="day-number">'.$list_day.'</div>';
+		/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
+		foreach ($eventarray as $calevent) {
+			if ( substr(get_the_time('Ymd', $calevent->ID),0,8) == date('Ymd',mktime(0,0,0,$month,$list_day,$year)) ) {
+				$calendar .= '<span style="word-break:break-all"><a href="' . get_permalink($calevent->ID) . '" title="'.$calevent->title.'">' . get_the_title( $calevent->ID ) . '</a></span> <br> ';
+			}
+		}	
+		$calendar.= '</td>';
+		if($running_day == 7):
+			$calendar.= '<td style="text-align:center;font-size:0.9em;padding:2px">'.$running_week.'</td></tr>';
+			if(($day_counter+1) != $days_in_month):
+				$calendar.= '<tr class="calendar-row">';
+			endif;
+			$running_day = 0;
+			$days_in_this_week = 0;
+		endif;
+		$days_in_this_week++; $running_day++; $day_counter++;
+	endfor;
+	/* finish the rest of the days in the week */
+	if($days_in_this_week < 8 && $days_in_this_week > 1):
+		for($x = 1; $x <= (8 - $days_in_this_week); $x++):
+			$calendar.= '<td class="calendar-day-np"></td>';
+		endfor;
+	$calendar.= '<td style="text-align:center;font-size:0.9em;padding:2px">'.$running_week.'</td></tr>';
+	endif;
+	/* end the table */
+	$calendar.= '</table>';
+	/* all done, return result */
+	return $calendar;
+}
 
-////display the timeline
+
+//  display the timeline
 function display_timeline($args){
 	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 		$post_args = array(
@@ -532,50 +592,64 @@ function display_timeline($args){
 		$tpostcount = count(get_posts( $tpostarg ));
 		if ( $tpostcount > intval($args['items']) ) $tpostcount = intval($args['items']);
 		$posts = get_posts( $post_args );
-		$out =  '<div id="timeline">';
-		$out .=   '<ul>';
-		$prevdate = '';
-		foreach ( $posts as $post ) : setup_postdata($post);
-	        $out .=  '<li><div>';
-			$out .=  '<nobr><a href="' . get_permalink($post->ID) . '" title="'.$post->title.'"><h6 class="headline">';
-			$out .=  ' '.get_the_title($post->ID). '</h4></a></nobr>';
-			$out .=  '<span class="timeline-datebild" style="background-color:'. get_theme_mod( 'link-color', '#888' ) .'">';
-			$out .=  get_the_time( 'D', $post->ID ).'<br><span style="font-size:1.5em">'.get_the_time( 'd', $post->ID ).'</span><br>'.get_the_time( 'M', $post->ID );
-			$out .=  '</span>';
-			if (  $args['pics'] == 1 ) {
-				$out .=  '<div class="timeline-image">';
-				if ( has_post_thumbnail( $post->ID ) ) {
-					$out .=  get_the_post_thumbnail( $post->ID, 'large' );
-				} else {
-					$first_img='';
-					$output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', get_the_content(), $matches);
-					if ($output) { $first_img = '<img src="'. $matches[1][0] . '">'; } else { 
-						if ( has_post_thumbnail() == false ) {
-							if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
-								$cbild = z_taxonomy_image_url($category[0]->term_id);
-								$first_img = '<img src="' . $cbild . '">';	
-							} 
-						} else {
-							$cbild = get_the_post_thumbnail_url();
-							$first_img = '<img src="' . $cbild . '">';	
-						}
-					}
-					$out .= $first_img;
+		$out='';
+		if ( $args['view'] == 'calendar' ) {
+			/// Cal Aufruf
+			$outputed_values = array();
+			foreach ($posts as $calevent) {
+				$workername = substr(get_the_time('Ymd', $calevent->ID),0,6);
+				if (!in_array($workername, $outputed_values)){
+					$mdatum = substr(get_the_time('Ymd', $calevent->ID),0,4).'-'. substr(get_the_time('Ymd', $calevent->ID),4,2).'-'.substr(get_the_time('Ymd', $calevent->ID),6,2);
+					$out .= timeline_calendar(date("m", strtotime($mdatum)),date("Y", strtotime($mdatum)),$posts);
+					array_push($outputed_values, $workername);
 				}	
-				$out .= '</div>';
 			}
-			if (  $args['pics'] == 1 ) { $imgon=''; $exwordcount = 15; } else { $imgon ='noimages'; $exwordcount = 30; }
-			$out .= '<span class="timeline-text '.$imgon.'" ><abbr>';
-			if ( !empty($prevdate)) $out .= ' <i title="älter als voriger Beitrag" class="fa fa-arrows-h"></i> '.human_time_diff($prevdate,get_the_time( 'U', $post->ID ));
-			$out .= ' <i class="fa fa-calendar-o"></i> ';
-			$out .=  get_the_time($args['dateformat'], $post->ID);
-			$out .=  ' vor '. human_time_diff( get_the_time( 'U', $post->ID ), current_time( 'timestamp' ) );
-			$out .=  ' &nbsp; <i class="fa fa-newspaper-o"></i> '.wp_trim_words(get_the_excerpt( $post->ID ), $exwordcount );
-			$out .=  '</abbr></span></div></li>';
-			$prevdate = get_the_time( 'U', $post->ID );
-    	endforeach;
-		$out .=  '</ul>';
-		$out .=  '</div> <!-- #timeline -->';
+		} else {	
+			$out .=  '<div id="timeline">';
+			$out .=   '<ul>';
+			$prevdate = '';
+			foreach ( $posts as $post ) : setup_postdata($post);
+				$out .=  '<li><div>';
+				$out .=  '<nobr><a href="' . get_permalink($post->ID) . '" title="'.$post->title.'"><h6 class="headline">';
+				$out .=  ' '.get_the_title($post->ID). '</h4></a></nobr>';
+				$out .=  '<span class="timeline-datebild" style="background-color:'. get_theme_mod( 'link-color', '#888' ) .'">';
+				$out .=  get_the_time( 'D', $post->ID ).'<br><span style="font-size:1.5em">'.get_the_time( 'd', $post->ID ).'</span><br>'.get_the_time( 'M', $post->ID );
+				$out .=  '</span>';
+				if (  $args['pics'] == 1 ) {
+					$out .=  '<div class="timeline-image">';
+					if ( has_post_thumbnail( $post->ID ) ) {
+						$out .=  get_the_post_thumbnail( $post->ID, 'large' );
+					} else {
+						$first_img='';
+						$output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', get_the_content(), $matches);
+						if ($output) { $first_img = '<img src="'. $matches[1][0] . '">'; } else { 
+							if ( has_post_thumbnail() == false ) {
+								if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
+									$cbild = z_taxonomy_image_url($category[0]->term_id);
+									$first_img = '<img src="' . $cbild . '">';	
+								} 
+							} else {
+								$cbild = get_the_post_thumbnail_url();
+								$first_img = '<img src="' . $cbild . '">';	
+							}
+						}
+						$out .= $first_img;
+					}	
+					$out .= '</div>';
+				}
+				if (  $args['pics'] == 1 ) { $imgon=''; $exwordcount = 15; } else { $imgon ='noimages'; $exwordcount = 30; }
+				$out .= '<span class="timeline-text '.$imgon.'" ><abbr>';
+				if ( !empty($prevdate)) $out .= ' <i title="älter als voriger Beitrag" class="fa fa-arrows-h"></i> '.human_time_diff($prevdate,get_the_time( 'U', $post->ID ));
+				$out .= ' <i class="fa fa-calendar-o"></i> ';
+				$out .=  get_the_time($args['dateformat'], $post->ID);
+				$out .=  ' vor '. human_time_diff( get_the_time( 'U', $post->ID ), current_time( 'timestamp' ) );
+				$out .=  ' &nbsp; <i class="fa fa-newspaper-o"></i> '.wp_trim_words(get_the_excerpt( $post->ID ), $exwordcount );
+				$out .=  '</abbr></span></div></li>';
+				$prevdate = get_the_time( 'U', $post->ID );
+			endforeach;
+			$out .=  '</ul>';
+			$out .=  '</div> <!-- #timeline -->';
+		}	
 		$big = 999999999; // need an unlikely integer
 		$out .= paginate_links( array(
 			'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
