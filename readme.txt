@@ -147,13 +147,14 @@ Output your WordPress posts or custom post types as a timeline with options.
 
 == Shortcode usage abnd defaults ==
 [wp-timeline]
-	'catname' => '',     // insert slugs of all post types you want, sep by comma, empty for all types
-	'view' => 'calendar',         // set to calendar to show month calendar instead of timeline leave empty for timeline
-	'type' => 'post,question,wpdoodle',         // separate type slugs by comma
-	'items' => 1000,     // Maximal 1000 Posts paginiert anzeigen
-	'perpage' => 20,     // posts per page for pagination
-	'pics' => 1,         // 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)
-	'dateformat' => 'l, d.m.Y H:i',
+
+  'catname' => '',     		// insert slugs of all post types you want, sep by comma, empty for all types
+  'type' => 'post,wpdoodle',  // separate type slugs by comma
+  'items' => 1000,    	 	// Maximal 1000 Posts paginiert anzeigen
+  'perpage' => 20,     		// posts per page for pagination
+  'view' => 'timeline',     // set to "calendar" for calender display, to "calendar,timeline" for both 
+  'pics' => 1,        		// 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)
+  'dateformat' => 'D d.m.Y H:i',
 
 =====================================================================================================================
 

@@ -497,12 +497,12 @@ new PB_ChartsCodes_Shortcode();
 // get shortcode attributes, pass to display function
 function timeline_shortcode($atts){
 	$args = shortcode_atts( array(
-		      'catname' => '',     // insert slugs of all post types you want, sep by comma, empty for all types
-		      'type' => 'post,wpdoodle',         // separate type slugs by comma
-			  'items' => 1000,     // Maximal 1000 Posts paginiert anzeigen
-			  'perpage' => 20,     // posts per page for pagination
-			  'view' => '',         // set to "calendar" for calender display instead of timeline 
-			  'pics' => 1,         // 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)
+		      'catname' => '',     		// insert slugs of all post types you want, sep by comma, empty for all types
+		      'type' => 'post,wpdoodle',  // separate type slugs by comma
+			  'items' => 1000,    	 	// Maximal 1000 Posts paginiert anzeigen
+			  'perpage' => 20,     		// posts per page for pagination
+			  'view' => 'timeline',     // set to "calendar" for calender display, to "calendar,timeline" for both 
+			  'pics' => 1,        		// 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)
 			  'dateformat' => 'D d.m.Y H:i',
      		), $atts );
      return display_timeline($args);
@@ -593,7 +593,7 @@ function display_timeline($args){
 		if ( $tpostcount > intval($args['items']) ) $tpostcount = intval($args['items']);
 		$posts = get_posts( $post_args );
 		$out='';
-		if ( $args['view'] == 'calendar' ) {
+		if ( strpos($args['view'], "calendar") !== false ) {
 			/// Cal Aufruf
 			$outputed_values = array();
 			foreach ($posts as $calevent) {
@@ -604,7 +604,8 @@ function display_timeline($args){
 					array_push($outputed_values, $workername);
 				}	
 			}
-		} else {	
+		}
+		if ( strpos($args['view'], "timeline") !== false ) {	
 			$out .=  '<div id="timeline">';
 			$out .=   '<ul>';
 			$prevdate = '';
