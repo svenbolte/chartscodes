@@ -1,22 +1,14 @@
 <?php
 /**
- * Charts QRCodes Barcodes Shortcode
- *
- * @package Charts QRCodes Barcodes
- * @since 0.1
- */
+* Charts QRCodes Barcodes Shortcode
+* @package Charts QRCodes Barcodes
+*/
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
+if ( ! defined( 'ABSPATH' ) ) {	exit; } // Exit if accessed directly.
 
 class PB_ChartsCodes_Shortcode {
 
-	public function __construct() 
-	{
-		$this->PB_ChartsCodes_create_shortcode();
-	}
-
+	public function __construct() {	$this->PB_ChartsCodes_create_shortcode(); }
 	
 	// Für die Akzentfarbe Nunancen errechnen
 	public function color_luminance( $hex, $percent ) {
@@ -34,7 +26,6 @@ class PB_ChartsCodes_Shortcode {
 		}		
 		return $new_hex;
 	}
-
 
 	public function farbpalette ($accolor) {
 		$colorl = '';
@@ -673,21 +664,10 @@ function has_timeline_shortcode( $posts ) {
                 break;
             }
         }
-        if ( $shortcode_found ) {
-            add_timeline_styles();
-        }
         return $posts;
     }
 add_action('the_posts', 'has_timeline_shortcode');
 
-//add styles to header
-function add_timeline_styles(){
-	add_action('wp_print_styles', 'timeline_styles');
-}
-function timeline_styles(){
-	wp_register_style($handle = 'timeline', $src = plugins_url('timeline.css', __FILE__), $deps = array(), $ver = '1.0.0', $media = 'all');
-	wp_enqueue_style('timeline');
-}
 
 //do shortcode for get_the_excerpt() && get_the_content()
 add_filter('get_the_content', 'do_shortcode');
