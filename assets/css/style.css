@@ -187,7 +187,7 @@ margin:0 auto;
 position:relative;
 display:inline-block;
 list-style: none;
-background:url('Image/ul-bg.png') center top repeat-y;
+background:url('../../Image/ul-bg.png') center top repeat-y;
 padding: 0;
 }
 #timeline ul li{
