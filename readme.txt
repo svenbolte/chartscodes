@@ -1,12 +1,12 @@
 === Charts QR-Barcodes ===
-Version: 11.1.40
-Stable tag: 11.1.40
-Requires at least: 5.1
-Tested up to: 5.6
-Requires PHP: 7.4
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
+Version: 11.1.40
+Stable tag: 11.1.40
+Requires at least: 5.1
+Tested up to: 5.7
+Requires PHP: 7.4
 
 == Description ==
 Shortcode collection for creating Line Charts, Bar Graph and Pie Charts (normal, donut, polar) with multiple colors.
