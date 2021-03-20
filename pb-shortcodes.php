@@ -562,6 +562,22 @@ function timeline_calendar( $month,$year,$eventarray ) {
 
 //  display the timeline
 function display_timeline($args){
+	if ( isset( $_GET[ 'cat' ] ) ) { $catfilter = esc_attr($_GET["cat"]); } else { $catfilter=''; }
+	$out = '';
+		// Kategorie-Filter von Hand
+		$cargs = array(
+			'show_option_none' => __( 'all', 'pb-chartscodes' ),
+			'show_count'       => 1,
+			'orderby'          => 'name',
+			'selected' => $catfilter,
+			'echo'             => 0,
+		);
+		$select  = wp_dropdown_categories( $cargs ); 
+		$replace = "<select$1 onchange='return this.form.submit()'>";
+		$select  = preg_replace( '#<select([^>]*)>#', $replace, $select );
+		$out .= '<div style="float:right"><form id="category-select" class="category-select" method="get">';
+		$out .= 'Kategorie filtern '.$select; 
+		$out .= '<noscript><input type="submit" value="View" /></noscript></form></div>';
 	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 		$post_args = array(
 			'post_type' => explode( ',', $args['type'] ),
@@ -570,6 +586,7 @@ function display_timeline($args){
 			'paged' => $paged,
 			'page' => $paged,
 			'category_name' => $args['catname'],
+			'category' =>  $catfilter,
 			'orderby' => 'post_date',
 			'order' => 'DESC',
 			'post_status' => 'publish',
@@ -578,12 +595,12 @@ function display_timeline($args){
 			'numberposts' => -1,
 			'post_type' => explode( ',', $args['type'] ),
 			'category_name' => $args['catname'],
+			'category' =>  $catfilter,
 			'post_status' => 'publish',
 		);
 		$tpostcount = count(get_posts( $tpostarg ));
 		if ( $tpostcount > intval($args['items']) ) $tpostcount = intval($args['items']);
 		$posts = get_posts( $post_args );
-		$out='';
 		if ( strpos($args['view'], "calendar") !== false ) {
 			/// Cal Aufruf
 			$outputed_values = array();
@@ -602,7 +619,7 @@ function display_timeline($args){
 			$prevdate = '';
 			foreach ( $posts as $post ) : setup_postdata($post);
 				$out .=  '<li><div>';
-				$out .=  '<nobr><a href="' . get_permalink($post->ID) . '" title="'.$post->title.'"><h6 class="headline">';
+				$out .=  '<nobr><a href="' . get_permalink($post->ID) . '" title="'.$post->title.'"><h6 class="headline" style="margin-right:8px;overflow:hidden">';
 				$out .=  ' '.get_the_title($post->ID). '</h4></a></nobr>';
 				$out .=  '<span class="timeline-datebild" style="background-color:'. get_theme_mod( 'link-color', '#888' ) .'">';
 				$out .=  get_the_time( 'D', $post->ID ).'<br><span style="font-size:1.5em">'.get_the_time( 'd', $post->ID ).'</span><br>'.get_the_time( 'M', $post->ID );
@@ -613,6 +630,7 @@ function display_timeline($args){
 						$out .=  get_the_post_thumbnail( $post->ID, 'large' );
 					} else {
 						$first_img='';
+						$category = get_the_category($post->ID);
 						$output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', get_the_content(), $matches);
 						if ($output) { $first_img = '<img src="'. $matches[1][0] . '">'; } else { 
 							if ( has_post_thumbnail() == false ) {
@@ -647,7 +665,7 @@ function display_timeline($args){
 			'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
 			'format' => '?paged=%#%',
 			'current' => max( 1, get_query_var('paged') ),
-			'total' => intval($tpostcount / 16),
+			'total' => intval($tpostcount / $args['perpage']) + 1,
 		) );
 		wp_reset_postdata();
 		return $out;

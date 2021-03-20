@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.40
-Stable tag: 11.1.40
+Version: 11.1.41
+Stable tag: 11.1.41
 Requires at least: 5.1
 Tested up to: 5.7
 Requires PHP: 7.4
@@ -859,12 +859,13 @@ function website_display_stats() {
 			<div class="postbox">
 				<p><tt>erstellt eine 2-spaltige Beitrags-Timeline als Shortcode an der Cursorposition (Doku siehe Readme)<br>
                     <code>[wp-timeline items=100 view="calendar" type="post" catname="software"]</code><br>
-			  'catname' => '' // insert slugs of all post types you want, sep by comma, empty for all types<br>
-		      'type' => 'post,wpdoodle'         // ...question,page separate type slugs by comma<br>
-			  'items' => 1000     // Maximal 1000 Posts paginiert anzeigen<br>
-			  'perpage' => 20,     // posts per page for pagination
-			  'pics' => 1,         // 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)
-			  'dateformat' => 'l, d. M Y, H:i'
+		      'catname' => ''     		// insert slugs of all post types you want, sep by comma, empty for all types<br>
+		      'type' => 'post,wpdoodle'  // separate type slugs by comma<br>
+			  'items' => 1000    	 	// Maximal 1000 Posts paginiert anzeigen<br>
+			  'perpage' => 20     		// posts per page for pagination<br>
+			  'view' => 'timeline'     // set to "calendar" for calender display, to "calendar,timeline" for both <br>
+			  'pics' => 1        		// 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)<br>
+			  'dateformat' => 'D d.m.Y H:i'<br>
                 </tt></p>                    
             </div>
             <div class="img-wrap">

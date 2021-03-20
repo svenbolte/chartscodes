@@ -261,13 +261,10 @@ text-align: right;
 }
 #timeline ul li:nth-child(odd) > div{
 display:block;
-float:right;
 margin-right:-10px;
 padding-right:30px;
 }
 #timeline ul li:nth-child(odd) > div .timeline-text{
-float:right;
-text-align: right;
 margin-left: 0;
 }
 #timeline ul .timeline-image{

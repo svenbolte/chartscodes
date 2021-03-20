@@ -2,8 +2,8 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.40
-Stable tag: 11.1.40
+Version: 11.1.41
+Stable tag: 11.1.41
 Requires at least: 5.1
 Tested up to: 5.7
 Requires PHP: 7.4
@@ -159,6 +159,9 @@ Output your WordPress posts or custom post types as a timeline with options.
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.41 =
+Add selectbox to filter on category near pagination links
 
 = 11.1.40 =
 Styles optimized. timeline styles integrated into main styles file and all minified
