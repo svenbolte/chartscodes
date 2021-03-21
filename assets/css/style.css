@@ -198,8 +198,7 @@ line-height: 1.1em;
 max-height: 50px;
 min-height: 50px;
 overflow: hidden;
-background-color: rgba(255,255,255,.85);
-margin-top: -3.3em;
+background-color: rgba(192,192,192,.1)
 }
 
 #timeline ul li .noimages {
