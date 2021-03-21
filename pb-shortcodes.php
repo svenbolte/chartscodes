@@ -559,6 +559,17 @@ function timeline_calendar( $month,$year,$eventarray ) {
 	return $calendar;
 }
 
+// Differenz zwischen 2 Beiträgen
+function german_time_diff( $from, $to ) {
+    $diff = human_time_diff($from,$to);
+    $replace = array(
+        'Tagen'  => 'Tage',
+        'Monaten' => 'Monate',
+        'Jahren'   => 'Jahre',
+    );
+    return ' <i title="älter als voriger Beitrag" class="fa fa-arrows-h"></i> ' . strtr($diff,$replace);
+}
+
 
 //  display the timeline
 function display_timeline($args){
@@ -575,10 +586,7 @@ function display_timeline($args){
 		$select  = wp_dropdown_categories( $cargs ); 
 		$replace = "<select$1 onchange='return this.form.submit()'>";
 		$select  = preg_replace( '#<select([^>]*)>#', $replace, $select );
-		$out .= '<div style="float:right"><form id="category-select" class="category-select" method="get">';
-		$out .= 'Kategorie filtern '.$select; 
-		$out .= '<noscript><input type="submit" value="View" /></noscript></form></div>';
-	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+		$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 		$post_args = array(
 			'post_type' => explode( ',', $args['type'] ),
 			'numberposts' => $args['items'],
@@ -600,6 +608,11 @@ function display_timeline($args){
 		);
 		$tpostcount = count(get_posts( $tpostarg ));
 		if ( $tpostcount > intval($args['items']) ) $tpostcount = intval($args['items']);
+		if (empty($args['catname'])) {
+			$out .= '<div style="float:right"><form id="category-select" class="category-select" method="get">';
+			$out .= 'Kategorie filtern '.$select; 
+			$out .= '<noscript><input type="submit" value="View" /></noscript></form></div>';
+		}	
 		$posts = get_posts( $post_args );
 		if ( strpos($args['view'], "calendar") !== false ) {
 			/// Cal Aufruf
@@ -649,7 +662,7 @@ function display_timeline($args){
 				}
 				if (  $args['pics'] == 1 ) { $imgon=''; $exwordcount = 15; } else { $imgon ='noimages'; $exwordcount = 30; }
 				$out .= '<span class="timeline-text '.$imgon.'" ><abbr>';
-				if ( !empty($prevdate)) $out .= ' <i title="älter als voriger Beitrag" class="fa fa-arrows-h"></i> '.human_time_diff($prevdate,get_the_time( 'U', $post->ID ));
+				if ( !empty($prevdate)) $out .= german_time_diff($prevdate,get_the_time( 'U', $post->ID ));
 				$out .= ' <i class="fa fa-calendar-o"></i> ';
 				$out .=  get_the_time($args['dateformat'], $post->ID);
 				$out .=  ' vor '. human_time_diff( get_the_time( 'U', $post->ID ), current_time( 'timestamp' ) );
@@ -661,12 +674,13 @@ function display_timeline($args){
 			$out .=  '</div> <!-- #timeline -->';
 		}	
 		$big = 999999999; // need an unlikely integer
-		$out .= paginate_links( array(
+		$out .= '<div class="nav-links">'.paginate_links( array(
 			'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
 			'format' => '?paged=%#%',
 			'current' => max( 1, get_query_var('paged') ),
 			'total' => intval($tpostcount / $args['perpage']) + 1,
 		) );
+		$out .= '</div>';
 		wp_reset_postdata();
 		return $out;
 }
