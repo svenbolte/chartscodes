@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.42
-Stable tag: 11.1.42
+Version: 11.1.44
+Stable tag: 11.1.44
 Requires at least: 5.1
 Tested up to: 5.7
 Requires PHP: 7.4
@@ -32,15 +32,13 @@ if ( ! class_exists( 'PB_ChartsCodes' ) ) :
 			$this->PB_ChartsCodes_includes();
 		}
 
-		public function PB_ChartsCodes_constant()
-		{
+		public function PB_ChartsCodes_constant() {
 			define( 'PB_ChartsCodes_BASE_PATH', dirname(__FILE__ ) );
 			define( 'PB_ChartsCodes_URL_PATH', plugin_dir_url(__FILE__ ) );
 			define( 'PB_ChartsCodes_PLUGIN_BASE_PATH', plugin_basename(__FILE__) );
 		}
 
-		public function PB_ChartsCodes_hooks()
-		{
+		public function PB_ChartsCodes_hooks() {
 			// enqueue admin scripts
 			add_action( 'wp_enqueue_scripts', array( $this, 'PB_ChartsCodes_enqueue' ) );
 		}
@@ -56,8 +54,7 @@ if ( ! class_exists( 'PB_ChartsCodes' ) ) :
 	        wp_register_script( 'pb-chartscodes-initialize', PB_ChartsCodes_URL_PATH . 'assets/js/pie-initialize.min.js', array( 'jquery', 'pb-chartscodes-script' ) );
 		}
 
-	    public function PB_ChartsCodes_includes()
-		{
+	    public function PB_ChartsCodes_includes() {
 			// Shortcode Page
 			include_once('pb-shortcodes.php');
 		}
@@ -82,14 +79,12 @@ class DoQRCode
 	private static $_instance ;
 
 	/** * Init */
-	private function __construct()
-	{
+	private function __construct() {
 		add_shortcode( 'qrcode', array( $this, 'shortcode_handler' ) ) ;
 	}
 
 	/** * Shortcode handler */
-	public function shortcode_handler( $atts, $content )
-	{
+	public function shortcode_handler( $atts, $content ) {
 		require_once DOQRCODE_DIR . 'barcode.php' ;
 		$symbology = 'qr';
 		if ( ! empty( $atts[ 'type' ] ) ) {
@@ -114,8 +109,7 @@ class DoQRCode
 	}
 
 	/** * Get the current instance object. */
-	public static function get_instance()
-	{
+	public static function get_instance() {
 		if ( ! isset( self::$_instance ) ) {
 			self::$_instance = new self() ;
 		}
@@ -126,8 +120,7 @@ $__core = DoQRCode::get_instance() ;
 
 // --------------------------- Nun die ipflag Funktionsklasse registrieren --------------------------------------------
 
-class ipflag{
-
+class ipflag {
     const version = '9.2.12';
     const name = 'ipflag';
     const slug = 'ipflag';
@@ -281,12 +274,14 @@ public function country_code ($lang = null , $code = null) {
 }
 
 
-    public function get_flag($info, $css_class = 'ipflag'){
-        $flag = '';
+    public function get_flag($info){
+		// Load flag freaky style for flags
+		wp_enqueue_style( 'pb-chartscodes-flagstyle', PB_ChartsCodes_URL_PATH . 'flags/freakflags.min.css' );
+		$flag = '';
         if($info != null)
-            $flag = '<img class="'.$css_class.'" title="'.$this->country_code('de',$info->code) . ' '.$info->code.'" src="'.$this->flag_url.'/'.$info->code.'.gif" />';
+			$flag = '<div class="fflag fflag-'.strtoupper($info->code).' ff-sm" title="'.$this->country_code('de',$info->code) . ' '.$info->code.'"></div>';
         else
-            $flag = '<img class="'.$css_class.'" title="privates Netz" src="'.$this->flag_url.'/EUROPEANUNION.gif" />';
+            $flag = '<div class="fflag fflag-EU ff-sm" title="privates Netzwerk"></div>';
         return $flag;
     }
 
@@ -603,7 +598,8 @@ function website_display_stats() {
 				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
 				$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
 				$html .= '<td><abbr>' . $this->showbrowosicon($customer->platform). ' ' . substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</abbr></td>';
-				$html .= '<td><img style="max-width:16px;width:16px" title="'.$this->country_code('de',$customer->country).'" src="'.$this->flag_url.'/'.$customer->country.'.gif" />' . '</td>';
+				if ($customer->country == 'EUROPEANUNION') $customer->country = 'EU';
+				$html .= '<td>'. $this->get_flag(  (object) [ 'code' => $customer->country ] ).'</td>';
 				$html .= '<td><abbr>' . $customer->userip .'</abbr></td><td><abbr><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</abbr></a></td>';
 				$html .= '<td><abbr>' . $datum . ' ' . ago(strtotime($customer->datum)).'</abbr></td></tr>';
 			}	
@@ -730,9 +726,11 @@ function website_display_stats() {
 		}
 	}
 
+	// IP-Informationen Shortcode mit flag, land und browserinfo optional
 	function shortcode($atts, $content = null, $code = '') {
         extract(shortcode_atts(array(
 			'ip' => null,
+			'iso' => null,
 			'details' => 0,
 			'browser' => 0,
 		), $atts ));
@@ -753,13 +751,17 @@ function website_display_stats() {
 		$yourbrowser='';
 		if ( $browser ) {
 			$ua=$this->getBrowser();
-			$yourbrowser= " &nbsp; <strong>".__('browser', 'pb-chartscodes')."</strong> " . $ua['name'] . " " . $ua['version'] . " unter " .$ua['platform']  . " " .substr($ua['language'],0,2) . "<br><small>" . $ua['userAgent']."</small>";
+			$yourbrowser= "<strong>".__('browser', 'pb-chartscodes')."</strong> " . $ua['name'] . " " . $ua['version'] . " unter " .$ua['platform']  . " " .substr($ua['language'],0,2) . "<br><small>" . $ua['userAgent']."</small>";
 		}
-        if(($info = $this->get_info($ip)) != false)
-            $flag = $this->country_code('de',$info->code).' '.$this->get_flag($info).' ';
-        else
-            $flag = 'privates Netz <img title="'.__('private network', 'pb-chartscodes').'" src="'.$this->flag_url.'/EUROPEANUNION.gif" />';
-        return $flag . $yourbrowser . $yourdetails;
+        if(($info = $this->get_info($ip)) != false) {
+            $flag = '<div>'.$this->country_code('de',$info->code).' ('.$info->code.') &nbsp; '.$this->get_flag($info).'</div>';
+		} else {
+            $flag = '<div>privates Netzwerk &nbsp; '.$this->get_flag($info).'</div>';
+		}	
+		if ( !empty($iso) ) {
+			$flag =  $this->get_flag( (object) [ 'code' => strtoupper($iso) ]);
+		}
+		return $flag . $yourbrowser . $yourdetails;
     }
 
     public function options_validate($input) {
@@ -837,10 +839,10 @@ function website_display_stats() {
             <div class="icon32" id="icon-options-general"><br></div>
             <h2><?php echo esc_attr_e( 'Chartscodes Settings', 'pb-chartscodes' ); ?></h2>
 			<div class="postbox">
-			<p><tt><code>[ipflag ip="123.20.30.0" details=1 browser=1]</code>
+			<p><tt><code>[ipflag ip="123.20.30.0" iso="mx" details=1 browser=1]</code>
 				liefert eine Flagge und das Land zu einer IP odr einem IP-Netz. Die letzte IP-Ziffer wird wegen DSGVO anonymisiert<br>
-				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz<br>
-				  <br>
+				iso="xx" liefert die Flagge zum ISO-Land oder die EU-Flagge für private und unbekannte Netzwerke<br>
+				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz<br><br>
 				<code>[webcounter admin=0]</code> zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>
 				Ist die Admin /webcounter-Seite aufgerufen, kann über das Eingabefeld oder den optionalen URL-Parameter ?items=x die Ausgabe-Anzahl einiger Listeneinträge verändert werden.
 				</tt>

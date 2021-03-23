@@ -2,8 +2,8 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.42
-Stable tag: 11.1.42
+Version: 11.1.44
+Stable tag: 11.1.44
 Requires at least: 5.1
 Tested up to: 5.7
 Requires PHP: 7.4
@@ -116,6 +116,15 @@ IPFflag feature highlights
 *   IPFflag provides PHP function to retrieve country code and country name for given IP address (see FAQ for more)
 *   IPFflag provides PHP function to retrieve country flag image for given country, 248 flag images provided by [Mark James](http://www.famfamfam.com)
 
+== IPFlag Shortcode ==
+`[ipflag ip="123.20.30.0" iso="mx" details=1 browser=1]`
+				liefert eine Flagge und das Land zu einer IP odr einem IP-Netz. Die letzte IP-Ziffer wird wegen DSGVO anonymisiert
+				iso="xx" liefert die Flagge zum ISO-Land oder die EU-Flagge für private und unbekannte Netzwerke
+				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz
+				
+`[webcounter admin=0]` zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>
+				Ist die Admin /webcounter-Seite aufgerufen, kann über das Eingabefeld oder den optionalen URL-Parameter ?items=x die Ausgabe-Anzahl einiger Listeneinträge verändert werden.
+
 == Frequently Asked Questions ==
 = How do I test is IPFflag installed properly? =
 You can place `[ipflag]` shortcode to add current IP address country name and flag image to your page or post. To display country name and flag image of IP address other than current you can use this shortcode like  `[ipflag ip="some_ip_address"]`. For more details to display there are shortcode parameters: details=1 and browser=1, both defaulting to 0
@@ -159,6 +168,10 @@ Output your WordPress posts or custom post types as a timeline with options.
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.43-44 =
+Replace 250 gif flags by one png. Flags are called as css sprites now and displayed as div. css code from freakflags. Many thanks.
+flag css minimized for performance. it will only be loaded (enqueued) when get_flag function is used
 
 = 11.1.41-42 =
 Add selectbox to filter on category near pagination links
