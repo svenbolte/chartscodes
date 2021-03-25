@@ -1,7 +1,4 @@
-/******************************************************
-Freak Flags, Copyright ©2021 Michael P. Cohen. Freak flags is licenced under the MIT licence.  
-For complete information visit: www.freakflagsprite.com 
-******************************************************/
+/** Freak Flags, Copyright ©2021 Michael P. Cohen. Freak flags is licenced under the MIT licence. freakflagsprite.com **/
 
 .fflag {
     background-image:url(flagSprite42.png);
@@ -161,6 +158,7 @@ For complete information visit: www.freakflagsprite.com
 .fflag-TJ {background-position:center 31.7101%}
 .fflag-TH {background-position:center 31.9318%}
 .fflag-TL {background-position:left 32.1535%}
+.fflag-TP {background-position:left 32.1535%}
 .fflag-TM {background-position:center 32.3752%}
 .fflag-VN {background-position:center 32.5969%}
 .fflag-AL {background-position:center 32.8186%}
@@ -258,28 +256,8 @@ For complete information visit: www.freakflagsprite.com
 .fflag-JR {background-position:center 53.215%}
 .fflag-OLY {background-position:center 53.4315%}
 .fflag-UN {background-position:center 53.6584%}
-
 .fflag.ff-xs {width: 18px;height: 11px}
 .fflag.ff-sm {width: 26px;height: 16px}
 .fflag.ff-md {width: 30px;height: 20px}
 .fflag.ff-lg {width: 42px;height: 27px}
 .fflag.ff-xl {width: 60px;height: 37px}
-
-/* ff-wave = waving flag look */
-.ff-wave:before {
-	content: '';
-	display: inline-block;
-	width: inherit;
-	height: inherit;
-	position: absolute;
-	top: 0;
-	left: 0;
-	background: linear-gradient(106deg, rgba(255,255,255,1) 0%, rgba(255,255,255,.2) 24%, rgba(255,255,255,0.3) 36%, rgba(0,0,0,0.15) 56%, rgba(255,255,255,0.2) 70%, rgba(0,0,0,0.2) 78%, rgba(255,255,255,0.1) 86%, rgba(0,0,0,.4) 100%)
-}
-.fflag-CH.ff-wave:before {
-	width: 69%;
-	left: 15%;
-}
-.fflag-NP.ff-wave:before {
-	content: none;
-}
