@@ -609,7 +609,7 @@ function display_timeline($args){
 		$tpostcount = count(get_posts( $tpostarg ));
 		if ( $tpostcount > intval($args['items']) ) $tpostcount = intval($args['items']);
 		if (empty($args['catname'])) {
-			$out .= '<div style="float:right"><form id="category-select" class="category-select" method="get">';
+			$out .= '<div style="margin-top:-1.4em"><form id="category-select" class="category-select" method="get">';
 			$out .= 'Kategorie filtern '.$select; 
 			$out .= '<noscript><input type="submit" value="View" /></noscript></form></div>';
 		}	
