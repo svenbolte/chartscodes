@@ -10,6 +10,7 @@ Requires PHP: 7.4
 
 == Description ==
 Shortcode collection for creating Line Charts, Bar Graph and Pie Charts (normal, donut, polar) with multiple colors.
+[carlogo] displays maufactorer logo for car brands
 [qrcode] creates qrcodes, [ipflag] shows country name of visitor (IP shortened for GDPR) - visitor info browser and details optional
 [webcounter] shortcode to gather and display stats about visitors (ip shortened for GRPR compliance)
 [wp-timeline] shortcodes shows posts in a timeline, paged, filters are category slug list, post type list
@@ -149,6 +150,12 @@ if(isset($ipflag) && is_object($ipflag)){
     }
 }
 ```
+=========================================== Carlogo Shortcode ===============================================
+Use Shortcode: [carlogo brand="mercedes" scale="sm"]
+
+		      'scale' => '',     		// sm = 32px  xs=21px
+		      'brand' => '0unknown',  // Autohersteller
+to display logo and link to german webpage or car manufacturer
 
 =========================================== WordPress Posts Timeline ===============================================
 
@@ -168,6 +175,8 @@ Output your WordPress posts or custom post types as a timeline with options.
 =====================================================================================================================
 
 == Changelog ==
+= 11.1.45 =
+Car logos shortcode added - displays a logo and link of car manufacturer
 
 = 11.1.43-44 =
 Replace 250 gif flags by one png. Flags are called as css sprites now and displayed as div. css code from freakflags. Many thanks.

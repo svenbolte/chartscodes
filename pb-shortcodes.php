@@ -483,6 +483,20 @@ class PB_ChartsCodes_Shortcode {
 }
 new PB_ChartsCodes_Shortcode();
 
+// ==================== Automarkenlogos anzeigen Shortcode ======================================
+function carlogo_shortcode($atts){
+	$args = shortcode_atts( array(
+		      'scale' => '',     		// sm = 32px  xs=21px
+		      'brand' => '0unknown',  // Autohersteller
+     		), $atts );
+		// Load flag freaky style for flags
+		wp_enqueue_style( 'pb-autologo-style', PB_ChartsCodes_URL_PATH . 'flags/car-logos.min.css' );
+		$autologo = '<a target="_blank" href="https://'.strtolower($args['brand']).'.de"><i class="fcar fcar-'.strtolower($args['brand']).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtoupper($atts['brand']).' aufrufen"></i></a>';
+        return $autologo;
+}
+add_shortcode('carlogo', 'carlogo_shortcode');
+
+
 // ========================================== Shortcode Timeline from posts ====================================================
 
 // get shortcode attributes, pass to display function

@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.44
-Stable tag: 11.1.44
+Version: 11.1.45
+Stable tag: 11.1.45
 Requires at least: 5.1
 Tested up to: 5.7
 Requires PHP: 7.4
@@ -845,6 +845,10 @@ function website_display_stats() {
 				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz<br><br>
 				<code>[webcounter admin=0]</code> zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>
 				Ist die Admin /webcounter-Seite aufgerufen, kann über das Eingabefeld oder den optionalen URL-Parameter ?items=x die Ausgabe-Anzahl einiger Listeneinträge verändert werden.
+				</tt>
+			</p>
+			<p><tt><code>[carlogo brand="mercedes" scale="sm"]</code>
+				liefert das Logo und den Link zum Automobilhersteller  Größen (scale): leer 48px, bei sm: 32px und bei xs:21px
 				</tt>
 			</p>
             <form action="options.php" method="post">
