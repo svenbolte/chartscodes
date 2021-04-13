@@ -359,8 +359,7 @@ class PB_ChartsCodes_Shortcode {
 	//
 	//  Posts und Pages pro Monat für letzte 12 Monate als Bar Chart (ruft Bar chart shortcode auf)
 	//
-	function wpse60859_shortcode_alt_cb($atts)
-	{
+	function wpse60859_shortcode_alt_cb($atts) {
 		$input = shortcode_atts( array(	
 			'fromdate' => date("Y-m-d H:i:s"),                //  NOW() Startdate like: 2020-07-01
 			'months' => 12,
