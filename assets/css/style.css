@@ -60,19 +60,21 @@ width:100%
 
 .tp-skills-bar .percent-value {
 background-color:rgba(255,255,255,.8);
-bottom:36px;
-color:#000;
+border-radius:3px;
 display:inline-block;
 font-family:monospace;
-font-size:13px;
-left:2px;
-margin:0 auto;
+font-size:.8rem;
+left:10%;
+margin-top:20px;
+padding-left:3px;
+padding-right:3px;
 position:absolute;
 text-align:center;
 transform:rotate(90deg);
 transform-origin:1.3em 0;
 white-space:nowrap;
-width:70px
+width:70px;
+z-index:9999
 }
 
 #secondary .widget .pie-title,#secondary .widget .tp-skill-items {
@@ -81,7 +83,6 @@ display:none
 
 .tp-skill-items {
 color:#fff;
-font-weight:700;
 margin:0;
 padding:0 0 0 1.5em;
 text-transform:uppercase
@@ -106,18 +107,16 @@ color:#000
 
 .tp-skill-items span.color {
 float:left;
-height:15px;
 height:20px;
 margin-right:10px;
 margin-top:3px;
 position:relative;
-width:15px;
 width:20px
 }
 
 .tp-skill-items span.color:after {
 border:3px solid #000;
-border-color:rgba(255,255,255,0.16) rgba(0,0,0,0.16) rgba(0,0,0,0.16) rgba(255,255,255,0.16);
+border-color:rgba(255,255,255,.16) rgba(0,0,0,.16) rgba(0,0,0,.16) rgba(255,255,255,.16);
 bottom:0;
 content:"";
 height:100%;
@@ -164,7 +163,7 @@ width:0
 .tp-skills-horizontalbar .skill-name {
 background-color:#fff;
 display:inline-block;
-font-size:0.85em;
+font-size:.85em;
 height:16px;
 margin-left:5px;
 margin-top:2px;
@@ -189,14 +188,14 @@ width:50%
 }
 
 #timeline ul li .timeline-text {
-float: left;
-height: 50px;
-width: 100%;
-line-height: 1.1em;
-max-height: 50px;
-min-height: 50px;
-overflow: hidden;
-background-color: rgba(192,192,192,.1)
+background-color:rgba(192,192,192,.1);
+float:left;
+height:50px;
+line-height:1.1em;
+max-height:50px;
+min-height:50px;
+overflow:hidden;
+width:100%
 }
 
 #timeline ul li .noimages {

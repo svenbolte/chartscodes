@@ -275,8 +275,8 @@ class PB_ChartsCodes_Shortcode {
 				}
 				?>
 				<div class="outer-box" <?php echo $barbreite ?> >
+					<span class="percent-value"><?php echo $balkenanzeige; ?></span>
 					<div id="<?php echo esc_attr( $id ) . '_' . $i; ?>" class="inner-fill" style="background-color: <?php echo esc_attr( $colors[$i] ); ?>; height: <?php echo $balkhoehe . '%'; ?>">
-						<div class="percent-value"><?php echo $balkenanzeige; ?></div>
 					</div><!-- .inner-fill -->
 					<?php
 					if (strpos($labels[$i], '<a href') !== false ) {
@@ -455,7 +455,6 @@ class PB_ChartsCodes_Shortcode {
 			'datapts'	=> $datapts,
 			'fontfamily' => $fontfamily,
 			);
-
 		// Load Charts QRCodes Barcodes line js
 		wp_enqueue_script( 'pb-chartscodes-line-script', PB_ChartsCodes_URL_PATH . 'assets/js/canvaschart.min.js', array(), '1.8', true  );
 		// Load Charts QRCodes Barcodes custom line js
@@ -467,10 +466,10 @@ class PB_ChartsCodes_Shortcode {
 		return ob_get_clean();
 	}
 
+	//
+	// Create Shortcodes  für Charts und für die Post per Month Statistik
+	//
 	public function PB_ChartsCodes_create_shortcode() {
-		/*
-		 * Create Shortcodes  für Charts und für die Post per Month Statistik
-		 */
 		add_shortcode( 'chartscodes', array( $this, 'PB_ChartsCodes_shortcode_function' ) );
 		add_shortcode( 'chartscodes_donut', array( $this, 'PB_ChartsCodes_doughnut_shortcode_function' ) );
 		add_shortcode( 'chartscodes_polar', array( $this, 'PB_ChartsCodes_polar_shortcode_function' ) );
@@ -582,7 +581,6 @@ function german_time_diff( $from, $to ) {
     );
     return ' <i title="älter als voriger Beitrag" class="fa fa-arrows-h"></i> ' . strtr($diff,$replace);
 }
-
 
 //  display the timeline
 function display_timeline($args){
@@ -712,7 +710,6 @@ function has_timeline_shortcode( $posts ) {
         return $posts;
     }
 add_action('the_posts', 'has_timeline_shortcode');
-
 
 //do shortcode for get_the_excerpt() && get_the_content()
 add_filter('get_the_content', 'do_shortcode');
