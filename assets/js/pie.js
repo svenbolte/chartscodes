@@ -47,6 +47,7 @@ The Implementation part of this Js
         this.options.centerX = Math.floor(this.options.canvas.width / 2);
         this.options.centerY = Math.floor(this.options.canvas.height / 2);
         this.DrawCanvas(this.options.whiteCircle);
+
     }
 
     PieBuilder.prototype.DrawCanvas = function (whiteCircle) {
@@ -64,7 +65,7 @@ The Implementation part of this Js
     }
 
     PieBuilder.prototype.DrawSamllCircle = function (xCor, yCor, color, r) {
-        this.options.context.save();
+		this.options.context.save();
         this.options.context.beginPath();
         this.options.context.moveTo(this.options.centerX, this.options.centerY);
         this.options.context.arc(xCor, yCor, r, 0, 2 * Math.PI, false);

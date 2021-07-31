@@ -2,10 +2,10 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.46
-Stable tag: 11.1.46
+Version: 11.1.47
+Stable tag: 11.1.47
 Requires at least: 5.1
-Tested up to: 5.7
+Tested up to: 5.8
 Requires PHP: 7.4
 
 == Description ==
@@ -175,6 +175,9 @@ Output your WordPress posts or custom post types as a timeline with options.
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.47 =
+Piechart/donut and polarchart responsiveness optimizations
 
 = 11.1.46 =
 Bar Graph percentage optimizations

@@ -44,7 +44,7 @@
     };
 
     var renderText = function() {
-        var labelFont = (data.labelFont != null) ? data.labelFont : '10pt Arial';
+        var labelFont = (data.labelFont != null) ? data.labelFont : '10px Arial';
         ctx.font = labelFont;
         ctx.textAlign = "center";
 
@@ -73,12 +73,11 @@
         var xPos = margin.left;
         for (var i = 0; i < data.dataPoints.length; i++) {
             yPos += (i == 0) ? margin.top : yInc;
-
-            if ( i % 2 == 0  && Math.round(maxYValue - ((i == 0) ? 0 : yPos / ratio)) > 0 ) {
+            if ( i % (Math.floor(data.dataPoints.length / 10 )) == 0  && Math.round(maxYValue - ((i == 0) ? 0 : yPos / ratio)) > 0 ) {
 				//Draw horizontal lines
-				drawLine(margin.left, yPos, xMax, yPos, '#E8E8E8');
+				drawLine(margin.left, yPos, xMax +12, yPos, '#E8E8E8');
 				//y axis labels
-				ctx.font = (data.dataPointFont != null) ? data.dataPointFont : '15px Arial';
+				ctx.font = (data.dataPointFont != null) ? data.dataPointFont : '14px Arial';
 				var txt = Math.round(maxYValue - ((i == 0) ? 0 : yPos / ratio));
 				var txtSize = ctx.measureText(txt);
 				ctx.fillText(txt, margin.left - ((txtSize.width >= 14) ? txtSize.width : 10) - 7, yPos + 4); 
@@ -88,13 +87,18 @@
             //x axis labels
             txt = data.dataPoints[i].x;
             txtSize = ctx.measureText(txt);
-            ctx.fillText(txt, xPos, yMax + (margin.bottom / 3));
+			ctx.save();
+			ctx.translate(xPos, yMax + (margin.bottom / 3));
+			ctx.rotate(Math.PI / 10);
+			ctx.translate(-xPos, -(yMax + (margin.bottom / 3)));
+			ctx.fillText(txt, xPos, yMax + (margin.bottom / 3));
+			ctx.restore();	
             xPos += xInc;
         }
         //Vertical line
         drawLine(margin.left, margin.top, margin.left, yMax, 'black');
         //Horizontal Line
-        drawLine(margin.left, yMax, xMax, yMax, 'black');
+        drawLine(margin.left, yMax, xMax+15, yMax, 'black');
     };
 
     var renderData = function(type) {
@@ -130,9 +134,7 @@
 				txtSize = ctx.measureText(txt);
 				ctx.fillStyle = '#000';
 				ctx.fillText(txt, ptX + 10, ptY - 15,);
-
             }
-
             prevX = ptX;
             prevY = ptY;
         }
