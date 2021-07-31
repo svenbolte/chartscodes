@@ -552,7 +552,7 @@ function website_display_stats() {
 				$datum = strftime("%a %e. %b %G", strtotime($customer->datum));	
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
 				$labels.= $datum .',';
-				$label2.= substr($customer->datum,8,2).',';
+				$label2.= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2).',';
 				$values.= $customer->viscount.',';
 			}	
 			$labels = rtrim($labels, ",");

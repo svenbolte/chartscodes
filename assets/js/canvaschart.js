@@ -1,6 +1,6 @@
 ﻿var CanvasChart = function () {
     var ctx;
-    var margin = { top: 40, left: 75, right: 0, bottom: 75 };
+    var margin = { top: 40, left: 75, right: 0, bottom: 80 };
     var chartHeight, chartWidth, yMax, xMax, data;
     var maxYValue = 0;
     var ratio = 0;
@@ -54,13 +54,13 @@
 
         //X-axis text
         txtSize = ctx.measureText(data.xLabel);
-        ctx.fillText(data.xLabel, margin.left + (xMax / 2) - (txtSize.width / 2), yMax + (margin.bottom / 1.2));
+        ctx.fillText(data.xLabel, margin.left + (xMax / 2) - (txtSize.width / 2), yMax + 17 );
 
         //Y-axis text
         ctx.save();
         ctx.rotate(-Math.PI / 2);
         ctx.font = labelFont;
-        ctx.fillText(data.yLabel, (yMax / 2) * -1, margin.left / 4);
+        ctx.fillText(data.yLabel, (yMax / 2) * -1, 10 );
         ctx.restore();
     };
 
@@ -71,9 +71,10 @@
         var yLabelInc = (maxYValue * ratio) / data.dataPoints.length;
         var xInc = getXInc();
         var xPos = margin.left;
+		ctx.textAlign = "left";
         for (var i = 0; i < data.dataPoints.length; i++) {
             yPos += (i == 0) ? margin.top : yInc;
-            if ( i % (Math.floor(data.dataPoints.length / 10 )) == 0  && Math.round(maxYValue - ((i == 0) ? 0 : yPos / ratio)) > 0 ) {
+            if ( i % (Math.round(data.dataPoints.length / (data.dataPoints.length /10) )) == 0  && Math.round(maxYValue - ((i == 0) ? 0 : yPos / ratio)) > 0 ) {
 				//Draw horizontal lines
 				drawLine(margin.left, yPos, xMax +12, yPos, '#E8E8E8');
 				//y axis labels
@@ -84,21 +85,24 @@
 			}
             //Draw vertical lines
             drawLine(xPos, yMax, xPos, margin.top, '#E8E8E8');
-            //x axis labels
-            txt = data.dataPoints[i].x;
-            txtSize = ctx.measureText(txt);
-			ctx.save();
-			ctx.translate(xPos, yMax + (margin.bottom / 3));
-			ctx.rotate(Math.PI / 10);
-			ctx.translate(-xPos, -(yMax + (margin.bottom / 3)));
-			ctx.fillText(txt, xPos, yMax + (margin.bottom / 3));
-			ctx.restore();	
+            if ( Math.round( xMax / data.dataPoints.length ) < 10 ) { xsteps = 2; } else { xsteps = 1; }
+			if ( (i % xsteps) == 0 ) {
+				//x axis labels
+				txt = data.dataPoints[i].x;
+				txtSize = ctx.measureText(txt);
+				ctx.save();
+				ctx.translate(xPos, yMax + (margin.bottom / 3));
+				ctx.rotate(90 * Math.PI / 180);
+				ctx.translate(-xPos, -(yMax + (margin.bottom / 3)));
+				ctx.fillText(txt, xPos, yMax + (margin.bottom / 3));
+				ctx.restore();	
+			}	
             xPos += xInc;
         }
         //Vertical line
         drawLine(margin.left, margin.top, margin.left, yMax, 'black');
         //Horizontal Line
-        drawLine(margin.left, yMax, xMax+15, yMax, 'black');
+        drawLine(margin.left, yMax, xMax+10, yMax, 'black');
     };
 
     var renderData = function(type) {
