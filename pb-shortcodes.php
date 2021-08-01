@@ -77,7 +77,7 @@ class PB_ChartsCodes_Shortcode {
 		?>
 		<div class="tp-piebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
 			<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
-			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="400" style="max-width:100%;max-height:400px;object-fit:contain">
+			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="400" style="max-width:100vw;max-height:400px;object-fit:contain">
 			</canvas>
 		</div>
 		<?php  
@@ -139,7 +139,7 @@ class PB_ChartsCodes_Shortcode {
 			<?php if ( ! empty( $title ) ) : ?>
 				<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
 			<?php endif; ?>
-			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="400" style="max-width:100%;max-height:400px;object-fit:contain">
+			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="400" style="max-width:100vw;max-height:400px;object-fit:contain">
 			</canvas>
 		</div>
 		<?php  
@@ -202,7 +202,7 @@ class PB_ChartsCodes_Shortcode {
 			<?php if ( ! empty( $title ) ) : ?>
 				<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
 			<?php endif; ?>
-			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="400" style="max-width:100%;max-height:400px;object-fit:contain">
+			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="400" style="max-width:100vw;max-height:400px;object-fit:contain">
 			</canvas>
 		</div>
 		<?php  

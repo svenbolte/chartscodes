@@ -74,7 +74,7 @@
 		ctx.textAlign = "left";
         for (var i = 0; i < data.dataPoints.length; i++) {
             yPos += (i == 0) ? margin.top : yInc;
-            if ( i % (Math.round(data.dataPoints.length / (data.dataPoints.length /10) )) == 0  && Math.round(maxYValue - ((i == 0) ? 0 : yPos / ratio)) > 0 ) {
+            if ( i % (Math.round(data.dataPoints.length / 10 )) == 0  && Math.round(maxYValue - ((i == 0) ? 0 : yPos / ratio)) > 0 ) {
 				//Draw horizontal lines
 				drawLine(margin.left, yPos, xMax +12, yPos, '#E8E8E8');
 				//y axis labels
