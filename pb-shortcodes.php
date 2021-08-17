@@ -481,13 +481,26 @@ class PB_ChartsCodes_Shortcode {
 }
 new PB_ChartsCodes_Shortcode();
 
+// ==================== Hardwaremarkenlogos anzeigen Shortcode ======================================
+function complogo_shortcode($atts){
+	$args = shortcode_atts( array(
+		      'scale' => '',     		// sm = 32px  xs=21px
+		      'brand' => '',  // Herstellermarke
+     		), $atts );
+		// Load comp freaky style for brands
+		wp_enqueue_style( 'pb-complogo-style', PB_ChartsCodes_URL_PATH . 'flags/computerbrands.min.css' );
+		$complogo = '<a target="_blank" href="https://'.strtolower($args['brand']).'.de"><i class="comp comp-'.strtolower($args['brand']).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtoupper($atts['brand']).' aufrufen"></i></a>';
+        return $complogo;
+}
+add_shortcode('complogo', 'complogo_shortcode');
+
 // ==================== Automarkenlogos anzeigen Shortcode ======================================
 function carlogo_shortcode($atts){
 	$args = shortcode_atts( array(
 		      'scale' => '',     		// sm = 32px  xs=21px
 		      'brand' => '0unknown',  // Autohersteller
      		), $atts );
-		// Load flag freaky style for flags
+		// Load car freaky style for car
 		wp_enqueue_style( 'pb-autologo-style', PB_ChartsCodes_URL_PATH . 'flags/car-logos.min.css' );
 		$autologo = '<a target="_blank" href="https://'.strtolower($args['brand']).'.de"><i class="fcar fcar-'.strtolower($args['brand']).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtoupper($atts['brand']).' aufrufen"></i></a>';
         return $autologo;

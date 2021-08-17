@@ -1,0 +1,151 @@
+.comp {
+  background: url('computerbrands.png') no-repeat top left;
+  display:inline-block;
+  overflow: hidden;
+  position: relative;
+  vertical-align: middle;
+  box-sizing: content-box;
+  width: 60px;
+  height: 60px;
+}
+.comp-_blank {
+  background-position: 0 0;
+}
+.comp-3com {
+  background-position: 0 -60px;
+}
+.comp-acer {
+  background-position: 0 -120px;
+}
+.comp-ascom {
+  background-position: 0 -180px;
+}
+.comp-asus {
+  background-position: 0 -240px;
+}
+.comp-belkin {
+  background-position: 0 -300px;
+}
+.comp-canon {
+  background-position: 0 -360px;
+}
+.comp-cisco {
+  background-position: 0 -420px;
+}
+.comp-commodore {
+  background-position: 0 -480px;
+}
+.comp-compaq {
+  background-position: 0 -540px;
+}
+.comp-dell {
+  background-position: 0 -600px;
+}
+.comp-d-link {
+  background-position: 0 -660px;
+}
+.comp-epson {
+  background-position: 0 -720px;
+}
+.comp-fujitsu {
+  background-position: 0 -780px;
+}
+.comp-fujitsu-siemens {
+  background-position: 0 -840px;
+}
+.comp-hewlett-packard {
+  background-position: 0 -900px;
+}
+.comp-hp {
+  background-position: 0 -960px;
+}
+.comp-htc {
+  background-position: 0 -1020px;
+}
+.comp-hyundai {
+  background-position: 0 -1080px;
+}
+.comp-ibm {
+  background-position: 0 -1140px;
+}
+.comp-konicaminolta {
+  background-position: 0 -1200px;
+}
+.comp-kyocera {
+  background-position: 0 -1260px;
+}
+.comp-lenovo {
+  background-position: 0 -1320px;
+}
+.comp-lexmark {
+  background-position: 0 -1380px;
+}
+.comp-lg {
+  background-position: 0 -1440px;
+}
+.comp-medion {
+  background-position: 0 -1500px;
+}
+.comp-microsoft {
+  background-position: 0 -1560px;
+}
+.comp-msi {
+  background-position: 0 -1620px;
+}
+.comp-nec {
+  background-position: 0 -1680px;
+}
+.comp-netgear {
+  background-position: 0 -1740px;
+}
+.comp-oki {
+  background-position: 0 -1800px;
+}
+.comp-panasonic {
+  background-position: 0 -1860px;
+}
+.comp-philips {
+  background-position: 0 -1920px;
+}
+.comp-pmg {
+  background-position: 0 -1980px;
+}
+.comp-post {
+  background-position: 0 -2040px;
+}
+.comp-ricoh {
+  background-position: 0 -2100px;
+}
+.comp-samsung {
+  background-position: 0 -2160px;
+}
+.comp-seagate {
+  background-position: 0 -2220px;
+}
+.comp-siemens {
+  background-position: 0 -2280px;
+}
+.comp-sony {
+  background-position: 0 -2340px;
+}
+.comp-sonyericsson {
+  background-position: 0 -2400px;
+}
+.comp-telekom {
+  background-position: 0 -2460px;
+}
+.comp-toshiba {
+  background-position: 0 -2520px;
+}
+.comp-vodafone {
+  background-position: 0 -2580px;
+}
+.comp-westerndigital {
+  background-position: 0 -2640px;
+}
+.comp-xerox {
+  background-position: 0 -2700px;
+}
+.comp-zyxel {
+  background-position: 0 -2760px;
+}

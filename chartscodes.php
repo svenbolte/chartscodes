@@ -851,6 +851,10 @@ function website_display_stats() {
 				liefert das Logo und den Link zum Automobilhersteller  Größen (scale): leer 48px, bei sm: 32px und bei xs:21px
 				</tt>
 			</p>
+			<p><tt><code>[complogo brand="lenovo"]</code>
+				liefert das Logo und den Link zum Hardware-Hersteller  Größe 60x60px
+				</tt>
+			</p>
             <form action="options.php" method="post">
             <?php settings_fields(self::safe_slug.'_options'); ?>
             <?php do_settings_sections(__FILE__); ?>
