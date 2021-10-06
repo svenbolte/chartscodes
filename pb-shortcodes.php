@@ -357,7 +357,7 @@ class PB_ChartsCodes_Shortcode {
 	}
 
 	//
-	//  Posts und Pages pro Monat für letzte 12 Monate als Bar Chart (ruft Bar chart shortcode auf)
+	//  Neu erstellte Posts und Pages pro Monat für letzte 12 Monate als Bar Chart (ruft Bar chart shortcode auf)
 	//
 	function wpse60859_shortcode_alt_cb($atts) {
 		$input = shortcode_atts( array(	
@@ -374,13 +374,15 @@ class PB_ChartsCodes_Shortcode {
 		}
 		$monate = $input['months']-1; 
 		$monnamen = array ("","Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez");
+		$pmod = 'post_date';
+		// if ( 1 === get_theme_mod( 'homesortbymoddate' ) ) {	$pmod = 'post_modified'; } else { $pmod = 'post_date'; }	
 		global $wpdb;
 		$res = $wpdb->get_results(
-			"SELECT MONTH(post_date) as post_month, YEAR(post_date) as post_year, COUNT(ID) as post_count " .
+			"SELECT MONTH(".$pmod.") as post_month, YEAR(".$pmod.") as post_year, COUNT(ID) as post_count " .
 			"FROM {$wpdb->posts} " .
-			"WHERE post_date BETWEEN DATE_SUB('".$fromdate."', INTERVAL ".$monate." MONTH) AND '".$fromdate."' " .
+			"WHERE ".$pmod." BETWEEN DATE_SUB('".$fromdate."', INTERVAL ".$monate." MONTH) AND '".$fromdate."' " .
 			"AND post_status = 'publish' AND post_type = 'post' " .
-			"GROUP BY post_month ORDER BY post_date ASC", OBJECT_K
+			"GROUP BY post_month ORDER BY ".$pmod." ASC", OBJECT_K
 		);
 		$valu="";
 		$labl="";
