@@ -99,7 +99,7 @@ class DoQRCode
 			$margin = (int) $atts[ 'margin' ] ;
 		}
 		if ( ! empty( $atts[ 'text' ] ) ) {
-			$textinput = $atts[ 'text' ] ;
+			$textinput = html_entity_decode($atts[ 'text' ]) ;
 		} else { $textinput ='no data'; }
 		$options =['sf'=>$size,'p'=>$margin,'pb'=>$pb,'th'=>$th];
 		$generator = new barcode_generator();
