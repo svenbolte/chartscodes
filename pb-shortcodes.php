@@ -659,9 +659,11 @@ function display_timeline($args){
 			foreach ( $posts as $post ) : setup_postdata($post);
 				$out .=  '<li><div>';
 				$out .=  '<nobr><a href="' . get_permalink($post->ID) . '" title="'.$post->title.'"><h6 class="headline" style="margin-right:8px;overflow:hidden">';
-				$out .=  ' '.get_the_title($post->ID). '</h4></a></nobr>';
+				$cuttext = get_the_title($post->ID);
+				if (strlen($cuttext) > 42) { $cuttext=substr(get_the_title($post->ID), 0, 27) . '&mldr;' . substr(get_the_title($post->ID), -15);	}	
+				$out .=  ' '.$cuttext. '</h4></a></nobr>';
 				$out .=  '<span class="timeline-datebild" style="background-color:'. get_theme_mod( 'link-color', '#888' ) .'">';
-				$out .=  get_the_time( 'D', $post->ID ).'<br><span style="font-size:1.5em">'.get_the_time( 'd', $post->ID ).'</span><br>'.get_the_time( 'M', $post->ID );
+				$out .=  get_the_time( 'D', $post->ID ).'<br><span style="font-size:1.5em;color:#fff">'.get_the_time( 'd', $post->ID ).'</span><br>'.get_the_time( 'M', $post->ID );
 				$out .=  '</span>';
 				if (  $args['pics'] == 1 ) {
 					$out .=  '<div class="timeline-image">';
