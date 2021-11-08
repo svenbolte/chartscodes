@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.47
-Stable tag: 11.1.47
+Version: 11.1.48
+Stable tag: 11.1.48
 Requires at least: 5.1
 Tested up to: 5.8
 Requires PHP: 7.4
@@ -99,7 +99,7 @@ class DoQRCode
 			$margin = (int) $atts[ 'margin' ] ;
 		}
 		if ( ! empty( $atts[ 'text' ] ) ) {
-			$textinput = $atts[ 'text' ] ;
+			$textinput = html_entity_decode($atts[ 'text' ]) ;
 		} else { $textinput ='no data'; }
 		$options =['sf'=>$size,'p'=>$margin,'pb'=>$pb,'th'=>$th];
 		$generator = new barcode_generator();
