@@ -279,7 +279,8 @@ width:100%
 border-radius:2px;
 height:180px;
 max-height:180px;
-width:100%
+width:100%;
+object-fit:cover;
 }
 
 #timeline ul li:nth-child(even) > div .timeline-image {
