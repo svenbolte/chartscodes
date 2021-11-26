@@ -539,7 +539,7 @@ function timeline_calendar( $month,$year,$eventarray ) {
 	$day_counter = 0;
 	$dates_array = array();
 	/* draw table */
-	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . strftime('%B %Y', mktime(0,0,0,$month,1,$year) ) . '</th></thead>';
+	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(0,0,0,$month,1,$year) ) . '</th></thead>';
 	/* table headings */
 	$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
 	$calendar.= '<tr><td style="padding:2px;text-align:center">'.implode('</td><td style="padding:2px;text-align:center">',$headings).'</td></tr>';

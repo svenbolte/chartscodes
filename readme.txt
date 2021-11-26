@@ -2,8 +2,8 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.48
-Stable tag: 11.1.48
+Version: 11.1.49
+Stable tag: 11.1.49
 Requires at least: 5.1
 Tested up to: 5.8.2
 Requires PHP: 7.4
@@ -175,6 +175,9 @@ Output your WordPress posts or custom post types as a timeline with options.
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.49 =
+strftime replaced by i18n since deprecated from php 8.1 
 
 = 11.1.48 =
 html decode entity for qrcodes containing & in url (it was replaced by &amp; before so Links did not work)

@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.48
-Stable tag: 11.1.48
+Version: 11.1.49
+Stable tag: 11.1.49
 Requires at least: 5.1
 Tested up to: 5.8.2
 Requires PHP: 7.4
@@ -518,7 +518,7 @@ function website_display_stats() {
 			setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 			$customers = $wpdb->get_results("SELECT MAX(id) as maxid, min(datum) as mindatum, COUNT(id) as xstored FROM " . $table);
 			foreach($customers as $customer){
-				$totales = sprintf(__('%1s clicks total, %2s since %3s', 'pb-chartscodes'),$customer->maxid,$customer->xstored,strftime("%a %e. %b %G", strtotime($customer->mindatum)) ).', '.human_time_diff( strtotime($customer->mindatum),current_time( 'timestamp' ) );
+				$totales = sprintf(__('%1s clicks total, %2s since %3s', 'pb-chartscodes'),$customer->maxid,$customer->xstored,date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($customer->mindatum) ) ) .', '.human_time_diff( strtotime($customer->mindatum),current_time( 'timestamp' ) );
 				$sdatum = new DateTime($customer->mindatum);
 				$edatum = new DateTime('Now');
 				$interval = $sdatum->diff($edatum)->days;
@@ -549,8 +549,8 @@ function website_display_stats() {
 			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $zeitraum);
 			$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h6><table>';
 			foreach($customers as $customer){
-				$datum = strftime("%a %e. %b %G", strtotime($customer->datum));	
-				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
+				$datum = date_i18n(get_option('date_format') , strtotime($customer->datum) );	
+				if ( count($customers)==1 )	$html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
 				$labels.= $datum .',';
 				$label2.= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2).',';
 				$values.= $customer->viscount.',';
