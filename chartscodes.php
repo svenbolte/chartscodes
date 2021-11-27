@@ -572,7 +572,10 @@ function website_display_stats() {
 				$values.= $customer->pidcount.',';
 				$xsum += absint($customer->pidcount);
 				$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a> &nbsp; ';
-				$html .= get_the_date( 'd. F Y', $customer->postid );
+				//$html .= get_the_date( 'd. F Y', $customer->postid );
+				
+				$html .= date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_the_date( 'd. F Y', $customer->postid )) );
+				
 				$html .= sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),get_post_meta( $customer->postid, 'post_views_count', true )) . '</td></tr>';
 			}	
 			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr>';
