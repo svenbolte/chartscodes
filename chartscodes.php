@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.49
-Stable tag: 11.1.49
+Version: 11.1.50
+Stable tag: 11.1.50
 Requires at least: 5.1
 Tested up to: 5.8.2
 Requires PHP: 7.4
@@ -572,11 +572,9 @@ function website_display_stats() {
 				$values.= $customer->pidcount.',';
 				$xsum += absint($customer->pidcount);
 				$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a> &nbsp; ';
-				//$html .= get_the_date( 'd. F Y', $customer->postid );
-				
-				$html .= date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_the_date( 'd. F Y', $customer->postid )) );
-				
-				$html .= sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),get_post_meta( $customer->postid, 'post_views_count', true )) . '</td></tr>';
+				$html .= '<i class="fa fa-calendar-o"></i> '.date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_the_date( 'd. F Y', $customer->postid )) );
+				$html .= ' '.ago(get_the_date( 'U', $customer->postid ));
+				$html .= '&nbsp; <i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),get_post_meta( $customer->postid, 'post_views_count', true )) . '</td></tr>';
 			}	
 			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr>';
 			$labels = rtrim($labels, ",");
