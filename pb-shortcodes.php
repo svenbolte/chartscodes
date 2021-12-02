@@ -654,19 +654,19 @@ function display_timeline($args){
 		}
 		if ( strpos($args['view'], "timeline") !== false ) {	
 			$out .=  '<div id="timeline">';
-			$out .=   '<ul>';
+			$out .=   '<ul style="background:url(\''.PB_ChartsCodes_URL_PATH.'/Image/ul-bg.png\') center top repeat-y;">';
 			$prevdate = '';
 			foreach ( $posts as $post ) : setup_postdata($post);
 				$out .=  '<li><div>';
-				$out .=  '<nobr><a href="' . get_permalink($post->ID) . '" title="'.$post->title.'"><h6 class="headline" style="margin-right:8px;overflow:hidden">';
+				$out .=  '<nobr><h6 class="headline" style="margin-right:8px;overflow:hidden"><a href="' . get_permalink($post->ID) . '" title="'.$post->title.'">';
 				$cuttext = get_the_title($post->ID);
 				if (strlen($cuttext) > 42) { $cuttext=substr(get_the_title($post->ID), 0, 27) . '&mldr;' . substr(get_the_title($post->ID), -15);	}	
-				$out .=  ' '.$cuttext. '</h4></a></nobr>';
+				$out .=  ' '.$cuttext. '</a></h6></nobr>';
 				$out .=  '<span class="timeline-datebild" style="background-color:'. get_theme_mod( 'link-color', '#888' ) .'">';
 				$out .=  get_the_time( 'D', $post->ID ).'<br><span style="font-size:1.5em;color:#fff">'.get_the_time( 'd', $post->ID ).'</span><br>'.get_the_time( 'M', $post->ID );
 				$out .=  '</span>';
 				if (  $args['pics'] == 1 ) {
-					$out .=  '<div class="timeline-image">';
+					$out .=  '<div class="timeline-image post-thumbnail">';
 					if ( has_post_thumbnail( $post->ID ) ) {
 						$out .=  get_the_post_thumbnail( $post->ID, 'large' );
 					} else {
@@ -684,7 +684,7 @@ function display_timeline($args){
 								$first_img = '<img src="' . $cbild . '">';	
 							}
 						}
-						$out .= $first_img;
+						$out .= $first_img. '<a style="color:#fff;text-shadow:1px 1px 1px #000" href="' . get_permalink($post->ID) . '"><div class="middle" style="top:45%">'.__( "Continue reading", "penguin" ).' &raquo;</a></div>';
 					}	
 					$out .= '</div>';
 				}

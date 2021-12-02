@@ -172,7 +172,6 @@ white-space:nowrap
 }
 
 #timeline ul {
-background:url(../../Image/ul-bg.png) center top repeat-y;
 display:inline-block;
 list-style:none;
 margin:0 auto;
