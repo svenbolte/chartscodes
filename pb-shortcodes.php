@@ -22,7 +22,7 @@ class PB_ChartsCodes_Shortcode {
 		for ($i = 0; $i < 3; $i++) {
 			$dec = hexdec( substr( $hex, $i*2, 2 ) );
 			$dec = min( max( 0, $dec + $dec * $percent ), 255 ); 
-			$new_hex .= str_pad( dechex( $dec ) , 2, 0, STR_PAD_LEFT );
+			$new_hex .= str_pad( dechex( (int) $dec ) , 2, 0, STR_PAD_LEFT );
 		}		
 		return $new_hex;
 	}
