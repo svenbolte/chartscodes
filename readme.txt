@@ -2,11 +2,11 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.50
-Stable tag: 11.1.50
+Version: 11.1.51
+Stable tag: 11.1.51
 Requires at least: 5.1
 Tested up to: 5.8.2
-Requires PHP: 7.4
+Requires PHP: 8.0
 
 == Description ==
 Shortcode collection for creating Line Charts, Bar Graph and Pie Charts (normal, donut, polar) with multiple colors.
@@ -175,6 +175,9 @@ Output your WordPress posts or custom post types as a timeline with options.
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.51 =
+does not require penguin theme any more, made ccago function for ago time
 
 = 11.1.49-50 =
 strftime replaced by i18n since deprecated from php 8.1 

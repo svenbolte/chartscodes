@@ -9,14 +9,47 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.50
-Stable tag: 11.1.50
+Version: 11.1.51
+Stable tag: 11.1.51
 Requires at least: 5.1
 Tested up to: 5.8.2
-Requires PHP: 7.4
+Requires PHP: 8.0
 */
 
 if ( ! defined( 'ABSPATH' ) ) {	exit; } // Exit if accessed directly.
+
+// Zeitdifferenz ermitteln und gestern/vorgestern/morgen schreiben
+function ccago($timestamp) {
+	$xlang = get_bloginfo("language");
+	date_default_timezone_set('Europe/Berlin');
+	$now = time();
+	if ($timestamp > $now) {
+		$prepo = __('in', 'pb-chartscodes');
+		$postpo = '';
+	} else {
+		if ($xlang == 'de-DE') {
+			$prepo = __('vor', 'pb-chartscodes');
+			$postpo = '';
+		} else {
+			$prepo = '';
+			$postpo = __('ago', 'pb-chartscodes');
+		}
+	}
+	$her = intval($now) - intval($timestamp);
+	if ($her > 86400 and $her < 172800) {
+		$hdate = __('yesterday', 'pb-chartscodes');
+	} else if ($her > 172800 and $her < 259200) {
+		$hdate = __('1 day before yesterday', 'pb-chartscodes');
+	} else if ($her < - 86400 and $her > - 172800) {
+		$hdate = __('tomorrow', 'pb-chartscodes');
+	} else if ($her < - 172800 and $her > - 259200) {
+		$hdate = __('1 day after tomorrow', 'pb-chartscodes');
+	} else {
+		$hdate = ' ' . $prepo . ' ' . human_time_diff(intval($timestamp), $now) . ' ' . $postpo;
+	}
+	return $hdate;
+}
+
 
 add_action( 'plugins_loaded', 'chartscodes_textdomain' );
 function chartscodes_textdomain() {
@@ -573,7 +606,7 @@ function website_display_stats() {
 				$xsum += absint($customer->pidcount);
 				$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a> &nbsp; ';
 				$html .= '<i class="fa fa-calendar-o"></i> '.date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_the_date( 'd. F Y', $customer->postid )) );
-				$html .= ' '.ago(get_the_date( 'U', $customer->postid ));
+				$html .= ' '.ccago(get_the_date( 'U', $customer->postid ));
 				$html .= '&nbsp; <i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),get_post_meta( $customer->postid, 'post_views_count', true )) . '</td></tr>';
 			}	
 			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr>';
@@ -602,7 +635,7 @@ function website_display_stats() {
 				if ($customer->country == 'EUROPEANUNION') $customer->country = 'EU';
 				$html .= '<td>'. $this->get_flag(  (object) [ 'code' => $customer->country ] ).'</td>';
 				$html .= '<td><abbr>' . $customer->userip .'</abbr></td><td><abbr><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</abbr></a></td>';
-				$html .= '<td><abbr>' . $datum . ' ' . ago(strtotime($customer->datum)).'</abbr></td></tr>';
+				$html .= '<td><abbr>' . $datum . ' ' . ccago(strtotime($customer->datum)).'</abbr></td></tr>';
 			}	
 			$html .= '</table>';
 
