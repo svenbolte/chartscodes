@@ -189,20 +189,34 @@ width:50%
 #timeline ul li .timeline-text {
 background-color:rgba(192,192,192,.1);
 float:left;
-height:50px;
+height:58px;
 line-height:1.1em;
-max-height:50px;
-min-height:50px;
+max-height:58px;
+min-height:58px;
 overflow:hidden;
-width:100%
+width:100%;
+padding:3px;
+}
+
+#timeline .timeline-title {
+margin-right:8px;
+overflow:hidden;
+display:block;
+background-color:#ffffffdd;
+padding:3px;
+max-width:100%;
+width:calc(100% - 20px);
+position:absolute;
+left:auto;
+top:0
 }
 
 #timeline ul li .noimages {
 float:left;
-height:70px;
+height:75px;
 line-height:1.1em;
-max-height:70px;
-min-height:70px;
+max-height:75px;
+min-height:75px;
 overflow:hidden
 }
 
@@ -268,16 +282,18 @@ margin-left:0
 }
 
 #timeline ul .timeline-image {
-height:180px;
-max-height:180px;
+background-color:#333333;
+border-radius:3px;
+height:190px;
+max-height:190px;
 overflow:hidden;
 width:100%
 }
 
 #timeline ul .timeline-image img {
 border-radius:2px;
-height:180px;
-max-height:180px;
+height:190px;
+max-height:190px;
 width:100%;
 object-fit:cover;
 }

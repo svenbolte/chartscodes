@@ -658,13 +658,11 @@ function display_timeline($args){
 			$prevdate = '';
 			foreach ( $posts as $post ) : setup_postdata($post);
 				$out .=  '<li><div>';
-				$out .=  '<nobr><h6 class="headline" style="margin-right:8px;overflow:hidden"><a href="' . get_permalink($post->ID) . '" title="'.$post->title.'">';
-				$cuttext = get_the_title($post->ID);
-				if (strlen($cuttext) > 42) { $cuttext=substr(get_the_title($post->ID), 0, 27) . '&mldr;' . substr(get_the_title($post->ID), -15);	}	
-				$out .=  ' '.$cuttext. '</a></h6></nobr>';
 				$out .=  '<span class="timeline-datebild" style="background-color:'. get_theme_mod( 'link-color', '#888' ) .'">';
 				$out .=  get_the_time( 'D', $post->ID ).'<br><span style="font-size:1.5em;color:#fff">'.get_the_time( 'd', $post->ID ).'</span><br>'.get_the_time( 'M', $post->ID );
 				$out .=  '</span>';
+				$cuttext = get_the_title($post->ID);
+				if (strlen($cuttext) > 42) { $cuttext=substr(get_the_title($post->ID), 0, 27) . '&mldr;' . substr(get_the_title($post->ID), -15);	}	
 				if (  $args['pics'] == 1 ) {
 					$out .=  '<div class="timeline-image post-thumbnail">';
 					if ( has_post_thumbnail( $post->ID ) ) {
@@ -686,16 +684,22 @@ function display_timeline($args){
 						}
 						$out .= $first_img. '<a style="color:#fff;text-shadow:1px 1px 1px #000" href="' . get_permalink($post->ID) . '"><div class="middle" style="top:45%">'.__( "Continue reading", "penguin" ).' &raquo;</a></div>';
 					}	
+					$out .=  '<div class="timeline-title"><nobr><a style="font-size:1.2em" href="' . get_permalink($post->ID) . '" title="'.$post->title.'">';
+					$out .=  ' '.$cuttext. '</a></nobr></div>';
 					$out .= '</div>';
+				} else {
+					$out .=  '<nobr><h6 class="headline" style="margin-right:8px;overflow:hidden"><a href="' . get_permalink($post->ID) . '" title="'.$post->title.'">';
+					$out .=  ' '.$cuttext. '</a></h6></nobr>';
 				}
 				if (  $args['pics'] == 1 ) { $imgon=''; $exwordcount = 15; } else { $imgon ='noimages'; $exwordcount = 30; }
-				$out .= '<span class="timeline-text '.$imgon.'" ><abbr>';
-				if ( !empty($prevdate)) $out .= german_time_diff($prevdate,get_the_time( 'U', $post->ID ));
+				$out .= '<span class="timeline-text '.$imgon.'" style="background-color:'. get_theme_mod( 'link-color', '#eeeeee' ). '22' .'"><abbr>';
+				if ( !empty($prevdate)) $out .= german_time_diff($prevdate,get_the_time( 'U', $post->ID )).' &nbsp; ';
 				$out .= ' <i class="fa fa-calendar-o"></i> ';
 				$out .=  get_the_time($args['dateformat'], $post->ID);
 				$out .=  ' vor '. human_time_diff( get_the_time( 'U', $post->ID ), current_time( 'timestamp' ) );
 				$out .=  ' &nbsp; <i class="fa fa-newspaper-o"></i> '.wp_trim_words(get_the_excerpt( $post->ID ), $exwordcount );
-				$out .=  '</abbr></span></div></li>';
+				$out .=  '</abbr></span>';
+				$out .=  '</div></li>';
 				$prevdate = get_the_time( 'U', $post->ID );
 			endforeach;
 			$out .=  '</ul>';
