@@ -597,9 +597,20 @@ function german_time_diff( $from, $to ) {
     return ' <i title="älter als voriger Beitrag" class="fa fa-arrows-h"></i> ' . strtr($diff,$replace);
 }
 
+
+// Search filter
+function my_filter_post_where( $where) {
+    global $wpdb;
+	global $keyword;
+    $where .= ' AND ' . $wpdb->posts . '.post_title LIKE \'%' . $keyword . '%\'';
+    return $where;
+}
+
 //  display the timeline
 function display_timeline($args){
+	global $keyword;
 	if ( isset( $_GET[ 'cat' ] ) ) { $catfilter = esc_attr($_GET["cat"]); } else { $catfilter=''; }
+	if ( isset( $_GET[ 'search' ] ) ) { $keyword = esc_attr($_GET["search"]); } else { $keyword=''; }
 	$out = '';
 		// Kategorie-Filter von Hand
 		$cargs = array(
@@ -614,6 +625,7 @@ function display_timeline($args){
 		$select  = preg_replace( '#<select([^>]*)>#', $replace, $select );
 		$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 		$post_args = array(
+			'suppress_filters' => false, // important!
 			'post_type' => explode( ',', $args['type'] ),
 			'numberposts' => $args['items'],
 			'posts_per_page' => $args['perpage'],
@@ -626,20 +638,26 @@ function display_timeline($args){
 			'post_status' => 'publish',
 		);
 		$tpostarg = array(
+			'suppress_filters' => false, // important!
 			'numberposts' => -1,
 			'post_type' => explode( ',', $args['type'] ),
 			'category_name' => $args['catname'],
 			'category' =>  $catfilter,
 			'post_status' => 'publish',
 		);
+		add_filter( 'posts_where', 'my_filter_post_where' );
 		$tpostcount = count(get_posts( $tpostarg ));
 		if ( $tpostcount > intval($args['items']) ) $tpostcount = intval($args['items']);
+		$out.= '<div style="text-align:right"><form name="finder" method="get">'.__('number of posts','pb-chartscodes').': '.$tpostcount;
 		if (empty($args['catname'])) {
-			$out .= '<div><form id="category-select" class="category-select" method="get">';
-			$out .= 'Kategorie filtern '.$select; 
-			$out .= '<noscript><input type="submit" value="View" /></noscript></form></div>';
+			$out .= ' '.$select; 
+			$out .= '<noscript><input type="submit" value="View" /></noscript>';
 		}	
+		$out.= ' <input type="text" placeholder="Suchbegriff" name="search" id="search" value="'.$keyword.'"> ';
+		$out.='</select><input class="noprint" type="submit" value="'. __( 'search', 'pb-chartscodes' ).'" />';
+		$out .= '</form></div>';
 		$posts = get_posts( $post_args );
+		remove_filter( 'posts_where', 'my_filter_post_where' );
 		if ( strpos($args['view'], "calendar") !== false ) {
 			/// Cal Aufruf
 			$outputed_values = array();
