@@ -9,10 +9,10 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.52
-Stable tag: 11.1.52
+Version: 11.1.53
+Stable tag: 11.1.53
 Requires at least: 5.1
-Tested up to: 5.8.2
+Tested up to: 5.8.3
 Requires PHP: 8.0
 */
 
@@ -582,7 +582,7 @@ function website_display_stats() {
 			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $zeitraum);
 			$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h6><table>';
 			foreach($customers as $customer){
-				$datum = date_i18n(get_option('date_format') , strtotime($customer->datum) );	
+				$datum = date_i18n(get_option('date_format'), strtotime($customer->datum) + get_option( 'gmt_offset' ) * 3600 );	
 				if ( count($customers)==1 )	$html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
 				$labels.= $datum .',';
 				$label2.= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2).',';
