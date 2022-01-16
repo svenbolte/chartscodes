@@ -2,10 +2,10 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.52
-Stable tag: 11.1.52
+Version: 11.1.53
+Stable tag: 11.1.53
 Requires at least: 5.1
-Tested up to: 5.8.2
+Tested up to: 5.8.3
 Requires PHP: 8.0
 
 == Description ==
@@ -175,6 +175,10 @@ Output your WordPress posts or custom post types as a timeline with options.
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.53 =
+WP 583 compatibility
+Date statistics added in timeline style, created, modified, time diffs and yellow for new
 
 = 11.1.51-52 =
 does not require penguin theme any more, made ccago function for ago time

@@ -712,9 +712,36 @@ function display_timeline($args){
 				if (  $args['pics'] == 1 ) { $imgon=''; $exwordcount = 15; } else { $imgon ='noimages'; $exwordcount = 30; }
 				$out .= '<span class="timeline-text '.$imgon.'" style="background-color:'. get_theme_mod( 'link-color', '#eeeeee' ). '22' .'"><abbr>';
 				if ( !empty($prevdate)) $out .= german_time_diff($prevdate,get_the_time( 'U', $post->ID )).' &nbsp; ';
-				$out .= ' <i class="fa fa-calendar-o"></i> ';
-				$out .=  get_the_time($args['dateformat'], $post->ID);
-				$out .=  ' vor '. human_time_diff( get_the_time( 'U', $post->ID ), current_time( 'timestamp' ) );
+				// Datum-Statistik des Posts mit Farbdarstellung <14Tg alt
+				$diff = time() - get_post_time('U', false, $post, true);
+				if (round((intval($diff) / 86400), 0) < 30) {
+					$newcolor = "#FFD800";
+				} else {
+					$newcolor = "transparent";
+				}
+				$erstelldat = get_post_time('l, d. M Y H:i:s', false, $post, true);
+				$postago = ago(get_post_time('U, d. F Y H:i:s', false, $post, true));
+				$moddat = get_the_modified_time('l, d. M Y H:i:s', false, $post, true);
+				$modago = ago(get_the_modified_time('U, d. F Y H:i:s', false, $post, true));
+				$diffmod = get_the_modified_time('U', false, $post, true) - get_post_time('U', false, $post, true);
+				$erstelltitle = 'erstellt: ' . $erstelldat . ' ' . $postago;
+				if ($diffmod > 0) {
+					$erstelltitle.= '&#10;verändert: ' . $moddat . ' ' . $modago;
+					$erstelltitle.= '&#10;verändert nach: ' . human_time_diff(get_post_time('U', false, $post, true), get_the_modified_time('U', false, $post, true));
+				}
+				if ($diffmod > 86400) {
+					$newormod = 'fa fa-calendar-plus-o';
+				} else {
+					$newormod = 'fa fa-calendar-o';
+				}
+				$out .= '<i style="background-color:' . $newcolor . '" title="' . $erstelltitle . '" class="' . $newormod . '"></i> ';
+				if (is_singular()) {
+					if ($diffmod > 0) {
+						$out.= '<abbr title="' . $erstelltitle . '">' . get_the_modified_time(get_option('date_format'), false, $post, true) . ' ' . $modago . '</abbr>';
+					} else {
+						$out.= '<abbr title="' . $erstelltitle . '">' . get_post_time(get_option('date_format'), false, $post, true) . ' ' . $postago . '</abbr>';
+					}
+				}
 				$out .=  ' &nbsp; <i class="fa fa-newspaper-o"></i> '.wp_trim_words(get_the_excerpt( $post->ID ), $exwordcount );
 				$out .=  '</abbr></span>';
 				$out .=  '</div></li>';
