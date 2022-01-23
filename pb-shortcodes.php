@@ -531,15 +531,15 @@ add_shortcode('wp-timeline', 'timeline_shortcode');
 function timeline_calendar( $month,$year,$eventarray ) {
 	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 	/* days and weeks vars now ... */
-	$calheader = date('Y-m-d',mktime(0,0,0,$month,1,$year));
-	$running_day = date('w',mktime(0,0,0,$month,1,$year));
+	$calheader = date('Y-m-d',mktime(2,0,0,$month,1,$year));
+	$running_day = date('w',mktime(2,0,0,$month,1,$year));
 	if ( $running_day == 0 ) { $running_day = 7; }
-	$days_in_month = date('t',mktime(0,0,0,$month,1,$year));
+	$days_in_month = date('t',mktime(2,0,0,$month,1,$year));
 	$days_in_this_week = 1;
 	$day_counter = 0;
 	$dates_array = array();
 	/* draw table */
-	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(0,0,0,$month,1,$year) ) . '</th></thead>';
+	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(2,0,0,$month,1,$year) ) . '</th></thead>';
 	/* table headings */
 	$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
 	$calendar.= '<tr><td style="padding:2px;text-align:center">'.implode('</td><td style="padding:2px;text-align:center">',$headings).'</td></tr>';
@@ -547,18 +547,18 @@ function timeline_calendar( $month,$year,$eventarray ) {
 	$calendar.= '<tr class="calendar-row">';
 	/* print "blank" days until the first of the current week */
 	for($x = 1; $x < $running_day; $x++):
-		$calendar.= '<td class="calendar-day-np"></td>';
+		$calendar.= '<td class="calendar-day-np" style="text-align:center"></td>';
 		$days_in_this_week++;
 	endfor;
 	/* keep going with days.... */
 	for($list_day = 1; $list_day <= $days_in_month; $list_day++):
-		$calendar.= '<td class="calendar-day">';
+		$calendar.= '<td class="calendar-day" style="text-align:center">';
 		/* add in the day number */
-		$running_week = date('W',mktime(0,0,0,$month,$list_day,$year));
+		$running_week = date('W',mktime(2,0,0,$month,$list_day,$year));
 		$calendar.= '<div class="day-number">'.$list_day.'</div>';
 		/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
 		foreach ($eventarray as $calevent) {
-			if ( substr(get_the_time('Ymd', $calevent->ID),0,8) == date('Ymd',mktime(0,0,0,$month,$list_day,$year)) ) {
+			if ( substr(get_the_time('Ymd', $calevent->ID),0,8) == date('Ymd',mktime(2,0,0,$month,$list_day,$year)) ) {
 				$calendar .= '<span style="word-break:break-all"><a href="' . get_permalink($calevent->ID) . '" title="'.$calevent->title.'">' . get_the_title( $calevent->ID ) . '</a></span> <br> ';
 			}
 		}	
@@ -576,7 +576,7 @@ function timeline_calendar( $month,$year,$eventarray ) {
 	/* finish the rest of the days in the week */
 	if($days_in_this_week < 8 && $days_in_this_week > 1):
 		for($x = 1; $x <= (8 - $days_in_this_week); $x++):
-			$calendar.= '<td class="calendar-day-np"></td>';
+			$calendar.= '<td class="calendar-day-np" style="text-align:center"></td>';
 		endfor;
 	$calendar.= '<td style="text-align:center;font-size:0.9em;padding:2px">'.$running_week.'</td></tr>';
 	endif;
