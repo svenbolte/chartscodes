@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.53
-Stable tag: 11.1.53
+Version: 11.1.54
+Stable tag: 11.1.54
 Requires at least: 5.1
 Tested up to: 5.9.0
 Requires PHP: 8.0
@@ -342,8 +342,25 @@ public function country_code ($lang = null , $code = null) {
 	}
 	
 	// Browser des Betrachters rausfinden und anzeigen und Referer
-	function getBrowser()
-	{
+	function getBrowser() {
+		// get user fullname if loggedin or guest or comment author by cookie
+		$current_user = wp_get_current_user();
+		if ( $current_user->ID ) {
+			// Check For Member
+			$user_id = $current_user->ID;
+			$user_name = $current_user->display_name;
+			$user_type = 'member';
+		} elseif ( !empty( $_COOKIE['comment_author_'.COOKIEHASH] ) ) {
+			// Check For Comment Author ( Guest )
+			$user_id = 0;
+			$user_name = trim( strip_tags( $_COOKIE['comment_author_'.COOKIEHASH] ) );
+			$user_type = 'guest';
+		} else {
+			// Check For Guest
+			$user_id = 0;
+			$user_name = __( 'Guest', 'pb-chartscodes' );
+			$user_type = 'guest';
+		}
 		$u_agent = esc_attr(htmlspecialchars(wp_strip_all_tags($_SERVER['HTTP_USER_AGENT'], false)));
 		$language = esc_attr(htmlspecialchars(wp_strip_all_tags($_SERVER['HTTP_ACCEPT_LANGUAGE'], false)));
 		$bname = 'Unknown';
@@ -352,6 +369,7 @@ public function country_code ($lang = null , $code = null) {
 
 		//First get the platform?
 		$os_array = array(
+			'/windows nt 13.0/i'    =>  'Windows 11',
 			'/windows nt 10.0/i'    =>  'Windows 10',
 			'/windows nt 6.3/i'     =>  'Windows 8.1/S2012R2',
 			'/windows nt 6.2/i'     =>  'Windows 8',
@@ -451,7 +469,9 @@ public function country_code ($lang = null , $code = null) {
 			'version'   => $version,
 			'platform'  => $platform,
 			'pattern'    => $pattern,
-			'language'    => $language
+			'language'    => $language,
+			'username'    => $user_name,
+			'usertype'    => $user_type,
 		);
 	}	
 
@@ -634,6 +654,7 @@ function website_display_stats() {
 				$html .= '<td><abbr>' . $this->showbrowosicon($customer->platform). ' ' . substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</abbr></td>';
 				if ($customer->country == 'EUROPEANUNION') $customer->country = 'EU';
 				$html .= '<td>'. $this->get_flag(  (object) [ 'code' => $customer->country ] ).'</td>';
+				$html .= '<td><abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
 				$html .= '<td><abbr>' . $customer->userip .'</abbr></td><td><abbr><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</abbr></a></td>';
 				$html .= '<td><abbr>' . $datum . ' ' . ccago(strtotime($customer->datum)).'</abbr></td></tr>';
 			}	
@@ -716,16 +737,28 @@ function website_display_stats() {
 			country varchar(90) not null,
 			postid varchar(60) not null,
 			userip varchar(50) not null,
+			username varchar(50) not null,
+			usertype varchar(50) not null,
 			datum TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (`id`) ) $charset_collate;";
 			dbDelta( $sql );
+			// update table if columns username usertype missing
+			$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+						WHERE table_name = " . $table . " AND column_name = 'username'" );
+			if(empty($row)){ $wpdb->query("ALTER TABLE " . $table . " ADD username varchar(50) not null"); }			
+			$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+						WHERE table_name = " . $table . " AND column_name = 'usertype'" );
+			if(empty($row)){ $wpdb->query("ALTER TABLE " . $table . " ADD usertype varchar(50) not null"); }			
+						
 			// does the inserting, in case the form is filled and submitted
 			$ua=$this->getBrowser();
 			$browser = $ua['name'];
 			$browserver = $ua['version'];
 			$language = $ua['language'];
 			$platform = $ua['platform'];
-			$useragent = $ua['userAgent'];
+			$useragent = $ua['userAgent'].' /'. $ua['username'].' /'.$ua['usertype'];
+			$username = $ua['username'];
+			$usertype = $ua['usertype'];
 			// Nur speichern, wenn kein BOT erkannt
 			if ( !$this->is_bot( $useragent ) ) {
 				if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
@@ -750,7 +783,9 @@ function website_display_stats() {
 						"country" => $country,
 						"postid" => $postid,
 						"userip" => $userip,
-						"datum" => $datum
+						"datum" => $datum,
+						"username" => $username,
+						"usertype" => $usertype,
 					)
 				);
 			// Alte Datensätze älter 30 Tage (oder den in den Optionen eingestellten Wert) löschen

@@ -331,10 +331,10 @@ class PB_ChartsCodes_Shortcode {
 					$hundproz = max($percentages);
 					for ( $i = 0; $i <= $count; $i++ ) : 
 						if ( $absolute == '1' ){
-							$balkenanzeige = absint( $percentages[$i] / $hundproz * 100 );
-							$balkhoehe = absint( $percentages[$i] / $hundproz * 100 );
-							$balksum += absint($percentages[$i]);
-							if ( absint( $percentages[$i]) > 0 ) { $balkenanzeige .= '% &nbsp; '.absint( $percentages[$i]); }
+							$balkenanzeige = @absint( $percentages[$i] / $hundproz * 100 );
+							$balkhoehe = @absint( $percentages[$i] / $hundproz * 100 );
+							$balksum += @absint($percentages[$i]);
+							if ( @absint( $percentages[$i]) > 0 ) { $balkenanzeige .= '% &nbsp; '.@absint( $percentages[$i]); }
 						} else {
 							$balkenanzeige = absint( $percentages[$i] );
 							$balkhoehe = absint( $percentages[$i] );
