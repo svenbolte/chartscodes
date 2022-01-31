@@ -369,7 +369,8 @@ public function country_code ($lang = null , $code = null) {
 
 		//First get the platform?
 		$os_array = array(
-			'/windows nt 13.0/i'    =>  'Windows 11',
+			'/windows nt 11.0/i'    =>  'Windows 11',
+			'/windows nt 10.1/i'    =>  'Windows 11',
 			'/windows nt 10.0/i'    =>  'Windows 10',
 			'/windows nt 6.3/i'     =>  'Windows 8.1/S2012R2',
 			'/windows nt 6.2/i'     =>  'Windows 8',
