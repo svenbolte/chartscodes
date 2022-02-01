@@ -554,6 +554,7 @@ function website_display_stats() {
 	// 
 
 	function writevisitortodatabase($attr) {
+		global $wp;
 		extract(shortcode_atts(array(
 			'admin'     => 0
 		), $attr));
@@ -572,10 +573,20 @@ function website_display_stats() {
 			setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 			$customers = $wpdb->get_results("SELECT MAX(id) as maxid, min(datum) as mindatum, COUNT(id) as xstored FROM " . $table);
 			foreach($customers as $customer){
-				$totales = sprintf(__('%1s clicks total, %2s since %3s', 'pb-chartscodes'),$customer->maxid,$customer->xstored,date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($customer->mindatum) ) ) .', '.human_time_diff( strtotime($customer->mindatum),current_time( 'timestamp' ) );
+				$totales = sprintf(__('%1s clicks total, %2s since %3s', 'pb-chartscodes'),$customer->maxid,$customer->xstored,date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($customer->mindatum) ) ) .' vor '.human_time_diff( strtotime($customer->mindatum),current_time( 'timestamp' ) ).' ';
 				$sdatum = new DateTime($customer->mindatum);
 				$edatum = new DateTime('Now');
 				$interval = $sdatum->diff($edatum)->days;
+			}
+			if (isset($_GET['suchfilter'])) {
+				$suchfilter = sanitize_text_field($_GET['suchfilter']);
+				$sqlsuchfilter = " AND ( usertype LIKE '%".$suchfilter."%'
+					OR username LIKE '%".$suchfilter."%'
+					OR browser LIKE '%".$suchfilter."%'
+					OR postid LIKE '%".$suchfilter."%'	) ";
+			} else {
+			  $suchfilter = '';
+			  $sqlsuchfilter='';
 			}
 			if (isset($_GET['items'])) {
 				$items = intval(sanitize_text_field($_GET['items']));
@@ -596,59 +607,62 @@ function website_display_stats() {
 			$html .= '<div style="text-align:right"><form name="wcitems" method="get">'.$totales;
 			$html .=' &nbsp; <input type="text" size="3" style="width:50px" id="zeitraum" name="zeitraum" value="'.$zeitraum.'">/'.$keepdays.' Tg ';
 			$html .='<input type="text" size="3" style="width:50px" id="items" name="items" value="'.$items.'"> Zeilen ';
+			$html .='<input type="text" size="20" title="filtern nach Browser, username, usertyp, Einzelbeitrag" placeholder="Suchfilter" id="suchfilter" name="suchfilter" value="'.$suchfilter.'">';
 			$html .= '</select><input type="submit" value="'.__('show items', 'pb-chartscodes').'" /></form></div>';
 
-			//	Klicks pro Tag auf Zeitraum
-			$labels="";$values='';$label2="";
-			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $zeitraum);
-			$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h6><table>';
-			foreach($customers as $customer){
-				$datum = date_i18n(get_option('date_format'), strtotime($customer->datum) + get_option( 'gmt_offset' ) * 3600 );	
-				if ( count($customers)==1 )	$html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
-				$labels.= $datum .',';
-				$label2.= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2).',';
-				$values.= $customer->viscount.',';
-			}	
-			$labels = rtrim($labels, ",");
-			$label2 = rtrim($label2, ",");
-			$values = rtrim($values, ",");
-			$html .= do_shortcode('[chartscodes_line accentcolor=1 yaxis="Klicks pro Tag" xaxis="Datum rückwärts" values="'.$values.'" labels="'.$label2.'"]');
-			$html .= do_shortcode('[chartscodes_horizontal_bar absolute="1" accentcolor=1 values="'.$values.'" labels="'.$labels.'"]');
-			$html .= '</table>';
+			if ( empty($suchfilter) ) {
 
-			//	Top x Seiten/Beiträge auf Zeitraum
-			$xsum=0;
-			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT postid, COUNT(*) AS pidcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY postid ORDER BY pidcount desc LIMIT ".$items );
-			$html .='<h6>'.sprintf(__('top %1s pages last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h6><table>';
-			foreach($customers as $customer){
-				$labels.= get_the_title($customer->postid).',';
-				$values.= $customer->pidcount.',';
-				$xsum += absint($customer->pidcount);
-				$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a> &nbsp; ';
-				$html .= '<i class="fa fa-calendar-o"></i> '.date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_the_date( 'd. F Y', $customer->postid )) );
-				$html .= ' '.ccago(get_the_date( 'U', $customer->postid ));
-				$html .= '&nbsp; <i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),get_post_meta( $customer->postid, 'post_views_count', true )) . '</td></tr>';
-			}	
-			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr>';
-			$labels = rtrim($labels, ",");
-			$values = rtrim($values, ",");
-			$html .= '</table>';
-			$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+				//	Klicks pro Tag auf Zeitraum
+				$labels="";$values='';$label2="";
+				$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $zeitraum);
+				$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h6><table>';
+				foreach($customers as $customer){
+					$datum = date_i18n(get_option('date_format'), strtotime($customer->datum) + get_option( 'gmt_offset' ) * 3600 );	
+					if ( count($customers)==1 )	$html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
+					$labels.= $datum .',';
+					$label2.= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2).',';
+					$values.= $customer->viscount.',';
+				}	
+				$labels = rtrim($labels, ",");
+				$label2 = rtrim($label2, ",");
+				$values = rtrim($values, ",");
+				$html .= do_shortcode('[chartscodes_line accentcolor=1 yaxis="Klicks pro Tag" xaxis="Datum rückwärts" values="'.$values.'" labels="'.$label2.'"]');
+				$html .= do_shortcode('[chartscodes_horizontal_bar absolute="1" accentcolor=1 values="'.$values.'" labels="'.$labels.'"]');
+				$html .= '</table>';
 
-			//	Top x Herkunftsseiten auf Zeitraum
-			$xsum=0;
-			$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY referer ORDER BY refcount desc LIMIT ".$items );
-			$html .='<h6>'.sprintf(__('top %1s referers last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h6><table>';
-			foreach($customers as $customer){
-				$xsum += absint($customer->refcount);
-				$html .= '<tr><td>' . $customer->refcount . '</td><td>' . $customer->referer . '</td></tr>';
+				//	Top x Seiten/Beiträge auf Zeitraum
+				$xsum=0;
+				$labels="";$values='';
+				$customers = $wpdb->get_results("SELECT postid, COUNT(*) AS pidcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY postid ORDER BY pidcount desc LIMIT ".$items );
+				$html .='<h6>'.sprintf(__('top %1s pages last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h6><table>';
+				foreach($customers as $customer){
+					$labels.= get_the_title($customer->postid).',';
+					$values.= $customer->pidcount.',';
+					$xsum += absint($customer->pidcount);
+					$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a> &nbsp; ';
+					$html .= '<i class="fa fa-calendar-o"></i> '.date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_the_date( 'd. F Y', $customer->postid )) );
+					$html .= ' '.ccago(get_the_date( 'U', $customer->postid ));
+					$html .= '&nbsp; <i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),get_post_meta( $customer->postid, 'post_views_count', true )) . '</td></tr>';
+				}	
+				$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr>';
+				$labels = rtrim($labels, ",");
+				$values = rtrim($values, ",");
+				$html .= '</table>';
+				$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+
+				//	Top x Herkunftsseiten auf Zeitraum
+				$xsum=0;
+				$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY referer ORDER BY refcount desc LIMIT ".$items );
+				$html .='<h6>'.sprintf(__('top %1s referers last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h6><table>';
+				foreach($customers as $customer){
+					$xsum += absint($customer->refcount);
+					$html .= '<tr><td>' . $customer->refcount . '</td><td>' . $customer->referer . '</td></tr>';
+				}	
+				$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr></table>';
 			}	
-			$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr></table>';
-			
-			//	Top x Besucher mit Details auf Zeitraum
-			$customers = $wpdb->get_results("SELECT * FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ORDER BY datum desc LIMIT ".$items);
-			$html .='<h6>'.sprintf(__('last %1s visitors last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h6><table>';
+			//	Top x Besucher mit Details auf Zeitraum mit Filtermöglichkeit
+			$customers = $wpdb->get_results("SELECT * FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." ORDER BY datum desc LIMIT ".$items);
+			$html .='<h6>'.sprintf(__('last %1s visitors {filter: %2s} last %3s days', 'pb-chartscodes'),$items,$suchfilter,$zeitraum).$startday.'</h6><table>';
 			foreach($customers as $customer){
 				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
 				$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
@@ -656,15 +670,18 @@ function website_display_stats() {
 				if ($customer->country == 'EUROPEANUNION') $customer->country = 'EU';
 				$html .= '<td>'. $this->get_flag(  (object) [ 'code' => $customer->country ] ).'</td>';
 				$html .= '<td><abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
-				$html .= '<td><abbr>' . $customer->userip .'</abbr></td><td><abbr><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</abbr></a></td>';
+				$html .= '<td><abbr>' . $customer->userip .'</abbr></td><td><abbr>
+					<i onclick="document.location.href=\''. esc_url(home_url(add_query_arg(array('suchfilter' => $customer->postid, 'zeitraum' => $zeitraum, 'items' => $items ), $wp->request))).'\'"
+					title="filter:'. $customer->postid.'" class="fa fa-filter"><i> ';
+				$html .= ' <a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</abbr></a></td>';
 				$html .= '<td><abbr>' . $datum . ' ' . ccago(strtotime($customer->datum)).'</abbr></td></tr>';
 			}	
 			$html .= '</table>';
 
 			//	Besucher nach Stunde auf Zeitraum
 			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT SUBSTRING(datum,12,2) AS stunde, COUNT(SUBSTRING(datum,12,2)) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY SUBSTRING(datum,12,2) ORDER BY SUBSTRING(datum,12,2) ");
-			$html .='<h6>'.sprintf(__('clicks by hour last %s days', 'pb-chartscodes'),$zeitraum).$startday.'</h6><table>';
+			$customers = $wpdb->get_results("SELECT SUBSTRING(datum,12,2) AS stunde, COUNT(SUBSTRING(datum,12,2)) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." GROUP BY SUBSTRING(datum,12,2) ORDER BY SUBSTRING(datum,12,2) ");
+			$html .='<h6>'.sprintf(__('clicks by hour {filter: %1s} last %2s days', 'pb-chartscodes'),$suchfilter,$zeitraum).$startday.'</h6><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
 				$labels.= $customer->stunde.',';
@@ -677,8 +694,8 @@ function website_display_stats() {
 
 			//	Besucher nach Wochentag auf Zeitraum
 			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT WEEKDAY(SUBSTRING(datum,1,10)) AS wotag, COUNT(WEEKDAY(SUBSTRING(datum,1,10))) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY WEEKDAY(SUBSTRING(datum,1,10)) ORDER BY SUBSTRING(datum,1,10) ");
-			$html .='<h6>'.sprintf(__('clicks by weekday last %s days', 'pb-chartscodes'),$zeitraum) . $startday . '</h6><table>';
+			$customers = $wpdb->get_results("SELECT WEEKDAY(SUBSTRING(datum,1,10)) AS wotag, COUNT(WEEKDAY(SUBSTRING(datum,1,10))) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." GROUP BY WEEKDAY(SUBSTRING(datum,1,10)) ORDER BY SUBSTRING(datum,1,10) ");
+			$html .='<h6>'.sprintf(__('clicks by weekday {filter: %2s} last %1s days', 'pb-chartscodes'),$suchfilter,$zeitraum) . $startday . '</h6><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
 				$labels.= $tage[$customer->wotag].',';
@@ -691,8 +708,8 @@ function website_display_stats() {
 
 			//	Top x Browser auf Zeitraum
 			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT browser, COUNT(browser) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY browser ORDER BY bcount desc LIMIT ".$items);
-			$html .='<h6>'.sprintf(__('Top %1s Browsers last %2s days', 'pb-chartscodes'),$items,$zeitraum).'</h6><table>';
+			$customers = $wpdb->get_results("SELECT browser, COUNT(browser) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." GROUP BY browser ORDER BY bcount desc LIMIT ".$items);
+			$html .='<h6>'.sprintf(__('Top %1s Browsers {filter: %2s} last %3s days', 'pb-chartscodes'),$items,$suchfilter,$zeitraum).'</h6><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->bcount . '</td><td>' . $customer->browser . '</td></tr>';
 				$labels.= $customer->browser.',';
@@ -706,7 +723,7 @@ function website_display_stats() {
 			//	Top x Länder auf Zeitraum
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT country, COUNT(country) AS ccount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY country ORDER BY ccount desc LIMIT ".$items);
-			$html .='<h6>'.sprintf(__('Top %1s countries last %2s days', 'pb-chartscodes'),$items,$zeitraum).'</h6><table>';
+			$html .='<h6>'.sprintf(__('Top %1s countries {filter: %2s} last %3s days', 'pb-chartscodes'),$items,$suchfilter,$zeitraum).'</h6><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->ccount . '</td><td>' . $this->country_code('de',$customer->country) . '</td></tr>';
 				$labels.= $this->country_code('de',$customer->country) . ',';
@@ -744,12 +761,12 @@ function website_display_stats() {
 			PRIMARY KEY (`id`) ) $charset_collate;";
 			dbDelta( $sql );
 			// update table if columns username usertype missing
-			$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-						WHERE table_name = " . $table . " AND column_name = 'username'" );
-			if(empty($row)){ $wpdb->query("ALTER TABLE " . $table . " ADD username varchar(50) not null"); }			
-			$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
-						WHERE table_name = " . $table . " AND column_name = 'usertype'" );
-			if(empty($row)){ $wpdb->query("ALTER TABLE " . $table . " ADD usertype varchar(50) not null"); }			
+			//$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+			//			WHERE table_name = " . $table . " AND column_name = 'username'" );
+			// if(empty($row)){ $wpdb->query("ALTER TABLE " . $table . " ADD username varchar(50) not null"); }			
+			//$row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS
+			//			WHERE table_name = " . $table . " AND column_name = 'usertype'" );
+			//if(empty($row)){ $wpdb->query("ALTER TABLE " . $table . " ADD usertype varchar(50) not null"); }			
 						
 			// does the inserting, in case the form is filled and submitted
 			$ua=$this->getBrowser();
