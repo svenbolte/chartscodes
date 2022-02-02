@@ -686,7 +686,7 @@ function website_display_stats() {
 			//	Besucher nach Stunde auf Zeitraum
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT SUBSTRING(datum,12,2) AS stunde, COUNT(SUBSTRING(datum,12,2)) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." GROUP BY SUBSTRING(datum,12,2) ORDER BY SUBSTRING(datum,12,2) ");
-			$html .='<h6>'.sprintf(__('clicks by hour {filter: %1s} last %2s days', 'pb-chartscodes'),$suchfilter,$zeitraum).$startday.'</h6><table>';
+			$html .='<h6>'.sprintf(__('clicks by hour %1s last %2s days', 'pb-chartscodes'),$filtertitle,$zeitraum).$startday.'</h6><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
 				$labels.= $customer->stunde.',';

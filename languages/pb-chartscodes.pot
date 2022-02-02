@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Charts QRCodes Barcodes\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-02 12:07+0000\n"
+"POT-Creation-Date: 2022-02-02 12:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PBMod\n"
 "Language-Team: \n"
@@ -74,7 +74,7 @@ msgstr ""
 
 #: chartscodes.php:689
 #, php-format
-msgid "clicks by hour {filter: %1s} last %2s days"
+msgid "clicks by hour %1s last %2s days"
 msgstr ""
 
 #: chartscodes.php:703
