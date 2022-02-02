@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.54
-Stable tag: 11.1.54
+Version: 11.1.55
+Stable tag: 11.1.55
 Requires at least: 5.1
 Tested up to: 5.9.0
 Requires PHP: 8.0
@@ -660,9 +660,13 @@ function website_display_stats() {
 				}	
 				$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr></table>';
 			}	
+
+			// Filter-Anzeige
+			if (!empty($suchfilter)) $filtertitle='<i class="fa fa-filter"></i> '.$suchfilter; else $filtertitle=''; 
+
 			//	Top x Besucher mit Details auf Zeitraum mit Filtermöglichkeit
 			$customers = $wpdb->get_results("SELECT * FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." ORDER BY datum desc LIMIT ".$items);
-			$html .='<h6>'.sprintf(__('last %1s visitors {filter: %2s} last %3s days', 'pb-chartscodes'),$items,$suchfilter,$zeitraum).$startday.'</h6><table>';
+			$html .='<h6>'.sprintf(__('last %1s visitors %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).$startday.'</h6><table>';
 			foreach($customers as $customer){
 				$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
 				$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
@@ -671,7 +675,8 @@ function website_display_stats() {
 				$html .= '<td>'. $this->get_flag(  (object) [ 'code' => $customer->country ] ).'</td>';
 				$html .= '<td><abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
 				$html .= '<td><abbr>' . $customer->userip .'</abbr></td><td><abbr>
-					<i onclick="document.location.href=\''. esc_url(home_url(add_query_arg(array('suchfilter' => $customer->postid, 'zeitraum' => $zeitraum, 'items' => $items ), $wp->request))).'\'"
+					<i style="cursor:pointer" 
+					onclick="document.location.href=\''. esc_url(home_url(add_query_arg(array('suchfilter' => $customer->postid, 'zeitraum' => $zeitraum, 'items' => $items ), $wp->request))).'\'"
 					title="filter:'. $customer->postid.'" class="fa fa-filter"><i> ';
 				$html .= ' <a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</abbr></a></td>';
 				$html .= '<td><abbr>' . $datum . ' ' . ccago(strtotime($customer->datum)).'</abbr></td></tr>';
@@ -695,7 +700,7 @@ function website_display_stats() {
 			//	Besucher nach Wochentag auf Zeitraum
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT WEEKDAY(SUBSTRING(datum,1,10)) AS wotag, COUNT(WEEKDAY(SUBSTRING(datum,1,10))) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." GROUP BY WEEKDAY(SUBSTRING(datum,1,10)) ORDER BY SUBSTRING(datum,1,10) ");
-			$html .='<h6>'.sprintf(__('clicks by weekday {filter: %2s} last %1s days', 'pb-chartscodes'),$suchfilter,$zeitraum) . $startday . '</h6><table>';
+			$html .='<h6>'.sprintf(__('clicks by weekday %2s last %1s days', 'pb-chartscodes'),$filtertitle,$zeitraum) . $startday . '</h6><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
 				$labels.= $tage[$customer->wotag].',';
@@ -709,7 +714,7 @@ function website_display_stats() {
 			//	Top x Browser auf Zeitraum
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT browser, COUNT(browser) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." GROUP BY browser ORDER BY bcount desc LIMIT ".$items);
-			$html .='<h6>'.sprintf(__('Top %1s Browsers {filter: %2s} last %3s days', 'pb-chartscodes'),$items,$suchfilter,$zeitraum).'</h6><table>';
+			$html .='<h6>'.sprintf(__('Top %1s Browsers %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).'</h6><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->bcount . '</td><td>' . $customer->browser . '</td></tr>';
 				$labels.= $customer->browser.',';
@@ -723,7 +728,7 @@ function website_display_stats() {
 			//	Top x Länder auf Zeitraum
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT country, COUNT(country) AS ccount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY country ORDER BY ccount desc LIMIT ".$items);
-			$html .='<h6>'.sprintf(__('Top %1s countries {filter: %2s} last %3s days', 'pb-chartscodes'),$items,$suchfilter,$zeitraum).'</h6><table>';
+			$html .='<h6>'.sprintf(__('Top %1s countries %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).'</h6><table>';
 			foreach($customers as $customer){
 				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->ccount . '</td><td>' . $this->country_code('de',$customer->country) . '</td></tr>';
 				$labels.= $this->country_code('de',$customer->country) . ',';
@@ -774,7 +779,7 @@ function website_display_stats() {
 			$browserver = $ua['version'];
 			$language = $ua['language'];
 			$platform = $ua['platform'];
-			$useragent = $ua['userAgent'].' /'. $ua['username'].' /'.$ua['usertype'];
+			$useragent = $ua['userAgent'];
 			$username = $ua['username'];
 			$usertype = $ua['usertype'];
 			// Nur speichern, wenn kein BOT erkannt
@@ -838,7 +843,8 @@ function website_display_stats() {
 		$yourbrowser='';
 		if ( $browser ) {
 			$ua=$this->getBrowser();
-			$yourbrowser= "<strong>".__('browser', 'pb-chartscodes')."</strong> " . $ua['name'] . " " . $ua['version'] . " unter " .$ua['platform']  . " " .substr($ua['language'],0,2) . "<br><small>" . $ua['userAgent']."</small>";
+			$yourbrowser = "<strong>Angemeldet als</strong> ". $ua['username'] . ' ' . $ua['usertype'];
+			$yourbrowser .= "".__('browser', 'pb-chartscodes')."</strong> " . $ua['name'] . " " . $ua['version'] . " unter " .$ua['platform']  . " " .substr($ua['language'],0,2) . "<br><small>" . $ua['userAgent']."</small>";
 		}
         if(($info = $this->get_info($ip)) != false) {
             $flag = '<div>'.$this->country_code('de',$info->code).' ('.$info->code.') &nbsp; '.$this->get_flag($info).'</div>';
@@ -1224,4 +1230,26 @@ function website_display_stats() {
 }
 global $ipflag;
 $ipflag = new ipflag();
+
+// Letze X Besucher der Seite anzeigen (nur als Admin) - pageid leer lassen für Gesamtstatistik
+function lastxvisitors ($items,$pageid) {
+	if (!empty($pageid)) { $pagefilter='AND postid = '.$pageid; } else {$pagefilter='';}
+	global $wpdb;
+	$table = $wpdb->prefix . "sitevisitors";
+	$customers = $wpdb->get_results("SELECT * FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -90 DAY ) ".$pagefilter." ORDER BY datum desc LIMIT ".$items);
+	$html ='<div class="noprint"><h6>'.__("Last Visitors","pb-chartscodes").'</h6><table>';
+	foreach($customers as $customer){
+		$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
+		$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
+		$html .= '<td><abbr>' . substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</abbr></td>';
+		if ($customer->country == 'EUROPEANUNION') $customer->country = 'EU';
+		$html .= '<td>' .do_shortcode('[ipflag iso="'.$customer->country.'"]') .'</td>';
+		$html .= '<td><abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
+		$html .= '<td><abbr>' . $customer->userip .'</abbr></td>';
+		if (empty($pageid)) $html .= '<td><abbr><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</abbr></a></td>';
+		$html .= '<td><abbr>' . $datum . ' ' . ccago(strtotime($customer->datum)).'</abbr></td></tr>';
+	}	
+	$html .= '</table></div>';
+	return $html;
+}
 ?>
