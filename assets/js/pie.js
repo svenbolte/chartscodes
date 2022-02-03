@@ -23,6 +23,7 @@ The Implementation part of this Js
             radiusList: "",
             canvasID: '',
             percentage: [],
+            percvalues: [],
             centerX: 0,
             centerY: 0,
             fontSize: 0,
@@ -131,10 +132,10 @@ The Implementation part of this Js
         this.options.context.font = this.options.fontVarient + ' ' + this.options.fontSize + "px " + this.options.fontFamily;
         this.options.context.fillStyle = this.options.labelColor;
         this.options.context.textAlign = textAlign;
-        this.options.context.fillText(this.options.dataLabelList[i], x2 + smlLineDir + labelBox, y2 + (this.options.fontSize / 2));
-        this.options.context.font = this.options.percentageFontVarient + ' ' + this.options.percentageFontSize + "px " + this.options.percentageFontFamily;
-        this.options.context.fillStyle = this.options.percentageColor;
-        this.options.context.fillText(this.options.percentage[i] + '%', x2 + smlLineDir + labelBox, y2 + (this.options.fontSize / 2) + parseInt(this.options.fontSize));
+        this.options.context.fillText(this.options.percvalues[i] + ' ' + this.options.percentage[i] + '% ' + this.options.dataLabelList[i], x2 + smlLineDir + labelBox, y2 + (this.options.fontSize / 2));
+        //this.options.context.font = this.options.percentageFontVarient + ' ' + this.options.percentageFontSize + "px " + this.options.percentageFontFamily;
+        //this.options.context.fillStyle = this.options.percentageColor;
+        //this.options.context.fillText(this.options.percvalues[i] + ' ' + this.options.percentage[i] + '%', x2 + smlLineDir + labelBox, y2 + (this.options.fontSize / 2) + parseInt(this.options.fontSize));
         this.options.context.restore();
     }
 

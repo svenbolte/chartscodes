@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.55
-Stable tag: 11.1.55
+Version: 11.1.56
+Stable tag: 11.1.56
 Requires at least: 5.1
 Tested up to: 5.9.0
 Requires PHP: 8.0
@@ -328,7 +328,6 @@ public function country_code ($lang = null , $code = null) {
 			'spider',
 			'curl',
 			'facebook',
-			'twitterbot',
 			'lua-resty',
 			'fetch',
 			'python',
@@ -337,6 +336,7 @@ public function country_code ($lang = null , $code = null) {
 			'monitor',
 			'mediapartners',
 			'50.0.2661.102',
+			'firefox/52.0',
 		);
 		foreach ( $identifiers as $identifier ) {
 			if ( strpos( $user_agent, $identifier ) !== false ) {
@@ -441,7 +441,7 @@ public function country_code ($lang = null , $code = null) {
 			$bname = 'Netscape';
 			$ub = "Netscape";
 		}
-		else if(preg_match('/bot|crawl|slurp|spider|mediapartners/i',$u_agent)) {
+		else if(preg_match('/bot|crawl|slurp|spider|lua-resty|mediapartners/i',$u_agent)) {
 			$bname = 'other Bot/Spider';
 			$ub = "Bot";
 		}

@@ -3,6 +3,7 @@ jQuery(function($){
 	function createPie( id ) {
 		var data = window[id];
 		var percent = data.percent;
+		var percvalues = data.percvalues;
 		var id = data.canvas_id;
 		var label = data.label ;
 		var color = data.color;
@@ -11,8 +12,9 @@ jQuery(function($){
 		var fontfamily = data.fontfamily;
 		var fontstyle = data.fontstyle;
 		var myModal = new PieBuilder({
-		    percentage: percent,//data in percentage
-		    dataLabelList: label,//respective label for data
+		    percentage: percent, //data in percentage
+		    percvalues: percvalues, //values for percentage
+		    dataLabelList: label, //respective label for data
 		    datathresholdDistance: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10],//this must be adjust according to data label length
 		    colorList: color,//respective data pie color
 		    radiusList: radius,//respective data radius

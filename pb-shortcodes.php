@@ -64,6 +64,7 @@ class PB_ChartsCodes_Shortcode {
 		$colorli= $input['colors'];
 		$accentcolor=$input['accentcolor'];
 		if ( $accentcolor ) { $colorli= $this->farbpalette(1); }
+		$pvalues = array();
 		$quotes = array( "\"", "'" );
 		$absolute 		= $input['absolute']; 
 		$title 			= $input['title']; 
@@ -85,12 +86,14 @@ class PB_ChartsCodes_Shortcode {
 		if (intval($sumperc) > 0) {
 			if ( $absolute == '1' ){ 
 				for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
+					$pvalues[$i] = $percentages[$i];
 					$percentages[$i] = round($percentages[$i]/ $sumperc * 100);
 				}
-			}
+			} else { $pvalues = array ('','','','','','','','','','','','','','','','','');}
 			$tp_pie_data = array(
 				'canvas_id'	=> $id,
 				'percent'	=> $percentages,
+				'percvalues'   => $pvalues,
 				'label'		=> $labels,
 				'color'		=> $colors,
 				'circle'	=> 0,

@@ -7,7 +7,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2022-02-02 12:57+0000\n"
+"PO-Revision-Date: 2022-02-03 16:33+0000\n"
 "Last-Translator: \n"
 "Language-Team: Deutsch (Sie)\n"
 "X-Generator: Loco https://localise.biz/\n"
@@ -24,7 +24,7 @@ msgstr "%1s Klicks gesamt, %2s seit %3s"
 #: chartscodes.php:645
 #, php-format
 msgid ", visitors alltime: %s"
-msgstr ", Allzeit-Besucher: %s"
+msgstr " Allzeit-Besucher: %s"
 
 #: chartscodes.php:46
 msgid "1 day after tomorrow"
