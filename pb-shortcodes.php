@@ -77,7 +77,7 @@ class PB_ChartsCodes_Shortcode {
 		$id 			= uniqid( 'tp_pie_', false ); 
 		?>
 		<div class="tp-piebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
-			<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
+			<h6 class="pie-title"><?php echo esc_html( $title ); ?></h6>
 			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="400" style="max-width:100vw;max-height:400px;object-fit:contain">
 			</canvas>
 		</div>
@@ -140,7 +140,7 @@ class PB_ChartsCodes_Shortcode {
 		?>
 		<div class="tp-piebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
 			<?php if ( ! empty( $title ) ) : ?>
-				<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
+				<h6 class="pie-title"><?php echo esc_html( $title ); ?></h6>
 			<?php endif; ?>
 			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="400" style="max-width:100vw;max-height:400px;object-fit:contain">
 			</canvas>
@@ -150,12 +150,14 @@ class PB_ChartsCodes_Shortcode {
 		if (intval($sumperc) > 0) {
 			if ( $absolute == '1' ){ 
 				for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
+					$pvalues[$i] = $percentages[$i];
 					$percentages[$i] = round($percentages[$i]/ $sumperc * 100);
 				}
 			}
 			$tp_pie_data = array(
 				'canvas_id'	=> $id,
 				'percent'	=> $percentages,
+				'percvalues'   => $pvalues,
 				'label'		=> $labels,
 				'color'		=> $colors,
 				'circle'	=> 45,
@@ -203,7 +205,7 @@ class PB_ChartsCodes_Shortcode {
 		?>
 		<div class="tp-piebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
 			<?php if ( ! empty( $title ) ) : ?>
-				<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
+				<h6 class="pie-title"><?php echo esc_html( $title ); ?></h6>
 			<?php endif; ?>
 			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="400" style="max-width:100vw;max-height:400px;object-fit:contain">
 			</canvas>
@@ -213,12 +215,14 @@ class PB_ChartsCodes_Shortcode {
 		if (intval($sumperc) > 0) {
 			if ( $absolute == '1' ){ 
 				for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
+					$pvalues[$i] = $percentages[$i];
 					$percentages[$i] = round($percentages[$i]/ $sumperc * 100);
 				}
 			}
 			$tp_pie_data = array(
 				'canvas_id'	=> $id,
 				'percent'	=> $percentages,
+				'percvalues'   => $pvalues,
 				'label'		=> $labels,
 				'color'		=> $colors,
 				'circle'	=> 15,
@@ -233,6 +237,61 @@ class PB_ChartsCodes_Shortcode {
 		}	
 		return ob_get_clean();
 	}
+
+
+	//	
+	//	Radar Chart Shortcode Function (absolute values given)
+	//	
+	public function PB_ChartsCodes_radar_shortcode_function( $atts ) 	{
+		ob_start();
+		$input = shortcode_atts( array(
+				'title'		=> '',
+				'absolute' => '',
+				'values' 	=> '',
+				'labels'	=> '',
+				'fontfamily' => 'Arial, sans-serif',
+				'fontstyle' => 'normal',
+			    'accentcolor' => false, 
+				'colors'	=>  $this->farbpalette('0'),
+			), $atts );
+		$colorli= $input['colors'];
+		$accentcolor=$input['accentcolor'];
+		if ( $accentcolor ) { $colorli= $this->farbpalette(1); }
+		$pvalues = array();
+		$quotes = array( "\"", "'" );
+		$title 			= $input['title']; 
+		$fontfamily 	= esc_attr( $input['fontfamily'] ); 
+		$fontstyle 		= esc_attr( $input['fontstyle'] ); 
+		$percentages 	= explode( ',', str_replace( $quotes, '', $input['values'] ) );
+		$labels 		= explode( ',', str_replace( "\"", '', $input['labels'] ) );
+		$colors 		= explode( ',', str_replace( $quotes, '', $colorli ) );
+		$id 			= uniqid( 'tp_pie_', false ); 
+		echo '<div class="tp-RadarbuilderWrapper" style="max-width:100vw;max-height:500px;object-fit:contain">';
+		$sumperc = array_sum( $percentages );
+		if (intval($sumperc) > 0) {
+			$radarval = 'values: {';
+			for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
+				$pvalues[$i] = $percentages[$i];
+				$percentages[$i] = round($percentages[$i]/ $sumperc * 40);
+				$radarval .= '"'.$labels[$i].'":'.$percentages[$i].',';
+			}
+			$radarval .= '}, ';
+			$colort = get_theme_mod( 'link-color' ) ?:'#666666';
+			list($r, $g, $b) = sscanf($colort, "#%02x%02x%02x");
+			$radcolor = "$r, $g, $b";
+			// Load radar js
+			//wp_enqueue_script( 'pb-chartscodes-radar-script', PB_ChartsCodes_URL_PATH . 'assets/js/radar2.js', array(), '1.9', true  );
+			wp_enqueue_script( 'pb-chartscodes-radar' );
+			// pass values to radar
+			$radaris = '	jQuery(function($){
+				var radardata ={color: ['.$radcolor.'], size: [900, 500], step: 1,	title: "'.esc_html( $title ).'",'.$radarval.'showAxisLabels: true };
+				$(".tp-RadarbuilderWrapper").radarChart(radardata);	});';
+			wp_add_inline_script('pb-chartscodes-radar',$radaris);
+			echo '</div>';
+		}
+		return ob_get_clean();
+	}
+
 
 	//
 	//  vertical Bar Graph Shortcode Function
@@ -262,7 +321,7 @@ class PB_ChartsCodes_Shortcode {
 		?>
 		<div class="tp-bar" data-id="tp_bar_data_<?php echo esc_attr( $id ); ?>">
 			<?php if ( ! empty( $title ) ) : ?>
-			<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
+			<h6 class="pie-title"><?php echo esc_html( $title ); ?></h6>
 			<?php endif; ?>
 			<div class="tp-skills-bar">
 				<?php if ( $count > 0 ) :
@@ -327,7 +386,7 @@ class PB_ChartsCodes_Shortcode {
 		?>
 		<div class="tp-horizontalbar" data-id="tp_horizontalbar_data_<?php echo esc_attr( $id ); ?>">
 			<?php if ( ! empty( $title ) ) : ?>
-				<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
+				<h6 class="pie-title"><?php echo esc_html( $title ); ?></h6>
 			<?php endif; ?>
 			<div class="tp-skills-horizontalbar">
 				<?php if ( $count > 0 ) :
@@ -436,7 +495,7 @@ class PB_ChartsCodes_Shortcode {
 		$id 			= uniqid( 'tp_line_', false ); 
 		?>
 		<div class="tp-linebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
-			<h6 class="pie-title"><?php echo esc_html( $title ); ?></h3>
+			<h6 class="pie-title"><?php echo esc_html( $title ); ?></h6>
 			<canvas id="<?php echo esc_attr( $id ); ?>" style="width:100%;height:<?php echo $height; ?>px" >
 			</canvas>
 			<script>
@@ -476,6 +535,7 @@ class PB_ChartsCodes_Shortcode {
 	//
 	public function PB_ChartsCodes_create_shortcode() {
 		add_shortcode( 'chartscodes', array( $this, 'PB_ChartsCodes_shortcode_function' ) );
+		add_shortcode( 'chartscodes_radar', array( $this, 'PB_ChartsCodes_radar_shortcode_function' ) );
 		add_shortcode( 'chartscodes_donut', array( $this, 'PB_ChartsCodes_doughnut_shortcode_function' ) );
 		add_shortcode( 'chartscodes_polar', array( $this, 'PB_ChartsCodes_polar_shortcode_function' ) );
 		add_shortcode( 'chartscodes_bar', array( $this, 'PB_ChartsCodes_bar_shortcode_function' ) );

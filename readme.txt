@@ -2,15 +2,17 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.56
-Stable tag: 11.1.56
+Version: 11.1.57
+Stable tag: 11.1.57
 Requires at least: 5.1
 Tested up to: 5.9.0
 Requires PHP: 8.0
 
 == Description ==
-Shortcode collection for creating Line Charts, Bar Graph and Pie Charts (normal, donut, polar) with multiple colors.
-[carlogo] displays maufactorer logo for car brands
+Webcounter, shortcodes for QRCodes, IP2Flag, post timeline, bar, line and Pie, Donut Pie, Polar Pie, Radar, Horizontal Bar, monthly post archive as bar chart, use as html widget too
+
+[carlogo] displays maufacturer logo for car brands
+[complogo] displays maufactorer logo for computer brands
 [qrcode] creates qrcodes, [ipflag] shows country name of visitor (IP shortened for GDPR) - visitor info browser and details optional
 [webcounter] shortcode to gather and display stats about visitors (ip shortened for GRPR compliance)
 [wp-timeline] shortcodes shows posts in a timeline, paged, filters are category slug list, post type list
@@ -48,6 +50,9 @@ Color palette for charts can be accentcolor with shares or random (colorful ligh
 	
  = Polar Piechart Shortcode = 
  	[chartscodes_polar title="Polar Chart mit Segmenten" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
+
+ = Radar-Chart Shortcode = 
+ 	[chartscodes_radar title="Radar Chart" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi"]
 
  = Bar Graph Shortcode = 
  	[chartscodes_bar title="Balkenchart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
@@ -157,6 +162,13 @@ Use Shortcode: [carlogo brand="mercedes" scale="sm"]
 		      'brand' => '0unknown',  // Autohersteller
 to display logo and link to german webpage or car manufacturer
 
+=========================================== Carlogo Shortcode ===============================================
+Use Shortcode: [complogo brand="lenovo" scale="sm"]
+
+		      'scale' => '',     		// sm = 32px  xs=21px
+		      'brand' => '0unknown',  // Computerhersteller
+to display logo and link to german webpage or computer manufacturer
+
 =========================================== WordPress Posts Timeline ===============================================
 
 Output your WordPress posts or custom post types as a timeline with options.
@@ -175,6 +187,10 @@ Output your WordPress posts or custom post types as a timeline with options.
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.57 =
+Radar Chart shortcode added - takes accent color or grey gradient for filling
+gets absolute values and aligns them to maximum value
 
 = 11.1.55-56 =
 piechart shows absolute values next to percentage

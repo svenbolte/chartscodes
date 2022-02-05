@@ -13,11 +13,17 @@ daher dieses Projekt, dass die Einzelfunktionen zusammen fasst und um viele neue
 
 [webcounter admin=0]
 
+[carlogo brand="mercedes" scale="sm"]
+
+[complogo brand="lenovo"]
+
 [chartscodes absolute="1" title="Pie Chart" values="20, 30, 50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
 
 [chartscodes_donut title="Donut Pie Chart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
 
 [chartscodes_polar title="Polar Chart mit Segmenten" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
+
+[chartscodes_radar title="Radar Chart" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi"]
 
 [chartscodes_bar title="Balkenchart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
 
@@ -27,3 +33,4 @@ daher dieses Projekt, dass die Einzelfunktionen zusammen fasst und um viele neue
 
 [posts_per_month_last months=x]
 
+[wp-timeline items=100 view="calendar" type="post" catname="software"]

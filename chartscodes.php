@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Charts QRcodes
-Description: Webcounter, shortcodes for QRCodes, IP2Flag, post timeline, bar, line and Pie, Donut Pie, Polar Pie, Horizontal Bar, monthly post archive as bar chart, use as html widget too
+Description: Webcounter, shortcodes for QRCodes, IP2Flag, post timeline, bar, line and Pie, Donut Pie, Polar Pie, Radar, Horizontal Bar, monthly post archive as bar chart, use as html widget too
 Author: PBMod und andere
 Plugin URI: https://github.com/svenbolte/chartcodes
 Author URI: https://github.com/svenbolte
@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.56
-Stable tag: 11.1.56
+Version: 11.1.57
+Stable tag: 11.1.57
 Requires at least: 5.1
 Tested up to: 5.9.0
 Requires PHP: 8.0
@@ -83,8 +83,10 @@ if ( ! class_exists( 'PB_ChartsCodes' ) ) :
             wp_enqueue_style( 'pb-chartscodes-style', PB_ChartsCodes_URL_PATH . 'assets/css/style.min.css' );
             // Load Charts pie js
 	        wp_enqueue_script( 'pb-chartscodes-script', PB_ChartsCodes_URL_PATH . 'assets/js/pie.min.js', array(), '1.7', true  );
-	        // Load Charts custom pie js
+	        // Load Charts custom pie js and radar JS
+	        // wp_register_script( 'pb-chartscodes-script', PB_ChartsCodes_URL_PATH . 'assets/js/pie.min.js', array( 'jquery', 'pb-chartscodes-scripts' ) );
 	        wp_register_script( 'pb-chartscodes-initialize', PB_ChartsCodes_URL_PATH . 'assets/js/pie-initialize.min.js', array( 'jquery', 'pb-chartscodes-script' ) );
+	        wp_register_script( 'pb-chartscodes-radar', PB_ChartsCodes_URL_PATH . 'assets/js/radar2.min.js', array( 'jquery' ) );
 		}
 
 	    public function PB_ChartsCodes_includes() {
@@ -937,21 +939,18 @@ function website_display_stats() {
             <div class="icon32" id="icon-options-general"><br></div>
             <h2><?php echo esc_attr_e( 'Chartscodes Settings', 'pb-chartscodes' ); ?></h2>
 			<div class="postbox">
-			<p><tt><code>[ipflag ip="123.20.30.0" iso="mx" details=1 browser=1]</code>
+			<p><code>[ipflag ip="123.20.30.0" iso="mx" details=1 browser=1]</code>
 				liefert eine Flagge und das Land zu einer IP odr einem IP-Netz. Die letzte IP-Ziffer wird wegen DSGVO anonymisiert<br>
 				iso="xx" liefert die Flagge zum ISO-Land oder die EU-Flagge für private und unbekannte Netzwerke<br>
 				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz<br><br>
 				<code>[webcounter admin=0]</code> zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>
 				Ist die Admin /webcounter-Seite aufgerufen, kann über das Eingabefeld oder den optionalen URL-Parameter ?items=x die Ausgabe-Anzahl einiger Listeneinträge verändert werden.
-				</tt>
 			</p>
-			<p><tt><code>[carlogo brand="mercedes" scale="sm"]</code>
+			<p><code>[carlogo brand="mercedes" scale="sm"]</code>
 				liefert das Logo und den Link zum Automobilhersteller  Größen (scale): leer 48px, bei sm: 32px und bei xs:21px
-				</tt>
 			</p>
-			<p><tt><code>[complogo brand="lenovo"]</code>
+			<p><code>[complogo brand="lenovo"]</code>
 				liefert das Logo und den Link zum Hardware-Hersteller  Größe 60x60px
-				</tt>
 			</p>
             <form action="options.php" method="post">
             <?php settings_fields(self::safe_slug.'_options'); ?>
@@ -965,7 +964,7 @@ function website_display_stats() {
             <div class="img-wrap">
                 <h2>Beitrags-Timeline anzeigen (Shortcode)</h2>
 			<div class="postbox">
-				<p><tt>erstellt eine 2-spaltige Beitrags-Timeline als Shortcode an der Cursorposition (Doku siehe Readme)<br>
+				<p>erstellt eine 2-spaltige Beitrags-Timeline als Shortcode an der Cursorposition (Doku siehe Readme)<br>
                     <code>[wp-timeline items=100 view="calendar" type="post" catname="software"]</code><br>
 		      'catname' => ''     		// insert slugs of all post types you want, sep by comma, empty for all types<br>
 		      'type' => 'post,wpdoodle'  // separate type slugs by comma<br>
@@ -973,68 +972,65 @@ function website_display_stats() {
 			  'perpage' => 20     		// posts per page for pagination<br>
 			  'view' => 'timeline'     // set to "calendar" for calender display, to "calendar,timeline" for both <br>
 			  'pics' => 1        		// 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)<br>
-			  'dateformat' => 'D d.m.Y H:i'<br>
-                </tt></p>                    
-            </div>
+			  'dateformat' => 'D d.m.Y H:i'</p>                    
+            </div></div>
             <div class="img-wrap">
                 <h2>QRCodes generieren</h2>
 			<div class="postbox">
-				<p><tt>erstellt QR-Codes als Shortcode an der Cursorposition (Doku siehe Readme)<br>
-                    <code>[qrcode text="tel:00492307299607" size=3 margin=3]</code><br>
-                </tt></p>                    
-            </div>
+				<p><code>[qrcode text="tel:00492307299607" size=3 margin=3]</code>
+				erstellt QR-Codes als Shortcode an der Cursorposition (Doku siehe Readme)</p>                    
+            </div></div>
 			<div class="img-wrap">
 				<h2><?php esc_html_e( 'Bar and Piecharts', 'pb-chartscodes' ); ?></h2>
 				<div class="postbox">
-				<p><tt>Shortcode Parameter: absolute="1" wenn keine Prozentwerte mitgegeben werden, sondern absolute Werte<br>
+				<p>Shortcode Parameter: absolute="1" wenn keine Prozentwerte mitgegeben werden, sondern absolute Werte<br>
 					fontfamily="Arial" fontstyle="bold". Für die PieCharts sollten maximal 20 Werte angegeben werden, bei den Bar Charts bis zu 50, beim horizontal Bar 200 und beim Linechart 50<br>
 					Bar Charts: bei absoluten Werten wird größter Wert in der Folge 100%, Werte werden angezeigt wenn >0<br> 
 					Bleibt der Parameter "colors" leer, werden bei "accentcolor=0" zufällige bunte helle Farben gewählt, bei "accentcolor=1" Akzentfarben aus der Linkfarbe des Themes bezogen
 					<br> accentcolor=0/1 kann auch für die post per month Statistik und als HTML Widget angewendet werden
-					</tt></p>
+					</p>
 				</div></div>
 			<div class="img-wrap postbox">
 				<img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-1.png' ?>"  alt="<?php esc_attr_e( 'Default Pie Chart', 'pb-chartscodes' ); ?>">
-                <p><tt>
-                    <code>[chartscodes accentcolor=false absolute="1" title="Pie Chart" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
-                </tt></p>                    
+                <p><code>[chartscodes accentcolor=false absolute="1" title="Pie Chart" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
+				<?php esc_attr_e( 'Default Pie Chart', 'pb-chartscodes' ); ?> </p>                    
             </div>
             <div class="img-wrap postbox">
                 <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-2.png' ?>"  alt="<?php esc_attr_e( 'Doughnut Pie Chart', 'pb-chartscodes' ); ?>">
-                <p><tt>
-                    <code>[chartscodes_donut title="Donut Pie Chart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>                </tt></p>
+                <p><code>[chartscodes_donut title="Donut Pie Chart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
+				<?php esc_attr_e( 'Doughnut Pie Chart', 'pb-chartscodes' ); ?> </p>
 			</div>
             <div class="img-wrap postbox">
                 <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-3.png' ?>"  alt="<?php esc_attr_e( 'Polar Pie Chart', 'pb-chartscodes' ); ?>">
-                <p><tt>
-                    <code>[chartscodes_polar title="Polar Chart mit Segmenten" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
-                </tt></p>                    
+                <p><code>[chartscodes_polar title="Polar Chart mit Segmenten" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
+				<?php esc_attr_e( 'Polar Pie Chart', 'pb-chartscodes' ); ?></p>                    
             </div>
             <div class="img-wrap postbox">
+                <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-8.png' ?>"  alt="<?php esc_attr_e( 'Radar Chart', 'pb-chartscodes' ); ?>">
+                <p><code>[chartscodes_radar title="Radar Chart" values="10,20,22,8,33,21" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi,Erdbeeren"]</code>
+				<?php esc_attr_e( 'Radar Chart', 'pb-chartscodes' ); ?> </p>                    
+            </div>
+			<div class="img-wrap postbox">
                 <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-4.png' ?>"  alt="<?php esc_attr_e( 'Bar Graph Chart', 'pb-chartscodes' ); ?>">
-                <p>
-                    <code>[chartscodes_bar title="Balkenchart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
-                </p>                    
+                <p><code>[chartscodes_bar title="Balkenchart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
+				<?php esc_attr_e( 'Bar Graph Chart', 'pb-chartscodes' ); ?> </p>                    
             </div>
             <div class="img-wrap postbox">
                 <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-5.png' ?>"  alt="<?php esc_attr_e( 'Horizontal Bar Graph Chart', 'pb-chartscodes' ); ?>">
-                <p><tt>
-                    <code>[chartscodes_horizontal_bar title="Balken horizontal" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
-                </tt></p>                    
+                <p><code>[chartscodes_horizontal_bar title="Balken horizontal" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
+				<?php esc_attr_e( 'Horizontal Bar Graph Chart', 'pb-chartscodes' ); ?></p>
             </div>
 			<div class="img-wrap postbox">
 				<img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-7.png' ?>"  alt="<?php esc_attr_e( 'Default Line Chart', 'pb-chartscodes' ); ?>">
-                <p><tt>
-                    <code>[chartscodes_line accentcolor=1 title="Obst Line Chart" xaxis="Obstsorte" yaxis="Umsatz" height="350" values="10,20,10,5,30,20,5" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi,Cranberry,Mango"]</code>
-                </tt></p>                    
+                <p><code>[chartscodes_line accentcolor=1 title="Obst Line Chart" xaxis="Obstsorte" yaxis="Umsatz" height="350" values="10,20,10,5,30,20,5" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi,Cranberry,Mango"]</code>
+				<?php esc_attr_e( 'Default Line Chart', 'pb-chartscodes' ); ?> </p>                    
             </div>
 			<div class="img-wrap postbox">
                 <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-6.png' ?>"  alt="<?php esc_attr_e( 'Horizontal Bar Graph Chart', 'pb-chartscodes' ); ?>">
-				<p><code>[posts_per_month_last months=x]</code><tt> zeigt die letzen 1-12 Monate Posts per Month als Bargraph an, wenn Months nicht angegeben für 12 Monate</tt><br>
-                  </p>                    
+				<p><code>[posts_per_month_last months=x]</code> zeigt die letzen 1-12 Monate Posts per Month als Bargraph an, wenn Months nicht angegeben für 12 Monate
+                </p>                    
             </div>
-        </div>
-    <?php
+        </div> <?php
     }
 
     public function settings_init(){
