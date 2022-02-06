@@ -424,43 +424,27 @@ class PB_ChartsCodes_Shortcode {
 	}
 
 	//
-	//  Neu erstellte Posts und Pages pro Monat für letzte 12 Monate als Bar Chart (ruft Bar chart shortcode auf)
+	//  Neu erstellte Posts und Pages pro Monat für letzte xx Monate als Bar Chart (ruft Bar chart shortcode auf)
 	//
-	function wpse60859_shortcode_alt_cb($atts) {
+	function pb_last_months_chart($atts) {
 		$input = shortcode_atts( array(	
-			'fromdate' => date("Y-m-d H:i:s"),                //  NOW() Startdate like: 2020-07-01
-			'months' => 12,
+			'months' => 15,
 		    'accentcolor' => false, 
 		), $atts );
 		$accentcolor=$input['accentcolor'];
-		$fromdate = $input['fromdate']; 
-		if ( is_archive() ) {  // If Archiv then show stats from 12 months before the archive month
-			$yearnum  = get_query_var('year');
-			$monthnum = get_query_var('monthnum');
-			$fromdate = $yearnum . '-'. $monthnum.'-01 00:00:00';
-		}
-		$monate = $input['months']-1; 
-		$monnamen = array ("","Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez");
+		$monate = $input['months']; 
 		$pmod = 'post_date';
 		// if ( 1 === get_theme_mod( 'homesortbymoddate' ) ) {	$pmod = 'post_modified'; } else { $pmod = 'post_date'; }	
 		global $wpdb;
-		$res = $wpdb->get_results(
-			"SELECT MONTH(".$pmod.") as post_month, YEAR(".$pmod.") as post_year, COUNT(ID) as post_count " .
-			"FROM {$wpdb->posts} " .
-			"WHERE ".$pmod." BETWEEN DATE_SUB('".$fromdate."', INTERVAL ".$monate." MONTH) AND '".$fromdate."' " .
-			"AND post_status = 'publish' AND post_type = 'post' " .
-			"GROUP BY post_month ORDER BY ".$pmod." ASC", OBJECT_K
-		);
+		$res = $wpdb->get_results("SELECT DISTINCT MONTH( post_date ) AS month, YEAR( post_date ) AS year, COUNT( id ) as post_count FROM $wpdb->posts WHERE post_status = 'publish' and post_type = 'post' GROUP BY month, year ORDER BY post_date DESC LIMIT ".$monate);
 		$valu="";
 		$labl="";
 		$out = '[chartscodes_bar accentcolor='.$accentcolor.' absolute="1" title="Beiträge/Seiten letzte '.$monate.' Monate" ';
-		$nmonth = date('n');
 		foreach($res as $r) {
-			$valu .= isset($r->post_month) ? floor($r->post_count) : 0;
+			$valu .= isset($r->month) ? floor($r->post_count) : 0;
 			$valu .= ',';
-			$nyear = $r->post_year;
-			$axislink=get_home_url( '/' ).'/'.$nyear.'/'.$r->post_month;
-			$labl .= '<a href='.$axislink.'>'.$monnamen[$r->post_month] .' ' . substr($nyear,2,2) . '</a>,';
+			$axislink=get_home_url( '/' ).'/'.$r->year.'/'.$r->month;
+			$labl .= '<a href='.$axislink.'>'.date_i18n("M y", mktime(2, 0, 0, $r->month, 1, $r->year)).'</a>,';
 		}
 		$labl = rtrim($labl,",");
 		$valu = rtrim($valu,",");
@@ -545,7 +529,7 @@ class PB_ChartsCodes_Shortcode {
 		add_shortcode( 'chartscodes_polar', array( $this, 'PB_ChartsCodes_polar_shortcode_function' ) );
 		add_shortcode( 'chartscodes_bar', array( $this, 'PB_ChartsCodes_bar_shortcode_function' ) );
 		add_shortcode( 'chartscodes_horizontal_bar', array( $this, 'PB_ChartsCodes_horizontal_bar_shortcode_function' ) );
-		add_shortcode( 'posts_per_month_last', array( $this, 'wpse60859_shortcode_alt_cb' ) );
+		add_shortcode( 'posts_per_month_last', array( $this, 'pb_last_months_chart' ) );
 		add_shortcode( 'chartscodes_line', array( $this, 'PB_ChartsCodes_line_shortcode_function' ) );
 	}
 }
