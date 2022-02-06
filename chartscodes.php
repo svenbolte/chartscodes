@@ -743,7 +743,7 @@ function website_display_stats() {
 
 			//	Archive: Beiträge pro Monat letzte 36 Monate
 			if ( empty($suchfilter) ) {
-				$html = do_shortcode('[posts_per_month_last accentcolor=1 months=44]');
+				$html .= do_shortcode('[posts_per_month_last accentcolor=1 months=44]');
 				$html .= '</table>';
 			}	
 
