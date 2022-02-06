@@ -724,7 +724,7 @@ function website_display_stats() {
 			}	
 			$labels = rtrim($labels, ",");
 			$values = rtrim($values, ",");
-			$html .= do_shortcode('[chartscodes accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+			$html .= do_shortcode('[chartscodes_polar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
 
 			//	Top x Länder auf Zeitraum
@@ -738,7 +738,7 @@ function website_display_stats() {
 			}	
 			$labels = rtrim($labels, ",");
 			$values = rtrim($values, ",");
-			$html .= do_shortcode('[chartscodes accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+			$html .= do_shortcode('[chartscodes_polar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
 			
 			return $html;
