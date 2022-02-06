@@ -249,6 +249,7 @@ class PB_ChartsCodes_Shortcode {
 				'absolute' => '',
 				'values' 	=> '',
 				'labels'	=> '',
+				'legend'	=> true,
 				'fontfamily' => 'Arial, sans-serif',
 				'fontstyle' => 'normal',
 			    'accentcolor' => false, 
@@ -266,14 +267,17 @@ class PB_ChartsCodes_Shortcode {
 		$labels 		= explode( ',', str_replace( "\"", '', $input['labels'] ) );
 		$colors 		= explode( ',', str_replace( $quotes, '', $colorli ) );
 		$id 			= uniqid( 'tp_pie_', false ); 
-		echo '<div class="tp-RadarbuilderWrapper" style="max-width:100vw;max-height:500px;object-fit:contain">';
+		$legend			= esc_attr( $input['legend'] );
+		echo '<div class="tp-RadarbuilderWrapper"'.$id.' style="max-width:100vw;max-height:500px;object-fit:contain">';
 		$sumperc = array_sum( $percentages );
 		if (intval($sumperc) > 0) {
+			$radarlegende = '';
 			$radarval = 'values: {';
 			for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
 				$pvalues[$i] = $percentages[$i];
-				$percentages[$i] = round($percentages[$i]/ $sumperc * 40);
-				$radarval .= '"'.$labels[$i].'":'.$percentages[$i].',';
+				$percentages[$i] = round($percentages[$i]/ $sumperc * 100);
+				$radarval .= '"'.$labels[$i].'": '.$percentages[$i].',';
+				$radarlegende  .= $labels[$i].': '.$pvalues[$i].' &nbsp; ';
 			}
 			$radarval .= '}, ';
 			$colort = get_theme_mod( 'link-color' ) ?:'#666666';
@@ -284,10 +288,11 @@ class PB_ChartsCodes_Shortcode {
 			wp_enqueue_script( 'pb-chartscodes-radar' );
 			// pass values to radar
 			$radaris = '	jQuery(function($){
-				var radardata ={color: ['.$radcolor.'], size: [900, 500], step: 1,	title: "'.esc_html( $title ).'",'.$radarval.'showAxisLabels: true };
+				var radardata ={color: ['.$radcolor.'], size: [900, 500], step: 1, title: "'.esc_html( $title ).'",'.$radarval.'showAxisLabels: true };
 				$(".tp-RadarbuilderWrapper").radarChart(radardata);	});';
 			wp_add_inline_script('pb-chartscodes-radar',$radaris);
 			echo '</div>';
+			if ( $legend ) echo '<div style="border:1px solid #eee;border-radius:3px;padding:3px;font-size:0.8em;text-align:center">'.$radarlegende.' TOTAL: '.number_format($sumperc,0,'.',',').'</div>';
 		}
 		return ob_get_clean();
 	}

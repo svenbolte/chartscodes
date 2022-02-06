@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.57
-Stable tag: 11.1.57
+Version: 11.1.58
+Stable tag: 11.1.58
 Requires at least: 5.1
 Tested up to: 5.9.0
 Requires PHP: 8.0
@@ -58,8 +58,7 @@ function chartscodes_textdomain() {
 
 if ( ! class_exists( 'PB_ChartsCodes' ) ) :
 	final class PB_ChartsCodes {
-		public function __construct()
-		{
+		public function __construct() {
 			$this->PB_ChartsCodes_constant();
 			$this->PB_ChartsCodes_hooks();
 			$this->PB_ChartsCodes_includes();
@@ -76,15 +75,11 @@ if ( ! class_exists( 'PB_ChartsCodes' ) ) :
 			add_action( 'wp_enqueue_scripts', array( $this, 'PB_ChartsCodes_enqueue' ) );
 		}
 
-		public function PB_ChartsCodes_enqueue()
-		{
-			// Enqueue scripts
+		public function PB_ChartsCodes_enqueue() {
             // Load chartcodes style
             wp_enqueue_style( 'pb-chartscodes-style', PB_ChartsCodes_URL_PATH . 'assets/css/style.min.css' );
-            // Load Charts pie js
-	        wp_enqueue_script( 'pb-chartscodes-script', PB_ChartsCodes_URL_PATH . 'assets/js/pie.min.js', array(), '1.7', true  );
 	        // Load Charts custom pie js and radar JS
-	        // wp_register_script( 'pb-chartscodes-script', PB_ChartsCodes_URL_PATH . 'assets/js/pie.min.js', array( 'jquery', 'pb-chartscodes-scripts' ) );
+			wp_register_script( 'pb-chartscodes-script', PB_ChartsCodes_URL_PATH . 'assets/js/pie.min.js', array( 'jquery' ), null, true );
 	        wp_register_script( 'pb-chartscodes-initialize', PB_ChartsCodes_URL_PATH . 'assets/js/pie-initialize.min.js', array( 'jquery', 'pb-chartscodes-script' ) );
 	        wp_register_script( 'pb-chartscodes-radar', PB_ChartsCodes_URL_PATH . 'assets/js/radar2.min.js', array( 'jquery' ) );
 		}
