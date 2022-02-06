@@ -727,23 +727,23 @@ function website_display_stats() {
 			$html .= do_shortcode('[chartscodes_polar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
 
-			if ( empty($suchfilter) ) {
-				//	Top x Länder auf Zeitraum
-				$labels="";$values='';
-				$customers = $wpdb->get_results("SELECT country, COUNT(country) AS ccount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY country ORDER BY ccount desc LIMIT ".$items);
-				$html .='<h6>'.sprintf(__('Top %1s countries %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).'</h6><table>';
-				foreach($customers as $customer){
-					if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->ccount . '</td><td>' . $this->country_code('de',$customer->country) . '</td></tr>';
-					$labels.= $this->country_code('de',$customer->country) . ',';
-					$values.= $customer->ccount . ',';
-				}	
-				$labels = rtrim($labels, ",");
-				$values = rtrim($values, ",");
-				$html .= do_shortcode('[chartscodes_polar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
-				$html .= '</table>';
+			//	Top x Länder auf Zeitraum
+			$labels="";$values='';
+			$customers = $wpdb->get_results("SELECT country, COUNT(country) AS ccount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY country ORDER BY ccount desc LIMIT ".$items);
+			$html .='<h6>'.sprintf(__('Top %1s countries %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).'</h6><table>';
+			foreach($customers as $customer){
+				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->ccount . '</td><td>' . $this->country_code('de',$customer->country) . '</td></tr>';
+				$labels.= $this->country_code('de',$customer->country) . ',';
+				$values.= $customer->ccount . ',';
+			}	
+			$labels = rtrim($labels, ",");
+			$values = rtrim($values, ",");
+			$html .= do_shortcode('[chartscodes_polar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
+			$html .= '</table>';
 
-				//	Archive: Beiträge pro Monat letzte 36 Monate
-				$html .= do_shortcode('[posts_per_month_last accentcolor=1 months=44]');
+			//	Archive: Beiträge pro Monat letzte 36 Monate
+			if ( empty($suchfilter) ) {
+				$html = do_shortcode('[posts_per_month_last accentcolor=1 months=44]');
 				$html .= '</table>';
 			}	
 
