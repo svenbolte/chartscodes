@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Charts QRCodes Barcodes\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-05 15:03+0000\n"
+"POT-Creation-Date: 2022-03-01 16:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PBMod\n"
 "Language-Team: \n"
@@ -15,12 +15,12 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.4.0; wp-5.4.2"
 
-#: chartscodes.php:583
+#: chartscodes.php:578
 #, php-format
 msgid "%1s clicks total, %2s since %3s"
 msgstr ""
 
-#: chartscodes.php:652
+#: chartscodes.php:647
 #, php-format
 msgid ", visitors alltime: %s"
 msgstr ""
@@ -33,12 +33,12 @@ msgstr ""
 msgid "1 day before yesterday"
 msgstr ""
 
-#: pb-shortcodes.php:413
+#: pb-shortcodes.php:418
 #, php-format
 msgid "<strong>%1s</strong> values, <strong>%2s</strong> sum of values"
 msgstr ""
 
-#: chartscodes.php:654 chartscodes.php:668
+#: chartscodes.php:649 chartscodes.php:663
 #, php-format
 msgid "<strong>%s</strong> sum of values"
 msgstr ""
@@ -47,42 +47,42 @@ msgstr ""
 msgid "ago"
 msgstr ""
 
-#: pb-shortcodes.php:680
+#: pb-shortcodes.php:669
 msgid "all"
 msgstr ""
 
-#: chartscodes.php:984
+#: chartscodes.php:985
 msgid "Bar and Piecharts"
 msgstr ""
 
-#: chartscodes.php:1014 chartscodes.php:1016
+#: chartscodes.php:1015 chartscodes.php:1017
 msgid "Bar Graph Chart"
 msgstr ""
 
-#: chartscodes.php:854
+#: chartscodes.php:855
 msgid "browser"
 msgstr ""
 
 #. Name of the plugin
-#: chartscodes.php:921
+#: chartscodes.php:922
 msgid "Charts QRcodes"
 msgstr ""
 
-#: chartscodes.php:940
+#: chartscodes.php:941
 msgid "Chartscodes Settings"
 msgstr ""
 
-#: chartscodes.php:696
+#: chartscodes.php:691
 #, php-format
 msgid "clicks by hour %1s last %2s days"
 msgstr ""
 
-#: chartscodes.php:710
+#: chartscodes.php:705
 #, php-format
 msgid "clicks by weekday %2s last %1s days"
 msgstr ""
 
-#: chartscodes.php:625
+#: chartscodes.php:620
 #, php-format
 msgid "clicks last %s days"
 msgstr ""
@@ -125,11 +125,11 @@ msgstr ""
 msgid "Database missing or corrupted, please update"
 msgstr ""
 
-#: chartscodes.php:1024
+#: chartscodes.php:1025 chartscodes.php:1027
 msgid "Default Line Chart"
 msgstr ""
 
-#: chartscodes.php:994 chartscodes.php:996
+#: chartscodes.php:995 chartscodes.php:997
 msgid "Default Pie Chart"
 msgstr ""
 
@@ -137,7 +137,7 @@ msgstr ""
 msgid "delete webhits older than (days):"
 msgstr ""
 
-#: chartscodes.php:999 chartscodes.php:1001
+#: chartscodes.php:1000 chartscodes.php:1002
 msgid "Doughnut Pie Chart"
 msgstr ""
 
@@ -145,11 +145,11 @@ msgstr ""
 msgid "Enable automatic weekly database update check:"
 msgstr ""
 
-#: chartscodes.php:255
+#: chartscodes.php:250
 msgid "every week"
 msgstr ""
 
-#: chartscodes.php:368
+#: chartscodes.php:363
 msgid "Guest"
 msgstr ""
 
@@ -157,7 +157,7 @@ msgstr ""
 msgid "Here you can control all ipflag and webcounter database options:"
 msgstr ""
 
-#: chartscodes.php:1019 chartscodes.php:1021 chartscodes.php:1029
+#: chartscodes.php:1020 chartscodes.php:1022 chartscodes.php:1030
 msgid "Horizontal Bar Graph Chart"
 msgstr ""
 
@@ -173,7 +173,7 @@ msgstr ""
 msgid "in"
 msgstr ""
 
-#: chartscodes.php:848
+#: chartscodes.php:849
 msgid "ip network"
 msgstr ""
 
@@ -185,11 +185,11 @@ msgstr ""
 msgid "ipflag database options"
 msgstr ""
 
-#: chartscodes.php:880
+#: chartscodes.php:881
 msgid "ipflag database updated."
 msgstr ""
 
-#: chartscodes.php:676
+#: chartscodes.php:671
 #, php-format
 msgid "last %1s visitors %2s last %3s days"
 msgstr ""
@@ -198,7 +198,7 @@ msgstr ""
 msgid "Last Visitors"
 msgstr ""
 
-#: pb-shortcodes.php:714
+#: pb-shortcodes.php:703
 msgid "number of posts"
 msgstr ""
 
@@ -206,15 +206,15 @@ msgstr ""
 msgid "PBMod und andere"
 msgstr ""
 
-#: chartscodes.php:1004 chartscodes.php:1006
+#: chartscodes.php:1005 chartscodes.php:1007
 msgid "Polar Pie Chart"
 msgstr ""
 
-#: chartscodes.php:1009 chartscodes.php:1011
+#: chartscodes.php:1010 chartscodes.php:1012
 msgid "Radar Chart"
 msgstr ""
 
-#: chartscodes.php:848
+#: chartscodes.php:849
 msgid "referer"
 msgstr ""
 
@@ -222,19 +222,19 @@ msgstr ""
 msgid "Remote ipflag database version not readable."
 msgstr ""
 
-#: pb-shortcodes.php:720
+#: pb-shortcodes.php:709
 msgid "search"
 msgstr ""
 
-#: chartscodes.php:928
+#: chartscodes.php:929
 msgid "Settings"
 msgstr ""
 
-#: chartscodes.php:920
+#: chartscodes.php:921
 msgid "Settings Admin"
 msgstr ""
 
-#: chartscodes.php:618
+#: chartscodes.php:613
 msgid "show items"
 msgstr ""
 
@@ -242,22 +242,22 @@ msgstr ""
 msgid "tomorrow"
 msgstr ""
 
-#: chartscodes.php:724
+#: chartscodes.php:719
 #, php-format
 msgid "Top %1s Browsers %2s last %3s days"
 msgstr ""
 
-#: chartscodes.php:738
+#: chartscodes.php:733
 #, php-format
 msgid "Top %1s countries %2s last %3s days"
 msgstr ""
 
-#: chartscodes.php:644
+#: chartscodes.php:639
 #, php-format
 msgid "top %1s pages last %2s days"
 msgstr ""
 
-#: chartscodes.php:663
+#: chartscodes.php:658
 #, php-format
 msgid "top %1s referers last %2s days"
 msgstr ""
@@ -273,8 +273,8 @@ msgstr ""
 #. Description of the plugin
 msgid ""
 "Webcounter, shortcodes for QRCodes, IP2Flag, post timeline, bar, line and "
-"Pie, Donut Pie, Polar Pie, Horizontal Bar, monthly post archive as bar chart,"
-" use as html widget too"
+"Pie, Donut Pie, Polar Pie, Radar, Horizontal Bar, monthly post archive as "
+"bar chart, use as html widget too"
 msgstr ""
 
 #: chartscodes.php:40
