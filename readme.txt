@@ -2,8 +2,8 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.60
-Stable tag: 11.1.60
+Version: 11.1.61
+Stable tag: 11.1.61
 Requires at least: 5.1
 Tested up to: 5.9.1
 Requires PHP: 8.0
@@ -196,6 +196,9 @@ gets absolute values and aligns them to maximum value
 piechart shows absolute values next to percentage
 add function lastxvisitors that can be called by theme templates or template parts
 added to penguin theme meta-bottom.php
+
+= 11.1.55-61 =
+calendar improvements and timeline shows categories if not filtered
 
 = 11.1.54 =
 WP590 compatibility
