@@ -570,7 +570,7 @@ function timeline_shortcode($atts){
 		      'catname' => '',     		// insert slugs of all post types you want, sep by comma, empty for all types
 		      'type' => 'post,wpdoodle',  // separate type slugs by comma
 			  'items' => 1000,    	 	// Maximal 1000 Posts paginiert anzeigen
-			  'perpage' => 20,     		// posts per page for pagination
+			  'perpage' => 12,     		// posts per page for pagination
 			  'view' => 'timeline',     // set to "calendar" for calender display, to "calendar,timeline" for both 
 			  'pics' => 1,        		// 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)
 			  'dateformat' => 'D d.m.Y H:i',
@@ -623,6 +623,7 @@ function timeline_calendar( $month,$year,$eventarray ) {
 		$days_in_this_week++; $running_day++; $day_counter++;
 	endfor;
 	/* finish the rest of the days in the week */
+	/* finish the rest of the days in the week */
 	if($days_in_this_week < 8 && $days_in_this_week > 1):
 		for($x = 1; $x <= (8 - $days_in_this_week); $x++):
 			$calendar.= '<td style="text-align:center;padding:2px"></td>';
@@ -654,7 +655,7 @@ function my_filter_post_where( $where) {
 
 //  display the timeline
 function display_timeline($args){
-	global $keyword;
+	global $keyword, $wp;
 	if ( isset( $_GET[ 'cat' ] ) ) { $catfilter = esc_attr($_GET["cat"]); } else { $catfilter=''; }
 	if ( isset( $_GET[ 'search' ] ) ) { $keyword = esc_attr($_GET["search"]); } else { $keyword=''; }
 	$out = '';
@@ -694,7 +695,8 @@ function display_timeline($args){
 	add_filter( 'posts_where', 'my_filter_post_where' );
 	$tpostcount = count(get_posts( $tpostarg ));
 	if ( $tpostcount > intval($args['items']) ) $tpostcount = intval($args['items']);
-	$out.= '<div style="text-align:right"><form name="finder" method="get">'.__('number of posts','pb-chartscodes').': '.$tpostcount;
+	$unpagedurl = preg_replace('/page(\/)*([0-9\/])*/i', '', home_url( $wp->request ));
+	$out.= '<div style="text-align:right"><form action="'.$unpagedurl.'" name="finder" method="get">'.__('number of posts','pb-chartscodes').': '.$tpostcount;
 	if (empty($args['catname'])) {
 		$out .= ' '.$select; 
 		$out .= '<noscript><input type="submit" value="View" /></noscript>';
@@ -704,18 +706,6 @@ function display_timeline($args){
 	$out .= '</form></div>';
 	$posts = get_posts( $post_args );
 	remove_filter( 'posts_where', 'my_filter_post_where' );
-	if ( strpos($args['view'], "calendar") !== false ) {
-		/// Cal Aufruf
-		$outputed_values = array();
-		foreach ($posts as $calevent) {
-			$workername = substr(get_the_time('Ymd', $calevent->ID),0,6);
-			if (!in_array($workername, $outputed_values)){
-				$mdatum = substr(get_the_time('Ymd', $calevent->ID),0,4).'-'. substr(get_the_time('Ymd', $calevent->ID),4,2).'-'.substr(get_the_time('Ymd', $calevent->ID),6,2);
-				$out .= timeline_calendar(date("m", strtotime($mdatum)),date("Y", strtotime($mdatum)),$posts);
-				array_push($outputed_values, $workername);
-			}	
-		}
-	}
 	if ( strpos($args['view'], "timeline") !== false ) {	
 		$out .=  '<div id="timeline">';
 		$out .=   '<ul style="background:url(\''.PB_ChartsCodes_URL_PATH.'/Image/ul-bg.png\') center top repeat-y;">';
@@ -797,6 +787,18 @@ function display_timeline($args){
 		$out .=  '</ul>';
 		$out .=  '</div> <!-- #timeline -->';
 	}	
+	if ( strpos($args['view'], "calendar") !== false ) {
+		/// Cal Aufruf
+		$outputed_values = array();
+		foreach ($posts as $calevent) {
+			$workername = substr(get_the_time('Ymd', $calevent->ID),0,6);
+			if (!in_array($workername, $outputed_values)){
+				$mdatum = substr(get_the_time('Ymd', $calevent->ID),0,4).'-'. substr(get_the_time('Ymd', $calevent->ID),4,2).'-'.substr(get_the_time('Ymd', $calevent->ID),6,2);
+				$out .= timeline_calendar(date("m", strtotime($mdatum)),date("Y", strtotime($mdatum)),$posts);
+				array_push($outputed_values, $workername);
+			}	
+		}
+	}
 	$big = 999999999; // need an unlikely integer
 	$out .= '<div class="nav-links" style="text-align:center">'.paginate_links( array(
 		'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
