@@ -415,7 +415,7 @@ class PB_ChartsCodes_Shortcode {
 					</div><!-- .outer-box -->
 					<?php 
 					endfor;  
-					echo sprintf(__('<strong>%1s</strong> values, <strong>%2s</strong> sum of values', 'pb-chartscodes'),($count+1),$balksum).', &Oslash; <strong>'.number_format_i18n( ($balksum/($count+1)), 2 ).'</strong>';
+					echo sprintf(__('<strong>%1s</strong> values, <strong>%2s</strong> sum of values', 'pb-chartscodes'),number_format_i18n(($count+1),0),number_format_i18n($balksum,0)).', &Oslash; <strong>'.number_format_i18n( ($balksum/($count+1)), 2 ).'</strong>';
 				endif; ?>
 			</div><!-- .skills-bar -->
 		</div>

@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.62
-Stable tag: 11.1.62
+Version: 11.1.63
+Stable tag: 11.1.63
 Requires at least: 5.1
 Tested up to: 5.9.2
 Requires PHP: 8.0
@@ -523,7 +523,7 @@ function website_display_stats() {
     global $wpdb;
     $wsstats = '<div class="wrap"><strong>Website-Fakten</strong> ';
     $totalposts = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'post' AND post_status = 'publish'");
-    $wsstats .= '&nbsp; Beiträge: '. $totalposts;
+    $wsstats .= '&nbsp; Beiträge: <b>'. number_format_i18n($totalposts,0).'</b>';
 	if ( current_theme_supports( 'post-formats' ) ) {
 		$post_formats = get_theme_support( 'post-formats' );
 		if ( is_array( $post_formats[0] ) ) {
@@ -575,7 +575,7 @@ function website_display_stats() {
 			setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
 			$customers = $wpdb->get_results("SELECT MAX(id) as maxid, min(datum) as mindatum, COUNT(id) as xstored FROM " . $table);
 			foreach($customers as $customer){
-				$totales = sprintf(__('%1s clicks total, %2s since %3s', 'pb-chartscodes'),$customer->maxid,$customer->xstored,date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($customer->mindatum) ) ) .' vor '.human_time_diff( strtotime($customer->mindatum),current_time( 'timestamp' ) ).' ';
+				$totales = sprintf(__('%1s clicks total, %2s since %3s', 'pb-chartscodes'),number_format_i18n($customer->maxid,0),number_format_i18n($customer->xstored,0),date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime($customer->mindatum) ) ) .' vor '.human_time_diff( strtotime($customer->mindatum),current_time( 'timestamp' ) ).' ';
 				$sdatum = new DateTime($customer->mindatum);
 				$edatum = new DateTime('Now');
 				$interval = $sdatum->diff($edatum)->days;
@@ -620,7 +620,7 @@ function website_display_stats() {
 				$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h6><table>';
 				foreach($customers as $customer){
 					$datum = date_i18n(get_option('date_format'), strtotime($customer->datum) + get_option( 'gmt_offset' ) * 3600 );	
-					if ( count($customers)==1 )	$html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
+					if ( count($customers)==1 )	$html .= '<tr><td>' . number_format_i18n($customer->viscount,0) . '</td><td>' . $datum . '</td></tr>';
 					$labels.= $datum .',';
 					$label2.= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2).',';
 					$values.= $customer->viscount.',';
@@ -644,9 +644,9 @@ function website_display_stats() {
 					$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a> &nbsp; ';
 					$html .= '<i class="fa fa-calendar-o"></i> '.date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_the_date( 'd. F Y', $customer->postid )) );
 					$html .= ' '.ccago(get_the_date( 'U', $customer->postid ));
-					$html .= '&nbsp; <i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),get_post_meta( $customer->postid, 'post_views_count', true )) . '</td></tr>';
+					$html .= '&nbsp; <i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),number_format_i18n( (float) get_post_meta( $customer->postid, 'post_views_count', true ),0) ) . '</td></tr>';
 				}	
-				$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr>';
+				$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr>';
 				$labels = rtrim($labels, ",");
 				$values = rtrim($values, ",");
 				$html .= '</table>';
@@ -658,9 +658,9 @@ function website_display_stats() {
 				$html .='<h6>'.sprintf(__('top %1s referers last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h6><table>';
 				foreach($customers as $customer){
 					$xsum += absint($customer->refcount);
-					$html .= '<tr><td>' . $customer->refcount . '</td><td>' . $customer->referer . '</td></tr>';
+					$html .= '<tr><td>' . number_format_i18n($customer->refcount,0) . '</td><td>' . $customer->referer . '</td></tr>';
 				}	
-				$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),$xsum).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr></table>';
+				$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr></table>';
 			}	
 
 			// Filter-Anzeige
