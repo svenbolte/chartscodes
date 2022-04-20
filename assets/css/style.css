@@ -194,21 +194,21 @@ line-height:1.1em;
 max-height:58px;
 min-height:58px;
 overflow:hidden;
-width:100%;
 padding:3px;
+width:100%
 }
 
 #timeline .timeline-title {
-margin-right:8px;
-overflow:hidden;
-display:block;
 background-color:#ffffffdd;
-padding:3px;
-max-width:100%;
-width:calc(100% - 20px);
-position:absolute;
+display:block;
 left:auto;
-top:0
+margin-right:8px;
+max-width:100%;
+overflow:hidden;
+padding:3px;
+position:absolute;
+top:0;
+width:calc(100% - 20px)
 }
 
 #timeline ul li .noimages {
@@ -282,7 +282,6 @@ margin-left:0
 }
 
 #timeline ul .timeline-image {
-background-color:#333333;
 border-radius:3px;
 height:190px;
 max-height:190px;
@@ -291,10 +290,9 @@ width:100%
 }
 
 #timeline ul .timeline-image img {
-border-radius:2px;
+border-radius:3px;
 height:190px;
 max-height:190px;
-width:100%;
 object-fit:cover;
 }
 

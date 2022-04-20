@@ -9,10 +9,10 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.63
-Stable tag: 11.1.63
+Version: 11.1.64
+Stable tag: 11.1.64
 Requires at least: 5.1
-Tested up to: 5.9.2
+Tested up to: 5.9.3
 Requires PHP: 8.0
 */
 
@@ -94,7 +94,7 @@ endif;
 
 // -------------------------- Jetzt den QRCode Generator noch -----------------------------------------------
 
-if ( defined( 'DOQRCODE_V' ) ) { return ; }
+if ( defined( 'DOQRCODE_V' ) ) { return; }
 define( 'DOQRCODE_V', '1.2.1' ) ;
 
 ! defined( 'DOQRCODE_DIR' ) && define( 'DOQRCODE_DIR', dirname( __FILE__ ) . '/' ) ;// Full absolute path '/usr/local/***/wp-content/plugins/doqrcode/' or MU
@@ -1234,6 +1234,7 @@ global $ipflag;
 $ipflag = new ipflag();
 
 // Letze X Besucher der Seite anzeigen (nur als Admin) - pageid leer lassen für Gesamtstatistik
+// penguin,template-parts/meta-bottom.php
 function lastxvisitors ($items,$pageid) {
 	if (!empty($pageid)) { $pagefilter='AND postid = '.$pageid; } else {$pagefilter='';}
 	global $wpdb;

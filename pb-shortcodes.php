@@ -722,7 +722,7 @@ function display_timeline($args){
 				if ( has_post_thumbnail( $post->ID ) ) {
 					$out .=  get_the_post_thumbnail( $post->ID, 'large' );
 				} else {
-					$first_img='';
+					$first_img='<img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIiA/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgd2lkdGg9IjcwMCIgaGVpZ2h0PSIyNTAiIHZpZXdCb3g9IjAgMCA3MDAgMjUwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGcgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAzNTAgMTI1KSIgaWQ9ImYyNjNiZTI5LWUwZmYtNDJlYS1hNzEyLWU5NTBiNzM2NzIyMCIgID4KPHJlY3Qgc3R5bGU9InN0cm9rZTogbm9uZTsgc3Ryb2tlLXdpZHRoOiAxOyBzdHJva2UtZGFzaGFycmF5OiBub25lOyBzdHJva2UtbGluZWNhcDogYnV0dDsgc3Ryb2tlLWRhc2hvZmZzZXQ6IDA7IHN0cm9rZS1saW5lam9pbjogbWl0ZXI7IHN0cm9rZS1taXRlcmxpbWl0OiA0OyBmaWxsOiByZ2IoNDQsNDQsNDQpOyBmaWxsLW9wYWNpdHk6IDAuNzQ7IGZpbGwtcnVsZTogbm9uemVybzsgb3BhY2l0eTogMTsiIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSIgIHg9Ii0zNTAiIHk9Ii0xMjUiIHJ4PSIwIiByeT0iMCIgd2lkdGg9IjcwMCIgaGVpZ2h0PSIyNTAiIC8+CjwvZz4KPGcgdHJhbnNmb3JtPSJtYXRyaXgoSW5maW5pdHkgTmFOIE5hTiBJbmZpbml0eSAwIDApIiBpZD0iMDBiYmNmMjYtZGJjZi00NTc5LTk2YzktNTFiNWVkYTA0ODRlIiAgPgo8L2c+Cjwvc3ZnPg==">';
 					$category = get_the_category($post->ID);
 					$output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', get_the_content(), $matches);
 					if ($output) { $first_img = '<img src="'. $matches[1][0] . '">'; } else { 
@@ -736,7 +736,7 @@ function display_timeline($args){
 							$first_img = '<img src="' . $cbild . '">';	
 						}
 					}
-					$out .= $first_img. '<a style="color:#fff;text-shadow:1px 1px 1px #000" href="' . get_permalink($post->ID) . '"><div class="middle" style="top:45%">'.__( "Continue reading", "penguin" ).' &raquo;</a></div>';
+					$out .= '<a style="color:#fff;text-shadow:1px 1px 1px #000" href="' . get_permalink($post->ID) . '">'.$first_img.'<div class="middle" style="top:45%">'.__( "Continue reading", "penguin" ).' &raquo;</div></a>';
 				}	
 				$out .=  '<div class="timeline-title"><nobr><a style="font-size:1.2em" href="' . get_permalink($post->ID) . '" title="'.$post->title.'">';
 				$out .=  ' '.$cuttext. '</a></nobr></div>';
