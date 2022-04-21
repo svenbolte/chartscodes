@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Charts QRCodes Barcodes\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-21 09:10+0000\n"
+"POT-Creation-Date: 2022-04-21 19:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PBMod\n"
 "Language-Team: \n"
@@ -18,6 +18,10 @@ msgstr ""
 #: chartscodes.php:578
 #, php-format
 msgid "%1s clicks total, %2s since %3s"
+msgstr ""
+
+#: pb-shortcodes.php:815
+msgid "&laquo; newer posts"
 msgstr ""
 
 #: chartscodes.php:647
@@ -87,7 +91,7 @@ msgstr ""
 msgid "clicks last %s days"
 msgstr ""
 
-#: pb-shortcodes.php:747
+#: pb-shortcodes.php:748
 msgid "Continue reading"
 msgstr ""
 
@@ -216,6 +220,10 @@ msgstr ""
 
 #: pb-shortcodes.php:700
 msgid "number of posts"
+msgstr ""
+
+#: pb-shortcodes.php:816
+msgid "older posts &raquo;"
 msgstr ""
 
 #. Author of the plugin

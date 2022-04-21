@@ -7,7 +7,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2022-04-21 09:12+0000\n"
+"PO-Revision-Date: 2022-04-21 19:54+0000\n"
 "Last-Translator: Keller Admin\n"
 "Language-Team: Deutsch\n"
 "X-Generator: Loco https://localise.biz/\n"
@@ -20,6 +20,10 @@ msgstr ""
 #, php-format
 msgid "%1s clicks total, %2s since %3s"
 msgstr "%1s Klicks gesamt, %2s seit %3s"
+
+#: pb-shortcodes.php:815
+msgid "&laquo; newer posts"
+msgstr "&laquo; neuere Beiträge"
 
 #: chartscodes.php:647
 #, php-format
@@ -90,7 +94,7 @@ msgstr "Klicks nach Wochentag %2s letzte %1s Tage"
 msgid "clicks last %s days"
 msgstr "Klicks der letzten %s Tage"
 
-#: pb-shortcodes.php:747
+#: pb-shortcodes.php:748
 msgid "Continue reading"
 msgstr "weiterlesen"
 
@@ -238,6 +242,10 @@ msgstr "Letzte Besucher"
 #: pb-shortcodes.php:700
 msgid "number of posts"
 msgstr "Beitragsanzahl"
+
+#: pb-shortcodes.php:816
+msgid "older posts &raquo;"
+msgstr "ältere Beiträge &raquo;"
 
 #. Author of the plugin
 #| msgid "PBMod und Andere"

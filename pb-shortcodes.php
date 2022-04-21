@@ -718,6 +718,7 @@ function display_timeline($args){
 		$out .=  '<div id="timeline">';
 		$out .=   '<ul>';
 		$prevdate = '';
+		$ctr = 1;
 		foreach ( $posts as $post ) : setup_postdata($post);
 			$out .=  '<li><div>';
 			$out .=  '<span class="timeline-datebild" style="background-color:'. get_theme_mod( 'link-color', '#888' ) .'">';
@@ -744,7 +745,7 @@ function display_timeline($args){
 							$first_img = '<img src="' . $cbild . '">';	
 						}
 					}
-					$out .= '<a style="color:#fff;text-shadow:1px 1px 1px #000" href="' . get_permalink($post->ID) . '">'.$first_img.'<div class="middle" style="top:45%">'.__( "Continue reading", "pb-chartscodes" ).' &raquo;</div></a>';
+					$out .= '<a style="color:#fff;text-shadow:1px 1px 1px #000" href="' . get_permalink($post->ID) . '">'.$first_img.'<div class="middle" style="top:45%">#'.$ctr.' '.__( "Continue reading", "pb-chartscodes" ).' &raquo;</div></a>';
 				}	
 				$out .=  '<div class="timeline-title"><nobr><a style="font-size:1.2em" href="' . get_permalink($post->ID) . '" title="'.$post->title.'">';
 				$out .=  ' '.$cuttext. '</a></nobr></div>';
@@ -788,6 +789,7 @@ function display_timeline($args){
 			$out .=  '<br><i class="fa fa-newspaper-o"></i> '.wp_trim_words(get_the_excerpt( $post->ID ), $exwordcount );
 			$out .=  '</abbr></span></div></li>';
 			$prevdate = get_the_time( 'U', $post->ID );
+			$ctr++;
 		endforeach;
 		$out .=  '</ul>';
 		$out .=  '</div> <!-- #timeline -->';
@@ -810,6 +812,8 @@ function display_timeline($args){
 		'format' => '?paged=%#%',
 		'current' => max( 1, get_query_var('paged') ),
 		'total' => intval($tpostcount / $args['perpage']) + 1,
+        'prev_text'    => __('&laquo; newer posts', 'pb-chartscodes').' '.(max( 1, get_query_var('paged') ) - 1) * $args['perpage'].'-'.(max( 1, get_query_var('paged') ) - 1) * $args['perpage'] + $args['perpage'],
+        'next_text'    => __('older posts &raquo;', 'pb-chartscodes').' '.(max( 1, get_query_var('paged') ) ) * $args['perpage'].'-'.(max( 1, get_query_var('paged') ) ) * $args['perpage'] + $args['perpage'],
 	) );
 	$out .= '</div>';
 	wp_reset_postdata();
