@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Charts QRCodes Barcodes\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-01 16:30+0000\n"
+"POT-Creation-Date: 2022-04-21 09:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PBMod\n"
 "Language-Team: \n"
@@ -47,7 +47,7 @@ msgstr ""
 msgid "ago"
 msgstr ""
 
-#: pb-shortcodes.php:669
+#: pb-shortcodes.php:665
 msgid "all"
 msgstr ""
 
@@ -85,6 +85,10 @@ msgstr ""
 #: chartscodes.php:620
 #, php-format
 msgid "clicks last %s days"
+msgstr ""
+
+#: pb-shortcodes.php:747
+msgid "Continue reading"
 msgstr ""
 
 #: chartscodes.php:1094
@@ -135,6 +139,18 @@ msgstr ""
 
 #: chartscodes.php:1040
 msgid "delete webhits older than (days):"
+msgstr ""
+
+#: pb-shortcodes.php:702
+msgid "display as calendar"
+msgstr ""
+
+#: pb-shortcodes.php:706
+msgid "display as tiles"
+msgstr ""
+
+#: pb-shortcodes.php:704
+msgid "display as tiles and calendar"
 msgstr ""
 
 #: chartscodes.php:1000 chartscodes.php:1002
@@ -194,11 +210,11 @@ msgstr ""
 msgid "last %1s visitors %2s last %3s days"
 msgstr ""
 
-#: chartscodes.php:1242
+#: chartscodes.php:1243
 msgid "Last Visitors"
 msgstr ""
 
-#: pb-shortcodes.php:703
+#: pb-shortcodes.php:700
 msgid "number of posts"
 msgstr ""
 
@@ -222,7 +238,7 @@ msgstr ""
 msgid "Remote ipflag database version not readable."
 msgstr ""
 
-#: pb-shortcodes.php:709
+#: pb-shortcodes.php:713
 msgid "search"
 msgstr ""
 

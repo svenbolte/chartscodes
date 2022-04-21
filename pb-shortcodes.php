@@ -658,6 +658,7 @@ function display_timeline($args){
 	global $keyword, $wp;
 	if ( isset( $_GET[ 'cat' ] ) ) { $catfilter = esc_attr($_GET["cat"]); } else { $catfilter=''; }
 	if ( isset( $_GET[ 'search' ] ) ) { $keyword = esc_attr($_GET["search"]); } else { $keyword=''; }
+	if (isset($_GET['view'])) { $view = esc_html($_GET['view']); } else $view = $args['view'];
 	$out = '';
 	// Kategorie-Filter von Hand
 	$cargs = array(
@@ -680,7 +681,7 @@ function display_timeline($args){
 		'page' => $paged,
 		'category_name' => $args['catname'],
 		'category' =>  $catfilter,
-		'orderby' => 'post_date',
+		'orderby' => 'modified',
 		'order' => 'DESC',
 		'post_status' => 'publish',
 	);
@@ -696,7 +697,14 @@ function display_timeline($args){
 	$tpostcount = count(get_posts( $tpostarg ));
 	if ( $tpostcount > intval($args['items']) ) $tpostcount = intval($args['items']);
 	$unpagedurl = preg_replace('/page(\/)*([0-9\/])*/i', '', home_url( $wp->request ));
-	$out.= '<div style="text-align:right"><form action="'.$unpagedurl.'" name="finder" method="get">'.__('number of posts','pb-chartscodes').': '.$tpostcount;
+	$out.= '<div style="text-align:right"><form action="'.$unpagedurl.'" name="finder" method="get">'.__('number of posts','pb-chartscodes').': <strong>'.$tpostcount.'</strong> &nbsp; ';
+	if ( $view == 'timeline' ) {
+		$out.= '<a title="'.__('display as calendar','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'view' => 'calendar' ), $wp->request))).'"><i class="fa fa-calendar"></i></a> &nbsp; ';	
+	} else if ( $view == 'calendar' ) {
+		$out.= '<a title="'.__('display as tiles and calendar','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'view' => 'timeline,calendar' ), $wp->request))).'"><i class="fa fa-th-large"></i>+<i class="fa fa-calendar"></i></a> &nbsp; ';	
+	} else if ( $view == 'timeline,calendar' ) {
+		$out.= '<a title="'.__('display as tiles','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'view' => 'timeline' ), $wp->request))).'"><i class="fa fa-th-large"></i></a> &nbsp; ';	
+	}
 	if (empty($args['catname'])) {
 		$out .= ' '.$select; 
 		$out .= '<noscript><input type="submit" value="View" /></noscript>';
@@ -706,9 +714,9 @@ function display_timeline($args){
 	$out .= '</form></div>';
 	$posts = get_posts( $post_args );
 	remove_filter( 'posts_where', 'my_filter_post_where' );
-	if ( strpos($args['view'], "timeline") !== false ) {	
+	if ( strpos($view, "timeline") !== false ) {	
 		$out .=  '<div id="timeline">';
-		$out .=   '<ul style="background:url(\''.PB_ChartsCodes_URL_PATH.'/Image/ul-bg.png\') center top repeat-y;">';
+		$out .=   '<ul>';
 		$prevdate = '';
 		foreach ( $posts as $post ) : setup_postdata($post);
 			$out .=  '<li><div>';
@@ -736,7 +744,7 @@ function display_timeline($args){
 							$first_img = '<img src="' . $cbild . '">';	
 						}
 					}
-					$out .= '<a style="color:#fff;text-shadow:1px 1px 1px #000" href="' . get_permalink($post->ID) . '">'.$first_img.'<div class="middle" style="top:45%">'.__( "Continue reading", "penguin" ).' &raquo;</div></a>';
+					$out .= '<a style="color:#fff;text-shadow:1px 1px 1px #000" href="' . get_permalink($post->ID) . '">'.$first_img.'<div class="middle" style="top:45%">'.__( "Continue reading", "pb-chartscodes" ).' &raquo;</div></a>';
 				}	
 				$out .=  '<div class="timeline-title"><nobr><a style="font-size:1.2em" href="' . get_permalink($post->ID) . '" title="'.$post->title.'">';
 				$out .=  ' '.$cuttext. '</a></nobr></div>';
@@ -749,21 +757,21 @@ function display_timeline($args){
 			$out .= '<span class="timeline-text '.$imgon.'" style="background-color:'. get_theme_mod( 'link-color', '#eeeeee' ). '22' .'"><abbr>';
 			if ( !empty($prevdate)) $out .= german_time_diff($prevdate,get_the_time( 'U', $post->ID )).' &nbsp; ';
 			// Datum-Statistik des Posts mit Farbdarstellung <14Tg alt
-			$diff = time() - get_post_time('U', false, $post, true);
+			$diff = time() - get_post_time('U', false, $post->ID, true);
 			if (round((intval($diff) / 86400), 0) < 30) {
 				$newcolor = "#FFD800";
 			} else {
 				$newcolor = "transparent";
 			}
-			$erstelldat = get_post_time('l, d. M Y H:i:s', false, $post, true);
-			$postago = ago(get_post_time('U, d. F Y H:i:s', false, $post, true));
-			$moddat = get_the_modified_time('l, d. M Y H:i:s', false, $post, true);
-			$modago = ago(get_the_modified_time('U, d. F Y H:i:s', false, $post, true));
-			$diffmod = get_the_modified_time('U', false, $post, true) - get_post_time('U', false, $post, true);
+			$erstelldat = get_post_time('l, d. M Y H:i:s', false, $post->ID, true);
+			$postago = ago(get_post_time('U, d. F Y H:i:s', false, $post->ID, true));
+			$moddat = get_the_modified_time('l, d. M Y H:i:s', $post->ID);
+			$modago = ago(get_the_modified_time('U, d. F Y H:i:s', $post->ID));
+			$diffmod = get_the_modified_time('U', $post->ID) - get_post_time('U', false, $post->ID, true);
 			$erstelltitle = 'erstellt: ' . $erstelldat . ' ' . $postago;
 			if ($diffmod > 0) {
 				$erstelltitle.= '&#10;verändert: ' . $moddat . ' ' . $modago;
-				$erstelltitle.= '&#10;verändert nach: ' . human_time_diff(get_post_time('U', false, $post, true), get_the_modified_time('U', false, $post, true));
+				$erstelltitle.= '&#10;verändert nach: ' . human_time_diff(get_post_time('U', false, $post->ID, true), get_the_modified_time('U', $post->ID));
 			}
 			if ($diffmod > 86400) {
 				$newormod = 'fa fa-calendar-plus-o';
@@ -771,23 +779,20 @@ function display_timeline($args){
 				$newormod = 'fa fa-calendar-o';
 			}
 			$out .= '<i style="background-color:' . $newcolor . '" title="' . $erstelltitle . '" class="' . $newormod . '"></i> ';
-			if (is_singular()) {
-				if ($diffmod > 0) {
-					$out.= '<span title="' . $erstelltitle . '">' . get_the_modified_time(get_option('date_format'), false, $post, true) . ' ' . $modago . '</span>';
-				} else {
-					$out.= '<span title="' . $erstelltitle . '">' . get_post_time(get_option('date_format'), false, $post, true) . ' ' . $postago . '</span>';
-				}
+			if ($diffmod > 0) {
+				$out.= '<span title="' . $erstelltitle . '">' . get_the_modified_time(get_option('date_format').' '.get_option('time_format'), $post->ID) . ' ' . $modago . '</span>';
+			} else {
+				$out.= '<span title="' . $erstelltitle . '">' . get_post_time(get_option('date_format').' '.get_option('time_format'), false, $post->ID, true) . ' ' . $postago . '</span>';
 			}
-			if (empty($catfilter) || $catfilter == -1) $out .= '&nbsp; <i class="fa fa-folder-o"></i> '.get_the_category($post->ID)[0]->name;
-			$out .=  ' &nbsp; <i class="fa fa-newspaper-o"></i> '.wp_trim_words(get_the_excerpt( $post->ID ), $exwordcount );
-			$out .=  '</abbr></span>';
-			$out .=  '</div></li>';
+			if (empty($catfilter) || $catfilter == -1) $out .= '&nbsp; <i class="fa fa-folder-open"></i> '.get_the_category($post->ID)[0]->name;
+			$out .=  '<br><i class="fa fa-newspaper-o"></i> '.wp_trim_words(get_the_excerpt( $post->ID ), $exwordcount );
+			$out .=  '</abbr></span></div></li>';
 			$prevdate = get_the_time( 'U', $post->ID );
 		endforeach;
 		$out .=  '</ul>';
 		$out .=  '</div> <!-- #timeline -->';
 	}	
-	if ( strpos($args['view'], "calendar") !== false ) {
+	if ( strpos($view, "calendar") !== false ) {
 		/// Cal Aufruf
 		$outputed_values = array();
 		foreach ($posts as $calevent) {

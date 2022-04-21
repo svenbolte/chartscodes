@@ -7,13 +7,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2022-03-01 16:31+0000\n"
-"Last-Translator: Root Admin\n"
+"PO-Revision-Date: 2022-04-21 09:12+0000\n"
+"Last-Translator: Keller Admin\n"
 "Language-Team: Deutsch\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Loco-Version: 2.5.8; wp-5.9.1\n"
+"X-Loco-Version: 2.6.1; wp-5.9.3\n"
 "Report-Msgid-Bugs-To: "
 
 #: chartscodes.php:578
@@ -48,7 +48,7 @@ msgstr "<strong>%s</strong> Summe der Einzel-Werte"
 msgid "ago"
 msgstr "vor"
 
-#: pb-shortcodes.php:669
+#: pb-shortcodes.php:665
 msgid "all"
 msgstr "alle Kategorien"
 
@@ -89,6 +89,10 @@ msgstr "Klicks nach Wochentag %2s letzte %1s Tage"
 #, php-format
 msgid "clicks last %s days"
 msgstr "Klicks der letzten %s Tage"
+
+#: pb-shortcodes.php:747
+msgid "Continue reading"
+msgstr "weiterlesen"
 
 #: chartscodes.php:1094
 msgid ""
@@ -154,6 +158,18 @@ msgstr "Standard Kuchendiagramm"
 msgid "delete webhits older than (days):"
 msgstr "Webhits nach (mind. 30) Tagen löschen:"
 
+#: pb-shortcodes.php:702
+msgid "display as calendar"
+msgstr "als Kalender anzeigen"
+
+#: pb-shortcodes.php:706
+msgid "display as tiles"
+msgstr "als Kacheln anzeigen"
+
+#: pb-shortcodes.php:704
+msgid "display as tiles and calendar"
+msgstr "als Kacheln und Kalender anzeigen"
+
 #: chartscodes.php:1000 chartscodes.php:1002
 msgid "Doughnut Pie Chart"
 msgstr "Donut Kuchendiagramm"
@@ -215,11 +231,11 @@ msgstr "ipflag Datenbank aktualisiert."
 msgid "last %1s visitors %2s last %3s days"
 msgstr "Letzte %1s Besucher %2s letzte %3s Tage"
 
-#: chartscodes.php:1242
+#: chartscodes.php:1243
 msgid "Last Visitors"
 msgstr "Letzte Besucher"
 
-#: pb-shortcodes.php:703
+#: pb-shortcodes.php:700
 msgid "number of posts"
 msgstr "Beitragsanzahl"
 
@@ -244,7 +260,7 @@ msgstr "Herkunft-Seite"
 msgid "Remote ipflag database version not readable."
 msgstr "Remote-ipflag-Datenbankversion nicht lesbar."
 
-#: pb-shortcodes.php:709
+#: pb-shortcodes.php:713
 msgid "search"
 msgstr "suchen"
 
