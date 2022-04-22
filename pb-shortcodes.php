@@ -1,6 +1,9 @@
 <?php
 /**
-* Charts QRCodes Barcodes Shortcode
+* Charts Shortcodes
+* 	'chartscodes', 'chartscodes_radar', 'chartscodes_donut' 'chartscodes_polar'
+*	'chartscodes_bar', 'chartscodes_horizontal_bar','posts_per_month_last'
+*	'pb_last_months_chart', 'chartscodes_line'
 * @package Charts QRCodes Barcodes
 */
 
@@ -173,7 +176,6 @@ class PB_ChartsCodes_Shortcode {
 		return ob_get_clean();
 	}
 
-
 	//
 	//  Polar Pie Chart Shortcode Function
 	//
@@ -238,7 +240,6 @@ class PB_ChartsCodes_Shortcode {
 		return ob_get_clean();
 	}
 
-
 	//	
 	//	Radar Chart Shortcode Function (absolute values given)
 	//	
@@ -296,7 +297,6 @@ class PB_ChartsCodes_Shortcode {
 		}
 		return ob_get_clean();
 	}
-
 
 	//
 	//  vertical Bar Graph Shortcode Function
@@ -361,7 +361,6 @@ class PB_ChartsCodes_Shortcode {
 		<?php 
 		return ob_get_clean();
 	}
-
 
 	//
 	//  Horizontal Bar Graph Shortcode Function
@@ -452,7 +451,6 @@ class PB_ChartsCodes_Shortcode {
 		return do_shortcode($out);
 	}
 
-
 	//	
 	//	Chartscodes Line Chart Shortcode Function
 	//	
@@ -534,289 +532,4 @@ class PB_ChartsCodes_Shortcode {
 	}
 }
 new PB_ChartsCodes_Shortcode();
-
-// ==================== Hardwaremarkenlogos anzeigen Shortcode ======================================
-function complogo_shortcode($atts){
-	$args = shortcode_atts( array(
-		      'scale' => '',     		// sm = 32px  xs=21px
-		      'brand' => '',  // Herstellermarke
-     		), $atts );
-		// Load comp freaky style for brands
-		wp_enqueue_style( 'pb-complogo-style', PB_ChartsCodes_URL_PATH . 'flags/computerbrands.min.css' );
-		$complogo = '<a target="_blank" href="https://'.strtolower($args['brand']).'.de"><i class="comp comp-'.strtolower($args['brand']).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtoupper($atts['brand']).' aufrufen"></i></a>';
-        return $complogo;
-}
-add_shortcode('complogo', 'complogo_shortcode');
-
-// ==================== Automarkenlogos anzeigen Shortcode ======================================
-function carlogo_shortcode($atts){
-	$args = shortcode_atts( array(
-		      'scale' => '',     		// sm = 32px  xs=21px
-		      'brand' => '0unknown',  // Autohersteller
-     		), $atts );
-		// Load car freaky style for car
-		wp_enqueue_style( 'pb-autologo-style', PB_ChartsCodes_URL_PATH . 'flags/car-logos.min.css' );
-		$autologo = '<a target="_blank" href="https://'.strtolower($args['brand']).'.de"><i class="fcar fcar-'.strtolower($args['brand']).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtoupper($atts['brand']).' aufrufen"></i></a>';
-        return $autologo;
-}
-add_shortcode('carlogo', 'carlogo_shortcode');
-
-
-// ========================================== Shortcode Timeline from posts ====================================================
-
-// get shortcode attributes, pass to display function
-function timeline_shortcode($atts){
-	$args = shortcode_atts( array(
-		      'catname' => '',     		// insert slugs of all post types you want, sep by comma, empty for all types
-		      'type' => 'post,wpdoodle',  // separate type slugs by comma
-			  'items' => 1000,    	 	// Maximal 1000 Posts paginiert anzeigen
-			  'perpage' => 12,     		// posts per page for pagination
-			  'view' => 'timeline',     // set to "calendar" for calender display, to "calendar,timeline" for both 
-			  'pics' => 1,        		// 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)
-			  'dateformat' => 'D d.m.Y H:i',
-     		), $atts );
-     return display_timeline($args);
- }
-add_shortcode('wp-timeline', 'timeline_shortcode');
-
-// Calendar display month - draws a calendar for the timeline
-function timeline_calendar( $month,$year,$eventarray ) {
-	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
-	$calheader = date('Y-m-d',mktime(2,0,0,$month,1,$year));
-	$running_day = date('w',mktime(2,0,0,$month,1,$year));
-	if ( $running_day == 0 ) { $running_day = 7; }
-	$days_in_month = date('t',mktime(2,0,0,$month,1,$year));
-	$days_in_this_week = 1;
-	$day_counter = 0;
-	$dates_array = array();
-	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(2,0,0,$month,1,$year) ) . '</th></thead>';
-	$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
-	$calendar.= '<tr><td style="font-weight:700;text-align:center">'.implode('</td><td style="font-weight:700;padding:2px;text-align:center">',$headings).'</td></tr>';
-	/* row for week one */
-	$calendar.= '<tr style="padding:2px">';
-	/* print "blank" days until the first of the current week */
-	for($x = 1; $x < $running_day; $x++):
-		$calendar.= '<td style="text-align:center;padding:2px;background:rgba(222,222,222,0.1);"></td>';
-		$days_in_this_week++;
-	endfor;
-	/* keep going with days.... */
-	for($list_day = 1; $list_day <= $days_in_month; $list_day++):
-		$calendar.= '<td style="padding:2px;text-align:center;vertical-align:top">';
-		/* add in the day number */
-		$running_week = date('W',mktime(2,0,0,$month,$list_day,$year));
-		$calendar.= '<div>'.$list_day.'</div>';
-		/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
-		foreach ($eventarray as $calevent) {
-			if ( substr(get_the_time('Ymd', $calevent->ID),0,8) == date('Ymd',mktime(2,0,0,$month,$list_day,$year)) ) {
-				$calendar .= '<span style="word-break:break-all;font-size:12px"><a href="' . get_permalink($calevent->ID) . '" title="'.$calevent->title.'">' . get_the_title( $calevent->ID ) . '</a></span> <br> ';
-			}
-		}	
-		$calendar.= '</td>';
-		if($running_day == 7):
-			$calendar.= '<td style="text-align:center;font-size:0.9em;padding:2px">'.$running_week.'</td></tr>';
-			if(($day_counter+1) != $days_in_month):
-				$calendar.= '<tr>';
-			endif;
-			$running_day = 0;
-			$days_in_this_week = 0;
-		endif;
-		$days_in_this_week++; $running_day++; $day_counter++;
-	endfor;
-	/* finish the rest of the days in the week */
-	/* finish the rest of the days in the week */
-	if($days_in_this_week < 8 && $days_in_this_week > 1):
-		for($x = 1; $x <= (8 - $days_in_this_week); $x++):
-			$calendar.= '<td style="text-align:center;padding:2px"></td>';
-		endfor;
-	$calendar.= '<td style="text-align:center;font-size:0.9em;padding:2px">'.$running_week.'</td></tr>';
-	endif;
-	$calendar.= '</table>';
-	return $calendar;
-}
-
-// Differenz zwischen 2 Beiträgen
-function german_time_diff( $from, $to ) {
-    $diff = human_time_diff($from,$to);
-    $replace = array(
-        'Tagen'  => 'Tage',
-        'Monaten' => 'Monate',
-        'Jahren'   => 'Jahre',
-    );
-    return ' <i title="älter als voriger Beitrag" class="fa fa-arrows-h"></i> ' . strtr($diff,$replace);
-}
-
-// Search filter
-function my_filter_post_where( $where) {
-    global $wpdb;
-	global $keyword;
-    $where .= ' AND ' . $wpdb->posts . '.post_title LIKE \'%' . $keyword . '%\'';
-    return $where;
-}
-
-//  display the timeline
-function display_timeline($args){
-	global $keyword, $wp;
-	if ( isset( $_GET[ 'cat' ] ) ) { $catfilter = esc_attr($_GET["cat"]); } else { $catfilter=''; }
-	if ( isset( $_GET[ 'search' ] ) ) { $keyword = esc_attr($_GET["search"]); } else { $keyword=''; }
-	if (isset($_GET['view'])) { $view = esc_html($_GET['view']); } else $view = $args['view'];
-	$out = '';
-	// Kategorie-Filter von Hand
-	$cargs = array(
-		'show_option_none' => __( 'all', 'pb-chartscodes' ),
-		'show_count'       => 1,
-		'orderby'          => 'name',
-		'selected' => $catfilter,
-		'echo'             => 0,
-	);
-	$select  = wp_dropdown_categories( $cargs ); 
-	$replace = "<select$1 onchange='return this.form.submit()'>";
-	$select  = preg_replace( '#<select([^>]*)>#', $replace, $select );
-	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-	$post_args = array(
-		'suppress_filters' => false, // important!
-		'post_type' => explode( ',', $args['type'] ),
-		'numberposts' => $args['items'],
-		'posts_per_page' => $args['perpage'],
-		'paged' => $paged,
-		'page' => $paged,
-		'category_name' => $args['catname'],
-		'category' =>  $catfilter,
-		'orderby' => 'modified',
-		'order' => 'DESC',
-		'post_status' => 'publish',
-	);
-	$tpostarg = array(
-		'suppress_filters' => false, // important!
-		'numberposts' => -1,
-		'post_type' => explode( ',', $args['type'] ),
-		'category_name' => $args['catname'],
-		'category' =>  $catfilter,
-		'post_status' => 'publish',
-	);
-	add_filter( 'posts_where', 'my_filter_post_where' );
-	$tpostcount = count(get_posts( $tpostarg ));
-	if ( $tpostcount > intval($args['items']) ) $tpostcount = intval($args['items']);
-	$unpagedurl = preg_replace('/page(\/)*([0-9\/])*/i', '', home_url( $wp->request ));
-	$out.= '<div style="text-align:right"><form action="'.$unpagedurl.'" name="finder" method="get">'.__('number of posts','pb-chartscodes').': <strong>'.$tpostcount.'</strong> &nbsp; ';
-	if ( $view == 'timeline' ) {
-		$out.= '<a title="'.__('display as calendar','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'view' => 'calendar' ), $wp->request))).'"><i class="fa fa-calendar"></i></a> &nbsp; ';	
-	} else if ( $view == 'calendar' ) {
-		$out.= '<a title="'.__('display as tiles and calendar','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'view' => 'timeline,calendar' ), $wp->request))).'"><i class="fa fa-th-large"></i>+<i class="fa fa-calendar"></i></a> &nbsp; ';	
-	} else if ( $view == 'timeline,calendar' ) {
-		$out.= '<a title="'.__('display as tiles','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'view' => 'timeline' ), $wp->request))).'"><i class="fa fa-th-large"></i></a> &nbsp; ';	
-	}
-	if (empty($args['catname'])) {
-		$out .= ' '.$select; 
-		$out .= '<noscript><input type="submit" value="View" /></noscript>';
-	}	
-	$out.= ' <input type="text" placeholder="Suchbegriff" name="search" id="search" value="'.$keyword.'"> ';
-	$out.='</select><input class="noprint" type="submit" value="'. __( 'search', 'pb-chartscodes' ).'" />';
-	$out .= '</form></div>';
-	$posts = get_posts( $post_args );
-	remove_filter( 'posts_where', 'my_filter_post_where' );
-	if ( strpos($view, "timeline") !== false ) {	
-		$out .=  '<div id="timeline">';
-		$out .=   '<ul>';
-		$prevdate = '';
-		$ctr = 1;
-		foreach ( $posts as $post ) : setup_postdata($post);
-			$out .=  '<li><div>';
-			$out .=  '<span class="timeline-datebild" style="background-color:'. get_theme_mod( 'link-color', '#888' ) .'">';
-			$out .=  get_the_time( 'D', $post->ID ).'<br><span style="font-size:1.5em;color:#fff">'.get_the_time( 'd', $post->ID ).'</span><br>'.get_the_time( 'M', $post->ID );
-			$out .=  '</span>';
-			$cuttext = get_the_title($post->ID);
-			if (strlen($cuttext) > 42) { $cuttext=substr(get_the_title($post->ID), 0, 27) . '&mldr;' . substr(get_the_title($post->ID), -15);	}	
-			if (  $args['pics'] == 1 ) {
-				$out .=  '<div class="timeline-image post-thumbnail">';
-				if ( has_post_thumbnail( $post->ID ) ) {
-					$out .=  get_the_post_thumbnail( $post->ID, 'large' );
-				} else {
-					$first_img='<img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIiA/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgd2lkdGg9IjcwMCIgaGVpZ2h0PSIyNTAiIHZpZXdCb3g9IjAgMCA3MDAgMjUwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGcgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAzNTAgMTI1KSIgaWQ9ImYyNjNiZTI5LWUwZmYtNDJlYS1hNzEyLWU5NTBiNzM2NzIyMCIgID4KPHJlY3Qgc3R5bGU9InN0cm9rZTogbm9uZTsgc3Ryb2tlLXdpZHRoOiAxOyBzdHJva2UtZGFzaGFycmF5OiBub25lOyBzdHJva2UtbGluZWNhcDogYnV0dDsgc3Ryb2tlLWRhc2hvZmZzZXQ6IDA7IHN0cm9rZS1saW5lam9pbjogbWl0ZXI7IHN0cm9rZS1taXRlcmxpbWl0OiA0OyBmaWxsOiByZ2IoNDQsNDQsNDQpOyBmaWxsLW9wYWNpdHk6IDAuNzQ7IGZpbGwtcnVsZTogbm9uemVybzsgb3BhY2l0eTogMTsiIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSIgIHg9Ii0zNTAiIHk9Ii0xMjUiIHJ4PSIwIiByeT0iMCIgd2lkdGg9IjcwMCIgaGVpZ2h0PSIyNTAiIC8+CjwvZz4KPGcgdHJhbnNmb3JtPSJtYXRyaXgoSW5maW5pdHkgTmFOIE5hTiBJbmZpbml0eSAwIDApIiBpZD0iMDBiYmNmMjYtZGJjZi00NTc5LTk2YzktNTFiNWVkYTA0ODRlIiAgPgo8L2c+Cjwvc3ZnPg==">';
-					$category = get_the_category($post->ID);
-					$output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', get_the_content(), $matches);
-					if ($output) { $first_img = '<img src="'. $matches[1][0] . '">'; } else { 
-						if ( has_post_thumbnail() == false ) {
-							if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
-								$cbild = z_taxonomy_image_url($category[0]->term_id);
-								$first_img = '<img src="' . $cbild . '">';	
-							} 
-						} else {
-							$cbild = get_the_post_thumbnail_url();
-							$first_img = '<img src="' . $cbild . '">';	
-						}
-					}
-					$out .= '<a style="color:#fff;text-shadow:1px 1px 1px #000" href="' . get_permalink($post->ID) . '">'.$first_img.'<div class="middle" style="top:45%">#'.$ctr.' '.__( "Continue reading", "pb-chartscodes" ).' &raquo;</div></a>';
-				}	
-				$out .=  '<div class="timeline-title"><nobr><a style="font-size:1.2em" href="' . get_permalink($post->ID) . '" title="'.$post->title.'">';
-				$out .=  ' '.$cuttext. '</a></nobr></div>';
-				$out .= '</div>';
-			} else {
-				$out .=  '<nobr><h6 class="headline" style="margin-right:8px;overflow:hidden"><a href="' . get_permalink($post->ID) . '" title="'.$post->title.'">';
-				$out .=  ' '.$cuttext. '</a></h6></nobr>';
-			}
-			if (  $args['pics'] == 1 ) { $imgon=''; $exwordcount = 15; } else { $imgon ='noimages'; $exwordcount = 30; }
-			$out .= '<span class="timeline-text '.$imgon.'" style="background-color:'. get_theme_mod( 'link-color', '#eeeeee' ). '22' .'"><abbr>';
-			if ( !empty($prevdate)) $out .= german_time_diff($prevdate,get_the_time( 'U', $post->ID )).' &nbsp; ';
-			// Datum-Statistik des Posts mit Farbdarstellung <14Tg alt
-			$diff = time() - get_post_time('U', false, $post->ID, true);
-			if (round((intval($diff) / 86400), 0) < 30) {
-				$newcolor = "#FFD800";
-			} else {
-				$newcolor = "transparent";
-			}
-			$erstelldat = get_post_time('l, d. M Y H:i:s', false, $post->ID, true);
-			$postago = ago(get_post_time('U, d. F Y H:i:s', false, $post->ID, true));
-			$moddat = get_the_modified_time('l, d. M Y H:i:s', $post->ID);
-			$modago = ago(get_the_modified_time('U, d. F Y H:i:s', $post->ID));
-			$diffmod = get_the_modified_time('U', $post->ID) - get_post_time('U', false, $post->ID, true);
-			$erstelltitle = 'erstellt: ' . $erstelldat . ' ' . $postago;
-			if ($diffmod > 0) {
-				$erstelltitle.= '&#10;verändert: ' . $moddat . ' ' . $modago;
-				$erstelltitle.= '&#10;verändert nach: ' . human_time_diff(get_post_time('U', false, $post->ID, true), get_the_modified_time('U', $post->ID));
-			}
-			if ($diffmod > 86400) {
-				$newormod = 'fa fa-calendar-plus-o';
-			} else {
-				$newormod = 'fa fa-calendar-o';
-			}
-			$out .= '<i style="background-color:' . $newcolor . '" title="' . $erstelltitle . '" class="' . $newormod . '"></i> ';
-			if ($diffmod > 0) {
-				$out.= '<span title="' . $erstelltitle . '">' . get_the_modified_time(get_option('date_format').' '.get_option('time_format'), $post->ID) . ' ' . $modago . '</span>';
-			} else {
-				$out.= '<span title="' . $erstelltitle . '">' . get_post_time(get_option('date_format').' '.get_option('time_format'), false, $post->ID, true) . ' ' . $postago . '</span>';
-			}
-			if (empty($catfilter) || $catfilter == -1) $out .= '&nbsp; <i class="fa fa-folder-open"></i> '.get_the_category($post->ID)[0]->name;
-			$out .=  '<br><i class="fa fa-newspaper-o"></i> '.wp_trim_words(get_the_excerpt( $post->ID ), $exwordcount );
-			$out .=  '</abbr></span></div></li>';
-			$prevdate = get_the_time( 'U', $post->ID );
-			$ctr++;
-		endforeach;
-		$out .=  '</ul>';
-		$out .=  '</div> <!-- #timeline -->';
-	}	
-	if ( strpos($view, "calendar") !== false ) {
-		/// Cal Aufruf
-		$outputed_values = array();
-		foreach ($posts as $calevent) {
-			$workername = substr(get_the_time('Ymd', $calevent->ID),0,6);
-			if (!in_array($workername, $outputed_values)){
-				$mdatum = substr(get_the_time('Ymd', $calevent->ID),0,4).'-'. substr(get_the_time('Ymd', $calevent->ID),4,2).'-'.substr(get_the_time('Ymd', $calevent->ID),6,2);
-				$out .= timeline_calendar(date("m", strtotime($mdatum)),date("Y", strtotime($mdatum)),$posts);
-				array_push($outputed_values, $workername);
-			}	
-		}
-	}
-	$big = 999999999; // need an unlikely integer
-	$out .= '<div class="nav-links" style="text-align:center">'.paginate_links( array(
-		'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-		'format' => '?paged=%#%',
-		'current' => max( 1, get_query_var('paged') ),
-		'total' => intval($tpostcount / $args['perpage']) + 1,
-        'prev_text'    => __('&laquo; newer posts', 'pb-chartscodes').' '.(max( 1, get_query_var('paged') ) - 1) * $args['perpage'].'-'.(max( 1, get_query_var('paged') ) - 1) * $args['perpage'] + $args['perpage'],
-        'next_text'    => __('older posts &raquo;', 'pb-chartscodes').' '.(max( 1, get_query_var('paged') ) ) * $args['perpage'].'-'.(max( 1, get_query_var('paged') ) ) * $args['perpage'] + $args['perpage'],
-	) );
-	$out .= '</div>';
-	wp_reset_postdata();
-	return $out;
-}
 ?>

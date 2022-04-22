@@ -9,47 +9,14 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.65
-Stable tag: 11.1.65
+Version: 11.1.66
+Stable tag: 11.1.66
 Requires at least: 5.1
 Tested up to: 5.9.3
 Requires PHP: 8.0
 */
 
 if ( ! defined( 'ABSPATH' ) ) {	exit; } // Exit if accessed directly.
-
-// Zeitdifferenz ermitteln und gestern/vorgestern/morgen schreiben
-function ccago($timestamp) {
-	$xlang = get_bloginfo("language");
-	date_default_timezone_set('Europe/Berlin');
-	$now = time();
-	if ($timestamp > $now) {
-		$prepo = __('in', 'pb-chartscodes');
-		$postpo = '';
-	} else {
-		if ($xlang == 'de-DE') {
-			$prepo = __('vor', 'pb-chartscodes');
-			$postpo = '';
-		} else {
-			$prepo = '';
-			$postpo = __('ago', 'pb-chartscodes');
-		}
-	}
-	$her = intval($now) - intval($timestamp);
-	if ($her > 86400 and $her < 172800) {
-		$hdate = __('yesterday', 'pb-chartscodes');
-	} else if ($her > 172800 and $her < 259200) {
-		$hdate = __('1 day before yesterday', 'pb-chartscodes');
-	} else if ($her < - 86400 and $her > - 172800) {
-		$hdate = __('tomorrow', 'pb-chartscodes');
-	} else if ($her < - 172800 and $her > - 259200) {
-		$hdate = __('1 day after tomorrow', 'pb-chartscodes');
-	} else {
-		$hdate = ' ' . $prepo . ' ' . human_time_diff(intval($timestamp), $now) . ' ' . $postpo;
-	}
-	return $hdate;
-}
-
 
 add_action( 'plugins_loaded', 'chartscodes_textdomain' );
 function chartscodes_textdomain() {
@@ -287,22 +254,14 @@ class ipflag {
         return $info;
     }
 
-
 public function country_code ($lang = null , $code = null) {
   if (empty ($countries)) $countries = unserialize ('a:2:{s:2:"en";a:204:{s:2:"AF";s:11:"Afghanistan";s:2:"AL";s:7:"Albania";s:2:"AS";s:14:"American Samoa";s:2:"AD";s:7:"Andorra";s:2:"AO";s:6:"Angola";s:2:"AI";s:8:"Anguilla";s:2:"AQ";s:10:"Antarctica";s:2:"AG";s:19:"Antigua and Barbuda";s:2:"AR";s:9:"Argentina";s:2:"AM";s:7:"Armenia";s:2:"AW";s:5:"Aruba";s:2:"AT";s:7:"Austria";s:2:"AU";s:9:"Australia";s:2:"AZ";s:10:"Azerbaijan";s:2:"BS";s:7:"Bahamas";s:2:"BH";s:7:"Bahrain";s:2:"BD";s:10:"Bangladesh";s:2:"BB";s:8:"Barbados";s:2:"BY";s:7:"Belarus";s:2:"BE";s:7:"Belgium";s:2:"BZ";s:6:"Belize";s:2:"BJ";s:5:"Benin";s:2:"BM";s:7:"Bermuda";s:2:"BT";s:6:"Bhutan";s:2:"BO";s:7:"Bolivia";s:2:"BA";s:22:"Bosnia and Herzegovina";s:2:"BW";s:8:"Botswana";s:2:"BV";s:13:"Bouvet Island";s:2:"BR";s:6:"Brazil";s:2:"BN";s:17:"Brunei Darussalam";s:2:"BG";s:8:"Bulgaria";s:2:"BF";s:12:"Burkina Faso";s:2:"BI";s:7:"Burundi";s:2:"KH";s:8:"Cambodia";s:2:"CM";s:8:"Cameroon";s:2:"CA";s:6:"Canada";s:2:"CV";s:10:"Cape Verde";s:2:"KY";s:14:"Cayman Islands";s:2:"CF";s:24:"Central African Republic";s:2:"TD";s:4:"Chad";s:2:"CL";s:5:"Chile";s:2:"CN";s:5:"China";s:2:"CO";s:8:"Colombia";s:2:"KM";s:7:"Comoros";s:2:"CG";s:5:"Congo";s:2:"CK";s:12:"Cook Islands";s:2:"CR";s:10:"Costa Rica";s:2:"CI";s:14:"Côte d\'Ivoire";s:2:"HR";s:7:"Croatia";s:2:"CU";s:4:"Cuba";s:2:"CZ";s:14:"Czech Republic";s:2:"DK";s:7:"Denmark";s:2:"DJ";s:8:"Djibouti";s:2:"DO";s:18:"Dominican Republic";s:2:"TP";s:10:"East Timor";s:2:"EC";s:7:"Ecuador";s:2:"EG";s:5:"Egypt";s:2:"SV";s:11:"El salvador";s:2:"GQ";s:17:"Equatorial Guinea";s:2:"ER";s:7:"Eritrea";s:2:"EE";s:7:"Estonia";s:2:"ET";s:8:"Ethiopia";s:2:"FK";s:16:"Falkland Islands";s:2:"FO";s:13:"Faroe Islands";s:2:"FJ";s:4:"Fiji";s:2:"FI";s:7:"Finland";s:2:"FR";s:6:"France";s:2:"GF";s:13:"French Guiana";s:2:"PF";s:16:"French Polynesia";s:2:"GA";s:5:"Gabon";s:2:"GM";s:6:"Gambia";s:2:"GE";s:7:"Georgia";s:2:"DE";s:7:"Germany";s:2:"GH";s:5:"Ghana";s:2:"GI";s:9:"Gibraltar";s:2:"GR";s:6:"Greece";s:2:"GL";s:9:"Greenland";s:2:"GD";s:7:"Grenada";s:2:"GP";s:10:"Guadeloupe";s:2:"GU";s:4:"Guam";s:2:"GT";s:9:"Guatemala";s:2:"GN";s:6:"Guinea";s:2:"GY";s:6:"Guyana";s:2:"HT";s:5:"Haiti";s:2:"VA";s:7:"Vatican";s:2:"HN";s:8:"Honduras";s:2:"HU";s:7:"Hungary";s:2:"IS";s:7:"Iceland";s:2:"IN";s:5:"India";s:2:"ID";s:9:"Indonesia";s:2:"IR";s:4:"Iran";s:2:"IQ";s:4:"Iraq";s:2:"IE";s:7:"Ireland";s:2:"IL";s:6:"Israel";s:2:"IT";s:5:"Italy";s:2:"JM";s:7:"Jamaica";s:2:"JP";s:5:"Japan";s:2:"JO";s:6:"Jordan";s:2:"KZ";s:9:"Kazakstan";s:2:"KE";s:5:"Kenya";s:2:"KI";s:8:"Kiribati";s:2:"KW";s:6:"Kuwait";s:2:"KG";s:9:"Kyrgystan";s:2:"LA";s:3:"Lao";s:2:"LV";s:6:"Latvia";s:2:"LB";s:7:"Lebanon";s:2:"LS";s:7:"Lesotho";s:2:"LI";s:13:"Liechtenstein";s:2:"LT";s:9:"Lithuania";s:2:"LU";s:10:"Luxembourg";s:2:"MO";s:5:"Macau";s:2:"MK";s:10:"Macedonia ";s:2:"MG";s:10:"Madagascar";s:2:"MW";s:6:"Malawi";s:2:"MY";s:8:"Malaysia";s:2:"MV";s:8:"Maldives";s:2:"ML";s:4:"Mali";s:2:"MT";s:5:"Malta";s:2:"MR";s:10:"Mauritania";s:2:"MU";s:9:"Mauritius";s:2:"YT";s:7:"Mayotte";s:2:"MX";s:6:"Mexico";s:2:"FM";s:10:"Micronesia";s:2:"MD";s:7:"Moldova";s:2:"MC";s:6:"Monaco";s:2:"MN";s:8:"Mongolia";s:2:"MS";s:10:"Montserrat";s:2:"MA";s:7:"Morocco";s:2:"MZ";s:10:"Mozambique";s:2:"MM";s:7:"Myanmar";s:2:"NA";s:7:"Namibia";s:2:"NR";s:5:"Nauru";s:2:"NP";s:5:"Nepal";s:2:"NL";s:11:"Netherlands";s:2:"NZ";s:11:"New Zealand";s:2:"NI";s:9:"Nicaragua";s:2:"NE";s:5:"Niger";s:2:"NG";s:7:"Nigeria";s:2:"NU";s:4:"Niue";s:2:"NF";s:14:"Norfolk Island";s:2:"KP";s:11:"North Korea";s:2:"NO";s:6:"Norway";s:2:"OM";s:4:"Oman";s:2:"PK";s:8:"Pakistan";s:2:"PW";s:5:"Palau";s:2:"PA";s:6:"Panama";s:2:"PG";s:16:"Papua New Guinea";s:2:"PY";s:8:"Paraguay";s:2:"PE";s:4:"Peru";s:2:"PH";s:11:"Philippines";s:2:"PL";s:6:"Poland";s:2:"PT";s:8:"Portugal";s:2:"PR";s:11:"Puerto Rico";s:2:"RO";s:7:"Romania";s:2:"RU";s:6:"Russia";s:2:"RW";s:6:"Rwanda";s:2:"WS";s:5:"Samoa";s:2:"SM";s:10:"San Marino";s:2:"SA";s:12:"Saudi Arabia";s:2:"SN";s:7:"Senegal";s:2:"SC";s:10:"Seychelles";s:2:"SL";s:12:"Sierra Leone";s:2:"SG";s:9:"Singapore";s:2:"SK";s:8:"Slovakia";s:2:"SB";s:15:"Solomon Islands";s:2:"SO";s:7:"Somalia";s:2:"ZA";s:12:"South Africa";s:2:"KR";s:11:"South Korea";s:2:"ES";s:5:"Spain";s:2:"LK";s:9:"Sri Lanka";s:2:"SD";s:5:"Sudan";s:2:"SR";s:8:"Suriname";s:2:"SZ";s:9:"Swaziland";s:2:"SE";s:6:"Sweden";s:2:"CH";s:11:"Switzerland";s:2:"SY";s:5:"Syria";s:2:"TW";s:6:"Taiwan";s:2:"TJ";s:10:"Tajikistan";s:2:"TZ";s:8:"Tanzania";s:2:"TH";s:8:"Thailand";s:2:"TG";s:4:"Togo";s:2:"TO";s:5:"Tonga";s:2:"TT";s:19:"Trinidad and Tobago";s:2:"TN";s:7:"Tunisia";s:2:"TR";s:6:"Turkey";s:2:"TM";s:12:"Turkmenistan";s:2:"TV";s:6:"Tuvalu";s:2:"UG";s:6:"Uganda";s:2:"UA";s:7:"Ukraine";s:2:"AE";s:20:"United Arab Emirates";s:2:"GB";s:14:"United Kingdom";s:2:"US";s:24:"United States of America";s:2:"UY";s:7:"Uruguay";s:2:"UZ";s:10:"Uzbekistan";s:2:"VU";s:7:"Vanuatu";s:2:"VE";s:9:"Venezuela";s:2:"VN";s:7:"Vietnam";s:2:"VG";s:14:"Virgin Islands";s:2:"EH";s:14:"Western Sahara";s:2:"YE";s:5:"Yemen";s:2:"YU";s:10:"Yugoslavia";s:2:"ZR";s:5:"Zaire";s:2:"ZM";s:6:"Zambia";s:2:"ZW";s:8:"Zimbabwe";}s:2:"de";a:204:{s:2:"AF";s:11:"Afghanistan";s:2:"AL";s:8:"Albanien";s:2:"AS";s:18:"Amerikanisch Samoa";s:2:"AD";s:7:"Andorra";s:2:"AO";s:6:"Angola";s:2:"AI";s:8:"Anguilla";s:2:"AQ";s:9:"Antarktis";s:2:"AG";s:19:"Antigua und Barbuda";s:2:"AR";s:11:"Argentinien";s:2:"AM";s:8:"Armenien";s:2:"AW";s:5:"Aruba";s:2:"AT";s:11:"Österreich";s:2:"AU";s:10:"Australien";s:2:"AZ";s:13:"Aserbaidschan";s:2:"BS";s:7:"Bahamas";s:2:"BH";s:7:"Bahrain";s:2:"BD";s:10:"Bangladesh";s:2:"BB";s:8:"Barbados";s:2:"BY";s:13:"Weißrussland";s:2:"BE";s:7:"Belgien";s:2:"BZ";s:6:"Belize";s:2:"BJ";s:5:"Benin";s:2:"BM";s:7:"Bermuda";s:2:"BT";s:6:"Bhutan";s:2:"BO";s:8:"Bolivien";s:2:"BA";s:19:"Bosnien Herzegowina";s:2:"BW";s:8:"Botswana";s:2:"BV";s:13:"Bouvet Island";s:2:"BR";s:9:"Brasilien";s:2:"BN";s:17:"Brunei Darussalam";s:2:"BG";s:9:"Bulgarien";s:2:"BF";s:12:"Burkina Faso";s:2:"BI";s:7:"Burundi";s:2:"KH";s:10:"Kambodscha";s:2:"CM";s:7:"Kamerun";s:2:"CA";s:6:"Kanada";s:2:"CV";s:9:"Kap Verde";s:2:"KY";s:13:"Cayman Inseln";s:2:"CF";s:28:"Zentralafrikanische Republik";s:2:"TD";s:6:"Tschad";s:2:"CL";s:5:"Chile";s:2:"CN";s:5:"China";s:2:"CO";s:9:"Kolumbien";s:2:"KM";s:7:"Comoros";s:2:"CG";s:5:"Kongo";s:2:"CK";s:11:"Cook Inseln";s:2:"CR";s:10:"Costa Rica";s:2:"CI";s:15:"Elfenbeinküste";s:2:"HR";s:8:"Kroatien";s:2:"CU";s:4:"Kuba";s:2:"CZ";s:10:"Tschechien";s:2:"DK";s:9:"Dänemark";s:2:"DJ";s:8:"Djibouti";s:2:"DO";s:23:"Dominikanische Republik";s:2:"TP";s:8:"Osttimor";s:2:"EC";s:7:"Ecuador";s:2:"EG";s:8:"Ägypten";s:2:"SV";s:11:"El Salvador";s:2:"GQ";s:18:"Äquatorial Guinea";s:2:"ER";s:7:"Eritrea";s:2:"EE";s:7:"Estland";s:2:"ET";s:10:"Äthiopien";s:2:"FK";s:15:"Falkland Inseln";s:2:"FO";s:12:"Faroe Inseln";s:2:"FJ";s:4:"Fiji";s:2:"FI";s:7:"Finland";s:2:"FR";s:10:"Frankreich";s:2:"GF";s:19:"Französisch Guiana";s:2:"PF";s:23:"Französisch Polynesien";s:2:"GA";s:5:"Gabon";s:2:"GM";s:6:"Gambia";s:2:"GE";s:8:"Georgien";s:2:"DE";s:11:"Deutschland";s:2:"GH";s:5:"Ghana";s:2:"GI";s:9:"Gibraltar";s:2:"GR";s:12:"Griechenland";s:2:"GL";s:9:"Grönland";s:2:"GD";s:7:"Grenada";s:2:"GP";s:10:"Guadeloupe";s:2:"GU";s:4:"Guam";s:2:"GT";s:9:"Guatemala";s:2:"GN";s:6:"Guinea";s:2:"GY";s:6:"Guyana";s:2:"HT";s:5:"Haiti";s:2:"VA";s:7:"Vatikan";s:2:"HN";s:8:"Honduras";s:2:"HU";s:6:"Ungarn";s:2:"IS";s:6:"Island";s:2:"IN";s:6:"Indien";s:2:"ID";s:10:"Indonesien";s:2:"IR";s:4:"Iran";s:2:"IQ";s:4:"Irak";s:2:"IE";s:6:"Irland";s:2:"IL";s:6:"Israel";s:2:"IT";s:7:"Italien";s:2:"JM";s:7:"Jamaika";s:2:"JP";s:5:"Japan";s:2:"JO";s:9:"Jordanien";s:2:"KZ";s:10:"Kasachstan";s:2:"KE";s:5:"Kenia";s:2:"KI";s:8:"Kiribati";s:2:"KW";s:6:"Kuwait";s:2:"KG";s:9:"Kirgistan";s:2:"LA";s:4:"Laos";s:2:"LV";s:8:"Lettland";s:2:"LB";s:7:"Libanon";s:2:"LS";s:7:"Lesotho";s:2:"LI";s:13:"Liechtenstein";s:2:"LT";s:7:"Litauen";s:2:"LU";s:9:"Luxemburg";s:2:"MO";s:5:"Macau";s:2:"MK";s:10:"Mazedonien";s:2:"MG";s:10:"Madagaskar";s:2:"MW";s:6:"Malawi";s:2:"MY";s:8:"Malaysia";s:2:"MV";s:9:"Malediven";s:2:"ML";s:4:"Mali";s:2:"MT";s:5:"Malta";s:2:"MR";s:11:"Mauretanien";s:2:"MU";s:9:"Mauritius";s:2:"YT";s:7:"Mayotte";s:2:"MX";s:6:"Mexiko";s:2:"FM";s:11:"Mikronesien";s:2:"MD";s:9:"Moldavien";s:2:"MC";s:6:"Monaco";s:2:"MN";s:8:"Mongolei";s:2:"MS";s:10:"Montserrat";s:2:"MA";s:7:"Marokko";s:2:"MZ";s:8:"Mosambik";s:2:"MM";s:7:"Myanmar";s:2:"NA";s:7:"Namibia";s:2:"NR";s:5:"Nauru";s:2:"NP";s:5:"Nepal";s:2:"NL";s:11:"Niederlande";s:2:"NZ";s:10:"Neuseeland";s:2:"NI";s:9:"Nicaragua";s:2:"NE";s:5:"Niger";s:2:"NG";s:7:"Nigeria";s:2:"NU";s:4:"Niue";s:2:"NF";s:14:"Norfolk Inseln";s:2:"KP";s:10:"Nord Korea";s:2:"NO";s:8:"Norwegen";s:2:"OM";s:4:"Oman";s:2:"PK";s:8:"Pakistan";s:2:"PW";s:5:"Palau";s:2:"PA";s:6:"Panama";s:2:"PG";s:16:"Papua Neu Guinea";s:2:"PY";s:8:"Paraguay";s:2:"PE";s:4:"Peru";s:2:"PH";s:11:"Philippinen";s:2:"PL";s:5:"Polen";s:2:"PT";s:8:"Portugal";s:2:"PR";s:11:"Puerto Rico";s:2:"RO";s:9:"Rumänien";s:2:"RU";s:8:"Russland";s:2:"RW";s:6:"Ruanda";s:2:"WS";s:5:"Samoa";s:2:"SM";s:10:"San Marino";s:2:"SA";s:13:"Saudi-Arabien";s:2:"SN";s:7:"Senegal";s:2:"SC";s:10:"Seychellen";s:2:"SL";s:12:"Sierra Leone";s:2:"SG";s:8:"Singapur";s:2:"SK";s:8:"Slovakei";s:2:"SB";s:14:"Solomon Inseln";s:2:"SO";s:7:"Somalia";s:2:"ZA";s:10:"Südafrika";s:2:"KR";s:9:"Südkorea";s:2:"ES";s:7:"Spanien";s:2:"LK";s:9:"Sri Lanka";s:2:"SD";s:5:"Sudan";s:2:"SR";s:8:"Suriname";s:2:"SZ";s:9:"Swasiland";s:2:"SE";s:8:"Schweden";s:2:"CH";s:7:"Schweiz";s:2:"SY";s:6:"Syrien";s:2:"TW";s:6:"Taiwan";s:2:"TJ";s:13:"Tadschikistan";s:2:"TZ";s:8:"Tansania";s:2:"TH";s:8:"Thailand";s:2:"TG";s:4:"Togo";s:2:"TO";s:5:"Tonga";s:2:"TT";s:19:"Trinidad und Tobago";s:2:"TN";s:8:"Tunesien";s:2:"TR";s:7:"Türkei";s:2:"TM";s:12:"Turkmenistan";s:2:"TV";s:6:"Tuvalu";s:2:"UG";s:6:"Uganda";s:2:"UA";s:7:"Ukraine";s:2:"AE";s:28:"Vereinigte Arabische Emirate";s:2:"GB";s:23:"Vereinigtes Königreich";s:2:"US";s:30:"Vereinigte Staaten von Amerika";s:2:"UY";s:7:"Uruguay";s:2:"UZ";s:10:"Usbekistan";s:2:"VU";s:7:"Vanuatu";s:2:"VE";s:9:"Venezuela";s:2:"VN";s:7:"Vietnam";s:2:"VG";s:14:"Virgin Islands";s:2:"EH";s:10:"Westsahara";s:2:"YE";s:5:"Jemen";s:2:"YU";s:11:"Jugoslavien";s:2:"ZR";s:5:"Zaire";s:2:"ZM";s:6:"Sambia";s:2:"ZW";s:8:"Simbabwe";}}');
-  if (null == $lang)
-    {
-    return ($countries);
-    }
+  if (null == $lang) { return ($countries); }
   $lang = strtolower ($lang);
-  if (null == $code)
-    {
-    return (isset ($countries[$lang]) ? $countries[$lang] : false);
-    }
+  if (null == $code) { return (isset ($countries[$lang]) ? $countries[$lang] : false); }
   $code = strtoupper ($code);
   return (isset ($countries[$lang][$code]) ? $countries[$lang][$code] : false);
 }
-
 
     public function get_flag($info){
 		// Load flag freaky style for flags
@@ -317,7 +276,6 @@ public function country_code ($lang = null , $code = null) {
 
 	private static function is_bot( $user_agent ) {
 		$user_agent = strtolower( $user_agent );
-
 		$identifiers = array(
 			'bot',
 			'slurp',
@@ -401,8 +359,7 @@ public function country_code ($lang = null , $code = null) {
 			if (preg_match($regex, $u_agent)) { $platform    =   $value; }
 		}
 		// Next get the name of the useragent yes seperately and for good reason
-		if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent))
-		{
+		if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent)) {
 			$bname = 'Internet Explorer';
 			$ub = "MSIE";
 		}
@@ -641,12 +598,12 @@ function website_display_stats() {
 					$labels.= get_the_title($customer->postid).',';
 					$values.= $customer->pidcount.',';
 					$xsum += absint($customer->pidcount);
-					$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a> &nbsp; ';
+					$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a></td><td>';
 					$html .= '<i class="fa fa-calendar-o"></i> '.date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_the_date( 'd. F Y', $customer->postid )) );
 					$html .= ' '.ccago(get_the_date( 'U', $customer->postid ));
-					$html .= '&nbsp; <i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),number_format_i18n( (float) get_post_meta( $customer->postid, 'post_views_count', true ),0) ) . '</td></tr>';
+					$html .= '</td><td><i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),number_format_i18n( (float) get_post_meta( $customer->postid, 'post_views_count', true ),0) ) . '</td></tr>';
 				}	
-				$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr>';
+				$html .= '<tfoot><tr><td colspan=4>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
 				$labels = rtrim($labels, ",");
 				$values = rtrim($values, ",");
 				$html .= '</table>';
@@ -854,7 +811,7 @@ function website_display_stats() {
 			$yourbrowser = "<strong>Angemeldet als</strong> ". $ua['username'] . ' ' . $ua['usertype'];
 			$yourbrowser .= "".__('browser', 'pb-chartscodes')."</strong> " . $ua['name'] . " " . $ua['version'] . " unter " .$ua['platform']  . " " .substr($ua['language'],0,2) . "<br><small>" . $ua['userAgent']."</small>";
 		}
-        if(($info = $this->get_info($ip)) != false) {
+        if (($info = $this->get_info($ip)) != false) {
             $flag = '<div>'.$this->country_code('de',$info->code).' ('.$info->code.') &nbsp; '.$this->get_flag($info).'</div>';
 		} else {
             $flag = '<div>privates Netzwerk &nbsp; '.$this->get_flag($info).'</div>';
@@ -867,13 +824,13 @@ function website_display_stats() {
 
     public function options_validate($input) {
         if(isset($input['db_update'])){
-            try{
+            try {
                 $this->update_db_file();
                 $this->update_db();
-            }catch(Exception $e){
+            } catch(Exception $e){
                 if($e->getCode() === 1){
                     add_settings_error(self::safe_slug.'_db_update', self::safe_slug.'_db_updated', $e->getMessage(), 'updated');
-                }else{
+                } else {
                     add_settings_error(self::safe_slug.'_db_update', self::safe_slug.'_db_update_failed', $e->getMessage());
                 }
                 return $this->options;
@@ -885,26 +842,26 @@ function website_display_stats() {
     }
 
     public function do_auto_update(){
-        try{
+        try {
             $this->update_db_file();
             $this->update_db();
-        }catch(Exception $e){
+        } catch(Exception $e){
         }
     }
 
     public function install(){
-        if(self::safe_slug.'_db_version' < 2){
+        if (self::safe_slug.'_db_version' < 2){
 			global $wpdb;
             $old_table_name = $wpdb->prefix . 'ipflag';
             $wpdb->query('DROP TABLE IF EXISTS '.$old_table_name.';');
         }
 
-        if(self::safe_slug.'_db_version' < 5){
+        if (self::safe_slug.'_db_version' < 5){
             $this->options['auto_update'] = '1';
         }
-        try{
+        try {
             $this->update_db();
-        }catch(Exception $e){
+        } catch(Exception $e){
         }
         update_option(self::safe_slug.'_options', $this->options);
         update_option(self::safe_slug.'_db_version', self::default_db_version);
@@ -935,8 +892,7 @@ function website_display_stats() {
 
     public function options_page(){
 	// für Charts, QR-Codes und Settings der IP-Datenbank
-    ?>
-        <div class="wrap">
+    ?>  <div class="wrap">
             <div class="icon32" id="icon-options-general"><br></div>
             <h2><?php echo esc_attr_e( 'Chartscodes Settings', 'pb-chartscodes' ); ?></h2>
 			<div class="postbox">
@@ -1118,17 +1074,12 @@ function website_display_stats() {
 
     protected function update_db(){
         if(!file_exists($this->db_file)){
-            try{
+            try {
                 $this->update_db_file();
-            }catch(Exception $e){}
+            } catch(Exception $e){}
         }
-
-        /* To protect update server deschedule all cron jobs on plugin update
-         * to make sure that everyone's cron job is at the default db update
-         * interval (in case someone has modified cron job interval manually)
-         */
+        // To protect update server deschedule all cron jobs on plugin update
         $this->deschedule_update();
-
         global $wpdb;
         $ip_ranges_table_name = $wpdb->prefix . self::ip_ranges_table_suffix;
         $countries_table_name = $wpdb->prefix . self::countries_table_suffix;
@@ -1152,7 +1103,6 @@ function website_display_stats() {
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql_countries);
         dbDelta($sql_ip_ranges);
-
         require_once(dirname(__FILE__) . '/iso-3166-2.php');
 
         $sql = '';
@@ -1179,16 +1129,16 @@ function website_display_stats() {
             }
             $wpdb->query('INSERT INTO '.$ip_ranges_table_name.' (fromip, toip, cid) VALUES '.substr($sql,0,-2));
             fclose($input);
-        }else{
+        } else {
             throw new Exception(__('Couldn\'t read ipflag database file from local file system. Please check permissions.', 'pb-chartscodes'), 6);
         }
     }
 
     protected function remote_timestamp(){
         $response = wp_remote_get($this->remote_ts_url, array('timeout' => self::http_timeout));
-        if(!is_wp_error($response) || isset($response['body']) || $response['body'] !== '0000-00-00-00-00-00'){
+        if (!is_wp_error($response) || isset($response['body']) || $response['body'] !== '0000-00-00-00-00-00'){
             $timestamp = $this->parse_time($response['body']);
-            if(is_integer($timestamp)){
+            if (is_integer($timestamp)){
                 return $timestamp;
             }
         }
@@ -1233,7 +1183,39 @@ function website_display_stats() {
 global $ipflag;
 $ipflag = new ipflag();
 
-// Letze X Besucher der Seite anzeigen (nur als Admin) - pageid leer lassen für Gesamtstatistik
+// --------------- Zeitdifferenz ermitteln und gestern/vorgestern/morgen schreiben  --------------------
+function ccago($timestamp) {
+	$xlang = get_bloginfo("language");
+	date_default_timezone_set('Europe/Berlin');
+	$now = time();
+	if ($timestamp > $now) {
+		$prepo = __('in', 'pb-chartscodes');
+		$postpo = '';
+	} else {
+		if ($xlang == 'de-DE') {
+			$prepo = __('vor', 'pb-chartscodes');
+			$postpo = '';
+		} else {
+			$prepo = '';
+			$postpo = __('ago', 'pb-chartscodes');
+		}
+	}
+	$her = intval($now) - intval($timestamp);
+	if ($her > 86400 and $her < 172800) {
+		$hdate = __('yesterday', 'pb-chartscodes');
+	} else if ($her > 172800 and $her < 259200) {
+		$hdate = __('1 day before yesterday', 'pb-chartscodes');
+	} else if ($her < - 86400 and $her > - 172800) {
+		$hdate = __('tomorrow', 'pb-chartscodes');
+	} else if ($her < - 172800 and $her > - 259200) {
+		$hdate = __('1 day after tomorrow', 'pb-chartscodes');
+	} else {
+		$hdate = ' ' . $prepo . ' ' . human_time_diff(intval($timestamp), $now) . ' ' . $postpo;
+	}
+	return $hdate;
+}
+
+// ========  Letze X Besucher der Seite anzeigen (nur als Admin) - pageid leer lassen für Gesamtstatistik  ===
 // penguin,template-parts/meta-bottom.php
 function lastxvisitors ($items,$pageid) {
 	if (!empty($pageid)) { $pagefilter='AND postid = '.$pageid; } else {$pagefilter='';}
@@ -1254,5 +1236,290 @@ function lastxvisitors ($items,$pageid) {
 	}	
 	$html .= '</table></div>';
 	return $html;
+}
+
+// ==================== Hardwaremarkenlogos anzeigen Shortcode ======================================
+function complogo_shortcode($atts){
+	$args = shortcode_atts( array(
+		      'scale' => '',     		// sm = 32px  xs=21px
+		      'brand' => '',  // Herstellermarke
+     		), $atts );
+		// Load comp freaky style for brands
+		wp_enqueue_style( 'pb-complogo-style', PB_ChartsCodes_URL_PATH . 'flags/computerbrands.min.css' );
+		$complogo = '<a target="_blank" href="https://'.strtolower($args['brand']).'.de"><i class="comp comp-'.strtolower($args['brand']).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtoupper($atts['brand']).' aufrufen"></i></a>';
+        return $complogo;
+}
+add_shortcode('complogo', 'complogo_shortcode');
+
+// ==================== Automarkenlogos anzeigen Shortcode ======================================
+function carlogo_shortcode($atts){
+	$args = shortcode_atts( array(
+		      'scale' => '',     		// sm = 32px  xs=21px
+		      'brand' => '0unknown',  // Autohersteller
+     		), $atts );
+		// Load car freaky style for car
+		wp_enqueue_style( 'pb-autologo-style', PB_ChartsCodes_URL_PATH . 'flags/car-logos.min.css' );
+		$autologo = '<a target="_blank" href="https://'.strtolower($args['brand']).'.de"><i class="fcar fcar-'.strtolower($args['brand']).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtoupper($atts['brand']).' aufrufen"></i></a>';
+        return $autologo;
+}
+add_shortcode('carlogo', 'carlogo_shortcode');
+
+
+// ========================================== Shortcode Timeline from posts ====================================================
+
+// get shortcode attributes, pass to display function
+function timeline_shortcode($atts){
+	$args = shortcode_atts( array(
+		      'catname' => '',     		// insert slugs of all post types you want, sep by comma, empty for all types
+		      'type' => 'post,wpdoodle',  // separate type slugs by comma
+			  'items' => 1000,    	 	// Maximal 1000 Posts paginiert anzeigen
+			  'perpage' => 12,     		// posts per page for pagination
+			  'view' => 'timeline',     // set to "calendar" for calender display, to "calendar,timeline" for both 
+			  'pics' => 1,        		// 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)
+			  'dateformat' => 'D d.m.Y H:i',
+     		), $atts );
+     return display_timeline($args);
+ }
+add_shortcode('wp-timeline', 'timeline_shortcode');
+
+// Calendar display month - draws a calendar for the timeline
+function timeline_calendar( $month,$year,$eventarray ) {
+	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
+	$calheader = date('Y-m-d',mktime(2,0,0,$month,1,$year));
+	$running_day = date('w',mktime(2,0,0,$month,1,$year));
+	if ( $running_day == 0 ) { $running_day = 7; }
+	$days_in_month = date('t',mktime(2,0,0,$month,1,$year));
+	$days_in_this_week = 1;
+	$day_counter = 0;
+	$dates_array = array();
+	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(2,0,0,$month,1,$year) ) . '</th></thead>';
+	$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
+	$calendar.= '<tr><td style="font-weight:700;text-align:center">'.implode('</td><td style="font-weight:700;padding:2px;text-align:center">',$headings).'</td></tr>';
+	/* row for week one */
+	$calendar.= '<tr style="padding:2px">';
+	/* print "blank" days until the first of the current week */
+	for($x = 1; $x < $running_day; $x++):
+		$calendar.= '<td style="text-align:center;padding:2px;background:rgba(222,222,222,0.1);"></td>';
+		$days_in_this_week++;
+	endfor;
+	/* keep going with days.... */
+	for($list_day = 1; $list_day <= $days_in_month; $list_day++):
+		$calendar.= '<td style="padding:2px;text-align:center;vertical-align:top">';
+		/* add in the day number */
+		$running_week = date('W',mktime(2,0,0,$month,$list_day,$year));
+		$calendar.= '<div>'.$list_day.'</div>';
+		/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
+		foreach ($eventarray as $calevent) {
+			if ( substr(get_the_time('Ymd', $calevent->ID),0,8) == date('Ymd',mktime(2,0,0,$month,$list_day,$year)) ) {
+				$calendar .= '<span style="word-break:break-all;font-size:12px"><a href="' . get_permalink($calevent->ID) . '" title="'.$calevent->title.'">' . get_the_title( $calevent->ID ) . '</a></span> <br> ';
+			}
+		}	
+		$calendar.= '</td>';
+		if($running_day == 7):
+			$calendar.= '<td style="text-align:center;font-size:0.9em;padding:2px">'.$running_week.'</td></tr>';
+			if(($day_counter+1) != $days_in_month):
+				$calendar.= '<tr>';
+			endif;
+			$running_day = 0;
+			$days_in_this_week = 0;
+		endif;
+		$days_in_this_week++; $running_day++; $day_counter++;
+	endfor;
+	/* finish the rest of the days in the week */
+	/* finish the rest of the days in the week */
+	if($days_in_this_week < 8 && $days_in_this_week > 1):
+		for($x = 1; $x <= (8 - $days_in_this_week); $x++):
+			$calendar.= '<td style="text-align:center;padding:2px"></td>';
+		endfor;
+	$calendar.= '<td style="text-align:center;font-size:0.9em;padding:2px">'.$running_week.'</td></tr>';
+	endif;
+	$calendar.= '</table>';
+	return $calendar;
+}
+
+// Differenz zwischen 2 Beiträgen
+function german_time_diff( $from, $to ) {
+    $diff = human_time_diff($from,$to);
+    $replace = array(
+        'Tagen'  => 'Tage',
+        'Monaten' => 'Monate',
+        'Jahren'   => 'Jahre',
+    );
+    return ' <i title="älter als voriger Beitrag" class="fa fa-arrows-h"></i> ' . strtr($diff,$replace);
+}
+
+// Search filter
+function my_filter_post_where( $where) {
+    global $wpdb;
+	global $keyword;
+    $where .= ' AND ' . $wpdb->posts . '.post_title LIKE \'%' . $keyword . '%\'';
+    return $where;
+}
+
+//  display the timeline
+function display_timeline($args){
+	global $keyword, $wp;
+	if ( isset( $_GET[ 'cat' ] ) ) { $catfilter = esc_attr($_GET["cat"]); } else { $catfilter=''; }
+	if ( isset( $_GET[ 'search' ] ) ) { $keyword = esc_attr($_GET["search"]); } else { $keyword=''; }
+	if (isset($_GET['view'])) { $view = esc_html($_GET['view']); } else $view = $args['view'];
+	$out = '';
+	// Kategorie-Filter von Hand
+	$cargs = array(
+		'show_option_none' => __( 'all', 'pb-chartscodes' ),
+		'show_count'       => 1,
+		'orderby'          => 'name',
+		'selected' => $catfilter,
+		'echo'             => 0,
+	);
+	$select  = wp_dropdown_categories( $cargs ); 
+	$replace = "<select$1 onchange='return this.form.submit()'>";
+	$select  = preg_replace( '#<select([^>]*)>#', $replace, $select );
+	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+	$post_args = array(
+		'suppress_filters' => false, // important!
+		'post_type' => explode( ',', $args['type'] ),
+		'numberposts' => $args['items'],
+		'posts_per_page' => $args['perpage'],
+		'paged' => $paged,
+		'page' => $paged,
+		'category_name' => $args['catname'],
+		'category' =>  $catfilter,
+		'orderby' => 'modified',
+		'order' => 'DESC',
+		'post_status' => 'publish',
+	);
+	$tpostarg = array(
+		'suppress_filters' => false, // important!
+		'numberposts' => -1,
+		'post_type' => explode( ',', $args['type'] ),
+		'category_name' => $args['catname'],
+		'category' =>  $catfilter,
+		'post_status' => 'publish',
+	);
+	add_filter( 'posts_where', 'my_filter_post_where' );
+	$tpostcount = count(get_posts( $tpostarg ));
+	if ( $tpostcount > intval($args['items']) ) $tpostcount = intval($args['items']);
+	$unpagedurl = preg_replace('/page(\/)*([0-9\/])*/i', '', home_url( $wp->request ));
+	$out.= '<div style="text-align:right"><form action="'.$unpagedurl.'" name="finder" method="get">'.__('number of posts','pb-chartscodes').': <strong>'.$tpostcount.'</strong> &nbsp; ';
+	if ( $view == 'timeline' ) {
+		$out.= '<a title="'.__('display as calendar','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'view' => 'calendar' ), $wp->request))).'"><i class="fa fa-calendar"></i></a> &nbsp; ';	
+	} else if ( $view == 'calendar' ) {
+		$out.= '<a title="'.__('display as tiles and calendar','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'view' => 'timeline,calendar' ), $wp->request))).'"><i class="fa fa-th-large"></i>+<i class="fa fa-calendar"></i></a> &nbsp; ';	
+	} else if ( $view == 'timeline,calendar' ) {
+		$out.= '<a title="'.__('display as tiles','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'view' => 'timeline' ), $wp->request))).'"><i class="fa fa-th-large"></i></a> &nbsp; ';	
+	}
+	if (empty($args['catname'])) {
+		$out .= ' '.$select; 
+		$out .= '<noscript><input type="submit" value="View" /></noscript>';
+	}	
+	$out.= ' <input type="text" placeholder="Suchbegriff" name="search" id="search" value="'.$keyword.'"> ';
+	$out.='</select><input class="noprint" type="submit" value="'. __( 'search', 'pb-chartscodes' ).'" />';
+	$out .= '</form></div>';
+	$posts = get_posts( $post_args );
+	remove_filter( 'posts_where', 'my_filter_post_where' );
+	if ( strpos($view, "timeline") !== false ) {	
+		$out .=  '<div id="timeline">';
+		$out .=   '<ul>';
+		$prevdate = '';
+		$ctr = 1;
+		foreach ( $posts as $post ) : setup_postdata($post);
+			$out .=  '<li><div>';
+			$out .=  '<span class="timeline-datebild" style="background-color:'. get_theme_mod( 'link-color', '#888' ) .'">';
+			$out .=  get_the_time( 'D', $post->ID ).'<br><span style="font-size:1.5em;color:#fff">'.get_the_time( 'd', $post->ID ).'</span><br>'.get_the_time( 'M', $post->ID );
+			$out .=  '</span>';
+			$cuttext = get_the_title($post->ID);
+			if (strlen($cuttext) > 42) { $cuttext=substr(get_the_title($post->ID), 0, 27) . '&mldr;' . substr(get_the_title($post->ID), -15);	}	
+			if (  $args['pics'] == 1 ) {
+				$out .=  '<div class="timeline-image post-thumbnail">';
+				if ( has_post_thumbnail( $post->ID ) ) {
+					$out .=  get_the_post_thumbnail( $post->ID, 'large' );
+				} else {
+					$first_img='<img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIiA/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgd2lkdGg9IjcwMCIgaGVpZ2h0PSIyNTAiIHZpZXdCb3g9IjAgMCA3MDAgMjUwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGcgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAzNTAgMTI1KSIgaWQ9ImYyNjNiZTI5LWUwZmYtNDJlYS1hNzEyLWU5NTBiNzM2NzIyMCIgID4KPHJlY3Qgc3R5bGU9InN0cm9rZTogbm9uZTsgc3Ryb2tlLXdpZHRoOiAxOyBzdHJva2UtZGFzaGFycmF5OiBub25lOyBzdHJva2UtbGluZWNhcDogYnV0dDsgc3Ryb2tlLWRhc2hvZmZzZXQ6IDA7IHN0cm9rZS1saW5lam9pbjogbWl0ZXI7IHN0cm9rZS1taXRlcmxpbWl0OiA0OyBmaWxsOiByZ2IoNDQsNDQsNDQpOyBmaWxsLW9wYWNpdHk6IDAuNzQ7IGZpbGwtcnVsZTogbm9uemVybzsgb3BhY2l0eTogMTsiIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSIgIHg9Ii0zNTAiIHk9Ii0xMjUiIHJ4PSIwIiByeT0iMCIgd2lkdGg9IjcwMCIgaGVpZ2h0PSIyNTAiIC8+CjwvZz4KPGcgdHJhbnNmb3JtPSJtYXRyaXgoSW5maW5pdHkgTmFOIE5hTiBJbmZpbml0eSAwIDApIiBpZD0iMDBiYmNmMjYtZGJjZi00NTc5LTk2YzktNTFiNWVkYTA0ODRlIiAgPgo8L2c+Cjwvc3ZnPg==">';
+					$category = get_the_category($post->ID);
+					$output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', get_the_content(), $matches);
+					if ($output) { $first_img = '<img src="'. $matches[1][0] . '">'; } else { 
+						if ( has_post_thumbnail() == false ) {
+							if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
+								$cbild = z_taxonomy_image_url($category[0]->term_id);
+								$first_img = '<img src="' . $cbild . '">';	
+							} 
+						} else {
+							$cbild = get_the_post_thumbnail_url();
+							$first_img = '<img src="' . $cbild . '">';	
+						}
+					}
+					$out .= '<a style="color:#fff;text-shadow:1px 1px 1px #000" href="' . get_permalink($post->ID) . '">'.$first_img.'<div class="middle" style="top:45%">#'.$ctr.' '.__( "Continue reading", "pb-chartscodes" ).' &raquo;</div></a>';
+				}	
+				$out .=  '<div class="timeline-title"><nobr><a style="font-size:1.2em" href="' . get_permalink($post->ID) . '" title="'.$post->title.'">';
+				$out .=  ' '.$cuttext. '</a></nobr></div>';
+				$out .= '</div>';
+			} else {
+				$out .=  '<nobr><h6 class="headline" style="margin-right:8px;overflow:hidden"><a href="' . get_permalink($post->ID) . '" title="'.$post->title.'">';
+				$out .=  ' '.$cuttext. '</a></h6></nobr>';
+			}
+			if (  $args['pics'] == 1 ) { $imgon=''; $exwordcount = 15; } else { $imgon ='noimages'; $exwordcount = 30; }
+			$out .= '<span class="timeline-text '.$imgon.'" style="background-color:'. get_theme_mod( 'link-color', '#eeeeee' ). '22' .'"><abbr>';
+			if ( !empty($prevdate)) $out .= german_time_diff($prevdate,get_the_time( 'U', $post->ID )).' &nbsp; ';
+			// Datum-Statistik des Posts mit Farbdarstellung <14Tg alt
+			$diff = time() - get_post_time('U', false, $post->ID, true);
+			if (round((intval($diff) / 86400), 0) < 30) {
+				$newcolor = "#FFD800";
+			} else {
+				$newcolor = "transparent";
+			}
+			$erstelldat = get_post_time('l, d. M Y H:i:s', false, $post->ID, true);
+			$postago = ago(get_post_time('U, d. F Y H:i:s', false, $post->ID, true));
+			$moddat = get_the_modified_time('l, d. M Y H:i:s', $post->ID);
+			$modago = ago(get_the_modified_time('U, d. F Y H:i:s', $post->ID));
+			$diffmod = get_the_modified_time('U', $post->ID) - get_post_time('U', false, $post->ID, true);
+			$erstelltitle = 'erstellt: ' . $erstelldat . ' ' . $postago;
+			if ($diffmod > 0) {
+				$erstelltitle.= '&#10;verändert: ' . $moddat . ' ' . $modago;
+				$erstelltitle.= '&#10;verändert nach: ' . human_time_diff(get_post_time('U', false, $post->ID, true), get_the_modified_time('U', $post->ID));
+			}
+			if ($diffmod > 86400) {
+				$newormod = 'fa fa-calendar-plus-o';
+			} else {
+				$newormod = 'fa fa-calendar-o';
+			}
+			$out .= '<i style="background-color:' . $newcolor . '" title="' . $erstelltitle . '" class="' . $newormod . '"></i> ';
+			if ($diffmod > 0) {
+				$out.= '<span title="' . $erstelltitle . '">' . get_the_modified_time(get_option('date_format').' '.get_option('time_format'), $post->ID) . ' ' . $modago . '</span>';
+			} else {
+				$out.= '<span title="' . $erstelltitle . '">' . get_post_time(get_option('date_format').' '.get_option('time_format'), false, $post->ID, true) . ' ' . $postago . '</span>';
+			}
+			if (empty($catfilter) || $catfilter == -1) $out .= '&nbsp; <i class="fa fa-folder-open"></i> '.get_the_category($post->ID)[0]->name;
+			$out .=  '<br><i class="fa fa-newspaper-o"></i> '.wp_trim_words(get_the_excerpt( $post->ID ), $exwordcount );
+			$out .=  '</abbr></span></div></li>';
+			$prevdate = get_the_time( 'U', $post->ID );
+			$ctr++;
+		endforeach;
+		$out .=  '</ul>';
+		$out .=  '</div> <!-- #timeline -->';
+	}	
+	if ( strpos($view, "calendar") !== false ) {
+		/// Cal Aufruf
+		$outputed_values = array();
+		foreach ($posts as $calevent) {
+			$workername = substr(get_the_time('Ymd', $calevent->ID),0,6);
+			if (!in_array($workername, $outputed_values)){
+				$mdatum = substr(get_the_time('Ymd', $calevent->ID),0,4).'-'. substr(get_the_time('Ymd', $calevent->ID),4,2).'-'.substr(get_the_time('Ymd', $calevent->ID),6,2);
+				$out .= timeline_calendar(date("m", strtotime($mdatum)),date("Y", strtotime($mdatum)),$posts);
+				array_push($outputed_values, $workername);
+			}	
+		}
+	}
+	$big = 999999999; // need an unlikely integer
+	$out .= '<div class="nav-links" style="text-align:center">'.paginate_links( array(
+		'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+		'format' => '?paged=%#%',
+		'current' => max( 1, get_query_var('paged') ),
+		'total' => intval($tpostcount / $args['perpage']) + 1,
+        'prev_text'    => __('&laquo; newer posts', 'pb-chartscodes').' '.(max( 1, get_query_var('paged') ) - 1) * $args['perpage'].'-'.(max( 1, get_query_var('paged') ) - 1) * $args['perpage'] + $args['perpage'],
+        'next_text'    => __('older posts &raquo;', 'pb-chartscodes').' '.(max( 1, get_query_var('paged') ) ) * $args['perpage'].'-'.(max( 1, get_query_var('paged') ) ) * $args['perpage'] + $args['perpage'],
+	) );
+	$out .= '</div>';
+	wp_reset_postdata();
+	return $out;
 }
 ?>

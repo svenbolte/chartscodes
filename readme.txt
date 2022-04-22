@@ -2,8 +2,8 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.65
-Stable tag: 11.1.65
+Version: 11.1.66
+Stable tag: 11.1.66
 Requires at least: 5.1
 Tested up to: 5.9.3
 Requires PHP: 8.0
@@ -188,7 +188,8 @@ Output your WordPress posts or custom post types as a timeline with options.
 
 == Changelog ==
 
-= 11.1.57 =
+= 11.1.57-66 =
+Code optimizations, wp593 testing
 Radar Chart shortcode added - takes accent color or grey gradient for filling
 gets absolute values and aligns them to maximum value
 
