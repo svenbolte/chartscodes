@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.66
-Stable tag: 11.1.66
+Version: 11.1.68
+Stable tag: 11.1.68
 Requires at least: 5.1
 Tested up to: 5.9.3
 Requires PHP: 8.0
@@ -631,13 +631,20 @@ function website_display_stats() {
 				$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $this->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
 				$html .= '<td><abbr>' . $this->showbrowosicon($customer->platform). ' ' . substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</abbr></td>';
 				if ($customer->country == 'EUROPEANUNION') $customer->country = 'EU';
+				if ($customer->postid == '-9999') {
+					$cptitle = '<i class="fa fa-home"></i> Homepage';
+					$cplink = get_site_url();
+				} else {
+					$cptitle = get_the_title($customer->postid);
+					$cplink = get_the_permalink($customer->postid);
+				}	
 				$html .= '<td>'. $this->get_flag(  (object) [ 'code' => $customer->country ] ).'</td>';
 				$html .= '<td><abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
 				$html .= '<td><abbr>' . $customer->userip .'</abbr></td><td><abbr>
 					<i style="cursor:pointer" 
 					onclick="document.location.href=\''. esc_url(home_url(add_query_arg(array('suchfilter' => $customer->postid, 'zeitraum' => $zeitraum, 'items' => $items ), $wp->request))).'\'"
 					title="filter:'. $customer->postid.'" class="fa fa-filter"><i> ';
-				$html .= ' <a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</abbr></a></td>';
+				$html .= ' <a title="Post aufrufen" href="'.$cplink.'">' . $cptitle .'</abbr></a></td>';
 				$html .= '<td><abbr>' . $datum . ' ' . ccago(strtotime($customer->datum)).'</abbr></td></tr>';
 			}	
 			$html .= '</table>';
@@ -757,7 +764,8 @@ function website_display_stats() {
 						$country = $info->code;
 					else
 						$country = 'EUROPEANUNION';
-				$postid = get_the_ID();
+				// Wenn Homepage gezählt wird, Pageid als -9999 speichern
+				if ( is_front_page() && is_home() ) { $postid = -9999; } else {	$postid = get_the_ID(); }
 				$datum = current_time( "mysql" );
 				$wpdb->insert(
 					$table,
@@ -923,7 +931,8 @@ function website_display_stats() {
 			<div class="postbox">
 				<p>erstellt eine 2-spaltige Beitrags-Timeline als Shortcode an der Cursorposition (Doku siehe Readme)<br>
                     <code>[wp-timeline items=100 view="calendar" type="post" catname="software"]</code><br>
-		      'catname' => ''     		// insert slugs of all post types you want, sep by comma, empty for all types<br>
+		      'catname' => ''     		// insert category slugs of all post types you want, sep by comma, empty for all types<br>
+		      'tagname' => ''     		// insert tag slugs of all post types you want, sep by comma, empty for all types<br>
 		      'type' => 'post,wpdoodle'  // separate type slugs by comma<br>
 			  'items' => 1000    	 	// Maximal 1000 Posts paginiert anzeigen<br>
 			  'perpage' => 20     		// posts per page for pagination<br>
@@ -1271,9 +1280,10 @@ add_shortcode('carlogo', 'carlogo_shortcode');
 function timeline_shortcode($atts){
 	$args = shortcode_atts( array(
 		      'catname' => '',     		// insert slugs of all post types you want, sep by comma, empty for all types
+		      'tagname' => '',     		// insert tag slugs of all post types you want, sep by comma, empty for all types<br>
 		      'type' => 'post,wpdoodle',  // separate type slugs by comma
 			  'items' => 1000,    	 	// Maximal 1000 Posts paginiert anzeigen
-			  'perpage' => 12,     		// posts per page for pagination
+			  'perpage' => get_option( 'posts_per_page' ),	// posts per page for pagination get from theme
 			  'view' => 'timeline',     // set to "calendar" for calender display, to "calendar,timeline" for both 
 			  'pics' => 1,        		// 1 or 0 - Show images (Category-Image, Post-Thumb or first image in post)
 			  'dateformat' => 'D d.m.Y H:i',
@@ -1360,11 +1370,13 @@ function my_filter_post_where( $where) {
 function display_timeline($args){
 	global $keyword, $wp;
 	if ( isset( $_GET[ 'cat' ] ) ) { $catfilter = esc_attr($_GET["cat"]); } else { $catfilter=''; }
+	if ( isset( $_GET[ 'tag' ] ) ) { $tagfilter = esc_attr($_GET["tag"]); } else { $tagfilter=''; }
 	if ( isset( $_GET[ 'search' ] ) ) { $keyword = esc_attr($_GET["search"]); } else { $keyword=''; }
 	if (isset($_GET['view'])) { $view = esc_html($_GET['view']); } else $view = $args['view'];
 	$out = '';
 	// Kategorie-Filter von Hand
 	$cargs = array(
+		'option_none_value' => '',
 		'show_option_none' => __( 'all', 'pb-chartscodes' ),
 		'show_count'       => 1,
 		'orderby'          => 'name',
@@ -1384,6 +1396,7 @@ function display_timeline($args){
 		'page' => $paged,
 		'category_name' => $args['catname'],
 		'category' =>  $catfilter,
+		'tag' => $tagfilter, 
 		'orderby' => 'modified',
 		'order' => 'DESC',
 		'post_status' => 'publish',
@@ -1393,6 +1406,7 @@ function display_timeline($args){
 		'numberposts' => -1,
 		'post_type' => explode( ',', $args['type'] ),
 		'category_name' => $args['catname'],
+		'tag' => $tagfilter,
 		'category' =>  $catfilter,
 		'post_status' => 'publish',
 	);
@@ -1400,20 +1414,32 @@ function display_timeline($args){
 	$tpostcount = count(get_posts( $tpostarg ));
 	if ( $tpostcount > intval($args['items']) ) $tpostcount = intval($args['items']);
 	$unpagedurl = preg_replace('/page(\/)*([0-9\/])*/i', '', home_url( $wp->request ));
-	$out.= '<div style="text-align:right"><form action="'.$unpagedurl.'" name="finder" method="get">'.__('number of posts','pb-chartscodes').': <strong>'.$tpostcount.'</strong> &nbsp; ';
+	$out .= '<div style="text-align:right"><form action="'.$unpagedurl.'" name="finder" method="get">';
+	$out .= __('number of posts','pb-chartscodes').': <strong>'.$tpostcount.'</strong> &nbsp; ';
 	if ( $view == 'timeline' ) {
-		$out.= '<a title="'.__('display as calendar','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'view' => 'calendar' ), $wp->request))).'"><i class="fa fa-calendar"></i></a> &nbsp; ';	
+		$out .= '<a title="'.__('display as calendar','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'tag' => $tagfilter, 'view' => 'calendar' ), $wp->request))).'"><i class="fa fa-calendar"></i></a> &nbsp; ';	
 	} else if ( $view == 'calendar' ) {
-		$out.= '<a title="'.__('display as tiles and calendar','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'view' => 'timeline,calendar' ), $wp->request))).'"><i class="fa fa-th-large"></i>+<i class="fa fa-calendar"></i></a> &nbsp; ';	
+		$out .= '<a title="'.__('display as tiles and calendar','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'tag' => $tagfilter,  'view' => 'timeline,calendar' ), $wp->request))).'"><i class="fa fa-th-large"></i>+<i class="fa fa-calendar"></i></a> &nbsp; ';	
 	} else if ( $view == 'timeline,calendar' ) {
-		$out.= '<a title="'.__('display as tiles','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'view' => 'timeline' ), $wp->request))).'"><i class="fa fa-th-large"></i></a> &nbsp; ';	
+		$out .= '<a title="'.__('display as tiles','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'tag' => $tagfilter, 'view' => 'timeline' ), $wp->request))).'"><i class="fa fa-th-large"></i></a> &nbsp; ';	
 	}
 	if (empty($args['catname'])) {
 		$out .= ' '.$select; 
 		$out .= '<noscript><input type="submit" value="View" /></noscript>';
 	}	
-	$out.= ' <input type="text" placeholder="Suchbegriff" name="search" id="search" value="'.$keyword.'"> ';
-	$out.='</select><input class="noprint" type="submit" value="'. __( 'search', 'pb-chartscodes' ).'" />';
+	$out .= '</select>';
+	// tag selector
+	$tags = get_tags($args);
+	$out .= '<select id="select-of-tags" name="tag" onchange="document.location.href=\''.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'view' => $view, 'tag' => '' ), $wp->request))).'=\' + this.options[this.selectedIndex].value;">';
+	$out .= '<option value="">Alle Themen</option>';
+	foreach ($tags as $tag) {
+		$out .= '<option value="'.$tag->slug.'"';
+		if ( $tagfilter == $tag->slug ) $out .= ' SELECTED ';
+		$out .= '>'.$tag->name.'</option>';
+	}
+	$out .= '</select> &nbsp;';
+	$out .= '<input type="text" placeholder="Suchbegriff" name="search" id="search" value="'.$keyword.'"> ';
+	$out .= '<input class="noprint" type="submit" value="'. __( 'search', 'pb-chartscodes' ).'" />';
 	$out .= '</form></div>';
 	$posts = get_posts( $post_args );
 	remove_filter( 'posts_where', 'my_filter_post_where' );

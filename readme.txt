@@ -2,8 +2,8 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.66
-Stable tag: 11.1.66
+Version: 11.1.68
+Stable tag: 11.1.68
 Requires at least: 5.1
 Tested up to: 5.9.3
 Requires PHP: 8.0
@@ -14,7 +14,7 @@ Webcounter, shortcodes for QRCodes, IP2Flag, post timeline, bar, line and Pie, D
 [carlogo] displays maufacturer logo for car brands
 [complogo] displays maufactorer logo for computer brands
 [qrcode] creates qrcodes, [ipflag] shows country name of visitor (IP shortened for GDPR) - visitor info browser and details optional
-[webcounter] shortcode to gather and display stats about visitors (ip shortened for GRPR compliance)
+[webcounter] shortcode to gather and admin-display stats about visitors (ip shortened for GRPR compliance)
 [wp-timeline] shortcodes shows posts in a timeline, paged, filters are category slug list, post type list
 Color palette for charts can be accentcolor with shares or random (colorful light colors) or given values
 
@@ -162,7 +162,7 @@ Use Shortcode: [carlogo brand="mercedes" scale="sm"]
 		      'brand' => '0unknown',  // Autohersteller
 to display logo and link to german webpage or car manufacturer
 
-=========================================== Carlogo Shortcode ===============================================
+=========================================== Computerbrand logo Shortcode ===============================================
 Use Shortcode: [complogo brand="lenovo" scale="sm"]
 
 		      'scale' => '',     		// sm = 32px  xs=21px
@@ -176,7 +176,8 @@ Output your WordPress posts or custom post types as a timeline with options.
 == Shortcode usage abnd defaults ==
 [wp-timeline]
 
-	'catname' => '',     		// insert slugs of all post types you want, sep by comma, empty for all types
+	'catname' => '',     		// insert category slugs of all post types you want, sep by comma, empty for all types
+	'tagname' => '',     		// insert tag slugs of all post types you want, sep by comma, empty for all types
 	'type' => 'post,wpdoodle',  // separate type slugs by comma
 	'items' => 1000,    	 	// Maximal 1000 Posts paginiert anzeigen
 	'perpage' => 20,     		// posts per page for pagination
@@ -187,6 +188,20 @@ Output your WordPress posts or custom post types as a timeline with options.
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.68 =
+webcounter shortcode - identify and count clicks on home page and list them in statistics
+theme (here: penguin mod) index.php must have the following code snippet at the end:
+
+	if (class_exists('PB_ChartsCodes')) {
+		if ( is_front_page() && is_home() ) do_shortcode('[webcounter]');
+	}
+	
+Integrate this snippet to other index.php and page-templates and create a webcounter page with the shortcode for use with other themes	
+
+= 11.1.67 =
+wp-timeline: Add url parameter, shortcode attr and dropdownlist to filter on tags added
+bugfixes on category select box: default value was -1 must be empty ""
 
 = 11.1.57-66 =
 Code optimizations, wp593 testing
