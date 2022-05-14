@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.68
-Stable tag: 11.1.68
+Version: 11.1.70
+Stable tag: 11.1.70
 Requires at least: 5.1
 Tested up to: 5.9.3
 Requires PHP: 8.0
@@ -569,26 +569,26 @@ function website_display_stats() {
 			$html .='<input type="text" size="20" title="filtern nach Browser, username, usertyp, Einzelbeitrag" placeholder="Suchfilter" id="suchfilter" name="suchfilter" value="'.$suchfilter.'">';
 			$html .= '</select><input type="submit" value="'.__('show items', 'pb-chartscodes').'" /></form></div>';
 
+			//	Klicks pro Tag auf Zeitraum
+			$labels="";$values='';$label2="";
+			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " WHERE 1=1 ".$sqlsuchfilter." GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $zeitraum);
+			$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h6><table>';
+			foreach($customers as $customer){
+				$datum = date_i18n(get_option('date_format'), strtotime($customer->datum) + get_option( 'gmt_offset' ) * 3600 );	
+				if ( count($customers)==1 )	$html .= '<tr><td>' . number_format_i18n($customer->viscount,0) . '</td><td>' . $datum . '</td></tr>';
+				$labels.= $datum .',';
+				$label2.= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2).',';
+				$values.= $customer->viscount.',';
+			}	
+			$labels = rtrim($labels, ",");
+			$label2 = rtrim($label2, ",");
+			$values = rtrim($values, ",");
+			$html .= do_shortcode('[chartscodes_line accentcolor=1 yaxis="Klicks pro Tag" xaxis="Datum rückwärts" values="'.$values.'" labels="'.$label2.'"]');
+			$html .= do_shortcode('[chartscodes_horizontal_bar absolute="1" accentcolor=1 values="'.$values.'" labels="'.$labels.'"]');
+			$html .= '</table>';
+
 			if ( empty($suchfilter) ) {
-
-				//	Klicks pro Tag auf Zeitraum
-				$labels="";$values='';$label2="";
-				$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $zeitraum);
-				$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h6><table>';
-				foreach($customers as $customer){
-					$datum = date_i18n(get_option('date_format'), strtotime($customer->datum) + get_option( 'gmt_offset' ) * 3600 );	
-					if ( count($customers)==1 )	$html .= '<tr><td>' . number_format_i18n($customer->viscount,0) . '</td><td>' . $datum . '</td></tr>';
-					$labels.= $datum .',';
-					$label2.= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2).',';
-					$values.= $customer->viscount.',';
-				}	
-				$labels = rtrim($labels, ",");
-				$label2 = rtrim($label2, ",");
-				$values = rtrim($values, ",");
-				$html .= do_shortcode('[chartscodes_line accentcolor=1 yaxis="Klicks pro Tag" xaxis="Datum rückwärts" values="'.$values.'" labels="'.$label2.'"]');
-				$html .= do_shortcode('[chartscodes_horizontal_bar absolute="1" accentcolor=1 values="'.$values.'" labels="'.$labels.'"]');
-				$html .= '</table>';
-
+				
 				//	Top x Seiten/Beiträge auf Zeitraum
 				$xsum=0;
 				$labels="";$values='';
@@ -634,6 +634,9 @@ function website_display_stats() {
 				if ($customer->postid == '-9999') {
 					$cptitle = '<i class="fa fa-home"></i> Homepage';
 					$cplink = get_site_url();
+				} else if ($customer->postid == '-1000') {
+					$cptitle = '<i class="fa fa-rss"></i> RSS Feed';
+					$cplink = get_site_url().'/feed';
 				} else {
 					$cptitle = get_the_title($customer->postid);
 					$cplink = get_the_permalink($customer->postid);
@@ -641,9 +644,8 @@ function website_display_stats() {
 				$html .= '<td>'. $this->get_flag(  (object) [ 'code' => $customer->country ] ).'</td>';
 				$html .= '<td><abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
 				$html .= '<td><abbr>' . $customer->userip .'</abbr></td><td><abbr>
-					<i style="cursor:pointer" 
-					onclick="document.location.href=\''. esc_url(home_url(add_query_arg(array('suchfilter' => $customer->postid, 'zeitraum' => $zeitraum, 'items' => $items ), $wp->request))).'\'"
-					title="filter:'. $customer->postid.'" class="fa fa-filter"><i> ';
+					<a onclick="document.location.href=\''. esc_url(home_url(add_query_arg(array('suchfilter' => $customer->postid, 'zeitraum' => $zeitraum, 'items' => $items ), $wp->request))).'\'"
+					title="filter:'. $customer->postid.'" class="fa fa-filter"></a> &nbsp; ';
 				$html .= ' <a title="Post aufrufen" href="'.$cplink.'">' . $cptitle .'</abbr></a></td>';
 				$html .= '<td><abbr>' . $datum . ' ' . ccago(strtotime($customer->datum)).'</abbr></td></tr>';
 			}	
@@ -766,6 +768,7 @@ function website_display_stats() {
 						$country = 'EUROPEANUNION';
 				// Wenn Homepage gezählt wird, Pageid als -9999 speichern
 				if ( is_front_page() && is_home() ) { $postid = -9999; } else {	$postid = get_the_ID(); }
+				if (is_feed() ) $postid = -1000;   // ID für Feeds geben
 				$datum = current_time( "mysql" );
 				$wpdb->insert(
 					$table,
