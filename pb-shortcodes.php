@@ -285,7 +285,7 @@ class PB_ChartsCodes_Shortcode {
 			list($r, $g, $b) = sscanf($colort, "#%02x%02x%02x");
 			$radcolor = "$r, $g, $b";
 			// Load radar js
-			//wp_enqueue_script( 'pb-chartscodes-radar-script', PB_ChartsCodes_URL_PATH . 'assets/js/radar2.js', array(), '1.9', true  );
+			//wp_enqueue_script( 'pb-chartscodes-radar-script', PB_ChartsCodes_URL_PATH . 'js/radar2.js', array(), '1.9', true  );
 			wp_enqueue_script( 'pb-chartscodes-radar' );
 			// pass values to radar
 			$radaris = '	jQuery(function($){
@@ -507,9 +507,9 @@ class PB_ChartsCodes_Shortcode {
 			'fontfamily' => $fontfamily,
 			);
 		// Load Charts QRCodes Barcodes line js
-		wp_enqueue_script( 'pb-chartscodes-line-script', PB_ChartsCodes_URL_PATH . 'assets/js/canvaschart.min.js', array(), '1.8', true  );
+		wp_enqueue_script( 'pb-chartscodes-line-script', PB_ChartsCodes_URL_PATH . 'js/canvaschart.min.js', array(), '1.8', true  );
 		// Load Charts QRCodes Barcodes custom line js
-		wp_register_script( 'pb-chartscodes-line-initialize', PB_ChartsCodes_URL_PATH . 'assets/js/line-initialize.js', array( 'jquery', 'pb-chartscodes-script' ) );
+		wp_register_script( 'pb-chartscodes-line-initialize', PB_ChartsCodes_URL_PATH . 'js/line-initialize.js', array( 'jquery', 'pb-chartscodes-script' ) );
 		// Fill data
 		wp_localize_script( 'pb-chartscodes-line-initialize', 'tp_pie_data_'.$id, $tp_pie_data );
 		// enqueue bar js
