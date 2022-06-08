@@ -180,6 +180,8 @@ position:relative;height:auto;margin:0 auto;max-width:100%;border-bottom:2px sol
 #timeline .middle { opacity:1 }
 }
 
+#timeline .middle { transition:none }
+
 #timeline ul {
 display:inline-block;
 list-style:none;

@@ -1444,8 +1444,7 @@ function display_timeline($args){
 	$posts = get_posts( $post_args );
 	remove_filter( 'posts_where', 'my_filter_post_where' );
 	if ( strpos($view, "timeline") !== false ) {	
-		$out .=  '<div id="timeline">';
-		$out .=   '<ul>';
+		$out .=  '<div id="timeline"><ul>';
 		$prevdate = '';
 		$ctr = 1;
 		foreach ( $posts as $post ) : setup_postdata($post);
@@ -1463,19 +1462,21 @@ function display_timeline($args){
 				$first_img='<img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIiA/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgd2lkdGg9IjcwMCIgaGVpZ2h0PSIyNTAiIHZpZXdCb3g9IjAgMCA3MDAgMjUwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGcgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAzNTAgMTI1KSIgaWQ9ImYyNjNiZTI5LWUwZmYtNDJlYS1hNzEyLWU5NTBiNzM2NzIyMCIgID4KPHJlY3Qgc3R5bGU9InN0cm9rZTogbm9uZTsgc3Ryb2tlLXdpZHRoOiAxOyBzdHJva2UtZGFzaGFycmF5OiBub25lOyBzdHJva2UtbGluZWNhcDogYnV0dDsgc3Ryb2tlLWRhc2hvZmZzZXQ6IDA7IHN0cm9rZS1saW5lam9pbjogbWl0ZXI7IHN0cm9rZS1taXRlcmxpbWl0OiA0OyBmaWxsOiByZ2IoNDQsNDQsNDQpOyBmaWxsLW9wYWNpdHk6IDAuNzQ7IGZpbGwtcnVsZTogbm9uemVybzsgb3BhY2l0eTogMTsiIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSIgIHg9Ii0zNTAiIHk9Ii0xMjUiIHJ4PSIwIiByeT0iMCIgd2lkdGg9IjcwMCIgaGVpZ2h0PSIyNTAiIC8+CjwvZz4KPGcgdHJhbnNmb3JtPSJtYXRyaXgoSW5maW5pdHkgTmFOIE5hTiBJbmZpbml0eSAwIDApIiBpZD0iMDBiYmNmMjYtZGJjZi00NTc5LTk2YzktNTFiNWVkYTA0ODRlIiAgPgo8L2c+Cjwvc3ZnPg==">';
 				$category = get_the_category($post->ID);
 				$output = preg_match_all('/<img.+src=[\'"]([^\'"]+)[\'"].*>/i', get_the_content(), $matches);
-				if ($output) { $first_img = '<img src="'. $matches[1][0] . '">'; } else { 
+				if ($output) { $first_img = '<img style="filter:brightness(75%);" src="'. $matches[1][0] . '">'; } else { 
 					if ( has_post_thumbnail() == false ) {
 						if ( class_exists('ZCategoriesImages') && !empty($category) && z_taxonomy_image_url($category[0]->term_id) != NULL ) {
 							$cbild = z_taxonomy_image_url($category[0]->term_id);
-							$first_img = '<img src="' . $cbild . '">';	
+							$first_img = '<img title="Kategoriebild" src="' . $cbild . '">';	
 						} 
 					} else {
 						$cbild = get_the_post_thumbnail_url();
-						$first_img = '<img src="' . $cbild . '">';	
+						$first_img = '<img title="Beitragsbild" src="' . $cbild . '">';	
 					}
 				}
-				$out .= '<a style="text-shadow:1px 1px 1px #000" href="' . get_permalink($post->ID) . '">'.$first_img.'<div class="middle" style="line-height:1.2em;width:calc(100% - 35px);top:45%">#'.$ctr.' <p style="color:#fff;font-size:0.8em">'.$xexcerpt.'</p> '.__( "Continue reading", "pb-chartscodes" ).' &raquo;</div></a>';
 			}	
+			$out .= '<a style="text-shadow:1px 1px 1px #000" href="' . get_permalink($post->ID) . '">'.$first_img;
+			$out .= '<div class="middle" style="line-height:1.2em;width:calc(100% - 35px);top:45%"><p style="color:#fff;font-size:0.8em">';
+			$out .= $xexcerpt.'</p> #'.$ctr.' '.__( "Continue reading", "pb-chartscodes" ).' &raquo;</div></a>';
 			$out .=  '<div class="timeline-title"><nobr><a style="font-size:1.2em" href="' . get_permalink($post->ID) . '" title="'.$post->title.'">';
 			$out .=  ' '.$cuttext. '</a></nobr></div>';
 			$out .= '<div class="timeline-text">';
@@ -1508,25 +1509,27 @@ function display_timeline($args){
 			} else {
 				$out.= '<span title="' . $erstelltitle . '">' . get_post_time(get_option('date_format').' '.get_option('time_format'), false, $post->ID, true) . ' ' . $postago . '</span>';
 			}
+			$out .='<div class="greybox">';
 			if (empty($catfilter) || $catfilter == -1) {
-				$out .='<br>';
-				$categories_list = get_the_category_list(esc_html__(', ', 'penguin'));
-				if ($categories_list) {
+				$categories = get_the_category($post->ID)[0];
+				if ($categories) {
 					$out .= '<i title="' . esc_html('Categories icon', 'penguin') . '" class="fa fa-folder-open"></i> ';
-					$out .= '<abbr>' . $categories_list . '</abbr>';
+					$out .= '<a href="'.get_category_link($categories->cat_ID).'">'.$categories->cat_name.'</a>';
 				}
+			$out .=' &nbsp; ';
 			}	
-			$tags_list = get_the_tag_list('', esc_html_x(', ', 'list item separator', 'penguin'));
+			$tags_list = wp_get_post_tags($post->ID);
 			if ($tags_list) {
-				$out .= ' &nbsp; <i title="' . esc_html('Tags icon', 'penguin') . '" class="fa fa-tag"></i> ';
-				$out .= '<abbr>' . $tags_list . '</abbr>';
+				$out .= '<i title="' . esc_html('Tag icon', 'penguin') . '" class="fa fa-tag"></i> ';
+				foreach ( $tags_list as $tag ) {
+					$out .= '<a href="'.get_tag_link($tag->term_ID).'">'.$tag->name.'</a> ';
+				}	
 			}
-			$out .=  '</div></div></div></li>';
+			$out .=  '</div></div></div></div></li>';
 			$prevdate = get_the_time( 'U', $post->ID );
 			$ctr++;
 		endforeach;
-		$out .=  '</ul>';
-		$out .=  '</div> <!-- #timeline -->';
+		$out .=  '</ul></div> <!-- #timeline -->';
 	}	
 	if ( strpos($view, "calendar") !== false ) {
 		/// Cal Aufruf
