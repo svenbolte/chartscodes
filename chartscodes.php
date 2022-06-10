@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.71
-Stable tag: 11.1.71
+Version: 11.1.72
+Stable tag: 11.1.72
 Requires at least: 5.1
 Tested up to: 6.0
 Requires PHP: 8.0
@@ -1375,11 +1375,17 @@ function display_timeline($args){
 	if (isset($_GET['view'])) { $view = esc_html($_GET['view']); } else $view = $args['view'];
 	$out = '';
 	// Kategorie-Filter von Hand
+	if (function_exists('is_woocommerce')) {
+		$cattax = array('product_cat','category');
+	} else {
+		$cattax = 'category';
+	}
 	$cargs = array(
 		'option_none_value' => '',
 		'show_option_none' => __( 'all', 'pb-chartscodes' ),
 		'show_count'       => 1,
 		'orderby'          => 'name',
+		'taxonomy' => $cattax,
 		'selected' => $catfilter,
 		'echo'             => 0,
 	);
@@ -1387,29 +1393,53 @@ function display_timeline($args){
 	$replace = "<select$1  style=\"max-width:200px\" onchange='return this.form.submit()'>";
 	$select  = preg_replace( '#<select([^>]*)>#', $replace, $select );
 	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-	$post_args = array(
-		'suppress_filters' => false, // important!
-		'post_type' => explode( ',', $args['type'] ),
-		'numberposts' => $args['items'],
-		'posts_per_page' => $args['perpage'],
-		'paged' => $paged,
-		'page' => $paged,
-		'category_name' => $args['catname'],
-		'category' =>  $catfilter,
-		'tag' => $tagfilter, 
-		'orderby' => 'modified',
-		'order' => 'DESC',
-		'post_status' => 'publish',
-	);
-	$tpostarg = array(
-		'suppress_filters' => false, // important!
-		'numberposts' => -1,
-		'post_type' => explode( ',', $args['type'] ),
-		'category_name' => $args['catname'],
-		'tag' => $tagfilter,
-		'category' =>  $catfilter,
-		'post_status' => 'publish',
-	);
+	if ( empty($catfilter) || $catfilter == -1 ) {
+		$post_args = array(
+			'suppress_filters' => false, // important!
+			'post_type' => explode( ',', $args['type'] ),
+			'numberposts' => $args['items'],
+			'posts_per_page' => $args['perpage'],
+			'paged' => $paged,
+			'page' => $paged,
+			'category_name' => $args['catname'],
+			'category' =>  $catfilter,
+			'tag' => $tagfilter,
+			'orderby' => 'modified',
+			'order' => 'DESC',
+			'post_status' => 'publish',
+		);
+		$tpostarg = array(
+			'suppress_filters' => false, // important!
+			'numberposts' => -1,
+			'post_type' => explode( ',', $args['type'] ),
+			'category_name' => $args['catname'],
+			'category' =>  $catfilter,
+			'tag' => $tagfilter,
+			'post_status' => 'publish',
+		);
+	} else {
+		$post_args = array(
+			'suppress_filters' => false, // important!
+			'post_type' => explode( ',', $args['type'] ),
+			'numberposts' => $args['items'],
+			'posts_per_page' => $args['perpage'],
+			'paged' => $paged,
+			'page' => $paged,
+			'tax_query' => array('relation' => 'OR', array(	'taxonomy' => 'category','field' => 'term_id','terms' => $catfilter ),array('taxonomy' => 'product_cat', 'field' => 'term_id', 'terms' => $catfilter ) ),
+			'tag' => $tagfilter,
+			'orderby' => 'modified',
+			'order' => 'DESC',
+			'post_status' => 'publish',
+		);
+		$tpostarg = array(
+			'suppress_filters' => false, // important!
+			'numberposts' => -1,
+			'post_type' => explode( ',', $args['type'] ),
+			'tax_query' => array('relation' => 'OR', array(	'taxonomy' => 'category','field' => 'term_id','terms' => $catfilter ),array('taxonomy' => 'product_cat', 'field' => 'term_id', 'terms' => $catfilter ) ),
+			'tag' => $tagfilter,
+			'post_status' => 'publish',
+		);
+	}
 	add_filter( 'posts_where', 'my_filter_post_where' );
 	$tpostcount = count(get_posts( $tpostarg ));
 	if ( $tpostcount > intval($args['items']) ) $tpostcount = intval($args['items']);
@@ -1457,6 +1487,7 @@ function display_timeline($args){
 			if (strlen($cuttext) > 42) { $cuttext=substr(get_the_title($post->ID), 0, 27) . '&mldr;' . substr(get_the_title($post->ID), -15);	}	
 			$out .=  '<div class="timeline-image post-thumbnail">';
 			if ( has_post_thumbnail( $post->ID ) ) {
+				$first_img='';
 				$out .=  get_the_post_thumbnail( $post->ID, 'large' );
 			} else {
 				$first_img='<img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIiA/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHZlcnNpb249IjEuMSIgd2lkdGg9IjcwMCIgaGVpZ2h0PSIyNTAiIHZpZXdCb3g9IjAgMCA3MDAgMjUwIiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPGcgdHJhbnNmb3JtPSJtYXRyaXgoMSAwIDAgMSAzNTAgMTI1KSIgaWQ9ImYyNjNiZTI5LWUwZmYtNDJlYS1hNzEyLWU5NTBiNzM2NzIyMCIgID4KPHJlY3Qgc3R5bGU9InN0cm9rZTogbm9uZTsgc3Ryb2tlLXdpZHRoOiAxOyBzdHJva2UtZGFzaGFycmF5OiBub25lOyBzdHJva2UtbGluZWNhcDogYnV0dDsgc3Ryb2tlLWRhc2hvZmZzZXQ6IDA7IHN0cm9rZS1saW5lam9pbjogbWl0ZXI7IHN0cm9rZS1taXRlcmxpbWl0OiA0OyBmaWxsOiByZ2IoNDQsNDQsNDQpOyBmaWxsLW9wYWNpdHk6IDAuNzQ7IGZpbGwtcnVsZTogbm9uemVybzsgb3BhY2l0eTogMTsiIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSIgIHg9Ii0zNTAiIHk9Ii0xMjUiIHJ4PSIwIiByeT0iMCIgd2lkdGg9IjcwMCIgaGVpZ2h0PSIyNTAiIC8+CjwvZz4KPGcgdHJhbnNmb3JtPSJtYXRyaXgoSW5maW5pdHkgTmFOIE5hTiBJbmZpbml0eSAwIDApIiBpZD0iMDBiYmNmMjYtZGJjZi00NTc5LTk2YzktNTFiNWVkYTA0ODRlIiAgPgo8L2c+Cjwvc3ZnPg==">';
@@ -1475,7 +1506,7 @@ function display_timeline($args){
 				}
 			}	
 			$out .= '<a style="text-shadow:1px 1px 1px #000" href="' . get_permalink($post->ID) . '">'.$first_img;
-			$out .= '<div class="middle" style="line-height:1.2em;width:calc(100% - 35px);top:45%"><p style="color:#fff;font-size:0.8em">';
+			$out .= '<div class="tmiddle"><p style="color:#fff;font-size:0.8em">';
 			$out .= $xexcerpt.'</p> #'.$ctr.' '.__( "Continue reading", "pb-chartscodes" ).' &raquo;</div></a>';
 			$out .=  '<div class="timeline-title"><nobr><a style="font-size:1.2em" href="' . get_permalink($post->ID) . '" title="'.$post->title.'">';
 			$out .=  ' '.$cuttext. '</a></nobr></div>';
@@ -1509,20 +1540,52 @@ function display_timeline($args){
 			} else {
 				$out.= '<span title="' . $erstelltitle . '">' . get_post_time(get_option('date_format').' '.get_option('time_format'), false, $post->ID, true) . ' ' . $postago . '</span>';
 			}
-			$out .='<div class="greybox">';
+			$out .='<div class="greybox">';  // Kategorien auch von CPTs anzeigen
+			$quizkat = '';
+			$terms = get_the_terms($post->ID, 'quizcategory'); // Get all terms of questions
+			if ($terms && !is_wp_error($terms)) {
+				foreach ($terms as $term) {
+					$quizkat.= '<i class="fa fa-folder-open"></i> <a href="' . get_term_link($term) . '">' . $term->name . '</a> &nbsp; ';
+				}
+			}
+			$out .= $quizkat;
+			$ddlkat = '';
+			$terms = get_the_terms($post->ID, 'ddownload_category'); // Get all terms of downloads
+			if ($terms && !is_wp_error($terms)) {
+				foreach ($terms as $term) {
+					$ddlkat.= '<i class="fa fa-folder-open"></i> <a href="' . get_term_link($term) . '">' . $term->name . '</a> &nbsp; ';
+				}
+			}
+			$out .= $ddlkat;
+			$ddltag = '';
+			$terms = get_the_terms($post->ID, 'ddownload_tag'); // Get all tags of downloads
+			if ($terms && !is_wp_error($terms)) {
+				foreach ($terms as $term) {
+					$ddltag.= '<i class="fa fa-tag"></i> <a href="' . get_term_link($term) . '">' . $term->name . '</a> &nbsp; ';
+				}
+			}
+			$out .= $ddltag;
+			if (function_exists('is_woocommerce')) {
+				$terms = get_the_terms($post->ID, 'product_cat'); // Woocommerce produktkategorien
+				if ($terms) {
+					$termlink = get_term_link($terms[0]->term_id);
+					$out .= '<i title="' . esc_html('Categories icon', 'pb-chartscodes') . '" class="fa fa-folder-open"></i> ';
+					$out .= '<a href="' . $termlink . '">' . $terms[0]->name . '</a>';
+				}
+			}
 			if (empty($catfilter) || $catfilter == -1) {
-				$categories = get_the_category($post->ID)[0];
-				if ($categories) {
-					$out .= '<i title="' . esc_html('Categories icon', 'penguin') . '" class="fa fa-folder-open"></i> ';
-					$out .= '<a href="'.get_category_link($categories->cat_ID).'">'.$categories->cat_name.'</a>';
+				$categories = get_the_category($post->ID);
+				if (!empty($categories)) {
+					$out .= '<i title="' . esc_html('Categories icon', 'pb-chartscodes') . '" class="fa fa-folder-open"></i> ';
+					$out .= '<a href="'.get_category_link($categories[0]->cat_ID).'">'.$categories[0]->cat_name.'</a>';
 				}
 			$out .=' &nbsp; ';
 			}	
-			$tags_list = wp_get_post_tags($post->ID);
+			$tags_list = get_the_tags($post->ID);
 			if ($tags_list) {
-				$out .= '<i title="' . esc_html('Tag icon', 'penguin') . '" class="fa fa-tag"></i> ';
+				$out .= '<i title="' . esc_html('Tag icon', 'pb-chartscodes') . '" class="fa fa-tag"></i> ';
 				foreach ( $tags_list as $tag ) {
-					$out .= '<a href="'.get_tag_link($tag->term_ID).'">'.$tag->name.'</a> ';
+					$out .= '<a href="'.get_tag_link($tag->term_id).'">'.$tag->name.'</a> ';
 				}	
 			}
 			$out .=  '</div></div></div></div></li>';

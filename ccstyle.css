@@ -180,7 +180,25 @@ position:relative;height:auto;margin:0 auto;max-width:100%;border-bottom:2px sol
 #timeline .middle { opacity:1 }
 }
 
-#timeline .middle { transition:none }
+.post-thumbnail:hover img {
+opacity:.7
+}
+
+#timeline .tmiddle:hover {
+opacity:1
+}
+
+#timeline .tmiddle {
+top:40px;
+width:calc(100% - 20px);
+height:190px;
+color:#fff;
+opacity:.1;
+font-size:1.3em;
+position:absolute;
+text-align:center;
+text-shadow:1px 1px 1px #000
+}
 
 #timeline ul {
 display:inline-block;
@@ -198,8 +216,7 @@ width:50%
 }
 
 #timeline ul li .timeline-text {
-backdrop-filter:blur(8px);
-background-color:#ffffffcc;
+background-color:#ffffffdd;
 border-radius:3px;
 float:left;
 height:38px;
@@ -214,8 +231,7 @@ width:calc(100% - 20px);
 }
 
 #timeline .timeline-title {
-backdrop-filter:blur(8px);
-background-color:#ffffffcc;
+background-color:#ffffffdd;
 display:block;
 left:auto;
 margin-right:8px;
