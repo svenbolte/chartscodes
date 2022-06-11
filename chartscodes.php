@@ -1294,68 +1294,72 @@ function timeline_shortcode($atts){
 add_shortcode('wp-timeline', 'timeline_shortcode');
 
 // Calendar display month - draws a calendar for the timeline
-function timeline_calendar( $month,$year,$eventarray ) {
-	setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
-	$calheader = date('Y-m-d',mktime(2,0,0,$month,1,$year));
-	$running_day = date('w',mktime(2,0,0,$month,1,$year));
-	if ( $running_day == 0 ) { $running_day = 7; }
-	$days_in_month = date('t',mktime(2,0,0,$month,1,$year));
-	$days_in_this_week = 1;
-	$day_counter = 0;
-	$dates_array = array();
-	$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(2,0,0,$month,1,$year) ) . '</th></thead>';
-	$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
-	$calendar.= '<tr><td style="font-weight:700;text-align:center">'.implode('</td><td style="font-weight:700;padding:2px;text-align:center">',$headings).'</td></tr>';
-	/* row for week one */
-	$calendar.= '<tr style="padding:2px">';
-	/* print "blank" days until the first of the current week */
-	for($x = 1; $x < $running_day; $x++):
-		$calendar.= '<td style="text-align:center;padding:2px;background:rgba(222,222,222,0.1);"></td>';
-		$days_in_this_week++;
-	endfor;
-	/* keep going with days.... */
-	for($list_day = 1; $list_day <= $days_in_month; $list_day++):
-		$calendar.= '<td style="padding:2px;text-align:center;vertical-align:top">';
-		/* add in the day number */
-		$running_week = date('W',mktime(2,0,0,$month,$list_day,$year));
-		$calendar.= '<div>'.$list_day.'</div>';
-		/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
-		foreach ($eventarray as $calevent) {
-			if ( substr(get_the_time('Ymd', $calevent->ID),0,8) == date('Ymd',mktime(2,0,0,$month,$list_day,$year)) ) {
-				$calendar .= '<span style="word-break:break-all;font-size:12px"><a href="' . get_permalink($calevent->ID) . '" title="'.$calevent->title.'">' . get_the_title( $calevent->ID ) . '</a></span> <br> ';
-			}
-		}	
-		$calendar.= '</td>';
-		if($running_day == 7):
-			$calendar.= '<td style="text-align:center;font-size:0.9em;padding:2px">'.$running_week.'</td></tr>';
-			if(($day_counter+1) != $days_in_month):
-				$calendar.= '<tr>';
-			endif;
-			$running_day = 0;
-			$days_in_this_week = 0;
-		endif;
-		$days_in_this_week++; $running_day++; $day_counter++;
-	endfor;
-	/* finish the rest of the days in the week */
-	if($days_in_this_week < 8 && $days_in_this_week > 1):
-		for($x = 1; $x <= (8 - $days_in_this_week); $x++):
-			$calendar.= '<td style="text-align:center;padding:2px"></td>';
+if( !function_exists('timeline_calendar')) {
+	function timeline_calendar( $month,$year,$eventarray ) {
+		setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
+		$calheader = date('Y-m-d',mktime(2,0,0,$month,1,$year));
+		$running_day = date('w',mktime(2,0,0,$month,1,$year));
+		if ( $running_day == 0 ) { $running_day = 7; }
+		$days_in_month = date('t',mktime(2,0,0,$month,1,$year));
+		$days_in_this_week = 1;
+		$day_counter = 0;
+		$dates_array = array();
+		$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(2,0,0,$month,1,$year) ) . '</th></thead>';
+		$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
+		$calendar.= '<tr><td style="font-weight:700;text-align:center">'.implode('</td><td style="font-weight:700;padding:2px;text-align:center">',$headings).'</td></tr>';
+		/* row for week one */
+		$calendar.= '<tr style="padding:2px">';
+		/* print "blank" days until the first of the current week */
+		for($x = 1; $x < $running_day; $x++):
+			$calendar.= '<td style="text-align:center;padding:2px;background:rgba(222,222,222,0.1);"></td>';
+			$days_in_this_week++;
 		endfor;
-	$calendar.= '<td style="text-align:center;font-size:0.9em;padding:2px">'.$running_week.'</td></tr>';
-	endif;
-	$calendar.= '</table>';
-	return $calendar;
+		/* keep going with days.... */
+		for($list_day = 1; $list_day <= $days_in_month; $list_day++):
+			$calendar.= '<td style="padding:2px;text-align:center;vertical-align:top">';
+			/* add in the day number */
+			$running_week = date('W',mktime(2,0,0,$month,$list_day,$year));
+			$calendar.= '<div>'.$list_day.'</div>';
+			/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
+			foreach ($eventarray as $calevent) {
+				if ( substr(get_the_time('Ymd', $calevent->ID),0,8) == date('Ymd',mktime(2,0,0,$month,$list_day,$year)) ) {
+					$calendar .= '<span style="word-break:break-all;font-size:12px"><a href="' . get_permalink($calevent->ID) . '" title="'.$calevent->title.'">' . get_the_title( $calevent->ID ) . '</a></span> <br> ';
+				}
+			}	
+			$calendar.= '</td>';
+			if($running_day == 7):
+				$calendar.= '<td style="text-align:center;font-size:0.9em;padding:2px">'.$running_week.'</td></tr>';
+				if(($day_counter+1) != $days_in_month):
+					$calendar.= '<tr>';
+				endif;
+				$running_day = 0;
+				$days_in_this_week = 0;
+			endif;
+			$days_in_this_week++; $running_day++; $day_counter++;
+		endfor;
+		/* finish the rest of the days in the week */
+		if($days_in_this_week < 8 && $days_in_this_week > 1):
+			for($x = 1; $x <= (8 - $days_in_this_week); $x++):
+				$calendar.= '<td style="text-align:center;padding:2px"></td>';
+			endfor;
+		$calendar.= '<td style="text-align:center;font-size:0.9em;padding:2px">'.$running_week.'</td></tr>';
+		endif;
+		$calendar.= '</table>';
+		return $calendar;
+	}
 }
 
 // Differenz zwischen 2 Beiträgen
-function german_time_diff( $from, $to ) {
-    $diff = human_time_diff($from,$to);
-    $replace = array(
-        'Tagen'  => 'Tage',
-        'Monaten' => 'Monate',
-        'Jahren'   => 'Jahre',
-    );
-    return ' <i title="älter als voriger Beitrag" class="fa fa-arrows-h"></i> ' . strtr($diff,$replace);
+if( !function_exists('german_time_diff')) {
+	function german_time_diff( $from, $to ) {
+		$diff = human_time_diff($from,$to);
+		$replace = array(
+			'Tagen'  => 'Tage',
+			'Monaten' => 'Monate',
+			'Jahren'   => 'Jahre',
+		);
+		return ' <i title="älter als voriger Beitrag" class="fa fa-arrows-h"></i> ' . strtr($diff,$replace);
+	}
 }
 
 // Search filter
