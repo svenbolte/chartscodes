@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.72
-Stable tag: 11.1.72
+Version: 11.1.73
+Stable tag: 11.1.73
 Requires at least: 5.1
 Tested up to: 6.0
 Requires PHP: 8.0
@@ -1293,7 +1293,7 @@ function timeline_shortcode($atts){
  }
 add_shortcode('wp-timeline', 'timeline_shortcode');
 
-// Calendar display month - draws a calendar for the timeline
+// Calendar display month - draws a calendar for the timeline and search and crchive pages view
 if( !function_exists('timeline_calendar')) {
 	function timeline_calendar( $month,$year,$eventarray ) {
 		setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
@@ -1307,23 +1307,18 @@ if( !function_exists('timeline_calendar')) {
 		$calendar = '<table><thead><th style="text-align:center" colspan=8>' . date_i18n('F Y', mktime(2,0,0,$month,1,$year) ) . '</th></thead>';
 		$headings = array('MO','DI','MI','DO','FR','SA','SO','Kw');
 		$calendar.= '<tr><td style="font-weight:700;text-align:center">'.implode('</td><td style="font-weight:700;padding:2px;text-align:center">',$headings).'</td></tr>';
-		/* row for week one */
 		$calendar.= '<tr style="padding:2px">';
-		/* print "blank" days until the first of the current week */
 		for($x = 1; $x < $running_day; $x++):
 			$calendar.= '<td style="text-align:center;padding:2px;background:rgba(222,222,222,0.1);"></td>';
 			$days_in_this_week++;
 		endfor;
-		/* keep going with days.... */
 		for($list_day = 1; $list_day <= $days_in_month; $list_day++):
-			$calendar.= '<td style="padding:2px;text-align:center;vertical-align:top">';
-			/* add in the day number */
+			$calendar.= '<td style="padding:2px;text-align:center;vertical-align:top"">';
 			$running_week = date('W',mktime(2,0,0,$month,$list_day,$year));
 			$calendar.= '<div>'.$list_day.'</div>';
-			/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
-			foreach ($eventarray as $calevent) {
+			foreach ($eventarray as $calevent) {  // Database query to get dates and events as 3D Array
 				if ( substr(get_the_time('Ymd', $calevent->ID),0,8) == date('Ymd',mktime(2,0,0,$month,$list_day,$year)) ) {
-					$calendar .= '<span style="word-break:break-all;font-size:12px"><a href="' . get_permalink($calevent->ID) . '" title="'.$calevent->title.'">' . get_the_title( $calevent->ID ) . '</a></span> <br> ';
+					$calendar .= '<a style="word-break:break-all;font-size:0.8em" href="' . get_permalink($calevent->ID) . '" title="'.$calevent->title.'">' . get_the_title( $calevent->ID ) . '</a><br>';
 				}
 			}	
 			$calendar.= '</td>';
@@ -1337,7 +1332,6 @@ if( !function_exists('timeline_calendar')) {
 			endif;
 			$days_in_this_week++; $running_day++; $day_counter++;
 		endfor;
-		/* finish the rest of the days in the week */
 		if($days_in_this_week < 8 && $days_in_this_week > 1):
 			for($x = 1; $x <= (8 - $days_in_this_week); $x++):
 				$calendar.= '<td style="text-align:center;padding:2px"></td>';
@@ -1449,12 +1443,12 @@ function display_timeline($args){
 	if ( $tpostcount > intval($args['items']) ) $tpostcount = intval($args['items']);
 	$unpagedurl = preg_replace('/page(\/)*([0-9\/])*/i', '', home_url( $wp->request ));
 	$out .= '<div style="padding:8px"><form action="'.$unpagedurl.'" name="finder" method="get">';
-	if ( $view == 'timeline' ) {
-		$out .= '<a title="'.__('display as calendar','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'tag' => $tagfilter, 'view' => 'calendar' ), $wp->request))).'"><i class="fa fa-calendar"></i></a> &nbsp; ';	
-	} else if ( $view == 'calendar' ) {
-		$out .= '<a title="'.__('display as tiles and calendar','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'tag' => $tagfilter,  'view' => 'timeline,calendar' ), $wp->request))).'"><i class="fa fa-th-large"></i>+<i class="fa fa-calendar"></i></a> &nbsp; ';	
+	if ( $view == 'calendar' ) {
+		$out .= '<a title="'.strtoupper($view).': '.__('display as tiles','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'tag' => $tagfilter, 'view' => 'timeline' ), $wp->request))).'"><i class="fa fa-th-large"></i></a> &nbsp; ';
+	} else 	if ( $view == 'timeline' ) {
+		$out .= '<a title="'.strtoupper($view).': '.__('display as tiles and calendar','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'tag' => $tagfilter,  'view' => 'timeline,calendar' ), $wp->request))).'"><i class="fa fa-th-large"></i>+<i class="fa fa-calendar"></i></a> &nbsp; ';	
 	} else if ( $view == 'timeline,calendar' ) {
-		$out .= '<a title="'.__('display as tiles','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'tag' => $tagfilter, 'view' => 'timeline' ), $wp->request))).'"><i class="fa fa-th-large"></i></a> &nbsp; ';	
+		$out .= '<a title="'.strtoupper($view).': '.__('display as calendar','pb-chartscodes').'" href="'.esc_url(home_url(add_query_arg(array('search' => $keyword, 'cat' => $catfilter, 'tag' => $tagfilter, 'view' => 'calendar' ), $wp->request))).'"><i class="fa fa-calendar"></i></a> &nbsp; ';
 	}
 	$out .= '<strong>'.$tpostcount.'</strong> '.__('hits','pb-chartscodes').' &nbsp; ';
 	if (empty($args['catname'])) {
