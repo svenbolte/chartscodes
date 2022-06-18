@@ -480,30 +480,44 @@ function website_display_stats() {
     global $wpdb;
     $wsstats = '<div class="wrap"><strong>Website-Fakten</strong> ';
     $totalposts = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'post' AND post_status = 'publish'");
-    $wsstats .= '&nbsp; Beiträge: <b>'. number_format_i18n($totalposts,0).'</b>';
-	if ( current_theme_supports( 'post-formats' ) ) {
-		$post_formats = get_theme_support( 'post-formats' );
-		if ( is_array( $post_formats[0] ) ) {
-			foreach ($post_formats[0] as $pf) {
-				$args = array( 'post_type'=> 'post', 'post_status' => 'publish', 'order' => 'DESC', 'tax_query' => array(
-						array( 'taxonomy' => 'post_format','field' => 'slug', 'terms' => array( 'post-format-'.$pf ) ) ) );
-				$asides = get_posts( $args );
-				$wsstats .= '&nbsp; <a href="'.get_site_url().'/type/'.$pf.'">'.get_post_format_string($pf).'</a>: '. count($asides);
-			} 
+    $wsstats .= '&nbsp; Beiträge <span title="Total" class="newlabel white">'. number_format_i18n($totalposts,0).'</span>';
+    $totalpages = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'page' AND post_status = 'publish'");
+    $wsstats .= ' &nbsp; Seiten <span title="Total" class="newlabel white">'. $totalpages.'</span>';
+    $totalauthors = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->users LEFT JOIN $wpdb->usermeta ON $wpdb->usermeta.user_id = $wpdb->users.ID WHERE $wpdb->users.user_activation_key = '' AND $wpdb->usermeta.meta_key = '".$wpdb->prefix."user_level' AND (meta_value+0.00) > 1");
+    $wsstats .= ' &nbsp; Autoren <span title="Total" class="newlabel white">'. $totalauthors.'</span>';
+	$args = array(  'public'   => true,  '_builtin' => false );
+	$output = 'names'; // 'names' or 'objects' (default: 'names')
+	$operator = 'and'; // 'and' or 'or' (default: 'and')
+	$post_types = get_post_types( $args, $output, $operator );
+	$wsstats .= ' &nbsp; ' . __('custom post types','penguin') . ': ';
+	if ( $post_types ) { // If there are any custom public post types.
+		foreach ( $post_types  as $post_type ) {
+			$post30days = get_days_ago_post_count_by_categories('',$post_type);
+			if ( $post30days > 0 ) {
+				$count30 = '<span title="NEU 30 T" class="newlabel yellow">'.$post30days.'</span>';
+			} else $count30 = '';
+			$count_posts = wp_count_posts( $post_type )->publish;
+			$gpot = $post_type;
+			if ($post_type == 'w4pl') $gpot = 'list';
+			if ($post_type == 'product') $gpot = 'shop';
+			if ($post_type == 'dedo_download') $gpot = 'downloads';
+			$wsstats .= ' &nbsp; <a href="'.esc_url(site_url().'/'.$gpot).'">' . strtoupper($gpot) . '</a> <span title="Total" class="newlabel white">'.$count_posts.'</span> '.$count30.'';
+		}
+		// Post-Formate
+		if ( current_theme_supports( 'post-formats' ) ) {
+			$post_formats = get_theme_support( 'post-formats' );
+			if ( is_array( $post_formats[0] ) ) {
+				foreach ($post_formats[0] as $pf) {
+					$args = array( 'post_type'=> 'post', 'post_status' => 'publish', 'order' => 'DESC', 'tax_query' => array(
+							array( 'taxonomy' => 'post_format','field' => 'slug', 'terms' => array( 'post-format-'.$pf ) ) ) );
+					$asides = get_posts( $args );
+					$wsstats .= ' &nbsp; <a href="'.get_site_url().'/type/'.$pf.'">'.get_post_format_string($pf).'</a> <span title="Total" class="newlabel white"> '. count($asides) . '</span>';
+				} 
+			}
 		}
 	}
-    $totaldoodle = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'wpdoodle' AND post_status = 'publish'");
-    $wsstats .= '&nbsp; <a href="'.get_site_url().'/wpdoodle/">Termine/Umfragen:</a> '. $totaldoodle;
-    $totalw4pl = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'w4pl' AND post_status = 'publish'");
-    $wsstats .= '&nbsp; <a href="'.get_site_url().'/list/">Listen:</a> '. $totalw4pl;
-    $totaldown = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'dedo_download' AND post_status = 'publish'");
-    $wsstats .= '&nbsp; Downloads: '. $totaldown;
-    $totalpages = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'page' AND post_status = 'publish'");
-    $wsstats .= '&nbsp; Seiten: '. $totalpages;
-    $totalauthors = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->users LEFT JOIN $wpdb->usermeta ON $wpdb->usermeta.user_id = $wpdb->users.ID WHERE $wpdb->users.user_activation_key = '' AND $wpdb->usermeta.meta_key = '".$wpdb->prefix."user_level' AND (meta_value+0.00) > 1");
-    $wsstats .= '&nbsp; Autoren: '. $totalauthors;
-    $totalcomments = (int) $wpdb->get_var("SELECT COUNT(comment_ID) FROM $wpdb->comments WHERE comment_approved = '1'");
-    $wsstats .= '&nbsp; Kommentare: '. $totalcomments;
+	$totalcomments = (int) $wpdb->get_var("SELECT COUNT(comment_ID) FROM $wpdb->comments WHERE comment_approved = '1'");
+	$wsstats .= ' &nbsp; <a href="'.get_site_url().'/alle-kommentare/"><i class="fa fa-comments"></i> Kommentare</a> <span title="Total" class="newlabel white">'. $totalcomments. '</span>';
     $wsstats .= '</div><br>';
 	return $wsstats;
 }
@@ -595,13 +609,15 @@ function website_display_stats() {
 				$customers = $wpdb->get_results("SELECT postid, COUNT(*) AS pidcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY postid ORDER BY pidcount desc LIMIT ".$items );
 				$html .='<h6>'.sprintf(__('top %1s pages last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h6><table>';
 				foreach($customers as $customer){
-					$labels.= get_the_title($customer->postid).',';
-					$values.= $customer->pidcount.',';
-					$xsum += absint($customer->pidcount);
-					$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a></td><td>';
-					$html .= '<i class="fa fa-calendar-o"></i> '.date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_the_date( 'd. F Y', $customer->postid )) );
-					$html .= ' '.ccago(get_the_date( 'U', $customer->postid ));
-					$html .= '</td><td><i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),number_format_i18n( (float) get_post_meta( $customer->postid, 'post_views_count', true ),0) ) . '</td></tr>';
+					if ( get_post_meta( $customer->postid, 'post_views_count', true ) > 0 ) {
+						$labels.= get_the_title($customer->postid).',';
+						$values.= $customer->pidcount.',';
+						$xsum += absint($customer->pidcount);
+						$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a></td><td>';
+						$html .= '<i class="fa fa-calendar-o"></i> '.date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_the_date( 'd. F Y', $customer->postid )) );
+						$html .= ' '.ago(get_the_date( 'U', $customer->postid ));
+						$html .= '</td><td><i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),number_format_i18n( (float) get_post_meta( $customer->postid, 'post_views_count', true ),0) ) . '</td></tr>';
+					}	
 				}	
 				$html .= '<tfoot><tr><td colspan=4>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
 				$labels = rtrim($labels, ",");
@@ -647,7 +663,7 @@ function website_display_stats() {
 					<a onclick="document.location.href=\''. esc_url(home_url(add_query_arg(array('suchfilter' => $customer->postid, 'zeitraum' => $zeitraum, 'items' => $items ), $wp->request))).'\'"
 					title="filter:'. $customer->postid.'" class="fa fa-filter"></a> &nbsp; ';
 				$html .= ' <a title="Post aufrufen" href="'.$cplink.'">' . $cptitle .'</abbr></a></td>';
-				$html .= '<td><abbr>' . $datum . ' ' . ccago(strtotime($customer->datum)).'</abbr></td></tr>';
+				$html .= '<td><abbr>' . $datum . ' ' . ago(strtotime($customer->datum)).'</abbr></td></tr>';
 			}	
 			$html .= '</table>';
 
@@ -1194,37 +1210,40 @@ function website_display_stats() {
 global $ipflag;
 $ipflag = new ipflag();
 
-// --------------- Zeitdifferenz ermitteln und gestern/vorgestern/morgen schreiben  --------------------
-function ccago($timestamp) {
-	$xlang = get_bloginfo("language");
-	date_default_timezone_set('Europe/Berlin');
-	$now = time();
-	if ($timestamp > $now) {
-		$prepo = __('in', 'pb-chartscodes');
-		$postpo = '';
-	} else {
-		if ($xlang == 'de-DE') {
-			$prepo = __('vor', 'pb-chartscodes');
+// Zeitdifferenz ermitteln und gestern/vorgestern/morgen schreiben
+if( !function_exists('ago')) {
+	function ago($timestamp) {
+		if (empty($timestamp)) return;
+		$xlang = get_bloginfo("language");
+		date_default_timezone_set('Europe/Berlin');
+		$now = time();
+		if ($timestamp > $now) {
+			$prepo = __('in', 'penguin');
 			$postpo = '';
 		} else {
-			$prepo = '';
-			$postpo = __('ago', 'pb-chartscodes');
+			if ($xlang == 'de-DE') {
+				$prepo = __('vor', 'penguin');
+				$postpo = '';
+			} else {
+				$prepo = '';
+				$postpo = __('ago', 'penguin');
+			}
 		}
+		$her = intval($now) - intval($timestamp);
+		if ($her > 86400 and $her < 172800) {
+			$hdate = __('yesterday', 'penguin');
+		} else if ($her > 172800 and $her < 259200) {
+			$hdate = __('1 day before yesterday', 'penguin');
+		} else if ($her < - 86400 and $her > - 172800) {
+			$hdate = __('tomorrow', 'penguin');
+		} else if ($her < - 172800 and $her > - 259200) {
+			$hdate = __('1 day after tomorrow', 'penguin');
+		} else {
+			$hdate = ' ' . $prepo . ' ' . human_time_diff(intval($timestamp), $now) . ' ' . $postpo;
+		}
+		return $hdate;
 	}
-	$her = intval($now) - intval($timestamp);
-	if ($her > 86400 and $her < 172800) {
-		$hdate = __('yesterday', 'pb-chartscodes');
-	} else if ($her > 172800 and $her < 259200) {
-		$hdate = __('1 day before yesterday', 'pb-chartscodes');
-	} else if ($her < - 86400 and $her > - 172800) {
-		$hdate = __('tomorrow', 'pb-chartscodes');
-	} else if ($her < - 172800 and $her > - 259200) {
-		$hdate = __('1 day after tomorrow', 'pb-chartscodes');
-	} else {
-		$hdate = ' ' . $prepo . ' ' . human_time_diff(intval($timestamp), $now) . ' ' . $postpo;
-	}
-	return $hdate;
-}
+}	
 
 // ========  Letze X Besucher der Seite anzeigen (nur als Admin) - pageid leer lassen für Gesamtstatistik  ===
 // penguin,template-parts/meta-bottom.php
@@ -1243,7 +1262,7 @@ function lastxvisitors ($items,$pageid) {
 		$html .= '<td><abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
 		$html .= '<td><abbr>' . $customer->userip .'</abbr></td>';
 		if (empty($pageid)) $html .= '<td><abbr><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</abbr></a></td>';
-		$html .= '<td><abbr>' . $datum . ' ' . ccago(strtotime($customer->datum)).'</abbr></td></tr>';
+		$html .= '<td><abbr>' . $datum . ' ' . ago(strtotime($customer->datum)).'</abbr></td></tr>';
 	}	
 	$html .= '</table></div>';
 	return $html;
