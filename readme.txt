@@ -2,8 +2,8 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.73
-Stable tag: 11.1.73
+Version: 11.1.74
+Stable tag: 11.1.74
 Requires at least: 5.1
 Tested up to: 6.0.1
 Requires PHP: 8.0
@@ -124,8 +124,14 @@ IPFflag feature highlights
 
 == IPFlag Shortcode ==
 `[ipflag ip="123.20.30.0" iso="mx" details=1 browser=1]`
+			'ip' => null,  // provide an ip like 10.20.30.40
+			'iso' => null, // provide ISO code to get country flag
+			'name' => null,  // provide country name in english please, you will result a flag in german
+			'details' => 0,   // get more details like ip net and referrer
+			'browser' => 0,  // show user agent string and browser info
 				liefert eine Flagge und das Land zu einer IP odr einem IP-Netz. Die letzte IP-Ziffer wird wegen DSGVO anonymisiert
 				iso="xx" liefert die Flagge zum ISO-Land oder die EU-Flagge für private und unbekannte Netzwerke
+				name="United kingdom" liefert die Flagge zum englischen Suchbegriff vom Land
 				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz
 				
 `[webcounter admin=0]` zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>

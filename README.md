@@ -9,7 +9,7 @@ daher dieses Projekt, dass die Einzelfunktionen zusammen fasst und um viele neue
 
 [qrcode text="https://test.com" size=2 margin=5]
 
-[ipflag ip="10.10.10.0" details=1 browser=1]
+[ipflag ip="10.10.10.0" iso="UA" name="Ukraine" details=1 browser=1]
 
 [webcounter admin=0]
 

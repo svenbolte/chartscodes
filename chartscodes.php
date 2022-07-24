@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.73
-Stable tag: 11.1.73
+Version: 11.1.74
+Stable tag: 11.1.74
 Requires at least: 5.1
 Tested up to: 6.0.1
 Requires PHP: 8.0
@@ -254,6 +254,16 @@ class ipflag {
         return $info;
     }
 
+    public function get_isofromland($land = null){
+        global $wpdb;
+        $countries_table_name = $wpdb->prefix . self::countries_table_suffix;
+        $sql=   "SELECT code, name FROM ".$countries_table_name." WHERE name LIKE '%".$land."%' ";
+        $info = $wpdb->get_row($sql);
+		if($info === null) return false;
+        return $info;
+    }
+	
+	
 public function country_code ($lang = null , $code = null) {
   if (empty ($countries)) $countries = unserialize ('a:2:{s:2:"en";a:204:{s:2:"AF";s:11:"Afghanistan";s:2:"AL";s:7:"Albania";s:2:"AS";s:14:"American Samoa";s:2:"AD";s:7:"Andorra";s:2:"AO";s:6:"Angola";s:2:"AI";s:8:"Anguilla";s:2:"AQ";s:10:"Antarctica";s:2:"AG";s:19:"Antigua and Barbuda";s:2:"AR";s:9:"Argentina";s:2:"AM";s:7:"Armenia";s:2:"AW";s:5:"Aruba";s:2:"AT";s:7:"Austria";s:2:"AU";s:9:"Australia";s:2:"AZ";s:10:"Azerbaijan";s:2:"BS";s:7:"Bahamas";s:2:"BH";s:7:"Bahrain";s:2:"BD";s:10:"Bangladesh";s:2:"BB";s:8:"Barbados";s:2:"BY";s:7:"Belarus";s:2:"BE";s:7:"Belgium";s:2:"BZ";s:6:"Belize";s:2:"BJ";s:5:"Benin";s:2:"BM";s:7:"Bermuda";s:2:"BT";s:6:"Bhutan";s:2:"BO";s:7:"Bolivia";s:2:"BA";s:22:"Bosnia and Herzegovina";s:2:"BW";s:8:"Botswana";s:2:"BV";s:13:"Bouvet Island";s:2:"BR";s:6:"Brazil";s:2:"BN";s:17:"Brunei Darussalam";s:2:"BG";s:8:"Bulgaria";s:2:"BF";s:12:"Burkina Faso";s:2:"BI";s:7:"Burundi";s:2:"KH";s:8:"Cambodia";s:2:"CM";s:8:"Cameroon";s:2:"CA";s:6:"Canada";s:2:"CV";s:10:"Cape Verde";s:2:"KY";s:14:"Cayman Islands";s:2:"CF";s:24:"Central African Republic";s:2:"TD";s:4:"Chad";s:2:"CL";s:5:"Chile";s:2:"CN";s:5:"China";s:2:"CO";s:8:"Colombia";s:2:"KM";s:7:"Comoros";s:2:"CG";s:5:"Congo";s:2:"CK";s:12:"Cook Islands";s:2:"CR";s:10:"Costa Rica";s:2:"CI";s:14:"Côte d\'Ivoire";s:2:"HR";s:7:"Croatia";s:2:"CU";s:4:"Cuba";s:2:"CZ";s:14:"Czech Republic";s:2:"DK";s:7:"Denmark";s:2:"DJ";s:8:"Djibouti";s:2:"DO";s:18:"Dominican Republic";s:2:"TP";s:10:"East Timor";s:2:"EC";s:7:"Ecuador";s:2:"EG";s:5:"Egypt";s:2:"SV";s:11:"El salvador";s:2:"GQ";s:17:"Equatorial Guinea";s:2:"ER";s:7:"Eritrea";s:2:"EE";s:7:"Estonia";s:2:"ET";s:8:"Ethiopia";s:2:"FK";s:16:"Falkland Islands";s:2:"FO";s:13:"Faroe Islands";s:2:"FJ";s:4:"Fiji";s:2:"FI";s:7:"Finland";s:2:"FR";s:6:"France";s:2:"GF";s:13:"French Guiana";s:2:"PF";s:16:"French Polynesia";s:2:"GA";s:5:"Gabon";s:2:"GM";s:6:"Gambia";s:2:"GE";s:7:"Georgia";s:2:"DE";s:7:"Germany";s:2:"GH";s:5:"Ghana";s:2:"GI";s:9:"Gibraltar";s:2:"GR";s:6:"Greece";s:2:"GL";s:9:"Greenland";s:2:"GD";s:7:"Grenada";s:2:"GP";s:10:"Guadeloupe";s:2:"GU";s:4:"Guam";s:2:"GT";s:9:"Guatemala";s:2:"GN";s:6:"Guinea";s:2:"GY";s:6:"Guyana";s:2:"HT";s:5:"Haiti";s:2:"VA";s:7:"Vatican";s:2:"HN";s:8:"Honduras";s:2:"HU";s:7:"Hungary";s:2:"IS";s:7:"Iceland";s:2:"IN";s:5:"India";s:2:"ID";s:9:"Indonesia";s:2:"IR";s:4:"Iran";s:2:"IQ";s:4:"Iraq";s:2:"IE";s:7:"Ireland";s:2:"IL";s:6:"Israel";s:2:"IT";s:5:"Italy";s:2:"JM";s:7:"Jamaica";s:2:"JP";s:5:"Japan";s:2:"JO";s:6:"Jordan";s:2:"KZ";s:9:"Kazakstan";s:2:"KE";s:5:"Kenya";s:2:"KI";s:8:"Kiribati";s:2:"KW";s:6:"Kuwait";s:2:"KG";s:9:"Kyrgystan";s:2:"LA";s:3:"Lao";s:2:"LV";s:6:"Latvia";s:2:"LB";s:7:"Lebanon";s:2:"LS";s:7:"Lesotho";s:2:"LI";s:13:"Liechtenstein";s:2:"LT";s:9:"Lithuania";s:2:"LU";s:10:"Luxembourg";s:2:"MO";s:5:"Macau";s:2:"MK";s:10:"Macedonia ";s:2:"MG";s:10:"Madagascar";s:2:"MW";s:6:"Malawi";s:2:"MY";s:8:"Malaysia";s:2:"MV";s:8:"Maldives";s:2:"ML";s:4:"Mali";s:2:"MT";s:5:"Malta";s:2:"MR";s:10:"Mauritania";s:2:"MU";s:9:"Mauritius";s:2:"YT";s:7:"Mayotte";s:2:"MX";s:6:"Mexico";s:2:"FM";s:10:"Micronesia";s:2:"MD";s:7:"Moldova";s:2:"MC";s:6:"Monaco";s:2:"MN";s:8:"Mongolia";s:2:"MS";s:10:"Montserrat";s:2:"MA";s:7:"Morocco";s:2:"MZ";s:10:"Mozambique";s:2:"MM";s:7:"Myanmar";s:2:"NA";s:7:"Namibia";s:2:"NR";s:5:"Nauru";s:2:"NP";s:5:"Nepal";s:2:"NL";s:11:"Netherlands";s:2:"NZ";s:11:"New Zealand";s:2:"NI";s:9:"Nicaragua";s:2:"NE";s:5:"Niger";s:2:"NG";s:7:"Nigeria";s:2:"NU";s:4:"Niue";s:2:"NF";s:14:"Norfolk Island";s:2:"KP";s:11:"North Korea";s:2:"NO";s:6:"Norway";s:2:"OM";s:4:"Oman";s:2:"PK";s:8:"Pakistan";s:2:"PW";s:5:"Palau";s:2:"PA";s:6:"Panama";s:2:"PG";s:16:"Papua New Guinea";s:2:"PY";s:8:"Paraguay";s:2:"PE";s:4:"Peru";s:2:"PH";s:11:"Philippines";s:2:"PL";s:6:"Poland";s:2:"PT";s:8:"Portugal";s:2:"PR";s:11:"Puerto Rico";s:2:"RO";s:7:"Romania";s:2:"RU";s:6:"Russia";s:2:"RW";s:6:"Rwanda";s:2:"WS";s:5:"Samoa";s:2:"SM";s:10:"San Marino";s:2:"SA";s:12:"Saudi Arabia";s:2:"SN";s:7:"Senegal";s:2:"SC";s:10:"Seychelles";s:2:"SL";s:12:"Sierra Leone";s:2:"SG";s:9:"Singapore";s:2:"SK";s:8:"Slovakia";s:2:"SB";s:15:"Solomon Islands";s:2:"SO";s:7:"Somalia";s:2:"ZA";s:12:"South Africa";s:2:"KR";s:11:"South Korea";s:2:"ES";s:5:"Spain";s:2:"LK";s:9:"Sri Lanka";s:2:"SD";s:5:"Sudan";s:2:"SR";s:8:"Suriname";s:2:"SZ";s:9:"Swaziland";s:2:"SE";s:6:"Sweden";s:2:"CH";s:11:"Switzerland";s:2:"SY";s:5:"Syria";s:2:"TW";s:6:"Taiwan";s:2:"TJ";s:10:"Tajikistan";s:2:"TZ";s:8:"Tanzania";s:2:"TH";s:8:"Thailand";s:2:"TG";s:4:"Togo";s:2:"TO";s:5:"Tonga";s:2:"TT";s:19:"Trinidad and Tobago";s:2:"TN";s:7:"Tunisia";s:2:"TR";s:6:"Turkey";s:2:"TM";s:12:"Turkmenistan";s:2:"TV";s:6:"Tuvalu";s:2:"UG";s:6:"Uganda";s:2:"UA";s:7:"Ukraine";s:2:"AE";s:20:"United Arab Emirates";s:2:"GB";s:14:"United Kingdom";s:2:"US";s:24:"United States of America";s:2:"UY";s:7:"Uruguay";s:2:"UZ";s:10:"Uzbekistan";s:2:"VU";s:7:"Vanuatu";s:2:"VE";s:9:"Venezuela";s:2:"VN";s:7:"Vietnam";s:2:"VG";s:14:"Virgin Islands";s:2:"EH";s:14:"Western Sahara";s:2:"YE";s:5:"Yemen";s:2:"YU";s:10:"Yugoslavia";s:2:"ZR";s:5:"Zaire";s:2:"ZM";s:6:"Zambia";s:2:"ZW";s:8:"Zimbabwe";}s:2:"de";a:204:{s:2:"AF";s:11:"Afghanistan";s:2:"AL";s:8:"Albanien";s:2:"AS";s:18:"Amerikanisch Samoa";s:2:"AD";s:7:"Andorra";s:2:"AO";s:6:"Angola";s:2:"AI";s:8:"Anguilla";s:2:"AQ";s:9:"Antarktis";s:2:"AG";s:19:"Antigua und Barbuda";s:2:"AR";s:11:"Argentinien";s:2:"AM";s:8:"Armenien";s:2:"AW";s:5:"Aruba";s:2:"AT";s:11:"Österreich";s:2:"AU";s:10:"Australien";s:2:"AZ";s:13:"Aserbaidschan";s:2:"BS";s:7:"Bahamas";s:2:"BH";s:7:"Bahrain";s:2:"BD";s:10:"Bangladesh";s:2:"BB";s:8:"Barbados";s:2:"BY";s:13:"Weißrussland";s:2:"BE";s:7:"Belgien";s:2:"BZ";s:6:"Belize";s:2:"BJ";s:5:"Benin";s:2:"BM";s:7:"Bermuda";s:2:"BT";s:6:"Bhutan";s:2:"BO";s:8:"Bolivien";s:2:"BA";s:19:"Bosnien Herzegowina";s:2:"BW";s:8:"Botswana";s:2:"BV";s:13:"Bouvet Island";s:2:"BR";s:9:"Brasilien";s:2:"BN";s:17:"Brunei Darussalam";s:2:"BG";s:9:"Bulgarien";s:2:"BF";s:12:"Burkina Faso";s:2:"BI";s:7:"Burundi";s:2:"KH";s:10:"Kambodscha";s:2:"CM";s:7:"Kamerun";s:2:"CA";s:6:"Kanada";s:2:"CV";s:9:"Kap Verde";s:2:"KY";s:13:"Cayman Inseln";s:2:"CF";s:28:"Zentralafrikanische Republik";s:2:"TD";s:6:"Tschad";s:2:"CL";s:5:"Chile";s:2:"CN";s:5:"China";s:2:"CO";s:9:"Kolumbien";s:2:"KM";s:7:"Comoros";s:2:"CG";s:5:"Kongo";s:2:"CK";s:11:"Cook Inseln";s:2:"CR";s:10:"Costa Rica";s:2:"CI";s:15:"Elfenbeinküste";s:2:"HR";s:8:"Kroatien";s:2:"CU";s:4:"Kuba";s:2:"CZ";s:10:"Tschechien";s:2:"DK";s:9:"Dänemark";s:2:"DJ";s:8:"Djibouti";s:2:"DO";s:23:"Dominikanische Republik";s:2:"TP";s:8:"Osttimor";s:2:"EC";s:7:"Ecuador";s:2:"EG";s:8:"Ägypten";s:2:"SV";s:11:"El Salvador";s:2:"GQ";s:18:"Äquatorial Guinea";s:2:"ER";s:7:"Eritrea";s:2:"EE";s:7:"Estland";s:2:"ET";s:10:"Äthiopien";s:2:"FK";s:15:"Falkland Inseln";s:2:"FO";s:12:"Faroe Inseln";s:2:"FJ";s:4:"Fiji";s:2:"FI";s:7:"Finland";s:2:"FR";s:10:"Frankreich";s:2:"GF";s:19:"Französisch Guiana";s:2:"PF";s:23:"Französisch Polynesien";s:2:"GA";s:5:"Gabon";s:2:"GM";s:6:"Gambia";s:2:"GE";s:8:"Georgien";s:2:"DE";s:11:"Deutschland";s:2:"GH";s:5:"Ghana";s:2:"GI";s:9:"Gibraltar";s:2:"GR";s:12:"Griechenland";s:2:"GL";s:9:"Grönland";s:2:"GD";s:7:"Grenada";s:2:"GP";s:10:"Guadeloupe";s:2:"GU";s:4:"Guam";s:2:"GT";s:9:"Guatemala";s:2:"GN";s:6:"Guinea";s:2:"GY";s:6:"Guyana";s:2:"HT";s:5:"Haiti";s:2:"VA";s:7:"Vatikan";s:2:"HN";s:8:"Honduras";s:2:"HU";s:6:"Ungarn";s:2:"IS";s:6:"Island";s:2:"IN";s:6:"Indien";s:2:"ID";s:10:"Indonesien";s:2:"IR";s:4:"Iran";s:2:"IQ";s:4:"Irak";s:2:"IE";s:6:"Irland";s:2:"IL";s:6:"Israel";s:2:"IT";s:7:"Italien";s:2:"JM";s:7:"Jamaika";s:2:"JP";s:5:"Japan";s:2:"JO";s:9:"Jordanien";s:2:"KZ";s:10:"Kasachstan";s:2:"KE";s:5:"Kenia";s:2:"KI";s:8:"Kiribati";s:2:"KW";s:6:"Kuwait";s:2:"KG";s:9:"Kirgistan";s:2:"LA";s:4:"Laos";s:2:"LV";s:8:"Lettland";s:2:"LB";s:7:"Libanon";s:2:"LS";s:7:"Lesotho";s:2:"LI";s:13:"Liechtenstein";s:2:"LT";s:7:"Litauen";s:2:"LU";s:9:"Luxemburg";s:2:"MO";s:5:"Macau";s:2:"MK";s:10:"Mazedonien";s:2:"MG";s:10:"Madagaskar";s:2:"MW";s:6:"Malawi";s:2:"MY";s:8:"Malaysia";s:2:"MV";s:9:"Malediven";s:2:"ML";s:4:"Mali";s:2:"MT";s:5:"Malta";s:2:"MR";s:11:"Mauretanien";s:2:"MU";s:9:"Mauritius";s:2:"YT";s:7:"Mayotte";s:2:"MX";s:6:"Mexiko";s:2:"FM";s:11:"Mikronesien";s:2:"MD";s:9:"Moldavien";s:2:"MC";s:6:"Monaco";s:2:"MN";s:8:"Mongolei";s:2:"MS";s:10:"Montserrat";s:2:"MA";s:7:"Marokko";s:2:"MZ";s:8:"Mosambik";s:2:"MM";s:7:"Myanmar";s:2:"NA";s:7:"Namibia";s:2:"NR";s:5:"Nauru";s:2:"NP";s:5:"Nepal";s:2:"NL";s:11:"Niederlande";s:2:"NZ";s:10:"Neuseeland";s:2:"NI";s:9:"Nicaragua";s:2:"NE";s:5:"Niger";s:2:"NG";s:7:"Nigeria";s:2:"NU";s:4:"Niue";s:2:"NF";s:14:"Norfolk Inseln";s:2:"KP";s:10:"Nord Korea";s:2:"NO";s:8:"Norwegen";s:2:"OM";s:4:"Oman";s:2:"PK";s:8:"Pakistan";s:2:"PW";s:5:"Palau";s:2:"PA";s:6:"Panama";s:2:"PG";s:16:"Papua Neu Guinea";s:2:"PY";s:8:"Paraguay";s:2:"PE";s:4:"Peru";s:2:"PH";s:11:"Philippinen";s:2:"PL";s:5:"Polen";s:2:"PT";s:8:"Portugal";s:2:"PR";s:11:"Puerto Rico";s:2:"RO";s:9:"Rumänien";s:2:"RU";s:8:"Russland";s:2:"RW";s:6:"Ruanda";s:2:"WS";s:5:"Samoa";s:2:"SM";s:10:"San Marino";s:2:"SA";s:13:"Saudi-Arabien";s:2:"SN";s:7:"Senegal";s:2:"SC";s:10:"Seychellen";s:2:"SL";s:12:"Sierra Leone";s:2:"SG";s:8:"Singapur";s:2:"SK";s:8:"Slovakei";s:2:"SB";s:14:"Solomon Inseln";s:2:"SO";s:7:"Somalia";s:2:"ZA";s:10:"Südafrika";s:2:"KR";s:9:"Südkorea";s:2:"ES";s:7:"Spanien";s:2:"LK";s:9:"Sri Lanka";s:2:"SD";s:5:"Sudan";s:2:"SR";s:8:"Suriname";s:2:"SZ";s:9:"Swasiland";s:2:"SE";s:8:"Schweden";s:2:"CH";s:7:"Schweiz";s:2:"SY";s:6:"Syrien";s:2:"TW";s:6:"Taiwan";s:2:"TJ";s:13:"Tadschikistan";s:2:"TZ";s:8:"Tansania";s:2:"TH";s:8:"Thailand";s:2:"TG";s:4:"Togo";s:2:"TO";s:5:"Tonga";s:2:"TT";s:19:"Trinidad und Tobago";s:2:"TN";s:8:"Tunesien";s:2:"TR";s:7:"Türkei";s:2:"TM";s:12:"Turkmenistan";s:2:"TV";s:6:"Tuvalu";s:2:"UG";s:6:"Uganda";s:2:"UA";s:7:"Ukraine";s:2:"AE";s:28:"Vereinigte Arabische Emirate";s:2:"GB";s:23:"Vereinigtes Königreich";s:2:"US";s:30:"Vereinigte Staaten von Amerika";s:2:"UY";s:7:"Uruguay";s:2:"UZ";s:10:"Usbekistan";s:2:"VU";s:7:"Vanuatu";s:2:"VE";s:9:"Venezuela";s:2:"VN";s:7:"Vietnam";s:2:"VG";s:14:"Virgin Islands";s:2:"EH";s:10:"Westsahara";s:2:"YE";s:5:"Jemen";s:2:"YU";s:11:"Jugoslavien";s:2:"ZR";s:5:"Zaire";s:2:"ZM";s:6:"Sambia";s:2:"ZW";s:8:"Simbabwe";}}');
   if (null == $lang) { return ($countries); }
@@ -813,10 +823,11 @@ function website_display_stats() {
 	// IP-Informationen Shortcode mit flag, land und browserinfo optional
 	function shortcode($atts, $content = null, $code = '') {
         extract(shortcode_atts(array(
-			'ip' => null,
-			'iso' => null,
-			'details' => 0,
-			'browser' => 0,
+			'ip' => null,  // provide an ip like 10.20.30.40
+			'iso' => null, // provide ISO code to get country flag
+			'name' => null,  // provide country name in english please, you will result a flag in german
+			'details' => 0,   // get more details like ip net and referrer
+			'browser' => 0,  // show user agent string and browser info
 		), $atts ));
 		$yourdetails='';
 		if ( $details ) {
@@ -835,16 +846,23 @@ function website_display_stats() {
 		$yourbrowser='';
 		if ( $browser ) {
 			$ua=$this->getBrowser();
-			$yourbrowser = "<strong>Angemeldet als</strong> ". $ua['username'] . ' ' . $ua['usertype'];
-			$yourbrowser .= "".__('browser', 'pb-chartscodes')."</strong> " . $ua['name'] . " " . $ua['version'] . " unter " .$ua['platform']  . " " .substr($ua['language'],0,2) . "<br><small>" . $ua['userAgent']."</small>";
+			$yourbrowser = "<br><strong>Angemeldet als</strong> ". $ua['username'] . ' ' . $ua['usertype'];
+			$yourbrowser .= "<br><strong>".__('browser', 'pb-chartscodes')."</strong> " . $ua['name'] . " " . $ua['version'] . " unter " .$ua['platform']  . " " .substr($ua['language'],0,2) . "<br><small>" . $ua['userAgent']."</small>";
 		}
         if (($info = $this->get_info($ip)) != false) {
-            $flag = '<div>'.$this->country_code('de',$info->code).' ('.$info->code.') &nbsp; '.$this->get_flag($info).'</div>';
+            $flag = '<div style="display:inline">'.$this->country_code('de',$info->code).' ('.$info->code.') &nbsp; '.$this->get_flag($info).'</div>';
 		} else {
-            $flag = '<div>privates Netzwerk &nbsp; '.$this->get_flag($info).'</div>';
+            $flag = '<div style="display:inline">privates Netzwerk &nbsp; '.$this->get_flag($info).'</div>';
 		}	
 		if ( !empty($iso) ) {
 			$flag =  $this->get_flag( (object) [ 'code' => strtoupper($iso) ]);
+		}
+		if ( !empty($name) ) {
+			$flag =  $this->get_flag( (object) [ 'code' => $this->get_isofromland($name)->code ]);
+			if ( $details ) {
+				$flag .= ' &nbsp; ' . $this->get_isofromland($name)->code.' '.$this->get_isofromland($name)->name;
+				$flag .= ' &nbsp; ' . $this->country_code('de',$this->get_isofromland($name)->code);
+			} 
 		}
 		return $flag . $yourbrowser . $yourdetails;
     }
