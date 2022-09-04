@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.74
-Stable tag: 11.1.74
+Version: 11.1.75
+Stable tag: 11.1.75
 Requires at least: 5.1
 Tested up to: 6.0.1
 Requires PHP: 8.0
@@ -493,7 +493,11 @@ function website_display_stats() {
     $wsstats .= '&nbsp; Beiträge <span title="Total" class="newlabel white">'. number_format_i18n($totalposts,0).'</span>';
     $totalpages = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'page' AND post_status = 'publish'");
     $wsstats .= ' &nbsp; Seiten <span title="Total" class="newlabel white">'. $totalpages.'</span>';
-    $totalauthors = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->users LEFT JOIN $wpdb->usermeta ON $wpdb->usermeta.user_id = $wpdb->users.ID WHERE $wpdb->users.user_activation_key = '' AND $wpdb->usermeta.meta_key = '".$wpdb->prefix."user_level' AND (meta_value+0.00) > 1");
+	$cargs = array('get' => 'all','hide_empty' => 0,'taxonomy'=>array('category','ddownload_category','quizcategory','product_cat'));
+	$wsstats .= ' &nbsp; Kategorien <span title="Gesamt Seiten" class="newlabel white">'. number_format_i18n(count(get_categories( $cargs )),0).'</span>';
+	$cargs = array('get' => 'all','hide_empty' => 0);
+	$wsstats .= '&nbsp; Themen <span title="Gesamt Themen" class="newlabel white">'. number_format_i18n(count(get_tags( $cargs )),0).'</span>';
+	$totalauthors = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->users LEFT JOIN $wpdb->usermeta ON $wpdb->usermeta.user_id = $wpdb->users.ID WHERE $wpdb->users.user_activation_key = '' AND $wpdb->usermeta.meta_key = '".$wpdb->prefix."user_level' AND (meta_value+0.00) > 1");
     $wsstats .= ' &nbsp; Autoren <span title="Total" class="newlabel white">'. $totalauthors.'</span>';
 	$args = array(  'public'   => true,  '_builtin' => false );
 	$output = 'names'; // 'names' or 'objects' (default: 'names')
@@ -528,6 +532,7 @@ function website_display_stats() {
 	}
 	$totalcomments = (int) $wpdb->get_var("SELECT COUNT(comment_ID) FROM $wpdb->comments WHERE comment_approved = '1'");
 	$wsstats .= ' &nbsp; <a href="'.get_site_url().'/alle-kommentare/"><i class="fa fa-comments"></i> Kommentare</a> <span title="Total" class="newlabel white">'. $totalcomments. '</span>';
+    $wsstats .= ' &nbsp; <a target="_blank" href="'.get_bloginfo('url').'/sitemap/"><i class="fa fa-map"></i> (Mehr Details siehe Sitemap)</a>';
     $wsstats .= '</div><br>';
 	return $wsstats;
 }
@@ -550,7 +555,7 @@ function website_display_stats() {
 		} else {
 			$keepdays=30;
 		}
-
+		// Anzeige für den Admin
 		if ( $admin && is_user_logged_in() ) {
 			global $wpdb;
 			setlocale (LC_ALL, 'de_DE.utf8', 'de_DE@euro', 'de_DE', 'de', 'ge'); 
