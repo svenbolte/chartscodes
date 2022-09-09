@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.75
-Stable tag: 11.1.75
+Version: 11.1.76
+Stable tag: 11.1.76
 Requires at least: 5.1
 Tested up to: 6.0.1
 Requires PHP: 8.0
@@ -1385,16 +1385,29 @@ if( !function_exists('timeline_calendar')) {
 	}
 }
 
-// Differenz zwischen 2 Beiträgen
+// Differenz zwischen 2 Beiträgen (kurz)
 if( !function_exists('german_time_diff')) {
 	function german_time_diff( $from, $to ) {
 		$diff = human_time_diff($from,$to);
 		$replace = array(
-			'Tagen'  => 'Tage',
-			'Monaten' => 'Monate',
-			'Jahren'   => 'Jahre',
+			'Sekunde'  => 's',
+			'Sekunden'  => 's',
+			'Minute'  => 'm',
+			'Minuten'  => 'm',
+			'Stunde'  => 'h',
+			'Stunden' => 'h',
+			'Tag'   => 'T',
+			'Tage'  => 'T',
+			'Woche'  => 'W',
+			'Wochen'  => 'W',
+			'Monat'  => 'M',
+			'Monate'  => 'M',
+			'Jahr'  => 'J',
+			'Jahre'  => 'J',
+			'n' =>'',
 		);
-		return ' <i title="älter als voriger Beitrag" class="fa fa-arrows-h"></i> ' . strtr($diff,$replace);
+		$aetitle = 'älter als voriger Beitrag&#10;'.$diff;
+		return ' <i title="'.$aetitle.'" class="fa fa-arrows-h"></i><abbr title="'.$aetitle.'" class="newlabel white">' . strtr($diff,$replace) . '</abbr>';
 	}
 }
 
