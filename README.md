@@ -32,5 +32,3 @@ daher dieses Projekt, dass die Einzelfunktionen zusammen fasst und um viele neue
 [chartscodes_line accentcolor=1 title="Obst Line Chart" xaxis="Obstsorte" yaxis="Umsatz" values="10,20,10,5,30,20,5" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi,Cranberry,Mango"]
 
 [posts_per_month_last months=x]
-
-[wp-timeline items=100 view="calendar" type="post" catname="software"]

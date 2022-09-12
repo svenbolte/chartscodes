@@ -2,20 +2,20 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.76
-Stable tag: 11.1.76
+Version: 11.1.77
+Stable tag: 11.1.77
 Requires at least: 5.1
 Tested up to: 6.0.1
 Requires PHP: 8.0
 
 == Description ==
-Webcounter, shortcodes for QRCodes, IP2Flag, post timeline, bar, line and Pie, Donut Pie, Polar Pie, Radar, Horizontal Bar, monthly post archive as bar chart, use as html widget too
+Webcounter, shortcodes for QRCodes, IP2Flag, bar, line and Pie, Donut Pie, Polar Pie, Radar, Horizontal Bar, monthly post archive as bar chart, use as html widget too
 
 [carlogo] displays maufacturer logo for car brands
 [complogo] displays maufactorer logo for computer brands
 [qrcode] creates qrcodes, [ipflag] shows country name of visitor (IP shortened for GDPR) - visitor info browser and details optional
 [webcounter] shortcode to gather and admin-display stats about visitors (ip shortened for GRPR compliance)
-[wp-timeline] shortcodes shows posts in a timeline, paged, filters are category slug list, post type list
+
 Color palette for charts can be accentcolor with shares or random (colorful light colors) or given values
 
 == Installation ==
@@ -175,24 +175,12 @@ Use Shortcode: [complogo brand="lenovo" scale="sm"]
 		      'brand' => '0unknown',  // Computerhersteller
 to display logo and link to german webpage or computer manufacturer
 
-=========================================== WordPress Posts Timeline ===============================================
-
-Output your WordPress posts or custom post types as a timeline with options.
-
-== Shortcode usage abnd defaults ==
-[wp-timeline]
-
-	'catname' => '',     		// insert category slugs of all post types you want, sep by comma, empty for all types
-	'tagname' => '',     		// insert tag slugs of all post types you want, sep by comma, empty for all types
-	'type' => 'post,wpdoodle',  // separate type slugs by comma
-	'items' => 1000,    	 	// Maximal 1000 Posts paginiert anzeigen
-	'perpage' => 20,     		// posts per page for pagination
-	'view' => 'timeline',     // set to "calendar" for calender display, to "calendar,timeline" for both 
-	'dateformat' => 'D d.m.Y H:i',
-
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.77 =
+Timeline moved to penguin mod theme
 
 = 11.1.76 =
 improved timediff btw. articles display
