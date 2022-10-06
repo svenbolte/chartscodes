@@ -9,10 +9,10 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.77
-Stable tag: 11.1.77
+Version: 11.1.78
+Stable tag: 11.1.78
 Requires at least: 5.1
-Tested up to: 6.0.1
+Tested up to: 6.0.2
 Requires PHP: 8.0
 */
 
@@ -1220,7 +1220,7 @@ function website_display_stats() {
 global $ipflag;
 $ipflag = new ipflag();
 
-// Zeitdifferenz ermitteln und gestern/vorgestern/morgen schreiben
+// Zeitdifferenz ermitteln und gestern/vorgestern/morgen schreiben: chartscodes, dedo, foldergallery, timeclock, w4-post-list
 if( !function_exists('ago')) {
 	function ago($timestamp) {
 		if (empty($timestamp)) return;
@@ -1239,14 +1239,14 @@ if( !function_exists('ago')) {
 				$postpo = __('ago', 'penguin');
 			}
 		}
-		$her = intval($now) - intval($timestamp);
-		if ($her > 86400 and $her < 172800) {
+		$her = date( 'd.m.Y', intval($timestamp) );
+		if ($her == date('d.m.Y',$now - (24 * 3600))) {
 			$hdate = __('yesterday', 'penguin');
-		} else if ($her > 172800 and $her < 259200) {
+		} else if ($her == date('d.m.Y',$now - (48 * 3600))) {
 			$hdate = __('1 day before yesterday', 'penguin');
-		} else if ($her < - 86400 and $her > - 172800) {
+		} else if ($her == date('d.m.Y',$now + (24 * 3600))) {
 			$hdate = __('tomorrow', 'penguin');
-		} else if ($her < - 172800 and $her > - 259200) {
+		} else if ($her == date('d.m.Y',$now + (48 * 3600))) {
 			$hdate = __('1 day after tomorrow', 'penguin');
 		} else {
 			$hdate = ' ' . $prepo . ' ' . human_time_diff(intval($timestamp), $now) . ' ' . $postpo;
