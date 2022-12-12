@@ -2,8 +2,8 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.78
-Stable tag: 11.1.78
+Version: 11.1.80
+Stable tag: 11.1.80
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -178,6 +178,11 @@ to display logo and link to german webpage or computer manufacturer
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.80 =
+PHP 8.1 compatibility checks
+Webstats improved with white/yellow newlabel formatting and progress display on referrers
+lastxvisitiors function nw callable from outside ipflag class
 
 = 11.1.77 =
 Timeline moved to penguin mod theme

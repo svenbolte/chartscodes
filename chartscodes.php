@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.78
-Stable tag: 11.1.78
+Version: 11.1.80
+Stable tag: 11.1.80
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -462,7 +462,7 @@ public function country_code ($lang = null , $code = null) {
 	}
 	
 	// Browser und OS icons anzeigen
-	function showbrowosicon($xname) {
+	public function showbrowosicon($xname) {
 		switch ( $xname ) :
 			case 'Google Chrome' : $xicon = 'Image/chrome.png'; break;
 			case 'Microsoft Edge' : $xicon = 'Image/edgenew.png'; break;
@@ -629,9 +629,15 @@ function website_display_stats() {
 						$values.= $customer->pidcount.',';
 						$xsum += absint($customer->pidcount);
 						$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a></td><td>';
-						$html .= '<i class="fa fa-calendar-o"></i> '.date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_the_date( 'd. F Y', $customer->postid )) );
+						$diff = time() - strtotime(get_the_date( 'd. F Y', $customer->postid ));
+						if (round((intval($diff) / 86400), 0) < 30) {
+							$newcolor = "#ffd800";
+						} else {
+							$newcolor = "#fff";
+						}
+						$html .= '<i class="fa fa-calendar-o"></i> <span class="newlabel" style="background-color:'.$newcolor.'">'.date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_the_date( 'd. F Y', $customer->postid )) );
 						$html .= ' '.ago(get_the_date( 'U', $customer->postid ));
-						$html .= '</td><td><i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),number_format_i18n( (float) get_post_meta( $customer->postid, 'post_views_count', true ),0) ) . '</td></tr>';
+						$html .= '</span></td><td><i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),number_format_i18n( (float) get_post_meta( $customer->postid, 'post_views_count', true ),0) ) . '</td></tr>';
 					}	
 				}	
 				$html .= '<tfoot><tr><td colspan=4>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
@@ -644,9 +650,12 @@ function website_display_stats() {
 				$xsum=0;
 				$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY referer ORDER BY refcount desc LIMIT ".$items );
 				$html .='<h6>'.sprintf(__('top %1s referers last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h6><table>';
+				if (!empty($customers)) $toprefer = $customers[0]->refcount; else $toprefer=0;
 				foreach($customers as $customer){
 					$xsum += absint($customer->refcount);
-					$html .= '<tr><td>' . number_format_i18n($customer->refcount,0) . '</td><td>' . $customer->referer . '</td></tr>';
+					$html .= '<tr><td><nobr>';
+					$html .= '<progress style="width:400px" max="100" value="'.round($customer->refcount / $toprefer *100).'"></progress> ';
+					$html .= number_format_i18n($customer->refcount,0) . '</nobr></td><td>' . $customer->referer . '</td></tr>';
 				}	
 				$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr></table>';
 			}	
@@ -673,12 +682,18 @@ function website_display_stats() {
 					$cplink = get_the_permalink($customer->postid);
 				}	
 				$html .= '<td>'. $this->get_flag(  (object) [ 'code' => $customer->country ] ).'</td>';
-				$html .= '<td><abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
-				$html .= '<td><abbr>' . $customer->userip .'</abbr></td><td><abbr>
+				$html .= '<td><i class="fa fa-user"></i> <abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
+				$html .= '<td><i class="fa fa-map-marker"></i> <abbr>' . $customer->userip .'</abbr></td><td><abbr>
 					<a onclick="document.location.href=\''. esc_url(home_url(add_query_arg(array('suchfilter' => $customer->postid, 'zeitraum' => $zeitraum, 'items' => $items ), $wp->request))).'\'"
 					title="filter:'. $customer->postid.'" class="fa fa-filter"></a> &nbsp; ';
 				$html .= ' <a title="Post aufrufen" href="'.$cplink.'">' . $cptitle .'</abbr></a></td>';
-				$html .= '<td><abbr>' . $datum . ' ' . ago(strtotime($customer->datum)).'</abbr></td></tr>';
+				$diff = time() - strtotime($customer->datum);
+				if (round((intval($diff) / 86400), 0) < 30) {
+					$newcolor = "#ffd800";
+				} else {
+					$newcolor = "#fff";
+				}
+				$html .= '<td><span class="newlabel" style="background-color:'.$newcolor.'">' . $datum . ' ' . ago(strtotime($customer->datum)).'</span></td></tr>';
 			}	
 			$html .= '</table>';
 
@@ -1219,6 +1234,7 @@ function website_display_stats() {
 }
 global $ipflag;
 $ipflag = new ipflag();
+// ------------------------------ IPFlag Klasse Ende ----------------------------
 
 // Zeitdifferenz ermitteln und gestern/vorgestern/morgen schreiben: chartscodes, dedo, foldergallery, timeclock, w4-post-list
 if( !function_exists('ago')) {
@@ -1258,6 +1274,7 @@ if( !function_exists('ago')) {
 // ========  Letze X Besucher der Seite anzeigen (nur als Admin) - pageid leer lassen für Gesamtstatistik  ===
 // penguin,template-parts/meta-bottom.php
 function lastxvisitors ($items,$pageid) {
+	$brosicons = new ipflag();
 	if (!empty($pageid)) { $pagefilter='AND postid = '.$pageid; } else {$pagefilter='';}
 	global $wpdb;
 	$table = $wpdb->prefix . "sitevisitors";
@@ -1265,14 +1282,20 @@ function lastxvisitors ($items,$pageid) {
 	$html ='<div class="noprint"><h6>'.__("Last Visitors","pb-chartscodes").'</h6><table>';
 	foreach($customers as $customer){
 		$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
-		$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
-		$html .= '<td><abbr>' . substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</abbr></td>';
+			$diff = time() - strtotime($customer->datum);
+			if (round((intval($diff) / 86400), 0) < 30) {
+				$newcolor = "#ffd800";
+			} else {
+				$newcolor = "#fff";
+			}
+		$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $brosicons->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
+		$html .= '<td><abbr>' .$brosicons->showbrowosicon($customer->platform).' '. substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</abbr></td>';
 		if ($customer->country == 'EUROPEANUNION') $customer->country = 'EU';
 		$html .= '<td>' .do_shortcode('[ipflag iso="'.$customer->country.'"]') .'</td>';
-		$html .= '<td><abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
-		$html .= '<td><abbr>' . $customer->userip .'</abbr></td>';
+		$html .= '<td><i class="fa fa-user"></i> <abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
+		$html .= '<td><i class="fa fa-map-marker"></i> <abbr>' . $customer->userip .'</abbr></td>';
 		if (empty($pageid)) $html .= '<td><abbr><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</abbr></a></td>';
-		$html .= '<td><abbr>' . $datum . ' ' . ago(strtotime($customer->datum)).'</abbr></td></tr>';
+		$html .= '<td><span class="newlabel" style="background-color:'.$newcolor.'">' . $datum . ' ' . ago(strtotime($customer->datum)).'</span></td></tr>';
 	}	
 	$html .= '</table></div>';
 	return $html;
