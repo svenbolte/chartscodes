@@ -132,6 +132,7 @@ IPFflag feature highlights
 				liefert eine Flagge und das Land zu einer IP odr einem IP-Netz. Die letzte IP-Ziffer wird wegen DSGVO anonymisiert
 				iso="xx" liefert die Flagge zum ISO-Land oder die EU-Flagge für private und unbekannte Netzwerke
 				name="United kingdom" liefert die Flagge zum englischen Suchbegriff vom Land
+				name="United kingdom" liefert die Flagge zum englischen Suchbegriff vom Land
 				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz
 				
 `[webcounter admin=0]` zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>

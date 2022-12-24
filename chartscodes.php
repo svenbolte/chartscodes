@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.80
-Stable tag: 11.1.80
+Version: 11.1.81
+Stable tag: 11.1.81
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -1272,7 +1272,7 @@ if( !function_exists('ago')) {
 }	
 
 // ========  Letze X Besucher der Seite anzeigen (nur als Admin) - pageid leer lassen für Gesamtstatistik  ===
-// penguin,template-parts/meta-bottom.php
+// Aufruf in penguin,template-parts/meta-bottom.php
 function lastxvisitors ($items,$pageid) {
 	$brosicons = new ipflag();
 	if (!empty($pageid)) { $pagefilter='AND postid = '.$pageid; } else {$pagefilter='';}
@@ -1281,13 +1281,9 @@ function lastxvisitors ($items,$pageid) {
 	$customers = $wpdb->get_results("SELECT * FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -90 DAY ) ".$pagefilter." ORDER BY datum desc LIMIT ".$items);
 	$html ='<div class="noprint"><h6>'.__("Last Visitors","pb-chartscodes").'</h6><table>';
 	foreach($customers as $customer){
-		$datum = date('d.m.Y H:i:s',strtotime($customer->datum));	
-			$diff = time() - strtotime($customer->datum);
-			if (round((intval($diff) / 86400), 0) < 30) {
-				$newcolor = "#ffd800";
-			} else {
-				$newcolor = "#fff";
-			}
+		$datum = date_i18n( get_option('date_format') .' H:i:s', strtotime($customer->datum) );
+		$diff = time() - strtotime($customer->datum);
+		if (round((intval($diff) / 86400), 0) < 30) { $newcolor = "#ffd80088"; } else { $newcolor = "#fff"; }
 		$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $brosicons->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
 		$html .= '<td><abbr>' .$brosicons->showbrowosicon($customer->platform).' '. substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</abbr></td>';
 		if ($customer->country == 'EUROPEANUNION') $customer->country = 'EU';

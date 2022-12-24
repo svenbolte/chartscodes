@@ -4,7 +4,6 @@
 * 	'chartscodes', 'chartscodes_radar', 'chartscodes_donut' 'chartscodes_polar'
 *	'chartscodes_bar', 'chartscodes_horizontal_bar','posts_per_month_last'
 *	'pb_last_months_chart', 'chartscodes_line'
-* @package Charts QRCodes Barcodes
 */
 
 if ( ! defined( 'ABSPATH' ) ) {	exit; } // Exit if accessed directly.
