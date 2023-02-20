@@ -288,12 +288,9 @@ public function country_code ($lang = null , $code = null) {
 		$user_agent = strtolower( $user_agent );
 		$identifiers = array(
 			'bot', 'slurp', 'crawler', 'spider', 'curl', 'facebook', 'lua-resty', 'fetch', 'python', 'scrubby',
-			'wget', 'monitor', 'mediapartners', 'baidu', 'linux',
+			'wget', 'monitor', 'mediapartners', 'baidu', 'linux','chrome/3','chrome/4','chrome/5','chrome/6','chrome/7','chrome/8','chrome/9',
+			'firefox/3','firefox/4','firefox/5','firefox/6','firefox/7','firefox/8','firefox/9',
 		);
-		// nur Mainstream Browser (Chromium, Firefix) mitzählen > ver 106
-		$browser = get_browser(null, true);
-		$broversion = (int) $browser['version'];
-		if ($broversion < 106) return true;
 		foreach ( $identifiers as $identifier ) {
 			if ( strpos( $user_agent, $identifier ) !== false ) {
 				return true;
