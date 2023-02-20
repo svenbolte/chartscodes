@@ -287,21 +287,9 @@ public function country_code ($lang = null , $code = null) {
 	private static function is_bot( $user_agent ) {
 		$user_agent = strtolower( $user_agent );
 		$identifiers = array(
-			'bot',
-			'slurp',
-			'crawler',
-			'spider',
-			'curl',
-			'facebook',
-			'lua-resty',
-			'fetch',
-			'python',
-			'scrubby',
-			'wget',
-			'monitor',
-			'mediapartners',
-			'50.0.2661.102',
-			'firefox/52.0',
+			'bot', 'slurp', 'crawler', 'spider', 'curl', 'facebook', 'lua-resty', 'fetch', 'python', 'scrubby',
+			'wget', 'monitor', 'mediapartners', 'baidu', 'chrome/50.0', 'chrome/30.0', 'chrome/74.0',
+			'firefox/52.0', 'firefox/73.0', 'firefox/68.0',
 		);
 		foreach ( $identifiers as $identifier ) {
 			if ( strpos( $user_agent, $identifier ) !== false ) {
