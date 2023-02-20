@@ -288,8 +288,8 @@ public function country_code ($lang = null , $code = null) {
 		$user_agent = strtolower( $user_agent );
 		$identifiers = array(
 			'bot', 'slurp', 'crawler', 'spider', 'curl', 'facebook', 'lua-resty', 'fetch', 'python', 'scrubby',
-			'wget', 'monitor', 'mediapartners', 'baidu', 'chrome/50.0', 'chrome/30.0', 'chrome/74.0',
-			'firefox/52.0', 'firefox/73.0', 'firefox/68.0',
+			'wget', 'monitor', 'mediapartners', 'baidu', 'chrome/3', 'chrome/4', 'chrome/5','chrome/6','chrome/7','chrome/8','chrome/9',
+			'firefox/5', 'firefox/6', 'firefox/7', 'firefox/8', 'firefox/9',
 		);
 		foreach ( $identifiers as $identifier ) {
 			if ( strpos( $user_agent, $identifier ) !== false ) {
