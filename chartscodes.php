@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.83
-Stable tag: 11.1.83
+Version: 11.1.84
+Stable tag: 11.1.84
 Requires at least: 5.1
 Tested up to: 6.1.1
 Requires PHP: 8.0
@@ -394,7 +394,7 @@ public function country_code ($lang = null , $code = null) {
 			$ub = "Netscape";
 		}
 		else if(preg_match('/bot|crawl|slurp|spider|lua-resty|mediapartners/i',$u_agent)) {
-			$bname = 'other Bot/Spider';
+			$bname = 'Bot/Spider';
 			$ub = "Bot";
 		}
 		// finally get the correct version number
@@ -459,6 +459,7 @@ public function country_code ($lang = null , $code = null) {
 			case 'Internet Explorer' : $xicon = 'Image/msie.png'; break;
 			case 'Apple Safari' : $xicon = 'Image/safari.png'; break;
 			case 'Windows 10' : $xicon = 'Image/win8-10.png'; break;
+			case 'Windows 8' : $xicon = 'Image/win8-10.png'; break;
 			case 'Windows XP' : $xicon = 'Image/winxp.png'; break;
 			case 'Windows 7' : $xicon = 'Image/win7.png'; break;
 			case 'Ubuntu' : $xicon = 'Image/ubuntu.png'; break;
