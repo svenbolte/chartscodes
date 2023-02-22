@@ -288,7 +288,7 @@ public function country_code ($lang = null , $code = null) {
 		$user_agent = strtolower( $user_agent );
 		$identifiers = array(
 			'bot', 'slurp', 'crawler', 'spider', 'curl', 'facebook', 'lua-resty', 'fetch', 'python', 'scrubby',
-			'wget', 'monitor', 'mediapartners', 'baidu', 'linux','chrome/3','chrome/4','chrome/5','chrome/6','chrome/7','chrome/8','chrome/9',
+			'wget', 'monitor', 'mediapartners', 'baidu','chrome/3','chrome/4','chrome/5','chrome/6','chrome/7','chrome/8','chrome/9',
 			'firefox/3','firefox/4','firefox/5','firefox/6','firefox/7','firefox/8','firefox/9',
 		);
 		foreach ( $identifiers as $identifier ) {
@@ -356,6 +356,7 @@ public function country_code ($lang = null , $code = null) {
 		foreach ($os_array as $regex => $value) { 
 			if (preg_match($regex, $u_agent)) { $platform    =   $value; }
 		}
+
 		// Next get the name of the useragent yes seperately and for good reason
 		if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent)) {
 			$bname = 'Internet Explorer';
@@ -392,6 +393,10 @@ public function country_code ($lang = null , $code = null) {
 		else if(preg_match('/Netscape/i',$u_agent)) {
 			$bname = 'Netscape';
 			$ub = "Netscape";
+		}
+		else if(preg_match('/ms-office/i',$u_agent)) {
+			$bname = 'MS-Office';
+			$ub = "MSOffice";
 		}
 		else if(preg_match('/bot|crawl|slurp|spider|lua-resty|mediapartners/i',$u_agent)) {
 			$bname = 'Bot/Spider';
@@ -458,6 +463,7 @@ public function country_code ($lang = null , $code = null) {
 			case 'Edge legacy' : $xicon = 'Image/edge.png'; break;
 			case 'Internet Explorer' : $xicon = 'Image/msie.png'; break;
 			case 'Apple Safari' : $xicon = 'Image/safari.png'; break;
+			case 'MS-Office' : $xicon = 'Image/office.png'; break;
 			case 'Windows 10' : $xicon = 'Image/win8-10.png'; break;
 			case 'Windows 8' : $xicon = 'Image/win8-10.png'; break;
 			case 'Windows XP' : $xicon = 'Image/winxp.png'; break;
@@ -791,6 +797,7 @@ function website_display_stats() {
 			$useragent = $ua['userAgent'];
 			$username = $ua['username'];
 			$usertype = $ua['usertype'];
+
 			// Nur speichern, wenn kein BOT erkannt
 			if ( !$this->is_bot( $useragent ) ) {
 				if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
