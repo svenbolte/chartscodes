@@ -9,10 +9,10 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.84
-Stable tag: 11.1.84
+Version: 11.1.90
+Stable tag: 11.1.90
 Requires at least: 5.1
-Tested up to: 6.1.1
+Tested up to: 6.2
 Requires PHP: 8.0
 */
 
@@ -22,6 +22,56 @@ add_action( 'plugins_loaded', 'chartscodes_textdomain' );
 function chartscodes_textdomain() {
 	load_plugin_textdomain( 'pb-chartscodes', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 }
+
+function cc_page_by_title($pagetitle) {
+	$query = new WP_Query(
+		array(
+			'post_type'              => array('post', 'page'),
+			'title'                  => $pagetitle,
+			'post_status'            => 'all',
+			'posts_per_page'         => 1,
+			'no_found_rows'          => true,
+			'ignore_sticky_posts'    => true,
+			'update_post_term_cache' => false,
+			'update_post_meta_cache' => false,
+			'orderby'                => 'post_date ID',
+			'order'                  => 'ASC',
+		)
+	);
+	if ( ! empty( $query->post ) ) {
+		$page_got_by_title = $query->post;
+	} else {
+		$page_got_by_title = null;
+	}
+	return $page_got_by_title;
+}
+
+register_activation_hook( __FILE__, 'create_webcounter' );
+function create_webcounter() {
+		// Webcounterseite für admin erzeugen
+		$new_page_title = 'Webcounter Stats';
+		$slug = 'webcounter';
+		$new_page_content = '[webcounter admin=1]';
+		$new_page_template = ''; //ex. template-custom.php. Leave blank for default
+		$page_check = cc_page_by_title($new_page_title);
+		$new_page = array(
+			'post_type' => 'page',
+			'post_name'  =>   $slug,
+			'post_title' => $new_page_title,
+			'post_content' => $new_page_content,
+			'post_status' => 'private',
+			'post_author' => 1,
+			'comment_status' => 'closed',   // if you prefer
+			'ping_status' => 'closed',      // if you prefer
+	   );
+		if(!isset($page_check->ID)){
+			$new_page_id = wp_insert_post($new_page);
+			if(!empty($new_page_template)){
+				update_post_meta($new_page_id, '_wp_page_template', $new_page_template);
+			}
+		}
+}
+
 
 if ( ! class_exists( 'PB_ChartsCodes' ) ) :
 	final class PB_ChartsCodes {
@@ -145,29 +195,6 @@ class ipflag {
     protected $db_file;
 
     public function __construct() {
-
-		// Webcounterseite für admin erzeugen
-		$new_page_title = 'Webcounter Stats';
-		$slug = 'webcounter';
-		$new_page_content = '[webcounter admin=1]';
-		$new_page_template = ''; //ex. template-custom.php. Leave blank for default
-		$page_check = get_page_by_title($new_page_title);
-		$new_page = array(
-			'post_type' => 'page',
-			'post_name'         =>   $slug,
-			'post_title' => $new_page_title,
-			'post_content' => $new_page_content,
-			'post_status' => 'private',
-			'post_author' => 1,
-			'comment_status' => 'closed',   // if you prefer
-			'ping_status' => 'closed',      // if you prefer
-	   );
-		if(!isset($page_check->ID)){
-			$new_page_id = wp_insert_post($new_page);
-			if(!empty($new_page_template)){
-				update_post_meta($new_page_id, '_wp_page_template', $new_page_template);
-			}
-		}
 
         $this->url = plugin_dir_url(__FILE__ );
         $this->flag_url = $this->url . '/flags';
@@ -398,6 +425,10 @@ public function country_code ($lang = null , $code = null) {
 			$bname = 'MS-Office';
 			$ub = "MSOffice";
 		}
+		else if(preg_match('/outlook/i',$u_agent)) {
+			$bname = 'Outlook';
+			$ub = "Outlook";
+		}
 		else if(preg_match('/bot|crawl|slurp|spider|lua-resty|mediapartners/i',$u_agent)) {
 			$bname = 'Bot/Spider';
 			$ub = "Bot";
@@ -464,6 +495,7 @@ public function country_code ($lang = null , $code = null) {
 			case 'Internet Explorer' : $xicon = 'Image/msie.png'; break;
 			case 'Apple Safari' : $xicon = 'Image/safari.png'; break;
 			case 'MS-Office' : $xicon = 'Image/office.png'; break;
+			case 'Outlook' : $xicon = 'Image/outlook.png'; break;
 			case 'Windows 10' : $xicon = 'Image/win8-10.png'; break;
 			case 'Windows 8' : $xicon = 'Image/win8-10.png'; break;
 			case 'Windows XP' : $xicon = 'Image/winxp.png'; break;

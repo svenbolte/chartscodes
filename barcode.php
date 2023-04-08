@@ -39,8 +39,8 @@ if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME'])) {
 	}
 	if (isset($_GET['s']) && isset($_GET['d'])) {
 		$generator = new barcode_generator();
-		$format = (isset($_GET['f']) ? $_GET['f'] : 'png');
-		$generator->output_image($format, $_GET['s'], $_GET['d'], $_GET);
+		$format = (isset($_GET['f']) ? esc_html($_GET['f']) : 'png');
+		$generator->output_image($format, esc_html($_GET['s']), esc_html($_GET['d']), esc_html($_GET));
 		exit(0);
 	}
 }
