@@ -26,24 +26,7 @@ DEALINGS IN THE SOFTWARE.
 
 \****************************************************************************/
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly.
-}
-
-if (realpath(__FILE__) == realpath($_SERVER['SCRIPT_FILENAME'])) {
-	if (isset($_POST['s']) && isset($_POST['d'])) {
-		$generator = new barcode_generator();
-		$format = (isset($_POST['f']) ? $_POST['f'] : 'png');
-		$generator->output_image($format, $_POST['s'], $_POST['d'], $_POST);
-		exit(0);
-	}
-	if (isset($_GET['s']) && isset($_GET['d'])) {
-		$generator = new barcode_generator();
-		$format = (isset($_GET['f']) ? esc_html($_GET['f']) : 'png');
-		$generator->output_image($format, esc_html($_GET['s']), esc_html($_GET['d']), esc_html($_GET));
-		exit(0);
-	}
-}
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
 
 class barcode_generator {
 
