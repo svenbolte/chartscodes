@@ -1,9 +1,9 @@
 === Charts QR-Barcodes ===
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.90
-Stable tag: 11.1.90
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Version: 11.1.91
+Stable tag: 11.1.91
 Requires at least: 5.1
 Tested up to: 6.2
 Requires PHP: 8.0
@@ -66,8 +66,21 @@ Color palette for charts can be accentcolor with shares or random (colorful ligh
 	
 ==================================  QRCodes Shortcode Usage ==========================================================
 
+Shortcode for creating qrcode and barcode images locally hosted. no external sources used, just php:
+
+[qrcode type="code-39" text="Hallo Welt" ]
+[qrcode type="ean-13" text="9780201379624" ]
+[qrcode text="tel:+49304030568956834058340" ]
+
 Barcode QRCode library taken from: https://github.com/kreativekorp/barcode
-In order to output barcodes, [barcode] will be used. Attributes:
+In order to output barcodes, [qrcode] will be used. Attributes:
+
+format ... One of:
+    png
+    gif
+    jpeg
+    svg
+
  text ... A text that should be in the image qrcode. 
  size ... Size of the qrcode (2 for x2)
  margin ... margin in pixel 
@@ -179,6 +192,11 @@ to display logo and link to german webpage or computer manufacturer
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.91 =
+counter logos updated
+documentation updated for barcode qrcode library usage
+wp62 and php82 compatibility checks
 
 = 11.1.83 =
 car logos updated to mfgs 2023 designs (css and optimized sprite PNG)

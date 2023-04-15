@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.90
-Stable tag: 11.1.90
+Version: 11.1.91
+Stable tag: 11.1.91
 Requires at least: 5.1
 Tested up to: 6.2
 Requires PHP: 8.0
@@ -1012,10 +1012,13 @@ function website_display_stats() {
 		
         <div class="wrap">
             <div class="img-wrap">
-                <h2>QRCodes generieren</h2>
+                <h2>QRCodes oder Barcodes generieren</h2>
 			<div class="postbox">
+				<p><code>[qrcode type="code-39" text="Hallo Welt" ]</code>
+				<p><code>[qrcode type="ean-13" text="9780201379624" ]</code>
+				<p><code>[qrcode text="tel:+49304030568956834058340" ]</code>
 				<p><code>[qrcode text="tel:00492307299607" size=3 margin=3]</code>
-				erstellt QR-Codes als Shortcode an der Cursorposition (Doku siehe Readme)</p>                    
+				erstellt QR-Codes als Shortcode an der Cursorposition (Dokumentation und Parameter siehe Readme.txt)</p>                    
             </div></div>
 			<div class="img-wrap">
 				<h2><?php esc_html_e( 'Bar and Piecharts', 'pb-chartscodes' ); ?></h2>

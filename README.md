@@ -7,6 +7,12 @@ daher dieses Projekt, dass die Einzelfunktionen zusammen fasst und um viele neue
 
 ## Shortcodes für die Funktionen
 
+[qrcode type="code-39" text="Hallo Welt" ]
+
+[qrcode type="ean-13" text="9780201379624" ]
+
+[qrcode text="tel:+49304030568956834058340" ]
+
 [qrcode text="https://test.com" size=2 margin=5]
 
 [ipflag ip="10.10.10.0" iso="UA" name="Ukraine" details=1 browser=1]
