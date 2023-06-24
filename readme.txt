@@ -2,8 +2,8 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.91
-Stable tag: 11.1.91
+Version: 11.1.92
+Stable tag: 11.1.92
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -140,13 +140,15 @@ IPFflag feature highlights
 			'ip' => null,  // provide an ip like 10.20.30.40
 			'iso' => null, // provide ISO code to get country flag
 			'name' => null,  // provide country name in english please, you will result a flag in german
+			'showland' => 0  // Land und ISO mit anzeigen
 			'details' => 0,   // get more details like ip net and referrer
 			'browser' => 0,  // show user agent string and browser info
-				liefert eine Flagge und das Land zu einer IP odr einem IP-Netz. Die letzte IP-Ziffer wird wegen DSGVO anonymisiert
-				iso="xx" liefert die Flagge zum ISO-Land oder die EU-Flagge für private und unbekannte Netzwerke
-				name="United kingdom" liefert die Flagge zum englischen Suchbegriff vom Land
-				name="United kingdom" liefert die Flagge zum englischen Suchbegriff vom Land
-				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz
+				liefert eine Flagge und das Land zu einer IP odr einem IP-Netz. Die letzte IP-Ziffer wird wegen DSGVO anonymisiert<br>
+				iso="xx" liefert die Flagge zum ISO-Land oder die EU-Flagge für private und unbekannte Netzwerke<br>
+				showland=1 zeigt ISO und Land hinter der Flagge an
+				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz<br><br>
+				<code>[webcounter admin=0]</code> zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>
+				Ist die Admin /webcounter-Seite aufgerufen, kann über das Eingabefeld oder den optionalen URL-Parameter ?items=x die Ausgabe-Anzahl einiger Listeneinträge verändert werden.
 				
 `[webcounter admin=0]` zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>
 				Ist die Admin /webcounter-Seite aufgerufen, kann über das Eingabefeld oder den optionalen URL-Parameter ?items=x die Ausgabe-Anzahl einiger Listeneinträge verändert werden.
@@ -192,6 +194,9 @@ to display logo and link to german webpage or computer manufacturer
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.92 =
+ipflag shortcode showland=1 added to display land and iso in clear text
 
 = 11.1.91 =
 counter logos updated

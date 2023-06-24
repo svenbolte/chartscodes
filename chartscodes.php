@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.91
-Stable tag: 11.1.91
+Version: 11.1.92
+Stable tag: 11.1.92
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -310,6 +310,14 @@ public function country_code ($lang = null , $code = null) {
             $flag = '<div class="fflag fflag-EU ff-sm" title="privates Netzwerk"></div>';
         return $flag;
     }
+
+    public function get_country($info){
+		// Load Country to ISO
+        if($info != null) $land = $this->country_code('de',$info->code) . ' '.$info->code;
+		else $land = '';
+        return $land;
+    }
+
 
 	private static function is_bot( $user_agent ) {
 		$user_agent = strtolower( $user_agent );
@@ -874,6 +882,7 @@ function website_display_stats() {
 			'ip' => null,  // provide an ip like 10.20.30.40
 			'iso' => null, // provide ISO code to get country flag
 			'name' => null,  // provide country name in english please, you will result a flag in german
+			'showland' => 0,   // show country name
 			'details' => 0,   // get more details like ip net and referrer
 			'browser' => 0,  // show user agent string and browser info
 		), $atts ));
@@ -904,6 +913,7 @@ function website_display_stats() {
 		}	
 		if ( !empty($iso) ) {
 			$flag =  $this->get_flag( (object) [ 'code' => strtoupper($iso) ]);
+			if ($showland) $flag .= '&nbsp'.$this->get_country( (object) [ 'code' => strtoupper($iso)]);
 		}
 		if ( !empty($name) ) {
 			$flag =  $this->get_flag( (object) [ 'code' => $this->get_isofromland($name)->code ]);
@@ -989,9 +999,10 @@ function website_display_stats() {
             <div class="icon32" id="icon-options-general"><br></div>
             <h2><?php echo esc_attr_e( 'Chartscodes Settings', 'pb-chartscodes' ); ?></h2>
 			<div class="postbox">
-			<p><code>[ipflag ip="123.20.30.0" iso="mx" details=1 browser=1]</code>
+			<p><code>[ipflag ip="123.20.30.0" iso="mx" showland=0/1 details=0/1 browser=1]</code>
 				liefert eine Flagge und das Land zu einer IP odr einem IP-Netz. Die letzte IP-Ziffer wird wegen DSGVO anonymisiert<br>
 				iso="xx" liefert die Flagge zum ISO-Land oder die EU-Flagge für private und unbekannte Netzwerke<br>
+				showland=1 zeigt ISO und Land hinter der Flagge an
 				browser=1 liefert Betriebssystem und Browser des Besuchers, details=1 liefert den Referrer, das IP-Netz<br><br>
 				<code>[webcounter admin=0]</code> zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>
 				Ist die Admin /webcounter-Seite aufgerufen, kann über das Eingabefeld oder den optionalen URL-Parameter ?items=x die Ausgabe-Anzahl einiger Listeneinträge verändert werden.
