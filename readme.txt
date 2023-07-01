@@ -2,8 +2,8 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.93
-Stable tag: 11.1.93
+Version: 11.1.100
+Stable tag: 11.1.100
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -121,6 +121,21 @@ ww - Width of wide modules and spaces. Applies to Code 39, Codabar, and ITF only
 wn - Width of narrow space between characters. Applies to Code 39 and Codabar only. Default is 1.
 ```
 
+======================== Girocode Shortcode ==================================================================
+
+	Erstellen eines EPC QR-Codes für SEPA Überweisungen (Girocode ganannt)
+	[girocode
+		'ibangen' => 0
+		'iban' => 'DE43370000000038001501',
+		'bic' => 'MARKDEF1370',	
+		'rec' => 'Max Mustermann',
+		'cur' => 'EUR',
+		'sum' => 1.99,
+		'subj' => 'Rechnung 123456789, Konto 123434',
+		'comm' => 'Kommentar zur Ueberweisung',
+	]
+
+
 ===================================== IPFflag  Usage =================================================================
 
 Resolves IP address to ISO 3166-1 alpha-2 two-letter country code and name and displays country flag image if required.
@@ -194,6 +209,9 @@ to display logo and link to german webpage or computer manufacturer
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.100 =
+girocode improved and iban generator für germany added
 
 = 11.1.92 =
 ipflag shortcode showland=1 added to display land and iso in clear text

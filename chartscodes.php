@@ -9,16 +9,14 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.93
-Stable tag: 11.1.93
+Version: 11.1.100
+Stable tag: 11.1.100
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
 */
 
 if ( ! defined( 'ABSPATH' ) ) {	exit; } // Exit if accessed directly.
-
-
 
 add_action( 'plugins_loaded', 'chartscodes_textdomain' );
 function chartscodes_textdomain() {
@@ -123,8 +121,7 @@ define( 'DOQRCODE_V', '1.2.1' ) ;
  */
 defined( 'WPINC' ) || exit ;
 
-class DoQRCode
-{
+class DoQRCode {
 	private static $_instance ;
 
 	/** * Init */
@@ -135,7 +132,7 @@ class DoQRCode
 	/** * Shortcode handler */
 	public function shortcode_handler( $atts, $content ) {
 		require_once DOQRCODE_DIR . 'barcode.php' ;
-		$symbology = 'qr';
+		$symbology = 'qr-m';
 		if ( ! empty( $atts[ 'type' ] ) ) {
 			$symbology = $atts[ 'type' ] ;
 		}
@@ -166,6 +163,132 @@ class DoQRCode
 	}
 }
 $__core = DoQRCode::get_instance() ;
+
+
+// ==================== Girocode erstellen ======================================
+
+function formatIBAN($iban) {
+  $iban = preg_replace('/\040/', '', $iban);
+  $iban_formated = '';
+  for ($i = 0; $i < ceil(strlen($iban) / 4); $i ++) $iban_formated .= substr($iban, $i * 4, 4).' ';
+  return trim($iban_formated);
+}
+
+function makeiban() {
+	if (isset($_POST["berechnen"])) {
+		if (isset($_POST["blz"])) $blz = sanitize_text_field($_POST["blz"]);
+		if (isset($_POST["kontonr"])) $kontonr = sanitize_text_field($_POST["kontonr"]);
+		if (isset($_POST["bic"])) $bic = sanitize_text_field($_POST["bic"]);
+		if (isset($_POST["iban"])) $iban = sanitize_text_field($_POST["iban"]);
+		if ( empty($iban) && !empty($blz) && !empty($kontonr) ) {
+			$blz8 = str_pad ( $blz, 8, "0", STR_PAD_RIGHT);
+			$kontonr10 = str_pad ( $kontonr, 10, "0", STR_PAD_LEFT);
+			$bban = $blz8 . $kontonr10;
+			$pruefsumme = $bban . "131400";
+			$modulo = (bcmod($pruefsumme,"97"));
+			$pruefziffer =str_pad ( 98 - $modulo, 2, "0",STR_PAD_LEFT);
+			$iban = "DE" . $pruefziffer . $bban;
+		}
+		$out = 'IBAN <code>'.formatIBAN($iban).'</code> ';
+		if (checkIBAN($iban)) $out .= 'ist gültig'; else $out .= '<span style="color:tomato">ist ungültig</span>';
+		if (!empty($bic)) {
+			$out .= ' | BIC <code>'.$bic.'</code> ';
+			if (swift_validate($bic)) $out .= 'ist gültig'; else $out .= ' | <span style="color:tomato">ist ungültig</span>';
+		}	
+		return $out;
+	} else {
+		$out = '<p><form method="post">';
+		$out .= 'BLZ<input name="blz" id="blz" type="int" size="8">';
+		$out .= ' Kontonr<input name="kontonr" id="kontonr" type="int" size="10">';
+		$out .= ' BIC/SWIFT<input name="bic" id="bic" type="text" size="10">';
+		$out .= ' IBAN<input name="iban" id="iban" type="text" size="22">';
+		$out .='<br><input style="width:100%" name="berechnen" id="berechnen" type="submit" class="submit" value="IBAN Berechnen oder IBAN und BIC prüfen">';
+		$out .='</form></p>';
+		return $out;
+	}	
+}
+
+function swift_validate($swift) {
+	if(!preg_match('/^([a-zA-Z]){4}([a-zA-Z]){2}([0-9a-zA-Z]){2}([0-9a-zA-Z]{3})?$/', $swift,$matches)) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+function checkIBAN($iban) {
+    if(strlen($iban) < 5) return false;
+    $iban = strtolower(str_replace(' ','',$iban));
+    $Countries = array('al'=>28,'ad'=>24,'at'=>20,'az'=>28,'bh'=>22,'be'=>16,'ba'=>20,'br'=>29,'bg'=>22,'cr'=>21,'hr'=>21,'cy'=>28,'cz'=>24,'dk'=>18,'do'=>28,'ee'=>20,'fo'=>18,'fi'=>18,'fr'=>27,'ge'=>22,'de'=>22,'gi'=>23,'gr'=>27,'gl'=>18,'gt'=>28,'hu'=>28,'is'=>26,'ie'=>22,'il'=>23,'it'=>27,'jo'=>30,'kz'=>20,'kw'=>30,'lv'=>21,'lb'=>28,'li'=>21,'lt'=>20,'lu'=>20,'mk'=>19,'mt'=>31,'mr'=>27,'mu'=>30,'mc'=>27,'md'=>24,'me'=>22,'nl'=>18,'no'=>15,'pk'=>24,'ps'=>29,'pl'=>28,'pt'=>25,'qa'=>29,'ro'=>24,'sm'=>27,'sa'=>24,'rs'=>22,'sk'=>24,'si'=>19,'es'=>24,'se'=>24,'ch'=>21,'tn'=>24,'tr'=>26,'ae'=>23,'gb'=>22,'vg'=>24);
+    $Chars = array('a'=>10,'b'=>11,'c'=>12,'d'=>13,'e'=>14,'f'=>15,'g'=>16,'h'=>17,'i'=>18,'j'=>19,'k'=>20,'l'=>21,'m'=>22,'n'=>23,'o'=>24,'p'=>25,'q'=>26,'r'=>27,'s'=>28,'t'=>29,'u'=>30,'v'=>31,'w'=>32,'x'=>33,'y'=>34,'z'=>35);
+    if(array_key_exists(substr($iban,0,2), $Countries) && strlen($iban) == $Countries[substr($iban,0,2)]){
+        $MovedChar = substr($iban, 4).substr($iban,0,4);
+        $MovedCharArray = str_split($MovedChar);
+        $NewString = "";
+        foreach($MovedCharArray AS $key => $value) {
+            if(!is_numeric($MovedCharArray[$key])) {
+                if(!isset($Chars[$MovedCharArray[$key]])) return false;
+                $MovedCharArray[$key] = $Chars[$MovedCharArray[$key]];
+            }
+            $NewString .= $MovedCharArray[$key];
+        }
+        if(bcmod($NewString, '97') == 1) return true;
+    }
+    return false;
+}
+
+function girocode_qr($atts){
+	$args = shortcode_atts( array(
+		'ibangen' => 0,
+		'iban' => 'DE43370000000038001501',
+		'bic' => 'MARKDEF1370',	
+		'rec' => 'Max Mustermann',
+		'cur' => 'EUR',
+		'sum' => 1.99,
+		'subj' => 'Rechnung 123456789, Konto 123434',
+		'comm' => 'Kommentar zur Ueberweisung',
+	), $atts );
+	if ( $args['ibangen'] == 1 ) {
+		if (!isset($_GET['noheader'])) return makeiban();
+	} else {
+		// Daten von der Befehlszeile
+		//cmdline:	?iban=DE43370000000038001501&bic=MARKDEF1370&rec=Maxine Mustermann&cur=EUR&sum=9.99&subj=Rechnung 123456789 Konto 123434&comm=Kommentar zur Ueberweisung
+		if (isset($_GET['iban'])) $iban = sanitize_text_field($_GET['iban']); else $iban = $args['iban'];
+		if (isset($_GET['bic'])) $bic = sanitize_text_field($_GET['bic']); else $bic = $args['bic'];
+		if (isset($_GET['rec'])) $rec = sanitize_text_field($_GET['rec']); else $rec = $args['rec'];
+		if (isset($_GET['cur'])) $cur = sanitize_text_field($_GET['cur']); else $cur = $args['cur'];
+		if (isset($_GET['sum'])) $sum = sanitize_text_field($_GET['sum']); else $sum = $args['sum'];
+		if (isset($_GET['subj'])) $subj = sanitize_text_field($_GET['subj']); else $subj = $args['subj'];
+		if (isset($_GET['comm'])) $comm = sanitize_text_field($_GET['comm']); else $comm = $args['comm'];
+		// Betragsformatierung
+		$sum = number_format( str_replace( ",", ".", $sum ), 2, '.', '' );
+		// QR Code Daten (Zeilenumbruch beachten)
+		$data = "BCD
+001
+1
+SCT
+".$bic."
+".$rec."
+".$iban."
+".$cur.$sum."
+
+".$subj."
+
+".$comm;
+		if (isset($_GET['noheader'])) {   // wenn in single.php der Parameter gesetzt, keinen Header zeigen
+			if (checkIBAN($iban)) return do_shortcode('[qrcode text="'.$data.'" size=3 margin=3]');
+		} else {
+			// QR Code generieren
+			if (! swift_validate($bic)) return "<b style='color:#FF0000;'>BIC (SWIFT code) <i>is not</i> valid.</b>";
+			if (checkIBAN($iban)) return '<div class="timeline"><div style="text-align:center">'
+				. do_shortcode('[qrcode text="'.$data.'" size=3 margin=3]')
+				.'</div><div><pre>'.$data.'</pre></div>';
+			else return '<span style="color:tomato">IBAN '.$iban.' '.__('is not a valid IBAN', 'pb-chartscodes').'</span>';
+		}	
+	}
+}
+add_shortcode('girocode', 'girocode_qr');
+
 
 // --------------------------- Nun die ipflag Funktionsklasse registrieren --------------------------------------------
 
