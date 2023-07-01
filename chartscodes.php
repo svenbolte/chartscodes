@@ -282,7 +282,7 @@ SCT
 			if (! swift_validate($bic)) return "<b style='color:#FF0000;'>BIC (SWIFT code) <i>is not</i> valid.</b>";
 			if (checkIBAN($iban)) return '<div class="timeline"><div style="text-align:center">'
 				. do_shortcode('[qrcode text="'.$data.'" size=3 margin=3]')
-				.'</div><div><pre>'.$data.'</pre></div>';
+				.'</div><div><pre>'.$data.'</pre></div></div>';
 			else return '<span style="color:tomato">IBAN '.$iban.' '.__('is not a valid IBAN', 'pb-chartscodes').'</span>';
 		}	
 	}
