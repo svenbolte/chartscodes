@@ -2,8 +2,8 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.100
-Stable tag: 11.1.100
+Version: 11.1.101
+Stable tag: 11.1.101
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -123,17 +123,17 @@ wn - Width of narrow space between characters. Applies to Code 39 and Codabar on
 
 ======================== Girocode Shortcode ==================================================================
 
-	Erstellen eines EPC QR-Codes für SEPA Überweisungen (Girocode ganannt)
-	[girocode
-		'ibangen' => 0
+Erstellen eines EPC QR-Codes für SEPA Überweisungen (Girocode ganannt)
+	`[girocode noheader=0 iban="DE1234544455454545"]` ...
+		'noheader' => 0, // set to 1 if you want only the QR-Code, nothing else
+		'ibangen' => 0,
 		'iban' => 'DE43370000000038001501',
 		'bic' => 'MARKDEF1370',	
-		'rec' => 'Max Mustermann',
+		'rec' => '',	// z.B. Max Mustermann, wenn leer kommt Formular
 		'cur' => 'EUR',
 		'sum' => 1.99,
 		'subj' => 'Rechnung 123456789, Konto 123434',
 		'comm' => 'Kommentar zur Ueberweisung',
-	]
 
 
 ===================================== IPFflag  Usage =================================================================
@@ -151,7 +151,7 @@ IPFflag feature highlights
 *   IPFflag provides PHP function to retrieve country flag image for given country, 248 flag images provided by [Mark James](http://www.famfamfam.com)
 
 == IPFlag Shortcode ==
-`[ipflag ip="123.20.30.0" iso="mx" details=1 browser=1]`
+	`[ipflag ip="123.20.30.0" iso="mx" details=1 browser=1]`
 			'ip' => null,  // provide an ip like 10.20.30.40
 			'iso' => null, // provide ISO code to get country flag
 			'name' => null,  // provide country name in english please, you will result a flag in german
@@ -165,7 +165,7 @@ IPFflag feature highlights
 				<code>[webcounter admin=0]</code> zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>
 				Ist die Admin /webcounter-Seite aufgerufen, kann über das Eingabefeld oder den optionalen URL-Parameter ?items=x die Ausgabe-Anzahl einiger Listeneinträge verändert werden.
 				
-`[webcounter admin=0]` zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>
+	`[webcounter admin=0]` zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>
 				Ist die Admin /webcounter-Seite aufgerufen, kann über das Eingabefeld oder den optionalen URL-Parameter ?items=x die Ausgabe-Anzahl einiger Listeneinträge verändert werden.
 
 == Frequently Asked Questions ==
@@ -210,8 +210,11 @@ to display logo and link to german webpage or computer manufacturer
 
 == Changelog ==
 
-= 11.1.100 =
+= 11.1.101 =
 girocode improved and iban generator für germany added
+forms to convert blz und konto to iban
+iban and bic prüfung (international)
+EPC-Code (Girocode) generieren, mit und ohne Text (noformat=1)
 
 = 11.1.92 =
 ipflag shortcode showland=1 added to display land and iso in clear text

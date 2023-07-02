@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.100
-Stable tag: 11.1.100
+Version: 11.1.101
+Stable tag: 11.1.101
 Requires at least: 5.1
 Tested up to: 6.2.2
 Requires PHP: 8.0
@@ -175,7 +175,11 @@ function formatIBAN($iban) {
 }
 
 function makeiban() {
+	global $wp;
+	$out ='';
+	
 	if (isset($_POST["berechnen"])) {
+		$out .= '<a href="'.esc_url(home_url(add_query_arg(array(), $wp->request))).'">Neue IBAN erzeugen</a> &nbsp; ';
 		if (isset($_POST["blz"])) $blz = sanitize_text_field($_POST["blz"]);
 		if (isset($_POST["kontonr"])) $kontonr = sanitize_text_field($_POST["kontonr"]);
 		if (isset($_POST["bic"])) $bic = sanitize_text_field($_POST["bic"]);
@@ -189,21 +193,21 @@ function makeiban() {
 			$pruefziffer =str_pad ( 98 - $modulo, 2, "0",STR_PAD_LEFT);
 			$iban = "DE" . $pruefziffer . $bban;
 		}
-		$out = 'IBAN <code>'.formatIBAN($iban).'</code> ';
+		$out .= '<p>IBAN <b>'.$iban.'</b> &nbsp; <code>'.formatIBAN($iban).'</code> ';
 		if (checkIBAN($iban)) $out .= 'ist gültig'; else $out .= '<span style="color:tomato">ist ungültig</span>';
 		if (!empty($bic)) {
-			$out .= ' | BIC <code>'.$bic.'</code> ';
-			if (swift_validate($bic)) $out .= 'ist gültig'; else $out .= ' | <span style="color:tomato">ist ungültig</span>';
+			$out .= '<br>BIC <code>'.$bic.'</code> ';
+			if (swift_validate($bic)) $out .= 'ist gültig'; else $out .= '<span style="color:tomato">ist ungültig</span>';
 		}	
-		return $out;
+		return $out.'</p>';
 	} else {
-		$out = '<p><form method="post">';
-		$out .= 'BLZ<input name="blz" id="blz" type="int" size="8">';
-		$out .= ' Kontonr<input name="kontonr" id="kontonr" type="int" size="10">';
-		$out .= ' BIC/SWIFT<input name="bic" id="bic" type="text" size="10">';
-		$out .= ' IBAN<input name="iban" id="iban" type="text" size="22">';
-		$out .='<br><input style="width:100%" name="berechnen" id="berechnen" type="submit" class="submit" value="IBAN Berechnen oder IBAN und BIC prüfen">';
-		$out .='</form></p>';
+		$out .= '<p><form method="post"><table>';
+		$out .= '<tr><td>BLZ</td><td><input name="blz" id="blz" type="int" size="8">';
+		$out .= '</td><td>Kontonr</td><td><input name="kontonr" id="kontonr" type="int" size="10"></td></tr>';
+		$out .= '<tr><td>BIC/SWIFT</td><td><input name="bic" id="bic" type="text" size="10">';
+		$out .= '</td><td>IBAN</td><td><input name="iban" id="iban" type="text" size="22"></td></tr>';
+		$out .='<tr><td colspan=4><input style="width:100%" name="berechnen" id="berechnen" type="submit" class="submit" value="IBAN (DE) berechnen oder IBAN und BIC prüfen"></td></tr>';
+		$out .='</table></form></p>';
 		return $out;
 	}	
 }
@@ -238,11 +242,13 @@ function checkIBAN($iban) {
 }
 
 function girocode_qr($atts){
+	global $wp;
 	$args = shortcode_atts( array(
+		'noheader' => 0, // set to 1 if you want only the QR-Code, nothing else
 		'ibangen' => 0,
 		'iban' => 'DE43370000000038001501',
 		'bic' => 'MARKDEF1370',	
-		'rec' => 'Max Mustermann',
+		'rec' => '',	// z.B. Max Mustermann, wenn leer kommt Formular
 		'cur' => 'EUR',
 		'sum' => 1.99,
 		'subj' => 'Rechnung 123456789, Konto 123434',
@@ -251,8 +257,9 @@ function girocode_qr($atts){
 	if ( $args['ibangen'] == 1 ) {
 		if (!isset($_GET['noheader'])) return makeiban();
 	} else {
+		$out = '<h6>Girocode-Generator</h6>';
 		// Daten von der Befehlszeile
-		//cmdline:	?iban=DE43370000000038001501&bic=MARKDEF1370&rec=Maxine Mustermann&cur=EUR&sum=9.99&subj=Rechnung 123456789 Konto 123434&comm=Kommentar zur Ueberweisung
+		//cmdline:	?noheader=1&iban=DE43370000000038001501&bic=MARKDEF1370&rec=Maxine Mustermann&cur=EUR&sum=9.99&subj=Rechnung 123456789 Konto 123434&comm=Kommentar zur Ueberweisung
 		if (isset($_GET['iban'])) $iban = sanitize_text_field($_GET['iban']); else $iban = $args['iban'];
 		if (isset($_GET['bic'])) $bic = sanitize_text_field($_GET['bic']); else $bic = $args['bic'];
 		if (isset($_GET['rec'])) $rec = sanitize_text_field($_GET['rec']); else $rec = $args['rec'];
@@ -260,6 +267,31 @@ function girocode_qr($atts){
 		if (isset($_GET['sum'])) $sum = sanitize_text_field($_GET['sum']); else $sum = $args['sum'];
 		if (isset($_GET['subj'])) $subj = sanitize_text_field($_GET['subj']); else $subj = $args['subj'];
 		if (isset($_GET['comm'])) $comm = sanitize_text_field($_GET['comm']); else $comm = $args['comm'];
+		// oder Daten aus Formular
+		if (isset($_POST["girosubmit"])) {
+			$iban = sanitize_text_field($_POST["iban"]);			
+			$bic = sanitize_text_field($_POST["bic"]);			
+			$rec = sanitize_text_field($_POST["rec"]);			
+			$cur = sanitize_text_field($_POST["cur"]);			
+			$sum = sanitize_text_field($_POST["sum"]);			
+			$subj = sanitize_text_field($_POST["subj"]);			
+			$comm = sanitize_text_field($_POST["comm"]);
+		}	
+		if (empty($rec)) {
+			// Form anzeigen, wenn $rec leer ist
+			$out .= '<p><form id="giroform" method="post"><table>';
+			$out .= '<tr><td>IBAN</td><td><input name="iban" id="iban" type="text" size="22" placeholder="'.$iban.'"></td></tr>';
+			$out .= '<tr><td>BIC/SWIFT</td><td><input name="bic" id="bic" type="text" size="10" placeholder="'.$bic.'"></td></tr>';
+			$out .= '<tr><td>Empfänger</td><td><input name="rec" id="rec" type="text" size="50" max="70" style="width:100%;max-width:100%" placeholder="'.$rec.'"></td></tr>';
+			$out .= '<tr><td>Währung/Betrag</td><td><input name="cur" id="cur" type="text" size="3" value="EUR">';
+			$out .= ' &nbsp; <input name="sum" id="sum" type="number" step="0.01" value="0.00" placeholder="0.00" size="10"></td></tr>';
+			$out .= '<tr><td>Verwendungszweck</td><td><input name="subj" id="subj" type="text" size="50" style="width:100%;max-width:100%" placeholder="'.$subj.'"></td></tr>';
+			$out .= '<tr><td>Kommentar</td><td><input name="comm" id="comm" type="text" size="50" max="70" style="width:100%;max-width:100%"></td></tr>';
+			$out .='<tr><td colspan=2><input style="width:100%" name="girosubmit" id="girosubmit" form="giroform" type="submit" class="submit" value="Daten prüfen und Girocode erzeugen"></td></tr>';
+			$out .='</table></form></p>';
+			return $out;
+		}
+
 		// Betragsformatierung
 		$sum = number_format( str_replace( ",", ".", $sum ), 2, '.', '' );
 		// QR Code Daten (Zeilenumbruch beachten)
@@ -275,15 +307,22 @@ SCT
 ".$subj."
 
 ".$comm;
-		if (isset($_GET['noheader'])) {   // wenn in single.php der Parameter gesetzt, keinen Header zeigen
+		if ( isset($_GET['noheader']) || $args['noheader'] == 1 ) {   // wenn in single.php der Parameter gesetzt, keinen Header zeigen
 			if (checkIBAN($iban)) return do_shortcode('[qrcode text="'.$data.'" size=3 margin=3]');
 		} else {
 			// QR Code generieren
+			$out .= '<a href="'.esc_url(home_url(add_query_arg(array(), $wp->request))).'">Neuen Girocode eingeben</a>';
+			if(current_user_can('administrator')) $out .= ' &nbsp; <a href="'.
+				esc_url(home_url(add_query_arg(array('noheader' => 1, 'iban' => $iban, 'bic' => $bic, 'rec' => $rec, 'cur' => $cur, 'sum' => $sum, 'subj' => $subj, 'comm' => $comm ), $wp->request)))
+				.'">Direkt-URL</a>';
 			if (! swift_validate($bic)) return "<b style='color:#FF0000;'>BIC (SWIFT code) <i>is not</i> valid.</b>";
-			if (checkIBAN($iban)) return '<div class="timeline"><div style="text-align:center">'
+			if (checkIBAN($iban)) {
+				$out .= '<div class="timeline"><div style="text-align:center">'
 				. do_shortcode('[qrcode text="'.$data.'" size=3 margin=3]')
-				.'</div><div><pre>'.$data.'</pre></div></div>';
-			else return '<span style="color:tomato">IBAN '.$iban.' '.__('is not a valid IBAN', 'pb-chartscodes').'</span>';
+				.'</div><div><pre>'.$data.'</pre></div></div>
+				';
+				return $out;
+			} else return '<span style="color:tomato">IBAN '.$iban.' '.__('is not a valid IBAN', 'pb-chartscodes').'</span>';
 		}	
 	}
 }
