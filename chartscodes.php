@@ -246,8 +246,8 @@ function girocode_qr($atts){
 	$args = shortcode_atts( array(
 		'noheader' => 0, // set to 1 if you want only the QR-Code, nothing else
 		'ibangen' => 0,
-		'iban' => 'DE43370000000038001501',
-		'bic' => 'MARKDEF1370',	
+		'iban' => '',
+		'bic' => '',	
 		'rec' => '',	// z.B. Max Mustermann, wenn leer kommt Formular
 		'cur' => 'EUR',
 		'sum' => 1.99,
@@ -259,7 +259,7 @@ function girocode_qr($atts){
 	} else {
 		$out = '<h6>Girocode-Generator</h6>';
 		// Daten von der Befehlszeile
-		//cmdline:	?noheader=1&iban=DE43370000000038001501&bic=MARKDEF1370&rec=Maxine Mustermann&cur=EUR&sum=9.99&subj=Rechnung 123456789 Konto 123434&comm=Kommentar zur Ueberweisung
+		//cmdline:	?noheader=1&iban=DE3370000000038001502&bic=ABCEDE&rec=Maxine Mustermann&cur=EUR&sum=9.99&subj=Rechnung 123456789 Konto 123434&comm=Kommentar zur Ueberweisung
 		if (isset($_GET['iban'])) $iban = sanitize_text_field($_GET['iban']); else $iban = $args['iban'];
 		if (isset($_GET['bic'])) $bic = sanitize_text_field($_GET['bic']); else $bic = $args['bic'];
 		if (isset($_GET['rec'])) $rec = sanitize_text_field($_GET['rec']); else $rec = $args['rec'];
