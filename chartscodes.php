@@ -9,10 +9,10 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.101
-Stable tag: 11.1.101
+Version: 11.1.102
+Stable tag: 11.1.102
 Requires at least: 6.0
-Tested up to: 6.3.2
+Tested up to: 6.4.1
 Requires PHP: 8.0
 */
 
@@ -259,7 +259,7 @@ function girocode_qr($atts){
 	} else {
 		$out = '<h6>Girocode-Generator</h6>';
 		// Daten von der Befehlszeile
-		//cmdline:	?noheader=1&iban=DE3370000000038001502&bic=ABCEDE&rec=Maxine Mustermann&cur=EUR&sum=9.99&subj=Rechnung 123456789 Konto 123434&comm=Kommentar zur Ueberweisung
+		//cmdline:	?noheader=1&iban=DE337002323230150232&bic=ABCEDE&rec=Maxine Mustermann&cur=EUR&sum=9.99&subj=Rechnung 123456789 Konto 123434&comm=Kommentar zur Ueberweisung
 		if (isset($_GET['iban'])) $iban = sanitize_text_field($_GET['iban']); else $iban = $args['iban'];
 		if (isset($_GET['bic'])) $bic = sanitize_text_field($_GET['bic']); else $bic = $args['bic'];
 		if (isset($_GET['rec'])) $rec = sanitize_text_field($_GET['rec']); else $rec = $args['rec'];
@@ -311,10 +311,12 @@ SCT
 			if (checkIBAN($iban)) return do_shortcode('[qrcode text="'.$data.'" size=3 margin=3]');
 		} else {
 			// QR Code generieren
-			$out .= '<a href="'.esc_url(home_url(add_query_arg(array(), $wp->request))).'">Neuen Girocode eingeben</a>';
-			if(current_user_can('administrator')) $out .= ' &nbsp; <a href="'.
+			if(current_user_can('administrator')) {
+				$out .= '<a href="'.esc_url(home_url(add_query_arg(array(), $wp->request))).'">Neuen Girocode eingeben</a>';
+				$out .= ' &nbsp; <a href="'.
 				esc_url(home_url(add_query_arg(array('noheader' => 1, 'iban' => $iban, 'bic' => $bic, 'rec' => $rec, 'cur' => $cur, 'sum' => $sum, 'subj' => $subj, 'comm' => $comm ), $wp->request)))
 				.'">Direkt-URL</a>';
+			}	
 			if (! swift_validate($bic)) return "<b style='color:#FF0000;'>BIC (SWIFT code) <i>is not</i> valid.</b>";
 			if (checkIBAN($iban)) {
 				$out .= '<div class="timeline"><div style="text-align:center">'
