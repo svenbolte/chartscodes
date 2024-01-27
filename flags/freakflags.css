@@ -1,6 +1,7 @@
 /** Freak Flags, Copyright ©2023 Michael P. Cohen. Freak flags is licenced under the MIT licence. freakflagsprite.com **/
 .fflag{background-image:url(flagSprite42.png);background-repeat:no-repeat;background-size:100% 49494%;box-shadow:0 0 0 1px #dcdcdc;box-sizing:content-box;display:inline-block;overflow:hidden;position:relative;vertical-align:middle}
 .fflag-CH,.fflag-NP{box-shadow:none!important}
+.fflag-AN{background-position:center 41.0215%}
 .fflag-DZ{background-position:center .2287%}
 .fflag-AO{background-position:center .4524%}
 .fflag-BJ{background-position:center .6721%}
@@ -203,6 +204,8 @@
 .fflag-TR{background-position:center 44.1253%}
 .fflag-UA{background-position:center 44.347%}
 .fflag-GB{background-position:center 44.5687%}
+.fflag-UK{background-position:center 44.5687%}
+.fflag-PN{background-position:center 44.5687%}
 .fflag-VA{background-position:right 44.7904%}
 .fflag-BH{background-position:center 45.0121%}
 .fflag-IR{background-position:center 45.2338%}
