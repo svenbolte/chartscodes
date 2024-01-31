@@ -1049,7 +1049,8 @@ class ipflag {
 			'/ipad/i'               =>  'iPad',
 			'/android/i'            =>  'Android',
 			'/blackberry/i'         =>  'BlackBerry',
-			'/webos/i'              =>  'Mobile'
+			'/webos/i'              =>  'Mobile',
+			'/wordpress/i'          =>  'Wordpress'
 		);
 		foreach ($os_array as $regex => $value) { 
 			if (preg_match($regex, $u_agent)) { $platform    =   $value; }
@@ -1184,17 +1185,12 @@ class ipflag {
 		else if (str_contains($xname,'Ubuntu')) $xicon = 'ubuntu.png';
 		else if (str_contains($xname,'Blackberry')) $xicon = 'blackberry.png';
 		else if (str_contains($xname,'Android')) $xicon = 'android.png';
-		else if (str_contains($xname,'MAC OS')) $xicon = 'mac.png';
+		else if (str_contains($xname,'Mac OS X')) $xicon = 'mac.png';
+		else if (str_contains($xname,'Wordpress')) $xicon = 'wordpress.png';
 		else if (str_contains($xname,'Windows Server 2003/XP x64')) $xicon = 'winxp.png';
 		else if (str_contains($xname,'Windows 8.1/S2012R2')) $xicon = 'win8-10.png';
 		else if (str_contains($xname,'iPhone')) $xicon = 'iphone.png';
-		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox.png';
-		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox.png';
-		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox.png';
-		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox.png';
-		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox.png';
-		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox.png';
-		else $xicon = 'Image/surf.png';
+		else $xicon = 'surf.png';
 		return '<img alt="browser" src="' .PB_ChartsCodes_URL_PATH . 'Image/'.$xicon . '">';
 	}
 
