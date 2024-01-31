@@ -1198,58 +1198,6 @@ class ipflag {
 		return '<img alt="browser" src="' .PB_ChartsCodes_URL_PATH . 'Image/'.$xicon . '">';
 	}
 
-// Display WP-Stats Admin Page
-function website_display_stats() {
-    global $wpdb;
-    $wsstats = '<div class="wrap"><strong>Website-Fakten</strong> ';
-    $totalposts = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'post' AND post_status = 'publish'");
-    $wsstats .= '&nbsp; Beiträge <span title="Total" class="newlabel white">'. number_format_i18n($totalposts,0).'</span>';
-    $totalpages = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->posts WHERE post_type = 'page' AND post_status = 'publish'");
-    $wsstats .= ' &nbsp; Seiten <span title="Total" class="newlabel white">'. $totalpages.'</span>';
-	$cargs = array('get' => 'all','hide_empty' => 0,'taxonomy'=>array('category','ddownload_category','quizcategory','product_cat'));
-	$wsstats .= ' &nbsp; Kategorien <span title="Gesamt Seiten" class="newlabel white">'. number_format_i18n(count(get_categories( $cargs )),0).'</span>';
-	$cargs = array('get' => 'all','hide_empty' => 0);
-	$wsstats .= '&nbsp; Themen <span title="Gesamt Themen" class="newlabel white">'. number_format_i18n(count(get_tags( $cargs )),0).'</span>';
-	$totalauthors = (int) $wpdb->get_var("SELECT COUNT(ID) FROM $wpdb->users LEFT JOIN $wpdb->usermeta ON $wpdb->usermeta.user_id = $wpdb->users.ID WHERE $wpdb->users.user_activation_key = '' AND $wpdb->usermeta.meta_key = '".$wpdb->prefix."user_level' AND (meta_value+0.00) > 1");
-    $wsstats .= ' &nbsp; Autoren <span title="Total" class="newlabel white">'. $totalauthors.'</span>';
-	$args = array(  'public'   => true,  '_builtin' => false );
-	$output = 'names'; // 'names' or 'objects' (default: 'names')
-	$operator = 'and'; // 'and' or 'or' (default: 'and')
-	$post_types = get_post_types( $args, $output, $operator );
-	$wsstats .= ' &nbsp; ' . __('custom post types','penguin') . ': ';
-	if ( $post_types ) { // If there are any custom public post types.
-		foreach ( $post_types  as $post_type ) {
-			$post30days = get_days_ago_post_count_by_categories('',$post_type);
-			if ( $post30days > 0 ) {
-				$count30 = '<span title="NEU 30 T" class="newlabel yellow">'.$post30days.'</span>';
-			} else $count30 = '';
-			$count_posts = wp_count_posts( $post_type )->publish;
-			$gpot = $post_type;
-			if ($post_type == 'w4pl') $gpot = 'list';
-			if ($post_type == 'product') $gpot = 'shop';
-			if ($post_type == 'dedo_download') $gpot = 'downloads';
-			$wsstats .= ' &nbsp; <a href="'.esc_url(site_url().'/'.$gpot).'">' . strtoupper($gpot) . '</a> <span title="Total" class="newlabel white">'.$count_posts.'</span> '.$count30.'';
-		}
-		// Post-Formate
-		if ( current_theme_supports( 'post-formats' ) ) {
-			$post_formats = get_theme_support( 'post-formats' );
-			if ( is_array( $post_formats[0] ) ) {
-				foreach ($post_formats[0] as $pf) {
-					$args = array( 'post_type'=> 'post', 'post_status' => 'publish', 'order' => 'DESC', 'tax_query' => array(
-							array( 'taxonomy' => 'post_format','field' => 'slug', 'terms' => array( 'post-format-'.$pf ) ) ) );
-					$asides = get_posts( $args );
-					$wsstats .= ' &nbsp; <a href="'.get_site_url().'/type/'.$pf.'">'.get_post_format_string($pf).'</a> <span title="Total" class="newlabel white"> '. count($asides) . '</span>';
-				} 
-			}
-		}
-	}
-	$totalcomments = (int) $wpdb->get_var("SELECT COUNT(comment_ID) FROM $wpdb->comments WHERE comment_approved = '1'");
-	$wsstats .= ' &nbsp; <a href="'.get_site_url().'/alle-kommentare/"><i class="fa fa-comments"></i> Kommentare</a> <span title="Total" class="newlabel white">'. $totalcomments. '</span>';
-    $wsstats .= ' &nbsp; <a target="_blank" href="'.get_bloginfo('url').'/sitemap/"><i class="fa fa-map"></i> (Mehr Details siehe Sitemap)</a>';
-    $wsstats .= '</div><br>';
-	return $wsstats;
-}
-
 	// 
 	//  Besucher in Datenbank schreiben oder als admin auswerten
 	// 
@@ -1304,8 +1252,8 @@ function website_display_stats() {
 			if ($zeitraum < 1) $zeitraum = 1;
 			$startday = ' - ' . date("d.m.Y", strtotime("-$zeitraum days"));
 			// Webseitenstatistik
-			$html  = $this->website_display_stats();
-			$html .= '<div style="text-align:right"><form name="wcitems" method="get">'.$totales;
+			$html = '<div style="text-align:right"><form name="wcitems" method="get">';
+			$html .= '<a target="_blank" href="'.get_bloginfo('url').'/sitemap/"><i class="fa fa-map"></i> Sitemap</a> &nbsp; ' . $totales;
 			$html .=' &nbsp; <input type="text" size="3" style="width:50px" id="zeitraum" name="zeitraum" value="'.$zeitraum.'">/'.$keepdays.' Tg ';
 			$html .='<input type="text" size="3" style="width:50px" id="items" name="items" value="'.$items.'"> Zeilen ';
 			$html .='<input type="text" size="20" title="filtern nach Browser, username, usertyp, Einzelbeitrag" placeholder="Suchfilter" id="suchfilter" name="suchfilter" value="'.$suchfilter.'">';
