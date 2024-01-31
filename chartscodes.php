@@ -9,10 +9,10 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.102
-Stable tag: 11.1.102
+Version: 11.1.103
+Stable tag: 11.1.103
 Requires at least: 6.0
-Tested up to: 6.4.2
+Tested up to: 6.4.3
 Requires PHP: 8.0
 */
 
@@ -48,28 +48,28 @@ function cc_page_by_title($pagetitle) {
 
 register_activation_hook( __FILE__, 'create_webcounter' );
 function create_webcounter() {
-		// Webcounterseite für admin erzeugen
-		$new_page_title = 'Webcounter Stats';
-		$slug = 'webcounter';
-		$new_page_content = '[webcounter admin=1]';
-		$new_page_template = ''; //ex. template-custom.php. Leave blank for default
-		$page_check = cc_page_by_title($new_page_title);
-		$new_page = array(
-			'post_type' => 'page',
-			'post_name'  =>   $slug,
-			'post_title' => $new_page_title,
-			'post_content' => $new_page_content,
-			'post_status' => 'private',
-			'post_author' => 1,
-			'comment_status' => 'closed',   // if you prefer
-			'ping_status' => 'closed',      // if you prefer
-	   );
-		if(!isset($page_check->ID)){
-			$new_page_id = wp_insert_post($new_page);
-			if(!empty($new_page_template)){
-				update_post_meta($new_page_id, '_wp_page_template', $new_page_template);
-			}
+	// Webcounterseite für admin erzeugen
+	$new_page_title = 'Webcounter Stats';
+	$slug = 'webcounter';
+	$new_page_content = '[webcounter admin=1]';
+	$new_page_template = ''; //ex. template-custom.php. Leave blank for default
+	$page_check = cc_page_by_title($new_page_title);
+	$new_page = array(
+		'post_type' => 'page',
+		'post_name'  =>   $slug,
+		'post_title' => $new_page_title,
+		'post_content' => $new_page_content,
+		'post_status' => 'private',
+		'post_author' => 1,
+		'comment_status' => 'closed',   // if you prefer
+		'ping_status' => 'closed',      // if you prefer
+   );
+	if(!isset($page_check->ID)){
+		$new_page_id = wp_insert_post($new_page);
+		if(!empty($new_page_template)){
+			update_post_meta($new_page_id, '_wp_page_template', $new_page_template);
 		}
+	}
 }
 
 
@@ -1027,8 +1027,6 @@ class ipflag {
 
 		//First get the platform?
 		$os_array = array(
-			'/windows nt 11.0/i'    =>  'Windows 11',
-			'/windows nt 10.1/i'    =>  'Windows 11',
 			'/windows nt 10.0/i'    =>  'Windows 10',
 			'/windows nt 6.3/i'     =>  'Windows 8.1/S2012R2',
 			'/windows nt 6.2/i'     =>  'Windows 8',
@@ -1056,6 +1054,15 @@ class ipflag {
 		foreach ($os_array as $regex => $value) { 
 			if (preg_match($regex, $u_agent)) { $platform    =   $value; }
 		}
+
+		// Windows 11 oder neuer detektieren
+			//foreach (getallheaders() as $name => $value) { echo "$name: $value\n"; }
+			// print_r( getallheaders()['sec-ch-ua-platform-version'] );
+		$browhints=getallheaders();
+		$hintos = str_replace('"', '', $browhints['sec-ch-ua-platform']);
+		$hintver = floatval(str_replace('"', '', $browhints['sec-ch-ua-platform-version']));
+		if ( $hintos == 'Windows' && $hintver == 12 ) $platform = 'Windows Server 2022';
+		if ( $hintos == 'Windows' && $hintver >= 13 ) $platform = 'Windows 11';
 
 		// Next get the name of the useragent yes seperately and for good reason
 		if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent)) {
@@ -1160,29 +1167,35 @@ class ipflag {
 	
 	// Browser und OS icons anzeigen
 	public function showbrowosicon($xname) {
-		switch ( $xname ) :
-			case 'Google Chrome' : $xicon = 'Image/chrome.png'; break;
-			case 'Microsoft Edge' : $xicon = 'Image/edgenew.png'; break;
-			case 'Mozilla Firefox' : $xicon = 'Image/firefox.png'; break;
-			case 'Edge legacy' : $xicon = 'Image/edge.png'; break;
-			case 'Internet Explorer' : $xicon = 'Image/msie.png'; break;
-			case 'Apple Safari' : $xicon = 'Image/safari.png'; break;
-			case 'MS-Office' : $xicon = 'Image/office.png'; break;
-			case 'Outlook' : $xicon = 'Image/outlook.png'; break;
-			case 'Windows 10' : $xicon = 'Image/win8-10.png'; break;
-			case 'Windows 8' : $xicon = 'Image/win8-10.png'; break;
-			case 'Windows XP' : $xicon = 'Image/winxp.png'; break;
-			case 'Windows 7' : $xicon = 'Image/win7.png'; break;
-			case 'Ubuntu' : $xicon = 'Image/ubuntu.png'; break;
-			case 'Blackberry' : $xicon = 'Image/blackberry.png'; break;
-			case 'Android' : $xicon = 'Image/android.png'; break;
-			case 'MAC OS X' : $xicon = 'Image/mac.png'; break;
-			case 'Windows Server 2003/XP x64' : $xicon = 'Image/winxp.png'; break;
-			case 'Windows 8.1/S2012R2' : $xicon = 'Image/win8-10.png'; break;
-			case 'iPhone' : $xicon = 'Image/iphone.png'; break;
-			default : $xicon = 'Image/surf.png'; break;
-		endswitch;
-		return '<img src="' .PB_ChartsCodes_URL_PATH . $xicon . '">';
+		if (str_contains($xname,'Google Chrome')) $xicon = 'chrome.png';
+		else if (str_contains($xname,'Microsoft Edge')) $xicon = 'edgenew.png';
+		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox.png';
+		else if (str_contains($xname,'Edge legacy')) $xicon = 'edge.png';
+		else if (str_contains($xname,'Internet Explorer')) $xicon = 'msie.png';
+		else if (str_contains($xname,'Apple Safari')) $xicon = 'safari.png';
+		else if (str_contains($xname,'MS-Office')) $xicon = 'office.png';
+		else if (str_contains($xname,'Outlook')) $xicon = 'outlook.png';
+		else if (str_contains($xname,'Windows Server 2022')) $xicon = 'winsrv22.png';
+		else if (str_contains($xname,'Windows 11')) $xicon = 'win11.png';
+		else if (str_contains($xname,'Windows 10')) $xicon = 'win8-10.png';
+		else if (str_contains($xname,'Windows 8')) $xicon = 'win8-10.png';
+		else if (str_contains($xname,'Windows XP')) $xicon = 'winxp.png';
+		else if (str_contains($xname,'Windows 7')) $xicon = 'win7.png';
+		else if (str_contains($xname,'Ubuntu')) $xicon = 'ubuntu.png';
+		else if (str_contains($xname,'Blackberry')) $xicon = 'blackberry.png';
+		else if (str_contains($xname,'Android')) $xicon = 'android.png';
+		else if (str_contains($xname,'MAC OS')) $xicon = 'mac.png';
+		else if (str_contains($xname,'Windows Server 2003/XP x64')) $xicon = 'winxp.png';
+		else if (str_contains($xname,'Windows 8.1/S2012R2')) $xicon = 'win8-10.png';
+		else if (str_contains($xname,'iPhone')) $xicon = 'iphone.png';
+		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox.png';
+		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox.png';
+		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox.png';
+		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox.png';
+		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox.png';
+		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox.png';
+		else $xicon = 'Image/surf.png';
+		return '<img alt="browser" src="' .PB_ChartsCodes_URL_PATH . 'Image/'.$xicon . '">';
 	}
 
 // Display WP-Stats Admin Page
@@ -1330,11 +1343,7 @@ function website_display_stats() {
 						$xsum += absint($customer->pidcount);
 						$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a></td><td>';
 						$diff = time() - strtotime(get_the_date( 'd. F Y', $customer->postid ));
-						if (round((intval($diff) / 86400), 0) < 30) {
-							$newcolor = "#ffd800";
-						} else {
-							$newcolor = "#fff";
-						}
+						if (round((intval($diff) / 86400), 0) < 30) $newcolor = "#fd08"; else $newcolor = "#fff";
 						$html .= '<i class="fa fa-calendar-o"></i> <span class="newlabel" style="background-color:'.$newcolor.'">'.date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_the_date( 'd. F Y', $customer->postid )) );
 						$html .= ' '.ago(get_the_date( 'U', $customer->postid ));
 						$html .= '</span></td><td><i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),number_format_i18n( (float) get_post_meta( $customer->postid, 'post_views_count', true ),0) ) . '</td></tr>';
@@ -1388,11 +1397,7 @@ function website_display_stats() {
 					title="filter:'. $customer->postid.'" class="fa fa-filter"></a> &nbsp; ';
 				$html .= ' <a title="Post aufrufen" href="'.$cplink.'">' . $cptitle .'</abbr></a></td>';
 				$diff = time() - strtotime($customer->datum);
-				if (round((intval($diff) / 86400), 0) < 30) {
-					$newcolor = "#ffd800";
-				} else {
-					$newcolor = "#fff";
-				}
+				if (round((intval($diff) / 86400), 0) < 30) $newcolor = "#fd08"; else $newcolor = "#fff";
 				$html .= '<td><span class="newlabel" style="background-color:'.$newcolor.'">' . $datum . ' ' . ago(strtotime($customer->datum)).'</span></td></tr>';
 			}	
 			$html .= '</table>';
@@ -1990,7 +1995,7 @@ function lastxvisitors ($items,$pageid) {
 	foreach($customers as $customer){
 		$datum = date_i18n( get_option('date_format') .' H:i:s', strtotime($customer->datum) );
 		$diff = time() - strtotime($customer->datum);
-		if (round((intval($diff) / 86400), 0) < 30) { $newcolor = "#ffd80088"; } else { $newcolor = "#fff"; }
+		if (round((intval($diff) / 86400), 0) < 30) { $newcolor = "#fd08"; } else { $newcolor = "#fff"; }
 		$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $brosicons->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
 		$html .= '<td><abbr>' .$brosicons->showbrowosicon($customer->platform).' '. substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</abbr>';
 		$html .= ' <i class="fa fa-map-marker"></i> <abbr>' . $customer->userip .'</abbr></td>';
