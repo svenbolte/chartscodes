@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.103
-Stable tag: 11.1.103
+Version: 11.1.104
+Stable tag: 11.1.104
 Requires at least: 6.0
 Tested up to: 6.4.3
 Requires PHP: 8.0
@@ -1053,17 +1053,18 @@ class ipflag {
 			'/wordpress/i'          =>  'Wordpress'
 		);
 		foreach ($os_array as $regex => $value) { 
-			if (preg_match($regex, $u_agent)) { $platform    =   $value; }
+			if (preg_match($regex, $u_agent)) $platform = $value;
 		}
 
-		// Windows 11 oder neuer detektieren
+		// Windows 11 oder neuer, Server 2019 und Server 2022 detektieren
 			//foreach (getallheaders() as $name => $value) { echo "$name: $value\n"; }
 			// print_r( getallheaders()['sec-ch-ua-platform-version'] );
 		$browhints=getallheaders();
 		$hintos = str_replace('"', '', $browhints['sec-ch-ua-platform']);
-		$hintver = floatval(str_replace('"', '', $browhints['sec-ch-ua-platform-version']));
-		if ( $hintos == 'Windows' && $hintver == 12 ) $platform = 'Windows Server 2022';
-		if ( $hintos == 'Windows' && $hintver >= 13 ) $platform = 'Windows 11';
+		$hintver = str_replace('"', '', $browhints['sec-ch-ua-platform-version']);
+		if ( $hintos == 'Windows' && $hintver == '7.0.0' ) $platform = 'Windows Server 2019';
+		if ( $hintos == 'Windows' && floatval($hintver) == 12 ) $platform = 'Windows Server 2022';
+		if ( $hintos == 'Windows' && floatval($hintver) >= 13 ) $platform = 'Windows 11';
 
 		// Next get the name of the useragent yes seperately and for good reason
 		if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent)) {
@@ -1105,6 +1106,18 @@ class ipflag {
 		else if(preg_match('/ms-office/i',$u_agent)) {
 			$bname = 'MS-Office';
 			$ub = "MSOffice";
+		}
+		else if(preg_match('/feedparser/i',$u_agent)) {
+			$bname = 'Feedparser RSS';
+			$ub = "Feedparser";
+		}
+		else if(preg_match('/rss-parser/i',$u_agent)) {
+			$bname = 'RSS Parser';
+			$ub = "RSSParser";
+		}
+		else if(preg_match('/wordpress/i',$u_agent)) {
+			$bname = 'Wordpress';
+			$ub = "Wordpress";
 		}
 		else if(preg_match('/outlook/i',$u_agent)) {
 			$bname = 'Outlook';
@@ -1177,6 +1190,7 @@ class ipflag {
 		else if (str_contains($xname,'MS-Office')) $xicon = 'office.png';
 		else if (str_contains($xname,'Outlook')) $xicon = 'outlook.png';
 		else if (str_contains($xname,'Windows Server 2022')) $xicon = 'winsrv22.png';
+		else if (str_contains($xname,'Windows Server 2019')) $xicon = 'winsrv22.png';
 		else if (str_contains($xname,'Windows 11')) $xicon = 'win11.png';
 		else if (str_contains($xname,'Windows 10')) $xicon = 'win8-10.png';
 		else if (str_contains($xname,'Windows 8')) $xicon = 'win8-10.png';
