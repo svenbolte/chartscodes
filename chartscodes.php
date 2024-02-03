@@ -1062,6 +1062,7 @@ class ipflag {
 		$browhints=getallheaders();
 		$hintos = str_replace('"', '', $browhints['sec-ch-ua-platform']);
 		$hintver = str_replace('"', '', $browhints['sec-ch-ua-platform-version']);
+		if ( $hintos == 'Windows' && $hintver == '3.0.0' ) $platform = 'Windows Server 2016';
 		if ( $hintos == 'Windows' && $hintver == '7.0.0' ) $platform = 'Windows Server 2019';
 		if ( $hintos == 'Windows' && floatval($hintver) == 12 ) $platform = 'Windows Server 2022';
 		if ( $hintos == 'Windows' && floatval($hintver) >= 13 ) $platform = 'Windows 11';
@@ -1114,6 +1115,10 @@ class ipflag {
 		else if(preg_match('/rss-parser/i',$u_agent)) {
 			$bname = 'RSS Parser';
 			$ub = "RSSParser";
+		}
+		else if(preg_match('/Go-http-client/i',$u_agent)) {
+			$bname = 'GO HTTP Client';
+			$ub = "GOHTTPClient";
 		}
 		else if(preg_match('/wordpress/i',$u_agent)) {
 			$bname = 'Wordpress';
@@ -1190,7 +1195,7 @@ class ipflag {
 		else if (str_contains($xname,'MS-Office')) $xicon = 'office.png';
 		else if (str_contains($xname,'Outlook')) $xicon = 'outlook.png';
 		else if (str_contains($xname,'Windows Server 2022')) $xicon = 'winsrv22.png';
-		else if (str_contains($xname,'Windows Server 2019')) $xicon = 'winsrv22.png';
+		else if (str_contains($xname,'Windows Server 201')) $xicon = 'winsrv22.png';
 		else if (str_contains($xname,'Windows 11')) $xicon = 'win11.png';
 		else if (str_contains($xname,'Windows 10')) $xicon = 'win8-10.png';
 		else if (str_contains($xname,'Windows 8')) $xicon = 'win8-10.png';
