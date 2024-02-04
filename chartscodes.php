@@ -1059,9 +1059,9 @@ class ipflag {
 		// Windows 11 oder neuer, Server 2019 und Server 2022 detektieren
 			//foreach (getallheaders() as $name => $value) { echo "$name: $value\n"; }
 			// print_r( getallheaders()['sec-ch-ua-platform-version'] );
-		$browhints=getallheaders();
-		$hintos = str_replace('"', '', $browhints['sec-ch-ua-platform']);
-		$hintver = str_replace('"', '', $browhints['sec-ch-ua-platform-version']);
+		$browhints=getallheaders() ?? array();
+		$hintos = str_replace('"', '', $browhints['sec-ch-ua-platform'] ?? '');
+		$hintver = str_replace('"', '', $browhints['sec-ch-ua-platform-version'] ?? '');
 		if ( $hintos == 'Windows' && $hintver == '3.0.0' ) $platform = 'Windows Server 2016';
 		if ( $hintos == 'Windows' && $hintver == '7.0.0' ) $platform = 'Windows Server 2019';
 		if ( $hintos == 'Windows' && floatval($hintver) == 12 ) $platform = 'Windows Server 2022';
@@ -1954,22 +1954,25 @@ function lastxvisitors ($items,$pageid) {
 	global $wpdb;
 	$table = $wpdb->prefix . "sitevisitors";
 	$customers = $wpdb->get_results("SELECT * FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -90 DAY ) ".$pagefilter." ORDER BY datum desc LIMIT ".$items);
-	$html ='<div class="noprint"><h6>'.__("Last Visitors","pb-chartscodes").'</h6><table style="table-layout:fixed">';
-	foreach($customers as $customer){
-		$datum = date_i18n( get_option('date_format') .' H:i:s', strtotime($customer->datum) );
-		$diff = time() - strtotime($customer->datum);
-		if (round((intval($diff) / 86400), 0) < 30) { $newcolor = "#fd08"; } else { $newcolor = "#fff"; }
-		$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $brosicons->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
-		$html .= '<td><abbr>' .$brosicons->showbrowosicon($customer->platform).' '. substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</abbr>';
-		$html .= ' <i class="fa fa-map-marker"></i> <abbr>' . $customer->userip .'</abbr></td>';
-		if ($customer->country == 'EUROPEANUNION') $customer->country = 'EU';
-		$html .= '<td>' .do_shortcode('[ipflag iso="'.$customer->country.'"]') .' ';
-		$html .= '<i class="fa fa-user"></i> <abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
-		if (empty($pageid)) $html .= '<td><abbr><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</abbr></a></td>';
-		$html .= '<td><span class="newlabel" style="background-color:'.$newcolor.'">' . $datum . ' ' . ago(strtotime($customer->datum)).'</span></td></tr>';
+	$counts = count( $customers );
+	if ($counts > 0) {
+		$html ='<div class="noprint"><h6>'.__("Last Visitors","pb-chartscodes").'</h6><table style="table-layout:fixed">';
+		foreach($customers as $customer){
+			$datum = date_i18n( get_option('date_format') .' H:i:s', strtotime($customer->datum) );
+			$diff = time() - strtotime($customer->datum);
+			if (round((intval($diff) / 86400), 0) < 30) { $newcolor = "#fd08"; } else { $newcolor = "#fff"; }
+			$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $brosicons->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
+			$html .= '<td><abbr>' .$brosicons->showbrowosicon($customer->platform).' '. substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</abbr>';
+			$html .= ' <i class="fa fa-map-marker"></i> <abbr>' . $customer->userip .'</abbr></td>';
+			if ($customer->country == 'EUROPEANUNION') $customer->country = 'EU';
+			$html .= '<td>' .do_shortcode('[ipflag iso="'.$customer->country.'"]') .' ';
+			$html .= '<i class="fa fa-user"></i> <abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
+			if (empty($pageid)) $html .= '<td><abbr><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</abbr></a></td>';
+			$html .= '<td><span class="newlabel" style="background-color:'.$newcolor.'">' . $datum . ' ' . ago(strtotime($customer->datum)).'</span></td></tr>';
+		}	
+		$html .= '</table></div>';
+		return $html;
 	}	
-	$html .= '</table></div>';
-	return $html;
 }
 
 // ==================== Hardwaremarkenlogos anzeigen Shortcode ======================================
