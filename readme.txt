@@ -2,8 +2,8 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.104
-Stable tag: 11.1.104
+Version: 11.1.106
+Stable tag: 11.1.106
 Requires at least: 6.0
 Tested up to: 6.4.3
 Requires PHP: 8.0
