@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.106
-Stable tag: 11.1.106
+Version: 11.1.107
+Stable tag: 11.1.107
 Requires at least: 6.0
 Tested up to: 6.4.3
 Requires PHP: 8.0
@@ -1018,7 +1018,7 @@ class ipflag {
 	'BM' => 'Bermuda',
 	'BN' => 'Brunei Darussalam',
 	'BO' => 'Bolivia (Plurinational State of)',
-	'BQ' => 'Bonaire, Sint Eustatius and Saba',
+	'BQ' => 'Bonaire  Sint Eustatius and Saba',
 	'BR' => 'Brazil',
 	'BS' => 'Bahamas',
 	'BT' => 'Bhutan',
@@ -1028,7 +1028,7 @@ class ipflag {
 	'BZ' => 'Belize',
 	'CA' => 'Canada',
 	'CC' => 'Cocos (Keeling) Islands',
-	'CD' => 'Congo, Democratic Republic of the',
+	'CD' => 'Congo  Democratic Republic of the',
 	'CF' => 'Central African Republic',
 	'CG' => 'Congo',
 	'CH' => 'Switzerland',
@@ -1113,7 +1113,7 @@ class ipflag {
 	'KM' => 'Comoros',
 	'KN' => 'Saint Kitts and Nevis',
 	'KP' => 'Korea (Democratic Peoples Republic of)',
-	'KR' => 'Korea, Republic of',
+	'KR' => 'Korea  Republic of',
 	'KW' => 'Kuwait',
 	'KY' => 'Cayman Islands',
 	'KZ' => 'Kazakhstan',
@@ -1130,7 +1130,7 @@ class ipflag {
 	'LY' => 'Libya',
 	'MA' => 'Morocco',
 	'MC' => 'Monaco',
-	'MD' => 'Moldova, Republic of',
+	'MD' => 'Moldova  Republic of',
 	'ME' => 'Montenegro',
 	'MF' => 'Saint Martin (French part)',
 	'MG' => 'Madagascar',
@@ -1174,7 +1174,7 @@ class ipflag {
 	'PM' => 'Saint Pierre and Miquelon',
 	'PN' => 'Pitcairn',
 	'PR' => 'Puerto Rico',
-	'PS' => 'Palestine, State of',
+	'PS' => 'Palestine  State of',
 	'PT' => 'Portugal',
 	'PW' => 'Palau',
 	'PY' => 'Paraguay',
@@ -1190,7 +1190,7 @@ class ipflag {
 	'SD' => 'Sudan',
 	'SE' => 'Sweden',
 	'SG' => 'Singapore',
-	'SH' => 'Saint Helena, Ascension and Tristan da Cunha',
+	'SH' => 'Saint Helena  Ascension and Tristan da Cunha',
 	'SI' => 'Slovenia',
 	'SJ' => 'Svalbard and Jan Mayen',
 	'SK' => 'Slovakia',
@@ -1219,8 +1219,8 @@ class ipflag {
 	'TR' => 'Tuerkiye',
 	'TT' => 'Trinidad and Tobago',
 	'TV' => 'Tuvalu',
-	'TW' => 'Taiwan, Province of China',
-	'TZ' => 'Tanzania, United Republic of',
+	'TW' => 'Taiwan (Republic)',
+	'TZ' => 'Tanzania  United Republic of',
 	'UA' => 'Ukraine',
 	'UG' => 'Uganda',
 	'UM' => 'United States Minor Outlying Islands',
@@ -1243,7 +1243,7 @@ class ipflag {
 	'ZA' => 'South Africa',
 	'ZM' => 'Zambia',
 	'ZW' => 'Zimbabwe',
-	'ZZ' => 'worldwide',
+	'ZZ' => 'international worldwide',
 	),
 		'de' => array (
 	'AD' => 'Andorra',
@@ -1477,7 +1477,7 @@ class ipflag {
 	'TR' => 'Türkei',
 	'TT' => 'Trinidad und Tobago',
 	'TV' => 'Tuvalu',
-	'TW' => 'China  Republik',
+	'TW' => 'Taiwan',
 	'TZ' => 'Tansania',
 	'UA' => 'Ukraine',
 	'UG' => 'Uganda',
@@ -2536,14 +2536,40 @@ add_shortcode('complogo', 'complogo_shortcode');
 
 // ==================== Automarkenlogos anzeigen Shortcode ======================================
 function carlogo_shortcode($atts){
+	// Load car freaky style for car
+	wp_enqueue_style( 'pb-autologo-style', PB_ChartsCodes_URL_PATH . 'flags/car-logos.min.css' );
+	$flagland = new ipflag();
 	$args = shortcode_atts( array(
 		      'scale' => '',     		// sm = 32px  xs=21px
-		      'brand' => '0unknown',  // Autohersteller
+		      'brand' => '0unknown',  // Autohersteller all=alle auflisten
      		), $atts );
-		// Load car freaky style for car
-		wp_enqueue_style( 'pb-autologo-style', PB_ChartsCodes_URL_PATH . 'flags/car-logos.min.css' );
-		$autologo = '<a target="_blank" href="https://'.strtolower($args['brand']).'.de"><i class="fcar fcar-'.strtolower($args['brand']).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtoupper($atts['brand']).' aufrufen"></i></a>';
-        return $autologo;
+	$brand = strtolower($args['brand']);
+	// $brand="ktm";
+	$carlands = 'Abarth;IT,Acura;US,AlfaRomeo;IT,Alpina;DE,Aprilia;IT,AstonMartin;GB,Audi;DE,Bentley;GB,BMW;DE,BYD;CN,Brilliance;CN,Bugatti;FR,Buick;US,Cadillac;US,Caterham;GB,Chery;CN,Chevrolet;US,Chrysler;US,Citroen;FR,Cupra;ES,Dacia;RO,Daewoo;KR,Daihatsu;JP,Datsun;JP,Dodge;US,Ferrari;IT,Fiat;IT,Ford;US,GMC;US,Geely;CN,Genesis;KR,GreatWall;CN,Haval;CN,Holden;AU,Honda;JP,Hummer;US,Hyundai;KR,Infiniti;HK,Isuzu;JP,Jaguar;GB,Jeep;US,Kia;KR,KTM;AT,Lada;RU,Lamborghini;IT,Lancia;IT,LandRover;GB,LDV;CN,Lexus;JP,Lincoln;US,Lotus;GB,Mahindra;IN,Maserati;IT,Maybach;DE,Mazda;JP,McLaren;GB,Mercedes;DE,MG;GB,Mini;GB,Morgan;GB,Mitsubishi;JP,NIO;CN,Nissan;JP,Opel;DE,Pagani;IT,Peugeot;FR,Porsche;DE,Proton;MY,Polestar;SE,RangeRover;GB,Renault;FR,Rimac;HR,RollsRoyce;GB,Rover;GB,Saab;SE,SEAT;ES,Scania;SE,SKODA;CZ,Spyker;NL,Smart;CN,SsangYong;KR,Subaru;JP,Suzuki;JP,Tesla;US,Trabant;DD,Triumph;GB,Toyota;JP,Vauxhall;GB,Volkswagen;DE,Volvo;SE,Wartburg;DD,Yugo;RS';
+	$carlandarray = explode (",",$carlands);
+	$carcountry = '';
+
+	if ('all' === $brand) {
+		$autologo = '';
+		foreach ($carlandarray as $carland) {
+			$ctryfound = explode (";",$carland);
+			$carcountry = '<i class="fflag fflag-'.$ctryfound[1].' ff-sm" title="'.__('manufacturer origin')
+				.' '.$ctryfound[1].'"></i> '.$flagland->country_code('de',$ctryfound[1]);
+			$carurl = preg_replace('/[^a-z]/', '', strtolower($ctryfound[0]));
+			$autologo .= '<div style="padding:5px;display:inline-block;height:76px;border:1px solid #ccc;"><a target="_blank" href="https://'.$carurl.'.de"><i class="fcar fcar-'.strtolower($ctryfound[0]).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtolower($ctryfound[0]).' aufrufen"></i></a> '.strtoupper($ctryfound[0]).' &nbsp; '.$carcountry.'</div>';
+		}
+	} else {
+		foreach ($carlandarray as $carland) {
+			if ( str_contains(strtolower($carland),$brand) ) {
+				$ctryfound = explode (";",$carland);
+				$carcountry = ' <i class="fflag fflag-'.$ctryfound[1].' ff-sm" title="'.__('manufacturer origin')
+					.' '.$ctryfound[1].'"></i> &nbsp; '.$flagland->country_code('de',$ctryfound[1]);
+			}	
+		}
+		if (!empty($ctryfound[0])) $carurl = preg_replace('/[^a-z]/', '', strtolower($ctryfound[0])); else $carurl='';
+		$autologo = '<a target="_blank" href="https://'.$carurl.'.de"><i class="fcar fcar-'.$brand.' fc-'.$args['scale'].'" title=" Herstellerseite: '.$brand.' aufrufen"></i></a> '.strtoupper($ctryfound[0] ?? '').' &nbsp; '.$carcountry;
+	}	
+	return $autologo;
 }
 add_shortcode('carlogo', 'carlogo_shortcode');
 ?>

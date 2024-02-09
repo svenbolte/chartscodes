@@ -2,8 +2,8 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.106
-Stable tag: 11.1.106
+Version: 11.1.107
+Stable tag: 11.1.107
 Requires at least: 6.0
 Tested up to: 6.4.3
 Requires PHP: 8.0
@@ -196,7 +196,7 @@ if(isset($ipflag) && is_object($ipflag)){
 Use Shortcode: [carlogo brand="mercedes" scale="sm"]
 
 		      'scale' => '',     		// sm = 32px  xs=21px
-		      'brand' => '0unknown',  // Autohersteller
+		      'brand' => '0unknown',  // Autohersteller  - all=show all logos with countries and flag
 to display logo and link to german webpage or car manufacturer
 
 =========================================== Computerbrand logo Shortcode ===============================================
@@ -209,6 +209,10 @@ to display logo and link to german webpage or computer manufacturer
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.107 =
+[Carlogos] updated and their origin land iso added to display flag of origin on shortcode use.
+Shortcode parameter "brand=all" added to display a panel aof all supported car brands with origin country 
 
 = 11.1.101 =
 girocode improved and iban generator für germany added
