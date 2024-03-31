@@ -2529,7 +2529,7 @@ function complogo_shortcode($atts){
      		), $atts );
 		// Load comp freaky style for brands
 		wp_enqueue_style( 'pb-complogo-style', PB_ChartsCodes_URL_PATH . 'flags/computerbrands.min.css' );
-		$complogo = '<a target="_blank" href="https://'.strtolower($args['brand']).'.de"><i class="comp comp-'.strtolower($args['brand']).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtoupper($atts['brand']).' aufrufen"></i></a>';
+		$complogo = '<a target="_blank" href="http://'.strtolower($args['brand']).'.com"><i class="comp comp-'.strtolower($args['brand']).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtoupper($atts['brand']).' aufrufen"></i></a>';
         return $complogo;
 }
 add_shortcode('complogo', 'complogo_shortcode');
@@ -2556,7 +2556,8 @@ function carlogo_shortcode($atts){
 			$carcountry = '<i class="fflag fflag-'.$ctryfound[1].' ff-sm" title="'.__('manufacturer origin')
 				.' '.$ctryfound[1].'"></i> '.$flagland->country_code('de',$ctryfound[1]);
 			$carurl = preg_replace('/[^a-z]/', '', strtolower($ctryfound[0]));
-			$autologo .= '<div style="padding:5px;display:inline-block;height:76px;border:1px solid #ccc;"><a target="_blank" href="https://'.$carurl.'.de"><i class="fcar fcar-'.strtolower($ctryfound[0]).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtolower($ctryfound[0]).' aufrufen"></i></a> '.strtoupper($ctryfound[0]).' &nbsp; '.$carcountry.'</div>';
+			$autologo .= '<div style="padding:5px;display:inline-block;height:76px;border:1px solid #ccc;">
+				<a target="_blank" href="http://'.$carurl.'.com"><i class="fcar fcar-'.strtolower($ctryfound[0]).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtolower($ctryfound[0]).' aufrufen"></i></a> '.strtoupper($ctryfound[0]).' &nbsp; '.$carcountry.'</div>';
 		}
 	} else {
 		foreach ($carlandarray as $carland) {
@@ -2567,7 +2568,7 @@ function carlogo_shortcode($atts){
 			}	
 		}
 		if (!empty($ctryfound[0])) $carurl = preg_replace('/[^a-z]/', '', strtolower($ctryfound[0])); else $carurl='';
-		$autologo = '<a target="_blank" href="https://'.$carurl.'.de"><i class="fcar fcar-'.$brand.' fc-'.$args['scale'].'" title=" Herstellerseite: '.$brand.' aufrufen"></i></a> '.strtoupper($ctryfound[0] ?? '').' &nbsp; '.$carcountry;
+		$autologo = '<a target="_blank" href="http://'.$carurl.'.com"><i class="fcar fcar-'.$brand.' fc-'.$args['scale'].'" title=" Herstellerseite: '.$brand.' aufrufen"></i></a> '.strtoupper($ctryfound[0] ?? '').' &nbsp; '.$carcountry;
 	}	
 	return $autologo;
 }
