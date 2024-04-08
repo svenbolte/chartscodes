@@ -5,7 +5,7 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Version: 11.1.107
 Stable tag: 11.1.107
 Requires at least: 6.0
-Tested up to: 6.4.3
+Tested up to: 6.5
 Requires PHP: 8.0
 
 == Description ==
