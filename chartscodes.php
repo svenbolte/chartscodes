@@ -1603,11 +1603,11 @@ class ipflag {
 		}
 
 		// Windows 11 oder neuer, Server 2019 und Server 2022 detektieren
-			//foreach (getallheaders() as $name => $value) { echo "$name: $value\n"; }
-			// print_r( getallheaders()['sec-ch-ua-platform-version'] );
+			// foreach (getallheaders() as $name => $value) { echo "$name: $value\n"; }
+			// print_r( getallheaders()['Sec-Ch-Ua-Platform-Version'] );
 		$browhints=getallheaders() ?? array();
-		$hintos = str_replace('"', '', $browhints['sec-ch-ua-platform'] ?? '');
-		$hintver = str_replace('"', '', $browhints['sec-ch-ua-platform-version'] ?? '');
+		$hintos = str_replace('"', '', $browhints['Sec-Ch-Ua-Platform'] ?? '');
+		$hintver = str_replace('"', '', $browhints['Sec-Ch-Ua-Platform-Version'] ?? '');
 		if ( $hintos == 'Windows' && $hintver == '3.0.0' ) $platform = 'Windows Server 2016';
 		if ( $hintos == 'Windows' && $hintver == '7.0.0' ) $platform = 'Windows Server 2019';
 		if ( $hintos == 'Windows' && floatval($hintver) == 12 ) $platform = 'Windows Server 2022';
