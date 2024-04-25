@@ -1606,8 +1606,10 @@ class ipflag {
 			// foreach (getallheaders() as $name => $value) { echo "$name: $value\n"; }
 			// print_r( getallheaders()['Sec-Ch-Ua-Platform-Version'] );
 		$browhints=getallheaders() ?? array();
-		$hintos = str_replace('"', '', $browhints['Sec-Ch-Ua-Platform'] ?? '');
-		$hintver = str_replace('"', '', $browhints['Sec-Ch-Ua-Platform-Version'] ?? '');
+		if (!empty($browhints['Sec-Ch-Ua-Platform'])) $hintos = str_replace('"', '', $browhints['Sec-Ch-Ua-Platform'] ?? '');
+		if (!empty($browhints['sec-ch-ua-platform'])) $hintos = str_replace('"', '', $browhints['sec-ch-ua-platform'] ?? '');
+		if (!empty($browhints['Sec-Ch-Ua-Platform-Version'])) 		$hintver = str_replace('"', '', $browhints['Sec-Ch-Ua-Platform-Version'] ?? '');
+		if (!empty($browhints['sec-ch-ua-platform-version'])) 		$hintver = str_replace('"', '', $browhints['sec-ch-ua-platform-version'] ?? '');
 		if ( $hintos == 'Windows' && $hintver == '3.0.0' ) $platform = 'Windows Server 2016';
 		if ( $hintos == 'Windows' && $hintver == '7.0.0' ) $platform = 'Windows Server 2019';
 		if ( $hintos == 'Windows' && floatval($hintver) == 12 ) $platform = 'Windows Server 2022';
@@ -2077,18 +2079,20 @@ class ipflag {
 			// ip anonymisieren wegen dsgvo
 			$ip = long2ip(ip2long($ip) & 0xFFFFFF00);
 		 	$referer = wp_get_referer();
-			$yourdetails = "<br><strong>".__('ip network', 'pb-chartscodes').":</strong> ". $ip . "<br><strong>".__('referer', 'pb-chartscodes')."</strong> " . $referer;
+			$yourdetails = "<div><strong>".__('ip network', 'pb-chartscodes')."</strong> ". $ip . "<br><strong>".__('referer', 'pb-chartscodes')."</strong> " . $referer.'</div>';
 		}
 		$yourbrowser='';
 		if ( $browser ) {
 			$ua=$this->getBrowser();
-			$yourbrowser = "<br><strong>Angemeldet als</strong> ". $ua['username'] . ' ' . $ua['usertype'];
-			$yourbrowser .= "<br><strong>".__('browser', 'pb-chartscodes')."</strong> " . $ua['name'] . " " . $ua['version'] . " unter " .$ua['platform']  . " " .substr($ua['language'],0,2) . "<br><small>" . $ua['userAgent']."</small>";
+			$yourbrowser = '<div><strong>Angemeldet als</strong> '. $ua['username'] . ' ' . $ua['usertype'];
+			$yourbrowser .= '<br><strong>'.__('browser', 'pb-chartscodes').'</strong> '. $this->showbrowosicon($ua['name']) .' '.
+				$ua['name'] . ' ' . $ua['version'] . ' unter ' .$this->showbrowosicon($ua['platform']).' '.$ua['platform']  . ' ' .
+				substr($ua['language'],0,2) . '<br>' . $ua['userAgent'].'</div>';
 		}
         if (($info = $this->get_info($ip)) != false) {
-            $flag = '<div style="display:inline">'.$this->country_code('de',$info->code).' ('.$info->code.') &nbsp; '.$this->get_flag($info).'</div>';
+            $flag = '<div title="IP: '.$ip.'" style="display:inline">'.$this->country_code('de',$info->code).' ('.$info->code.') &nbsp; '.$this->get_flag($info).'</div>';
 		} else {
-            $flag = '<div style="display:inline">privates Netzwerk &nbsp; '.$this->get_flag($info).'</div>';
+            $flag = '<div title="IP: '.$ip.'" style="display:inline">privates Netzwerk &nbsp; '.$this->get_flag($info).'</div>';
 		}	
 		if ( !empty($iso) ) {
 			$flag =  $this->get_flag( (object) [ 'code' => strtoupper($iso) ]);
@@ -2101,6 +2105,8 @@ class ipflag {
 				$flag .= ' &nbsp; ' . $this->country_code('de',$this->get_isofromland($name)->code);
 			} 
 		}
+		if (!empty($yourbrowser)) $yourbrowser = '<blockquote class="blockbulb">' . $yourbrowser;
+		if (!empty($yourdetails)) $yourdetails .= '</blockquote>';
 		return $flag . $yourbrowser . $yourdetails;
     }
 
