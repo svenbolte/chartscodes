@@ -1966,7 +1966,7 @@ class ipflag {
 			$customers = $wpdb->get_results("SELECT COUNT(platform) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." ORDER BY bcount desc LIMIT ".$items);
 			$totalsum = $customers[0]->bcount ?? 1;
 			$customers = $wpdb->get_results("SELECT platform, COUNT(platform) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." GROUP BY platform ORDER BY bcount desc LIMIT ".$items);
-			$html .='<h6>'.sprintf(__('Top %1s operating system %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).'</h6><table>';
+			$html .='<h6>'.sprintf(__('Top %1s operating systems %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).'</h6><table>';
 			foreach($customers as $customer){
 				$xsum += absint($customer->bcount);
 				if ( count($customers)>=1 ) $html .= '<tr><td>' . $customer->bcount . '</td><td>'. number_format_i18n( ($customer->bcount/$totalsum*100), 2 ). ' %</td><td>'.$customer->platform . '</td></tr>';

@@ -7,74 +7,75 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2023-06-30 19:17+0000\n"
+"PO-Revision-Date: 2024-04-26 08:04+0000\n"
 "Last-Translator: Keller Admin\n"
 "Language-Team: Deutsch\n"
 "X-Generator: Loco https://localise.biz/\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Loco-Version: 2.6.4; wp-6.2.2\n"
+"X-Loco-Version: 2.6.7; wp-6.5.2\n"
 "Report-Msgid-Bugs-To: "
 
-#: chartscodes.php:1164
+#: chartscodes.php:1788
 #, php-format
 msgid "%1s clicks total, %2s since %3s"
 msgstr "%1s Klicks gesamt, %2s seit %3s"
 
-#: chartscodes.php:1240
+#: chartscodes.php:1860
 #, php-format
 msgid ", visitors alltime: %s"
 msgstr " Allzeit-Besucher: %s"
 
-#: pb-shortcodes.php:416
+#: chartscodes.php:438
 #, php-format
 msgid "<strong>%1s</strong> values, <strong>%2s</strong> sum of values"
 msgstr "<strong>%1s</strong> Werte, <strong>%2s</strong> Werte-Summe"
 
-#: chartscodes.php:1243 chartscodes.php:1260
+#: chartscodes.php:1863 chartscodes.php:1880 chartscodes.php:1959
+#: chartscodes.php:1978 chartscodes.php:1995
 #, php-format
 msgid "<strong>%s</strong> sum of values"
 msgstr "<strong>%s</strong> Summe der Einzel-Werte"
 
-#: chartscodes.php:1600
+#: chartscodes.php:2247
 msgid "Bar and Piecharts"
 msgstr "Balken und Kuchendiagramme"
 
-#: chartscodes.php:1630 chartscodes.php:1632
+#: chartscodes.php:2277 chartscodes.php:2279
 msgid "Bar Graph Chart"
 msgstr "Balkendiagramm"
 
-#: chartscodes.php:1472
+#: chartscodes.php:2115
 msgid "browser"
 msgstr "Browser"
 
 #. Name of the plugin
-#: chartscodes.php:1547
+#: chartscodes.php:2194
 #| msgid "Charts QR-Barcodes"
 msgid "Charts QRcodes"
 msgstr "Charts QRcodes"
 
-#: chartscodes.php:1565
+#: chartscodes.php:2212
 msgid "Chartscodes Settings"
 msgstr "Chartscodes Einstellungen"
 
-#: chartscodes.php:1303
+#: chartscodes.php:1919
 #, php-format
 msgid "clicks by hour %1s last %2s days"
 msgstr "Klicks nach Stunden %1s letzte %2s Tage"
 
-#: chartscodes.php:1317
+#: chartscodes.php:1933
 #, php-format
 #| msgid "clicks by weekday {filter: %2s} last %1s days"
 msgid "clicks by weekday %2s last %1s days"
 msgstr "Klicks nach Wochentag %2s letzte %1s Tage"
 
-#: chartscodes.php:1204
+#: chartscodes.php:1828
 #, php-format
 msgid "clicks last %s days"
 msgstr "Klicks der letzten %s Tage"
 
-#: chartscodes.php:1709
+#: chartscodes.php:2356
 msgid ""
 "Couldn't fetch ipflag database zip file. Fetching remote content not "
 "supported or remote server is down."
@@ -82,7 +83,7 @@ msgstr ""
 "Die ipflag-Datenbank-Zip-Datei konnte nicht abgerufen werden. Das Abrufen "
 "von nicht unterstütztem Remote-Inhalt oder Remote-Server ist ausgefallen.\n"
 
-#: chartscodes.php:1792
+#: chartscodes.php:2439
 msgid ""
 "Couldn't read ipflag database file from local file system. Please check "
 "permissions."
@@ -91,7 +92,7 @@ msgstr ""
 "Die ipflag-Datenbankdatei konnte nicht aus dem lokalen Dateisystem gelesen "
 "werden. Bitte überprüfen Sie die Berechtigungen.\n"
 
-#: chartscodes.php:1722
+#: chartscodes.php:2369
 msgid ""
 "Couldn't unzip ipflag database zip file to local file system. Please check "
 "permissions and your server unzip capabilities."
@@ -100,7 +101,7 @@ msgstr ""
 "entpackt werden. Bitte überprüfen Sie die Berechtigungen und die "
 "Entpackungsfunktionen Ihres Servers."
 
-#: chartscodes.php:1728
+#: chartscodes.php:2375
 msgid ""
 "Couldn't write ipflag database version file to local file system. Please "
 "check permissions."
@@ -108,7 +109,7 @@ msgstr ""
 "Die ipflag-Datenbankversionsdatei konnte nicht in das lokale Dateisystem "
 "geschrieben werden. Bitte überprüfen Sie die Berechtigungen."
 
-#: chartscodes.php:1718
+#: chartscodes.php:2365
 msgid ""
 "Couldn't write ipflag database zip file to local file system. Please check "
 "permissions."
@@ -116,50 +117,50 @@ msgstr ""
 "Die ipflag-Datenbank-Zip-Datei konnte nicht in das lokale Dateisystem "
 "geschrieben werden. Bitte überprüfen Sie die Berechtigungen."
 
-#: chartscodes.php:1657
+#: chartscodes.php:2304
 msgid "Current database status:"
 msgstr ""
 "\n"
 "Aktueller Datenbankstatus:"
 
-#: chartscodes.php:1692
+#: chartscodes.php:2339
 msgid "Database missing or corrupted, please update"
 msgstr "Datenbank fehlt oder ist beschädigt, bitte aktualisieren"
 
-#: chartscodes.php:1640 chartscodes.php:1642
+#: chartscodes.php:2287 chartscodes.php:2289
 msgid "Default Line Chart"
 msgstr "Standard Liniengrafik"
 
-#: chartscodes.php:1610 chartscodes.php:1612
+#: chartscodes.php:2257 chartscodes.php:2259
 msgid "Default Pie Chart"
 msgstr "Standard Kuchendiagramm"
 
-#: chartscodes.php:1655
+#: chartscodes.php:2302
 msgid "delete webhits older than (days):"
 msgstr "Webhits nach (mind. 30) Tagen löschen:"
 
-#: chartscodes.php:1615 chartscodes.php:1617
+#: chartscodes.php:2262 chartscodes.php:2264
 msgid "Doughnut Pie Chart"
 msgstr "Donut Kuchendiagramm"
 
-#: chartscodes.php:1656
+#: chartscodes.php:2303
 msgid "Enable automatic weekly database update check:"
 msgstr "Flaggendatenbank wöchentlich aktualisieren?"
 
-#: chartscodes.php:310
+#: chartscodes.php:937
 msgid "every week"
 msgstr "jede Woche"
 
-#: chartscodes.php:919
+#: chartscodes.php:1565
 msgid "Guest"
 msgstr "Gast"
 
-#: chartscodes.php:1662
+#: chartscodes.php:2309
 msgid "Here you can control all ipflag and webcounter database options:"
 msgstr ""
 "Webcounter und IPFlag Datenbank-Einstellungen, Aktualisierung, Speicherdauer:"
 
-#: chartscodes.php:1635 chartscodes.php:1637 chartscodes.php:1645
+#: chartscodes.php:2282 chartscodes.php:2284 chartscodes.php:2292
 msgid "Horizontal Bar Graph Chart"
 msgstr "horizontales Balkendiagramm"
 
@@ -171,35 +172,35 @@ msgstr "https://github.com/svenbolte"
 msgid "https://github.com/svenbolte/chartcodes"
 msgstr "https://github.com/svenbolte/chartcodes"
 
-#: chartscodes.php:1466
+#: chartscodes.php:2109
 msgid "ip network"
 msgstr "IP-Netzwerk"
 
-#: chartscodes.php:1705
+#: chartscodes.php:2352
 msgid "ipflag database already up to date."
 msgstr "ipflag Datenbank bereits aktuell."
 
-#: chartscodes.php:1654
+#: chartscodes.php:2301
 msgid "ipflag database options"
 msgstr ""
 "\n"
 "ipflag Datenbankoptionen"
 
-#: chartscodes.php:1506
+#: chartscodes.php:2153
 msgid "ipflag database updated."
 msgstr "ipflag Datenbank aktualisiert."
 
-#: chartscodes.php:229
+#: chartscodes.php:854
 msgid "is not a valid IBAN"
 msgstr "ist keine gültige IBAN"
 
-#: chartscodes.php:1268
+#: chartscodes.php:1888
 #, php-format
 #| msgid "last %1s visitors {filter: %2s} last %3s days"
 msgid "last %1s visitors %2s last %3s days"
 msgstr "Letzte %1s Besucher %2s letzte %3s Tage"
 
-#: chartscodes.php:1889
+#: chartscodes.php:2538
 msgid "Last Visitors"
 msgstr "Letzte Besucher"
 
@@ -208,56 +209,61 @@ msgstr "Letzte Besucher"
 msgid "PBMod und andere"
 msgstr "PBMod und Andere"
 
-#: chartscodes.php:1620 chartscodes.php:1622
+#: chartscodes.php:2267 chartscodes.php:2269
 msgid "Polar Pie Chart"
 msgstr "Polar Diagramm"
 
-#: chartscodes.php:1625 chartscodes.php:1627
+#: chartscodes.php:2272 chartscodes.php:2274
 msgid "Radar Chart"
 msgstr "Radar-Diagramm"
 
-#: chartscodes.php:1466
+#: chartscodes.php:2109
 msgid "referer"
 msgstr "Herkunft-Seite"
 
-#: chartscodes.php:1804
+#: chartscodes.php:2451
 msgid "Remote ipflag database version not readable."
 msgstr "Remote-ipflag-Datenbankversion nicht lesbar."
 
-#: chartscodes.php:1554
+#: chartscodes.php:2201
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: chartscodes.php:1546
+#: chartscodes.php:2193
 msgid "Settings Admin"
 msgstr "Admin Einstellungen"
 
-#: chartscodes.php:1199
+#: chartscodes.php:1823
 msgid "show items"
 msgstr "anzeigen"
 
-#: chartscodes.php:1331
+#: chartscodes.php:1950
 #, php-format
 msgid "Top %1s Browsers %2s last %3s days"
 msgstr "Top %1s Browser %2s letzte %3s Tage"
 
-#: chartscodes.php:1345
+#: chartscodes.php:1986
 #, php-format
 #| msgid "Top %1s countries {filter: %2s} last %3s days"
 msgid "Top %1s countries %2s last %3s days"
 msgstr "Top %1s Länder %2s letzte %3s Tage"
 
-#: chartscodes.php:1225
+#: chartscodes.php:1969
+#, php-format
+msgid "Top %1s operating systems %2s last %3s days"
+msgstr "Top %1s Betriebssysteme %2s letzte %3s Tage"
+
+#: chartscodes.php:1849
 #, php-format
 msgid "top %1s pages last %2s days"
 msgstr "Top %1s Seiten der letzten %2s Tage"
 
-#: chartscodes.php:1252
+#: chartscodes.php:1872
 #, php-format
 msgid "top %1s referers last %2s days"
 msgstr "Top %1s Herkunftseiten der letzten %2s Tage"
 
-#: chartscodes.php:1697
+#: chartscodes.php:2344
 msgid "Update"
 msgstr "Aktualisierung"
 
