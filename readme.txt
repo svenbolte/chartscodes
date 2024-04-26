@@ -2,11 +2,11 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.107
-Stable tag: 11.1.107
+Version: 11.1.108
+Stable tag: 11.1.108
 Requires at least: 6.0
 Tested up to: 6.5.2
-Requires PHP: 8.0
+Requires PHP: 8.1
 
 == Description ==
 Webcounter, shortcodes for QRCodes, IP2Flag, bar, line and Pie, Donut Pie, Polar Pie, Radar, Horizontal Bar, monthly post archive as bar chart, use as html widget too

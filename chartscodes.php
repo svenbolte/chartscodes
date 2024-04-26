@@ -9,11 +9,11 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.107
-Stable tag: 11.1.107
+Version: 11.1.108
+Stable tag: 11.1.108
 Requires at least: 6.0
 Tested up to: 6.5.2
-Requires PHP: 8.0
+Requires PHP: 8.1
 */
 
 if ( ! defined( 'ABSPATH' ) ) {	exit; } // Exit if accessed directly.
@@ -1795,7 +1795,14 @@ class ipflag {
 				$sqlsuchfilter = " AND ( usertype LIKE '%".$suchfilter."%'
 					OR username LIKE '%".$suchfilter."%'
 					OR browser LIKE '%".$suchfilter."%'
+					OR platform LIKE '%".$suchfilter."%'
 					OR postid LIKE '%".$suchfilter."%'	) ";
+				$customers = $wpdb->get_results("SELECT * FROM " . $table ." WHERE 1=1 ".$sqlsuchfilter);
+				if (count($customers)==0) {
+					$html = '<p>'.sprintf(__('no matches for search criteria {%s}. Try other search words','pb-chartscodes'),$suchfilter); 
+					$html .= '. <a href="'.home_url($wp->request).'">'.__('return to counter','pb-chartscodes').'</a></p>';
+					return $html;
+				}	
 			} else {
 			  $suchfilter = '';
 			  $sqlsuchfilter='';
@@ -1946,6 +1953,7 @@ class ipflag {
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT COUNT(browser) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." ORDER BY bcount desc LIMIT ".$items);
 			$totalsum = $customers[0]->bcount ?? 1;
+			if ($totalsum==0) $totalsum=1;
 			$customers = $wpdb->get_results("SELECT browser, COUNT(browser) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." GROUP BY browser ORDER BY bcount desc LIMIT ".$items);
 			$html .='<h6>'.sprintf(__('Top %1s Browsers %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).'</h6><table>';
 			foreach($customers as $customer){
@@ -1956,7 +1964,7 @@ class ipflag {
 			}	
 			$labels = rtrim($labels, ",");
 			$values = rtrim($values, ",");
-			$html .= '<tfoot><tr><td>'.count($customers).'</td><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
+			if (count($customers)>=1) $html .= '<tfoot><tr><td>'.count($customers).'</td><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
 			$html .= do_shortcode('[chartscodes_polar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
 
@@ -1965,6 +1973,7 @@ class ipflag {
 			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT COUNT(platform) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." ORDER BY bcount desc LIMIT ".$items);
 			$totalsum = $customers[0]->bcount ?? 1;
+			if ($totalsum==0) $totalsum=1;
 			$customers = $wpdb->get_results("SELECT platform, COUNT(platform) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." GROUP BY platform ORDER BY bcount desc LIMIT ".$items);
 			$html .='<h6>'.sprintf(__('Top %1s operating systems %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).'</h6><table>';
 			foreach($customers as $customer){
@@ -1975,24 +1984,27 @@ class ipflag {
 			}	
 			$labels = rtrim($labels, ",");
 			$values = rtrim($values, ",");
-			$html .= '<tfoot><tr><td>'.count($customers).'</td><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
+			if (count($customers)>=1) $html .= '<tfoot><tr><td>'.count($customers).'</td><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
 			$html .= do_shortcode('[chartscodes_polar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
 
 			//	Top x Länder auf Zeitraum
 			$xsum=0;
 			$labels="";$values='';
+			$customers = $wpdb->get_results("SELECT COUNT(country) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." ORDER BY bcount desc LIMIT ".$items);
+			$totalsum = $customers[0]->bcount ?? 1;
+			if ($totalsum==0) $totalsum=1;
 			$customers = $wpdb->get_results("SELECT country, COUNT(country) AS ccount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY country ORDER BY ccount desc LIMIT ".$items);
 			$html .='<h6>'.sprintf(__('Top %1s countries %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).'</h6><table>';
 			foreach($customers as $customer){
 				$xsum += absint($customer->ccount);
-				if ( count($customers)>=1 ) $html .= '<tr><td>' . $customer->ccount . '</td><td>' . number_format_i18n( ($customer->bcount/$totalsum*100), 2 ). ' %</td><td>'. $this->country_code('de',$customer->country) . '</td></tr>';
+				if ( count($customers)>=1 ) $html .= '<tr><td>' . $customer->ccount . '</td><td>' . number_format_i18n( ($customer->ccount/$totalsum*100), 2 ). ' %</td><td>'. $this->country_code('de',$customer->country) . '</td></tr>';
 				$labels.= $this->country_code('de',$customer->country) . ',';
 				$values.= $customer->ccount . ',';
 			}	
 			$labels = rtrim($labels, ",");
 			$values = rtrim($values, ",");
-			$html .= '<tfoot><tr><td>'.count($customers).'</td><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
+			if (count($customers)>=1) $html .= '<tfoot><tr><td>'.count($customers).'</td><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
 			$html .= do_shortcode('[chartscodes_polar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
 
