@@ -1605,6 +1605,7 @@ class ipflag {
 		// Windows 11 oder neuer, Server 2019 und Server 2022 detektieren
 			// foreach (getallheaders() as $name => $value) { echo "$name: $value\n"; }
 			// print_r( getallheaders()['Sec-Ch-Ua-Platform-Version'] );
+		$hintver='';
 		$browhints=getallheaders() ?? array();
 		if (!empty($browhints['Sec-Ch-Ua-Platform'])) $hintos = str_replace('"', '', $browhints['Sec-Ch-Ua-Platform'] ?? '');
 		if (!empty($browhints['sec-ch-ua-platform'])) $hintos = str_replace('"', '', $browhints['sec-ch-ua-platform'] ?? '');
