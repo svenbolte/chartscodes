@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.108
-Stable tag: 11.1.108
+Version: 11.1.109
+Stable tag: 11.1.109
 Requires at least: 6.0
 Tested up to: 6.5.2
 Requires PHP: 8.1
@@ -22,6 +22,17 @@ add_action( 'plugins_loaded', 'chartscodes_textdomain' );
 function chartscodes_textdomain() {
 	load_plugin_textdomain( 'pb-chartscodes', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 }
+
+// Fontawesomeplus laden, wenn nicht penguin style für browsericon und os icons
+function ccode_enqueue_scripts( $page ) {
+	global $post;
+	// load fontawesome 4.7 plus if not penguin theme
+	$wpxtheme = wp_get_theme(); // gets the current theme
+	if ( 'Penguin' == $wpxtheme->name || 'Penguin' == $wpxtheme->parent_theme ) { $xpenguin = true;} else { $xpenguin=false; }
+	if (!$xpenguin) wp_enqueue_style('font-awesome', dirname( plugin_basename( __FILE__ ) ) . '/assets/font-awesome/css/fontawesomeplus.min.css', true);
+}
+add_action( 'wp_enqueue_scripts', 'ccode_enqueue_scripts' );
+
 
 /**
 * Charts Shortcodes
@@ -1590,6 +1601,8 @@ class ipflag {
 			'/mac_powerpc/i'        =>  'Mac OS 9',
 			'/linux/i'              =>  'Linux',
 			'/ubuntu/i'             =>  'Ubuntu',
+			'/freebsd/i'             =>  'FreeBSD',
+			'/debian/i'             =>  'Debian',
 			'/iphone/i'             =>  'iPhone',
 			'/ipod/i'               =>  'iPod',
 			'/ipad/i'               =>  'iPad',
@@ -1735,31 +1748,34 @@ class ipflag {
 	
 	// Browser und OS icons anzeigen
 	public function showbrowosicon($xname) {
-		if (str_contains($xname,'Google Chrome')) $xicon = 'chrome.png';
-		else if (str_contains($xname,'Microsoft Edge')) $xicon = 'edgenew.png';
-		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox.png';
-		else if (str_contains($xname,'Edge legacy')) $xicon = 'edge.png';
-		else if (str_contains($xname,'Internet Explorer')) $xicon = 'msie.png';
-		else if (str_contains($xname,'Apple Safari')) $xicon = 'safari.png';
-		else if (str_contains($xname,'MS-Office')) $xicon = 'office.png';
-		else if (str_contains($xname,'Outlook')) $xicon = 'outlook.png';
-		else if (str_contains($xname,'Windows Server 2022')) $xicon = 'winsrv22.png';
-		else if (str_contains($xname,'Windows Server 201')) $xicon = 'winsrv22.png';
-		else if (str_contains($xname,'Windows 11')) $xicon = 'win11.png';
-		else if (str_contains($xname,'Windows 10')) $xicon = 'win8-10.png';
-		else if (str_contains($xname,'Windows 8')) $xicon = 'win8-10.png';
-		else if (str_contains($xname,'Windows XP')) $xicon = 'winxp.png';
-		else if (str_contains($xname,'Windows 7')) $xicon = 'win7.png';
-		else if (str_contains($xname,'Ubuntu')) $xicon = 'ubuntu.png';
-		else if (str_contains($xname,'Blackberry')) $xicon = 'blackberry.png';
-		else if (str_contains($xname,'Android')) $xicon = 'android.png';
-		else if (str_contains($xname,'Mac OS X')) $xicon = 'mac.png';
-		else if (str_contains($xname,'Wordpress')) $xicon = 'wordpress.png';
-		else if (str_contains($xname,'Windows Server 2003/XP x64')) $xicon = 'winxp.png';
-		else if (str_contains($xname,'Windows 8.1/S2012R2')) $xicon = 'win8-10.png';
-		else if (str_contains($xname,'iPhone')) $xicon = 'iphone.png';
-		else $xicon = 'surf.png';
-		return '<img alt="browser" src="' .PB_ChartsCodes_URL_PATH . 'Image/'.$xicon . '">';
+		if (str_contains($xname,'Google Chrome')) $xicon = 'chrome';
+		else if (str_contains($xname,'Microsoft Edge')) $xicon = 'edge';
+		else if (str_contains($xname,'Mozilla Firefox')) $xicon = 'firefox';
+		else if (str_contains($xname,'Opera')) $xicon = 'opera';
+		else if (str_contains($xname,'Edge legacy')) $xicon = 'edge-legacy';
+		else if (str_contains($xname,'Internet Explorer')) $xicon = 'internet-explorer';
+		else if (str_contains($xname,'Apple Safari')) $xicon = 'safari';
+		else if (str_contains($xname,'MS-Office')) $xicon = 'microsoft365';
+		else if (str_contains($xname,'Outlook')) $xicon = 'microsoft365';
+		else if (str_contains($xname,'Windows Server 2022')) $xicon = 'windows11';
+		else if (str_contains($xname,'Windows Server 201')) $xicon = 'windows';
+		else if (str_contains($xname,'Windows 11')) $xicon = 'windows11';
+		else if (str_contains($xname,'Windows 10')) $xicon = 'windows';
+		else if (str_contains($xname,'Windows 8')) $xicon = 'windows';
+		else if (str_contains($xname,'Windows XP')) $xicon = 'windowsxp';
+		else if (str_contains($xname,'Windows 7')) $xicon = 'windowsxp';
+		else if (str_contains($xname,'Ubuntu')) $xicon = 'ubuntu';
+		else if (str_contains($xname,'Debian')) $xicon = 'debian';
+		else if (str_contains($xname,'FreeBSD')) $xicon = 'freebsd';
+		else if (str_contains($xname,'Blackberry')) $xicon = 'blackberry';
+		else if (str_contains($xname,'Android')) $xicon = 'android';
+		else if (str_contains($xname,'Mac OS X')) $xicon = 'apple';
+		else if (str_contains($xname,'Wordpress')) $xicon = 'wordpress';
+		else if (str_contains($xname,'Windows Server 2003/XP x64')) $xicon = 'windowsxp';
+		else if (str_contains($xname,'Windows 8.1/S2012R2')) $xicon = 'windows';
+		else if (str_contains($xname,'iPhone')) $xicon = 'mobile-phone';
+		else $xicon = 'globe';
+		return '<i class="fa fa-' . $xicon . '"></i> ';
 	}
 
 	// 

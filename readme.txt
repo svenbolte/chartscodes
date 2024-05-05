@@ -2,8 +2,8 @@
 Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
-Version: 11.1.108
-Stable tag: 11.1.108
+Version: 11.1.109
+Stable tag: 11.1.109
 Requires at least: 6.0
 Tested up to: 6.5.2
 Requires PHP: 8.1
@@ -209,6 +209,9 @@ to display logo and link to german webpage or computer manufacturer
 =====================================================================================================================
 
 == Changelog ==
+
+= 11.1.109 =
+fontawesome updates, some icons added. only needed when not penguin-mod theme
 
 = 11.1.107 =
 [Carlogos] updated and their origin land iso added to display flag of origin on shortcode use.
