@@ -1764,6 +1764,7 @@ class ipflag {
 		else if (str_contains($xname,'Windows 8')) $xicon = 'windows';
 		else if (str_contains($xname,'Windows XP')) $xicon = 'windowsxp';
 		else if (str_contains($xname,'Windows 7')) $xicon = 'windowsxp';
+		else if (str_contains($xname,'Linux')) $xicon = 'linux';
 		else if (str_contains($xname,'Ubuntu')) $xicon = 'ubuntu';
 		else if (str_contains($xname,'Debian')) $xicon = 'debian';
 		else if (str_contains($xname,'FreeBSD')) $xicon = 'freebsd';
