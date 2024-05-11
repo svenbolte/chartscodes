@@ -12,7 +12,7 @@ Domain Path: /languages/
 Version: 11.1.109
 Stable tag: 11.1.109
 Requires at least: 6.0
-Tested up to: 6.5.2
+Tested up to: 6.5.3
 Requires PHP: 8.1
 */
 
@@ -29,7 +29,7 @@ function ccode_enqueue_scripts( $page ) {
 	// load fontawesome 4.7 plus if not penguin theme
 	$wpxtheme = wp_get_theme(); // gets the current theme
 	if ( 'Penguin' == $wpxtheme->name || 'Penguin' == $wpxtheme->parent_theme ) { $xpenguin = true;} else { $xpenguin=false; }
-	if (!$xpenguin) wp_enqueue_style('font-awesome', dirname( plugin_basename( __FILE__ ) ) . '/assets/font-awesome/css/fontawesomeplus.min.css', true);
+	if (!$xpenguin) wp_enqueue_style('font-awesome', dirname( plugin_basename( __FILE__ ) ) . '/assets/fontawesomeplus.min.css', true);
 }
 add_action( 'wp_enqueue_scripts', 'ccode_enqueue_scripts' );
 
