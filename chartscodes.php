@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.109
-Stable tag: 11.1.109
+Version: 11.1.111
+Stable tag: 11.1.111
 Requires at least: 6.0
 Tested up to: 6.5.3
 Requires PHP: 8.1
@@ -1878,9 +1878,9 @@ class ipflag {
 						$values.= $customer->pidcount.',';
 						$xsum += absint($customer->pidcount);
 						$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a></td><td>';
-						$diff = time() - strtotime(get_the_date( 'd. F Y', $customer->postid ));
+						$diff = time() - get_the_date( 'U', $customer->postid );
 						if (round((intval($diff) / 86400), 0) < 30) $newcolor = "#fd08"; else $newcolor = "#fff";
-						$html .= '<i class="fa fa-calendar-o"></i> <span class="newlabel" style="background-color:'.$newcolor.'">'.date_i18n(get_option('date_format') . ' ' . get_option('time_format'), strtotime(get_the_date( 'd. F Y', $customer->postid )) );
+						$html .= '<i class="fa fa-calendar-o"></i> <span class="newlabel" style="background-color:'.$newcolor.'">'. get_the_date( 'd. F Y h:i:s', $customer->postid );
 						$html .= ' '.ago(get_the_date( 'U', $customer->postid ));
 						$html .= '</span></td><td><i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),number_format_i18n( (float) get_post_meta( $customer->postid, 'post_views_count', true ),0) ) . '</td></tr>';
 					}	
