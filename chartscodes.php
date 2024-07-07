@@ -2240,7 +2240,8 @@ class ipflag {
     ?>  <div class="wrap">
             <div class="icon32" id="icon-options-general"><br></div>
             <h2><?php echo esc_attr_e( 'Chartscodes Settings', 'pb-chartscodes' ); ?></h2>
-			<div class="postbox">
+			<div class="wrap">
+			 <h3>Allgemeine Shortcodes</h3>
 			<p><code>[ipflag ip="123.20.30.0" iso="mx" showland=0/1 details=0/1 browser=1]</code>
 				liefert eine Flagge und das Land zu einer IP odr einem IP-Netz. Die letzte IP-Ziffer wird wegen DSGVO anonymisiert<br>
 				iso="xx" liefert die Flagge zum ISO-Land oder die EU-Flagge für private und unbekannte Netzwerke<br>
@@ -2266,7 +2267,7 @@ class ipflag {
         <div class="wrap">
             <div class="img-wrap">
                 <h2>QRCodes oder Barcodes generieren</h2>
-			<div class="postbox">
+			<div class="wrap">
 				<p><code>[qrcode type="code-39" text="Hallo Welt" ]</code>
 				<p><code>[qrcode type="ean-13" text="9780201379624" ]</code>
 				<p><code>[qrcode text="tel:+49304030568956834058340" ]</code>
@@ -2275,7 +2276,7 @@ class ipflag {
             </div></div>
 			<div class="img-wrap">
 				<h2><?php esc_html_e( 'Bar and Piecharts', 'pb-chartscodes' ); ?></h2>
-				<div class="postbox">
+				<div class="wrap">
 				<p>Shortcode Parameter: absolute="1" wenn keine Prozentwerte mitgegeben werden, sondern absolute Werte<br>
 					fontfamily="Arial" fontstyle="bold". Für die PieCharts sollten maximal 20 Werte angegeben werden, bei den Bar Charts bis zu 50, beim horizontal Bar 200 und beim Linechart 50<br>
 					Bar Charts: bei absoluten Werten wird größter Wert in der Folge 100%, Werte werden angezeigt wenn >0<br> 
