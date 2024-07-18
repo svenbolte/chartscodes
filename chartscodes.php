@@ -12,7 +12,7 @@ Domain Path: /languages/
 Version: 11.1.112
 Stable tag: 11.1.112
 Requires at least: 6.0
-Tested up to: 6.5.5
+Tested up to: 6.6
 Requires PHP: 8.2
 */
 
