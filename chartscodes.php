@@ -28,7 +28,7 @@ function ccode_enqueue_scripts( $page ) {
 	global $post;
 	// load fontawesome 4.7 plus if not penguin theme
 	$wpxtheme = wp_get_theme(); // gets the current theme
-	if ( 'Penguin' == $wpxtheme->name || 'Penguin' == $wpxtheme->parent_theme ) { $xpenguin = true;} else { $xpenguin=false; }
+	if ( 'pb-chartscodes' == $wpxtheme->name || 'pb-chartscodes' == $wpxtheme->parent_theme ) { $xpenguin = true;} else { $xpenguin=false; }
 	if (!$xpenguin) wp_enqueue_style('font-awesome', plugin_dir_url( __FILE__ ) . '/assets/fontawesomeplus.min.css', true);
 }
 add_action( 'wp_enqueue_scripts', 'ccode_enqueue_scripts' );
@@ -2529,26 +2529,26 @@ if( !function_exists('ago')) {
 		date_default_timezone_set('Europe/Berlin');
 		$now = time();
 		if ($timestamp > $now) {
-			$prepo = __('in', 'penguin');
+			$prepo = 'in';
 			$postpo = '';
 		} else {
 			if ($xlang == 'de') {
-				$prepo = __('vor', 'penguin');
+				$prepo = 'vor';
 				$postpo = '';
 			} else {
 				$prepo = '';
-				$postpo = __('ago', 'penguin');
+				$postpo = __('ago', 'pb-chartscodes');
 			}
 		}
 		$her = date( 'd.m.Y', intval($timestamp) );
 		if ($her == date('d.m.Y',$now - (24 * 3600))) {
-			$hdate = __('yesterday', 'penguin');
+			$hdate = __('yesterday', 'pb-chartscodes');
 		} else if ($her == date('d.m.Y',$now - (48 * 3600))) {
-			$hdate = __('1 day before yesterday', 'penguin');
+			$hdate = __('1 day before yesterday', 'pb-chartscodes');
 		} else if ($her == date('d.m.Y',$now + (24 * 3600))) {
-			$hdate = __('tomorrow', 'penguin');
+			$hdate = __('tomorrow', 'pb-chartscodes');
 		} else if ($her == date('d.m.Y',$now + (48 * 3600))) {
-			$hdate = __('1 day after tomorrow', 'penguin');
+			$hdate = __('1 day after tomorrow', 'pb-chartscodes');
 		} else {
 			$hdate = ' ' . $prepo . ' ' . human_time_diff(intval($timestamp), $now) . ' ' . $postpo;
 		}
