@@ -2566,7 +2566,7 @@ function lastxvisitors ($items,$pageid) {
 	$customers = $wpdb->get_results("SELECT * FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -90 DAY ) ".$pagefilter." ORDER BY datum desc LIMIT ".$items);
 	$counts = count( $customers );
 	if ($counts > 0) {
-		$html ='<div class="noprint"><h6>'.__("Last Visitors","pb-chartscodes").'</h6><table style="table-layout:fixed">';
+		$html ='<div class="noprint"><h6>'.__("Last Visitors","pb-chartscodes").'</h6><table>';
 		foreach($customers as $customer){
 			$datum = date_i18n( get_option('date_format') .' H:i:s', strtotime($customer->datum) );
 			$diff = time() - strtotime($customer->datum);
