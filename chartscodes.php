@@ -1742,7 +1742,7 @@ class ipflag {
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
 		// letzte Stelle der IP anonymisieren (0 setzen)	
-		$ip = long2ip(ip2long($ip) & 0xFFFFFF00);
+		// $ip = long2ip(ip2long($ip) & 0xFFFFFF00);
 		return apply_filters( 'wpb_get_ip', $ip );
 	}
 	
