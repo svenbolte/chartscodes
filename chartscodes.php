@@ -1544,9 +1544,9 @@ class ipflag {
 	private static function is_bot( $user_agent ) {
 		$user_agent = strtolower( $user_agent );
 		$identifiers = array(
-			'bot', 'slurp', 'crawler', 'spider', 'curl', 'facebook', 'lua-resty', 'fetch', 'python', 'scrubby',
+			'crawl', 'bot', 'slurp', 'crawler', 'spider', 'curl', 'facebook', 'lua-resty', 'fetch', 'python', 'scrubby',
 			'wget', 'monitor', 'mediapartners', 'baidu','chrome/3','chrome/4','chrome/5','chrome/6','chrome/7','chrome/8','chrome/9',
-			'firefox/3','firefox/4','firefox/5','firefox/6','firefox/7','firefox/8','firefox/9','Go-http-client',
+			'firefox/3','firefox/4','firefox/5','firefox/6','firefox/7','firefox/8','firefox/9','Go-http-client'
 		);
 		foreach ( $identifiers as $identifier ) {
 			if ( strpos( $user_agent, $identifier ) !== false ) {
