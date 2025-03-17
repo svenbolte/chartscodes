@@ -2250,6 +2250,9 @@ class ipflag {
 				<code>[webcounter admin=0]</code> zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>
 				Ist die Admin /webcounter-Seite aufgerufen, kann über das Eingabefeld oder den optionalen URL-Parameter ?items=x die Ausgabe-Anzahl einiger Listeneinträge verändert werden.
 			</p>
+			<p><code>[bulawappen land="Nordrhein-Westfalen" oder land="nw"]</code>
+				liefert das Wappen vom Bundesland in 30x50px, Eingabe Landeskürzel oder Länderbezeichnung mit ue statt ü
+			</p>
 			<p><code>[carlogo brand="mercedes" scale="sm"]</code>
 				liefert das Logo und den Link zum Automobilhersteller  Größen (scale): leer 48px, bei sm: 32px und bei xs:21px
 			</p>
@@ -2584,6 +2587,40 @@ function lastxvisitors ($items,$pageid) {
 		return $html;
 	}	
 }
+
+// ==================== Bundenländer-Wappen der 16 dt. Bundesländer anzeigen Shortcode ======================================
+function bulawappen_shortcode($atts){
+	$args = shortcode_atts( array(
+	      'land' => 'Nordrhein-Westfalen',  // Bundesland oder 2 Buchstaben-Kürzel
+    ), $atts );
+	$buland = $args['land'];
+	$bundeslaender = array (
+		"BW" => "Baden-Wuerttemberg",
+		"BY" =>"Bayern",
+		"BE" => "Berlin",
+		"BB" => "Brandenburg",
+		"HB" => "Bremen",
+		"HH" => "Hamburg",
+		"HE" => "Hessen",
+		"MV" => "Mecklenburg-Vorpommern",
+		"NI" => "Niedersachsen",
+		"NW" => "Nordrhein-Westfalen",
+		"RP" => "Rheinland-Pfalz",
+		"SL" => "Saarland",
+		"SN" => "Sachsen",
+		"ST" => "Sachsen-Anhalt",
+		"SH" => "Schleswig-Holstein",
+		"TH" => "Thueringen"
+	);
+	if (strlen($buland) == 2) $buix = array_search(strtoupper($buland), array_keys($bundeslaender),true);
+	else $buix = array_search($buland, array_values($bundeslaender),true);
+	//    echo $buix.' '. array_keys($bundeslaender)[$buix].' '.array_values($bundeslaender)[$buix];
+	// Load comp freaky style for brands
+	wp_enqueue_style( 'pb-complogo-style', PB_ChartsCodes_URL_PATH . 'flags/bulawappen.min.css' );
+	$complogo = '<i class="fbula fbula-'.array_values($bundeslaender)[$buix].'" title=" Bundesland: '.array_keys($bundeslaender)[$buix].' '.array_values($bundeslaender)[$buix].'"></i>';
+	return $complogo;
+}
+add_shortcode('bulawappen', 'bulawappen_shortcode');
 
 // ==================== Hardwaremarkenlogos anzeigen Shortcode ======================================
 function complogo_shortcode($atts){

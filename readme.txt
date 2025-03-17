@@ -1,5 +1,5 @@
 === Charts QR-Barcodes ===
-Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter,useragent 
+Tags: post-timeline, line chart, pie chart, chart, graph, polar chart, doughnut chart, bar graph, horizontal bar graph, absolute, percent, QRCode, IPFlag, webcounter, useragent, Bulawappen
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Version: 11.1.112
@@ -192,6 +192,14 @@ if(isset($ipflag) && is_object($ipflag)){
     }
 }
 ```
+
+
+=========================================== Bulawappen Shortcode ===============================================
+Use Shortcode: [bulawappen land="Nordrhein-Westfalen" oder land="nw"]
+
+		      'land' => 'Nordrhein-Westfalen',     		// Länderkürzel oder ausgeschriebenes Land
+liefert das Wappen vom Bundesland in 30x50px, Eingabe xx Landeskürzel oder Länderbezeichnung mit ue statt ü
+
 =========================================== Carlogo Shortcode ===============================================
 Use Shortcode: [carlogo brand="mercedes" scale="sm"]
 
