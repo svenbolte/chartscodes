@@ -17,6 +17,10 @@ background-position:0 0
 background-position:0 -64px
 }
 
+.fcar-alfa,.fcar-alfaromeo {
+background-position:0 -128px
+}
+
 .fcar-astonmartin {
 background-position:0 -192px
 }
@@ -427,14 +431,10 @@ background-position:0 -6704px
 background-position:0 -6768px
 }
 
-.fcar.fc-sm {
+.fcar-sm {
 zoom:.7
 }
 
-.fcar.fc-xs {
+.fcar-xs {
 zoom:.4
-}
-
-.fcar-alfa,.fcar-alfaromeo {
-background-position:0 -128px
 }

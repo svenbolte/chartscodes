@@ -7,66 +7,79 @@ position:relative;
 width:30px
 }
 
-.fbula-Baden-Wuerttemberg {
+.fbula-ohne {
 background-position:0 0
 }
 
-.fbula-Bayern {
+.fbula-Baden-Wuerttemberg, .fbula-bw {
 background-position:0 -50px
 }
 
-.fbula-Berlin {
+.fbula-Bayern, .fbula-by {
 background-position:0 -100px
 }
 
-.fbula-Brandenburg {
+.fbula-Berlin, .fbula-be {
 background-position:0 -150px
 }
 
-.fbula-Bremen {
+.fbula-Brandenburg, .fbula-bb {
 background-position:0 -200px
 }
 
-.fbula-Hamburg {
+.fbula-Bremen, .fbula-hb {
 background-position:0 -250px
 }
 
-.fbula-Hessen {
+.fbula-Hamburg, .fbula-hh {
 background-position:0 -300px
 }
 
-.fbula-Mecklenburg-Vorpommern {
+.fbula-Hessen, .fbula-he {
 background-position:0 -350px
 }
 
-.fbula-Niedersachsen {
+.fbula-Mecklenburg-Vorpommern, .fbula-mv {
 background-position:0 -400px
 }
 
-.fbula-Nordrhein-Westfalen {
+.fbula-Niedersachsen, .fbula-ni {
 background-position:0 -450px
 }
 
-.fbula-Rheinland-Pfalz {
+.fbula-Nordrhein-Westfalen, .fbula-nw {
 background-position:0 -500px
 }
 
-.fbula-Saarland {
+.fbula-Rheinland-Pfalz, .fbula-rp {
 background-position:0 -550px
 }
 
-.fbula-Sachsen {
+.fbula-Saarland, .fbula-sl {
 background-position:0 -600px
 }
 
-.fbula-Sachsen-Anhalt {
+.fbula-Sachsen, .fbula-sn {
 background-position:0 -650px
 }
 
-.fbula-Schleswig-Holstein {
+.fbula-Sachsen-Anhalt, .fbula-st {
 background-position:0 -700px
 }
 
-.fbula-Thueringen {
+.fbula-Schleswig-Holstein, .fbula-sh {
 background-position:0 -750px
 }
+
+.fbula-Thueringen, .fbula-th {
+background-position:0 -750px
+}
+
+.fbula-sm {
+zoom:.7
+}
+
+.fbula-xs {
+zoom:.5
+}
+

@@ -21,9 +21,11 @@ daher dieses Projekt, dass die Einzelfunktionen zusammen fasst und um viele neue
 
 [webcounter admin=0]
 
-[carlogo brand="mercedes" scale="sm"]
+[carlogo brand="mercedes" scale="sm/xs"]
 
-[complogo brand="lenovo"]
+[complogo brand="lenovo" scale="sm/xs"]
+
+[bulawappen land="Bremen/HB" scale="sm/xs"]
 
 [chartscodes absolute="1" title="Pie Chart" values="20, 30, 50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
 

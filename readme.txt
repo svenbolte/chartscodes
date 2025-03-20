@@ -197,7 +197,9 @@ if(isset($ipflag) && is_object($ipflag)){
 =========================================== Bulawappen Shortcode ===============================================
 Use Shortcode: [bulawappen land="Nordrhein-Westfalen" oder land="nw"]
 
-		      'land' => 'Nordrhein-Westfalen',     		// Länderkürzel oder ausgeschriebenes Land
+	      'scale' => '',     		// sm = 32px  xs=21px
+	      'land' => 'Nordrhein-Westfalen',  // Bundesland oder 2 Buchstaben-Kürzel
+ 
 liefert das Wappen vom Bundesland in 30x50px, Eingabe xx Landeskürzel oder Länderbezeichnung mit ue statt ü
 
 =========================================== Carlogo Shortcode ===============================================
@@ -205,6 +207,7 @@ Use Shortcode: [carlogo brand="mercedes" scale="sm"]
 
 		      'scale' => '',     		// sm = 32px  xs=21px
 		      'brand' => '0unknown',  // Autohersteller  - all=show all logos with countries and flag
+
 to display logo and link to german webpage or car manufacturer
 
 =========================================== Computerbrand logo Shortcode ===============================================
@@ -212,11 +215,17 @@ Use Shortcode: [complogo brand="lenovo" scale="sm"]
 
 		      'scale' => '',     		// sm = 32px  xs=21px
 		      'brand' => '0unknown',  // Computerhersteller
+
 to display logo and link to german webpage or computer manufacturer
 
 =====================================================================================================================
 
+
 == Changelog ==
+
+= 11.1.112 =
+Bundesländerwappen Shortcode bulawappen, mit parameter land und scale
+scale-parameter sm und xs bei carlogo, herstellerlogo shortdoce fixed
 
 = 11.1.109 =
 fontawesome updates, some icons added. only needed when not penguin-mod theme

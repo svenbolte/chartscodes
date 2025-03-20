@@ -2588,9 +2588,10 @@ function lastxvisitors ($items,$pageid) {
 	}	
 }
 
-// ==================== Bundenländer-Wappen der 16 dt. Bundesländer anzeigen Shortcode ======================================
+// ==================== Bundesländer-Wappen der 16 dt. Bundesländer anzeigen Shortcode ======================================
 function bulawappen_shortcode($atts){
 	$args = shortcode_atts( array(
+	      'scale' => '',     		// sm = 32px  xs=21px
 	      'land' => 'Nordrhein-Westfalen',  // Bundesland oder 2 Buchstaben-Kürzel
     ), $atts );
 	$buland = $args['land'];
@@ -2617,7 +2618,7 @@ function bulawappen_shortcode($atts){
 	//    echo $buix.' '. array_keys($bundeslaender)[$buix].' '.array_values($bundeslaender)[$buix];
 	// Load comp freaky style for brands
 	wp_enqueue_style( 'pb-complogo-style', PB_ChartsCodes_URL_PATH . 'flags/bulawappen.min.css' );
-	$complogo = '<i class="fbula fbula-'.array_values($bundeslaender)[$buix].'" title=" Bundesland: '.array_keys($bundeslaender)[$buix].' '.array_values($bundeslaender)[$buix].'"></i>';
+	$complogo = '<i class="fbula fbula-'.array_values($bundeslaender)[$buix].' fbula-'.$args['scale'].'" title=" Bundesland: '.array_keys($bundeslaender)[$buix].' '.array_values($bundeslaender)[$buix].'"></i>';
 	return $complogo;
 }
 add_shortcode('bulawappen', 'bulawappen_shortcode');
@@ -2630,7 +2631,7 @@ function complogo_shortcode($atts){
      		), $atts );
 		// Load comp freaky style for brands
 		wp_enqueue_style( 'pb-complogo-style', PB_ChartsCodes_URL_PATH . 'flags/computerbrands.min.css' );
-		$complogo = '<a target="_blank" href="http://'.strtolower($args['brand']).'.com"><i class="comp comp-'.strtolower($args['brand']).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtoupper($atts['brand']).' aufrufen"></i></a>';
+		$complogo = '<a target="_blank" href="http://'.strtolower($args['brand']).'.com"><i class="comp comp-'.strtolower($args['brand']).' comp-'.$args['scale'].'" title=" Herstellerseite: '.strtoupper($atts['brand']).' aufrufen"></i></a>';
         return $complogo;
 }
 add_shortcode('complogo', 'complogo_shortcode');
@@ -2658,7 +2659,7 @@ function carlogo_shortcode($atts){
 				.' '.$ctryfound[1].'"></i> '.$flagland->country_code('de',$ctryfound[1]);
 			$carurl = preg_replace('/[^a-z]/', '', strtolower($ctryfound[0]));
 			$autologo .= '<div style="padding:5px;display:inline-block;height:76px;border:1px solid #ccc;">
-				<a target="_blank" href="http://'.$carurl.'.com"><i class="fcar fcar-'.strtolower($ctryfound[0]).' fc-'.$args['scale'].'" title=" Herstellerseite: '.strtolower($ctryfound[0]).' aufrufen"></i></a> '.strtoupper($ctryfound[0]).' &nbsp; '.$carcountry.'</div>';
+				<a target="_blank" href="http://'.$carurl.'.com"><i class="fcar fcar-'.strtolower($ctryfound[0]).' fcar-'.$args['scale'].'" title=" Herstellerseite: '.strtolower($ctryfound[0]).' aufrufen"></i></a> '.strtoupper($ctryfound[0]).' &nbsp; '.$carcountry.'</div>';
 		}
 	} else {
 		foreach ($carlandarray as $carland) {
@@ -2669,7 +2670,7 @@ function carlogo_shortcode($atts){
 			}	
 		}
 		if (!empty($ctryfound[0])) $carurl = preg_replace('/[^a-z]/', '', strtolower($ctryfound[0])); else $carurl='';
-		$autologo = '<a target="_blank" href="http://'.$carurl.'.com"><i class="fcar fcar-'.$brand.' fc-'.$args['scale'].'" title=" Herstellerseite: '.$brand.' aufrufen"></i></a> '.strtoupper($ctryfound[0] ?? '').' &nbsp; '.$carcountry;
+		$autologo = '<a target="_blank" href="http://'.$carurl.'.com"><i class="fcar fcar-'.$brand.' fcar-'.$args['scale'].'" title=" Herstellerseite: '.$brand.' aufrufen"></i></a> '.strtoupper($ctryfound[0] ?? '').' &nbsp; '.$carcountry;
 	}	
 	return $autologo;
 }
