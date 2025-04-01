@@ -1879,7 +1879,7 @@ class ipflag {
 						$xsum += absint($customer->pidcount);
 						$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a></td><td>';
 						$diff = time() - get_the_date( 'U', $customer->postid );
-						if (round((intval($diff) / 86400), 0) < 30) $newcolor = "#fd08"; else $newcolor = "#fff";
+						if (round((intval($diff) / 86400), 0) < 30) $newcolor = "#fe8"; else $newcolor = "#fff";
 						$html .= '<i class="fa fa-calendar-o"></i> <span class="newlabel" style="background-color:'.$newcolor.'">'. get_the_date( 'd. F Y h:i:s', $customer->postid );
 						$html .= ' '.ago(get_the_date( 'U', $customer->postid ));
 						$html .= '</span></td><td><i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),number_format_i18n( (float) get_post_meta( $customer->postid, 'post_views_count', true ),0) ) . '</td></tr>';
@@ -1933,7 +1933,7 @@ class ipflag {
 					title="filter:'. $customer->postid.'" class="fa fa-filter"></a> &nbsp; ';
 				$html .= ' <a title="Post aufrufen" href="'.$cplink.'">' . $cptitle .'</abbr></a></td>';
 				$diff = time() - strtotime($customer->datum);
-				if (round((intval($diff) / 86400), 0) < 30) $newcolor = "#fd08"; else $newcolor = "#fff";
+				if (round((intval($diff) / 86400), 0) < 30) $newcolor = "#fe8"; else $newcolor = "#fff";
 				$html .= '<td><span class="newlabel" style="background-color:'.$newcolor.'">' . $datum . ' ' . ago(strtotime($customer->datum)).'</span></td></tr>';
 			}	
 			$html .= '</table>';
@@ -2573,7 +2573,7 @@ function lastxvisitors ($items,$pageid) {
 		foreach($customers as $customer){
 			$datum = date_i18n( get_option('date_format') .' H:i:s', strtotime($customer->datum) );
 			$diff = time() - strtotime($customer->datum);
-			if (round((intval($diff) / 86400), 0) < 30) { $newcolor = "#fd08"; } else { $newcolor = "#fff"; }
+			if (round((intval($diff) / 86400), 0) < 30) { $newcolor = "#fe8"; } else { $newcolor = "#fff"; }
 			$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $brosicons->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
 			$html .= '<td><abbr>' .$brosicons->showbrowosicon($customer->platform).' '. substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</abbr>';
 			$html .= ' <i class="fa fa-map-marker"></i> <abbr>' . $customer->userip .'</abbr></td>';
