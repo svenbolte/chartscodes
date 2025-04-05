@@ -2455,7 +2455,7 @@ class ipflag {
         $counter = 0;
         $sql = '';
         if (($input = fopen($this->db_file, 'r')) !== false) {
-            while (($file_data = fgetcsv($input, 1000, ' ')) !== false) {
+            while (($file_data = fgetcsv($input, 1000, ' ', escape: "")) !== false) {
                 if(isset($country_data[$file_data[2]])){
                     $counter++;
                     $sql .= '('.$file_data[0].', '.$file_data[1].', '.$country_data[$file_data[2]]['cid'].'), ';
