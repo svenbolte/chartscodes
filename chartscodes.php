@@ -1878,11 +1878,8 @@ class ipflag {
 						$values.= $customer->pidcount.',';
 						$xsum += absint($customer->pidcount);
 						$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a></td><td>';
-						$diff = time() - get_the_date( 'U', $customer->postid );
-						if (round((intval($diff) / 86400), 0) < 30) $newcolor = "#fe8"; else $newcolor = "#fff";
-						$html .= '<i class="fa fa-calendar-o"></i> <span class="newlabel" style="background-color:'.$newcolor.'">'. get_the_date( 'd. F Y h:i:s', $customer->postid );
-						$html .= ' '.ago(get_the_date( 'U', $customer->postid ));
-						$html .= '</span></td><td><i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),number_format_i18n( (float) get_post_meta( $customer->postid, 'post_views_count', true ),0) ) . '</td></tr>';
+						$html .= colordatebox( get_the_date('U', $customer->postid) ,NULL ,NULL,1);
+						$html .= '</td><td><i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),number_format_i18n( (float) get_post_meta( $customer->postid, 'post_views_count', true ),0) ) . '</td></tr>';
 					}	
 				}	
 				$html .= '<tfoot><tr><td colspan=4>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
@@ -1932,9 +1929,7 @@ class ipflag {
 					<a onclick="document.location.href=\''. esc_url(home_url(add_query_arg(array('suchfilter' => $customer->postid, 'zeitraum' => $zeitraum, 'items' => $items ), $wp->request))).'\'"
 					title="filter:'. $customer->postid.'" class="fa fa-filter"></a> &nbsp; ';
 				$html .= ' <a title="Post aufrufen" href="'.$cplink.'">' . $cptitle .'</abbr></a></td>';
-				$diff = time() - strtotime($customer->datum);
-				if (round((intval($diff) / 86400), 0) < 30) $newcolor = "#fe8"; else $newcolor = "#fff";
-				$html .= '<td><span class="newlabel" style="background-color:'.$newcolor.'">' . $datum . ' ' . ago(strtotime($customer->datum)).'</span></td></tr>';
+				$html .= '<td>' .colordatebox( strtotime($customer->datum), NULL, NULL, 1 ) . '</span></td></tr>';
 			}	
 			$html .= '</table>';
 
@@ -2522,9 +2517,13 @@ class ipflag {
 }
 global $ipflag;
 $ipflag = new ipflag();
-// ------------------------------ IPFlag Klasse Ende ----------------------------
+// ------------------------------ IPFlag Klasse Ende ----------------------------------------------------------------
 
-// Zeitdifferenz ermitteln und gestern/vorgestern/morgen schreiben: penguin-mod, chartscodes, dedo, foldergallery, timeclock
+
+// ----------------------------------- Funktionen, die in andere Plugins und themes gespiegelt sind ------------------------------------
+
+// Zeitdifferenz ermitteln und gestern/vorgestern/morgen schreiben
+//   gespiegelt in: chartcodes.php, delightful-downloads/includes/functions.php, foldergallery.php, penguin/functions.php, timeclock/includes/functions.php
 if( !function_exists('ago')) {
 	function ago($timestamp) {
 		if (empty($timestamp)) return;
@@ -2559,8 +2558,58 @@ if( !function_exists('ago')) {
 	}
 }	
 
+// Datumbox farbig mit Wochenende SA gelb und SO rot ausgeben aus createdatum und moddatum. wird nur createdatum gesetzt, wird nur das ausgewertet.
+//   gespiegelt in: chartcodes.php, delightful-downloads/includes/functions.php, foldergallery.php, penguin/functions.php
+//   Parameter 1: Erstell-Unix-Timestamp | 2: Mod-Timestamp oder NULL=Erstell-Timestamp | 3: NULL=ICON anzeigen, 1=kein Icon | 4: NULL=nur Datum, 1=Datum und AGO, 2=nur AGO
+//     test:     echo colordatebox( (time()-86400), NULL, NULL, 1);
+if( !function_exists('colordatebox')) {
+	function colordatebox($created, $modified = NULL, $noicon = NULL, $showago = NULL) {
+		$modified = $modified ?? $created;
+		$erstelldat = str_replace( ' 00:00', '', wp_date('D d. M Y H:i', $created) );
+		$moddat = str_replace( ' 00:00', '', wp_date('D d. M Y H:i', $modified) );
+		$postago = ago($created);
+		$modago = ago($modified);
+		$diff = time() - $modified;
+		$diffmod = $modified - $created;
+		$diffround = floor($diff / 86400);
+		if ($diffround < -30 || $diffround > 30) $newcolor = "#eee";
+		else if ($diffround != 0) $newcolor = "#fe8";
+		else $newcolor = '#fff';
+		$istoday = date('Y-m-d', $modified) === date('Y-m-d');
+		if ($istoday) $newcolor = "#bfd";
+		$getweekday = wp_date('w', $created);
+		$erstelltitle = __("created", "penguin") . ': ' . $erstelldat . ' ' . $postago.' '.$diffround.' Tg';
+		if ($diffmod != 0) {
+			$erstelltitle .= "\n" . __("modified", "penguin") . ': ' . $moddat . ' ' . $modago;
+			$erstelltitle .= "\n" . __("modified after", "penguin") . ': ' . human_time_diff($created, $modified);
+			$getweekday = wp_date('w', $modified);
+		}
+		$isweekend = ($getweekday == 0) ? '#f00' : (($getweekday == 6) ? '#e60' : '#444'); // angezeigtes create oder mod Datum am Wochenende SA orange SO rote schrift
+		if ($diffmod > 0) {
+			$newormod = 'calendar-plus-o';
+			if (2 !== $showago) $anzeigedat = $moddat;
+			if (2 === $showago) $anzeigedat = $modago;
+			if (1 === $showago) $anzeigedat .= ' ' . $modago;
+		} else {
+			$newormod = 'calendar-o';
+			if (2 !== $showago) $anzeigedat = $erstelldat;
+			if (2 === $showago) $anzeigedat = $postago;
+			if (1 === $showago) $anzeigedat .= ' ' . $postago;
+		}
+		$colordate = '<span class="newlabel" style="background-color:' . $newcolor . '">';
+		if (!isset($noicon)) {
+			$colordate .= '<i class="fa fa-' . $newormod . '" style="margin-right:4px"></i>';
+		}
+		$colordate .= '<span style="color:' . $isweekend . '" title="' . htmlspecialchars($erstelltitle, ENT_QUOTES) . '">' . $anzeigedat . '</span></span>';
+		return $colordate;
+	}
+}
+
+// ---------------------------------- Spiegelung Ende ------------------------------------------------------------------------
+
+
 // ========  Letze X Besucher der Seite anzeigen (nur als Admin) - pageid leer lassen für Gesamtstatistik  ===
-// Aufruf in penguin,template-parts/meta-bottom.php
+// nur in diesem Skript, Aufruf in penguin,template-parts/meta-bottom.php
 function lastxvisitors ($items,$pageid) {
 	$brosicons = new ipflag();
 	if (!empty($pageid)) { $pagefilter='AND postid = '.$pageid; } else {$pagefilter='';}
@@ -2571,9 +2620,6 @@ function lastxvisitors ($items,$pageid) {
 	if ($counts > 0) {
 		$html ='<div class="noprint"><h6>'.__("Last Visitors","pb-chartscodes").'</h6><table>';
 		foreach($customers as $customer){
-			$datum = date_i18n( get_option('date_format') .' H:i:s', strtotime($customer->datum) );
-			$diff = time() - strtotime($customer->datum);
-			if (round((intval($diff) / 86400), 0) < 30) { $newcolor = "#fe8"; } else { $newcolor = "#fff"; }
 			$html .= '<tr><td><abbr title="#'.$customer->id.' - '.$customer->useragent.'">' . $brosicons->showbrowosicon($customer->browser) . ' ' . $customer->browser .' ' . $customer->browserver .'</abbr></td>';
 			$html .= '<td><abbr>' .$brosicons->showbrowosicon($customer->platform).' '. substr($customer->platform,0,19). ' ' . substr($customer->language,0,2) .'</abbr>';
 			$html .= ' <i class="fa fa-map-marker"></i> <abbr>' . $customer->userip .'</abbr></td>';
@@ -2581,7 +2627,7 @@ function lastxvisitors ($items,$pageid) {
 			$html .= '<td>' .do_shortcode('[ipflag iso="'.$customer->country.'"]') .' ';
 			$html .= '<i class="fa fa-user"></i> <abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
 			if (empty($pageid)) $html .= '<td><abbr><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</abbr></a></td>';
-			$html .= '<td><span class="newlabel" style="background-color:'.$newcolor.';font-size:.8em">' . $datum . ' ' . ago(strtotime($customer->datum)).'</span></td></tr>';
+			$html .= '<td><span style="font-size:.8em">' . colordatebox( strtotime($customer->datum) ,NULL ,NULL,1) . '</span></td></tr>';
 		}	
 		$html .= '</table></div>';
 		return $html;
