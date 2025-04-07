@@ -2627,7 +2627,7 @@ function lastxvisitors ($items,$pageid) {
 			$html .= '<td>' .do_shortcode('[ipflag iso="'.$customer->country.'"]') .' ';
 			$html .= '<i class="fa fa-user"></i> <abbr>'. $customer->username . ' | '.$customer->usertype .'</abbr></td>';
 			if (empty($pageid)) $html .= '<td><abbr><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) .'</abbr></a></td>';
-			$html .= '<td><span style="font-size:.8em">' . colordatebox( strtotime($customer->datum) ,NULL ,NULL,1) . '</span></td></tr>';
+			$html .= '<td><span style="font-size:.9em">' . colordatebox( strtotime($customer->datum) ,NULL ,NULL,1) . '</span></td></tr>';
 		}	
 		$html .= '</table></div>';
 		return $html;
