@@ -2720,6 +2720,7 @@ add_shortcode('complogo', 'complogo_shortcode');
 function carlogo_shortcode($atts){
 	// Load car freaky style for car
 	wp_enqueue_style( 'pb-autologo-style', PB_ChartsCodes_URL_PATH . 'flags/car-logos.min.css' );
+	wp_enqueue_style( 'pb-chartscodes-flagstyle', PB_ChartsCodes_URL_PATH . 'flags/freakflags.min.css' );
 	$flagland = new ipflag();
 	$args = shortcode_atts( array(
 		      'scale' => '',     		// sm = 32px  xs=21px
