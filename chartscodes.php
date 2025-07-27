@@ -888,9 +888,8 @@ class ipflag {
 
     public $url;
     public $flag_url;
-    public $remote_db_url = 'https://github.com/Markus-Go/ip-countryside/raw/downloads/ip2country.zip';
-    public $remote_ts_url = 'https://github.com/Markus-Go/ip-countryside/raw/downloads/ip2country.version';
-
+    public $remote_db_url = 'https://github.com/Markus-Go/ip-countryside/blob/downloads/ip2country.zip?raw=true';
+    public $remote_ts_url = 'https://github.com/Markus-Go/ip-countryside/blob/downloads/ip2country.version?raw=true';
     protected $path;
     protected $db_version;
     protected $options;
