@@ -9,10 +9,10 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.112
-Stable tag: 11.1.112
+Version: 11.1.113
+Stable tag: 11.1.113
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 6.8.2
 Requires PHP: 8.2
 */
 
@@ -1541,20 +1541,43 @@ class ipflag {
     }
 
 
-	private static function is_bot( $user_agent ) {
-		$user_agent = strtolower( $user_agent );
+	private static function is_bot($user_agent) {
+		$user_agent = strtolower($user_agent);
+
+		// Bot-typische Begriffe
 		$identifiers = array(
-			'crawl', 'bot', 'slurp', 'crawler', 'spider', 'curl', 'facebook', 'lua-resty', 'fetch', 'python', 'scrubby',
-			'wget', 'monitor', 'mediapartners', 'baidu','chrome/3','chrome/4','chrome/5','chrome/6','chrome/7','chrome/8','chrome/9',
-			'firefox/3','firefox/4','firefox/5','firefox/6','firefox/7','firefox/8','firefox/9','Go-http-client'
+			'bot', 'crawl', 'slurp', 'crawler', 'spider', 'monitor', 'checker',
+			'fetch', 'scraper', 'scan', 'search', 'seo', 'libwww-perl',
+			'facebookexternalhit', 'facebot', 'googlebot', 'bingbot', 'yandex', 'duckduckbot',
+			'baiduspider', 'semrush', 'ahrefsbot', 'mj12bot', 'applebot', 'twitterbot', 'linkedinbot',
+			'embedly', 'whatsapp', 'telegrambot', 'discordbot', 'skypeuripreview',
+			'python', 'java', 'curl', 'wget', 'axios', 'node-fetch', 'httpclient', 'go-http-client',
+			'restsharp', 'guzzlehttp', 'php/', 'lua-resty', 'scrubby',
+			'pagespeed', 'pingdom', 'gtmetrix', 'lighthouse', 'uptimerobot'
 		);
-		foreach ( $identifiers as $identifier ) {
-			if ( strpos( $user_agent, $identifier ) !== false ) {
+
+		foreach ($identifiers as $identifier) {
+			if (stripos($user_agent, $identifier) !== false) {
+				return true;
+			}
+		}
+
+		// Alte Chrome-Versionen raus
+		if (preg_match('/chrome\/(\d+)\./', $user_agent, $matches)) {
+			if ((int) $matches[1] < 128) {
+				return true;
+			}
+		}
+
+		// Alte Firefox-Versionen raus
+		if (preg_match('/firefox\/(\d+)\./', $user_agent, $matches)) {
+			if ((int) $matches[1] < 128) {
 				return true;
 			}
 		}
 		return false;
 	}
+
 	
 	// Browser des Betrachters rausfinden und anzeigen und Referer
 	function getBrowser() {
@@ -1808,19 +1831,22 @@ class ipflag {
 				$edatum = new DateTime('Now');
 				$interval = $sdatum->diff($edatum)->days;
 			}
+			// Suchfiltern
 			if (isset($_GET['suchfilter'])) {
 				$suchfilter = sanitize_text_field($_GET['suchfilter']);
-				$sqlsuchfilter = " AND ( usertype LIKE '%".$suchfilter."%'
-					OR username LIKE '%".$suchfilter."%'
-					OR browser LIKE '%".$suchfilter."%'
-					OR platform LIKE '%".$suchfilter."%'
-					OR postid LIKE '%".$suchfilter."%'	) ";
-				$customers = $wpdb->get_results("SELECT * FROM " . $table ." WHERE 1=1 ".$sqlsuchfilter);
-				if (count($customers)==0) {
-					$html = '<p>'.sprintf(__('no matches for search criteria {%s}. Try other search words','pb-chartscodes'),$suchfilter); 
-					$html .= '. <a href="'.home_url($wp->request).'">'.__('return to counter','pb-chartscodes').'</a></p>';
-					return $html;
-				}	
+				if  ($suchfilter != NULL) {
+					$sqlsuchfilter = " AND ( usertype LIKE '%".$suchfilter."%'
+						OR username LIKE '%".$suchfilter."%'
+						OR browser LIKE '%".$suchfilter."%'
+						OR platform LIKE '%".$suchfilter."%'
+						OR postid LIKE '%".$suchfilter."%'	) ";
+					$customers = $wpdb->get_results("SELECT * FROM " . $table ." WHERE 1=1 ".$sqlsuchfilter);
+					if (count($customers)==0) {
+						$html = '<p>'.sprintf(__('no matches for search criteria {%s}. Try other search words','pb-chartscodes'),$suchfilter); 
+						$html .= '. <a href="'.home_url($wp->request).'">'.__('return to counter','pb-chartscodes').'</a></p>';
+						return $html;
+					}	
+				} else	$sqlsuchfilter='';
 			} else {
 			  $suchfilter = '';
 			  $sqlsuchfilter='';
