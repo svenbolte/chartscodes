@@ -1964,6 +1964,26 @@ class ipflag {
 			$html .= do_shortcode('[chartscodes_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 			$html .= '</table>';
 
+			//	Top x calendarweeks last recorded days (180)
+			$labels = "";
+			$values = "";
+			$customers = $wpdb->get_results("
+				SELECT YEARWEEK(SUBSTRING(datum,1,10), 3) AS kw, COUNT(*) AS viscount 
+				FROM " . $table . " 
+				WHERE datum >= DATE_ADD(NOW(), INTERVAL -" . $zeitraum . " DAY ) " . $sqlsuchfilter . " 
+				GROUP BY YEARWEEK(SUBSTRING(datum,1,10), 3) 
+				ORDER BY YEARWEEK(SUBSTRING(datum,1,10), 3)
+			");
+			$html .= '<h6>' . sprintf(__('clicks by calendar week %2s last %1s days', 'pb-chartscodes'), $filtertitle, $zeitraum) . $startday . '</h6><table>';
+			foreach ($customers as $customer) {
+				$labels .= 'KW ' . $customer->kw . ',';
+				$values .= $customer->viscount . ',';
+			}
+			$labels = rtrim($labels, ",");
+			$values = rtrim($values, ",");
+			$html .= do_shortcode('[chartscodes_bar accentcolor=1 absolute="1" values="' . $values . '" labels="' . $labels . '"]');
+			$html .= '</table>';
+
 			//	Top x Browser auf Zeitraum
 			$xsum=0;
 			$labels="";$values='';

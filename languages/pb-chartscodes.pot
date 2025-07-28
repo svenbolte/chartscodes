@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Charts QRCodes Barcodes\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-28 16:30+0000\n"
+"POT-Creation-Date: 2025-07-28 18:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: PBMod\n"
 "Language-Team: \n"
@@ -30,31 +30,36 @@ msgstr ""
 msgid "<strong>%1s</strong> values, <strong>%2s</strong> sum of values"
 msgstr ""
 
-#: chartscodes.php:1888 chartscodes.php:1905 chartscodes.php:1983
-#: chartscodes.php:2003 chartscodes.php:2023
+#: chartscodes.php:1888 chartscodes.php:1905 chartscodes.php:2003
+#: chartscodes.php:2023 chartscodes.php:2043
 #, php-format
 msgid "<strong>%s</strong> sum of values"
 msgstr ""
 
-#: chartscodes.php:2252
+#: chartscodes.php:2272
 msgid "Bar and Piecharts"
 msgstr ""
 
-#: chartscodes.php:2282 chartscodes.php:2284
+#: chartscodes.php:2302 chartscodes.php:2304
 msgid "Bar Graph Chart"
 msgstr ""
 
-#: chartscodes.php:2143
+#: chartscodes.php:2163
 msgid "browser"
 msgstr ""
 
 #. Name of the plugin
-#: chartscodes.php:2195
+#: chartscodes.php:2215
 msgid "Charts QRcodes"
 msgstr ""
 
-#: chartscodes.php:2213
+#: chartscodes.php:2233
 msgid "Chartscodes Settings"
+msgstr ""
+
+#: chartscodes.php:1977
+#, php-format
+msgid "clicks by calendar week %2s last %1s days"
 msgstr ""
 
 #: chartscodes.php:1942
@@ -72,35 +77,39 @@ msgstr ""
 msgid "clicks last %s days"
 msgstr ""
 
-#: chartscodes.php:2309
+#: chartscodes.php:2332
 msgid "Current database status:"
 msgstr ""
 
-#: chartscodes.php:2358
+#: chartscodes.php:2381
 msgid "Database missing or corrupted, please update"
 msgstr ""
 
-#: chartscodes.php:2375
+#: chartscodes.php:2398
 msgid "DB-IP Import"
 msgstr ""
 
-#: chartscodes.php:2292 chartscodes.php:2294
+#: chartscodes.php:2312 chartscodes.php:2314
 msgid "Default Line Chart"
 msgstr ""
 
-#: chartscodes.php:2262 chartscodes.php:2264
+#: chartscodes.php:2282 chartscodes.php:2284
 msgid "Default Pie Chart"
 msgstr ""
 
-#: chartscodes.php:2307
+#: chartscodes.php:2330
 msgid "delete webhits older than (days):"
 msgstr ""
 
-#: chartscodes.php:2267 chartscodes.php:2269
+#: chartscodes.php:2424
+msgid "Die IP-Datenbank ist bereits auf dem neuesten Stand."
+msgstr ""
+
+#: chartscodes.php:2287 chartscodes.php:2289
 msgid "Doughnut Pie Chart"
 msgstr ""
 
-#: chartscodes.php:2308
+#: chartscodes.php:2331
 msgid "Enable automatic monthly database update check:"
 msgstr ""
 
@@ -112,11 +121,11 @@ msgstr ""
 msgid "Guest"
 msgstr ""
 
-#: chartscodes.php:2314
+#: chartscodes.php:2337
 msgid "Here you can control all ipflag and webcounter database options:"
 msgstr ""
 
-#: chartscodes.php:2287 chartscodes.php:2289 chartscodes.php:2297
+#: chartscodes.php:2307 chartscodes.php:2309 chartscodes.php:2317
 msgid "Horizontal Bar Graph Chart"
 msgstr ""
 
@@ -128,23 +137,23 @@ msgstr ""
 msgid "https://github.com/svenbolte/chartcodes"
 msgstr ""
 
-#: chartscodes.php:2388
+#: chartscodes.php:2411
 msgid "Import erfolgreich ausgeführt."
 msgstr ""
 
-#: chartscodes.php:2379
+#: chartscodes.php:2402
 msgid "Import fortsetzen"
 msgstr ""
 
-#: chartscodes.php:2137
+#: chartscodes.php:2157
 msgid "ip network"
 msgstr ""
 
-#: chartscodes.php:2306
+#: chartscodes.php:2329
 msgid "ipflag database options"
 msgstr ""
 
-#: chartscodes.php:2180
+#: chartscodes.php:2200
 msgid "ipflag database updated."
 msgstr ""
 
@@ -157,7 +166,7 @@ msgstr ""
 msgid "last %1s visitors %2s last %3s days"
 msgstr ""
 
-#: chartscodes.php:2703
+#: chartscodes.php:2733
 msgid "Last Visitors"
 msgstr ""
 
@@ -170,19 +179,19 @@ msgstr ""
 msgid "PBMod und andere"
 msgstr ""
 
-#: chartscodes.php:2272 chartscodes.php:2274
+#: chartscodes.php:2292 chartscodes.php:2294
 msgid "Polar Pie Chart"
 msgstr ""
 
-#: chartscodes.php:2277 chartscodes.php:2279
+#: chartscodes.php:2297 chartscodes.php:2299
 msgid "Radar Chart"
 msgstr ""
 
-#: chartscodes.php:2137
+#: chartscodes.php:2157
 msgid "referer"
 msgstr ""
 
-#: chartscodes.php:2528
+#: chartscodes.php:2558
 msgid "Remote ipflag database version not readable."
 msgstr ""
 
@@ -190,11 +199,11 @@ msgstr ""
 msgid "return to counter"
 msgstr ""
 
-#: chartscodes.php:2202
+#: chartscodes.php:2222
 msgid "Settings"
 msgstr ""
 
-#: chartscodes.php:2194
+#: chartscodes.php:2214
 msgid "Settings Admin"
 msgstr ""
 
@@ -202,17 +211,17 @@ msgstr ""
 msgid "show items"
 msgstr ""
 
-#: chartscodes.php:1974
+#: chartscodes.php:1994
 #, php-format
 msgid "Top %1s Browsers %2s last %3s days"
 msgstr ""
 
-#: chartscodes.php:2014
+#: chartscodes.php:2034
 #, php-format
 msgid "Top %1s countries %2s last %3s days"
 msgstr ""
 
-#: chartscodes.php:1994
+#: chartscodes.php:2014
 #, php-format
 msgid "Top %1s operating systems %2s last %3s days"
 msgstr ""
@@ -227,7 +236,7 @@ msgstr ""
 msgid "top %1s referers last %2s days"
 msgstr ""
 
-#: chartscodes.php:2363
+#: chartscodes.php:2386
 msgid "Update"
 msgstr ""
 
