@@ -1,24 +1,18 @@
 <?php
-/* ISO-3166-2 from 12-10-2012
- *
- * Not 100% ISO-3166-2 because it doesn't use long names for all countries.
- * For example:
- * "Macedonia, the former Yugoslav Republic of" is used as "Macedonia"
- *
- */
-$country_data =
-array (
+// ISO-3166-2 von 2025-07-28 updated by chatgpt
+
+$country_data = array (
     'AF' =>
     array (
         'cid' => 1,
         'name' => __('Afghanistan', self::slug),
-        'latitude' => 33,
+        'latitude' => 33.0,
         'longitude' => 65,
     ),
     'AX' =>
     array (
         'cid' => 2,
-        'name' => __('Åland Islands', self::slug),
+        'name' => __('Aland Islands', self::slug),
         'latitude' => 60.1166,
         'longitude' => 19.9,
     ),
@@ -26,14 +20,14 @@ array (
     array (
         'cid' => 3,
         'name' => __('Albania', self::slug),
-        'latitude' => 41,
+        'latitude' => 41.0,
         'longitude' => 20,
     ),
     'DZ' =>
     array (
         'cid' => 4,
         'name' => __('Algeria', self::slug),
-        'latitude' => 28,
+        'latitude' => 28.0,
         'longitude' => 3,
     ),
     'AS' =>
@@ -68,7 +62,7 @@ array (
     array (
         'cid' => 9,
         'name' => __('Antarctica', self::slug),
-        'latitude' => -90,
+        'latitude' => -90.0,
         'longitude' => 0,
     ),
     'AG' =>
@@ -82,14 +76,14 @@ array (
     array (
         'cid' => 11,
         'name' => __('Argentina', self::slug),
-        'latitude' => -34,
+        'latitude' => -34.0,
         'longitude' => -64,
     ),
     'AM' =>
     array (
         'cid' => 12,
         'name' => __('Armenia', self::slug),
-        'latitude' => 40,
+        'latitude' => 40.0,
         'longitude' => 45,
     ),
     'AW' =>
@@ -103,7 +97,7 @@ array (
     array (
         'cid' => 14,
         'name' => __('Australia', self::slug),
-        'latitude' => -27,
+        'latitude' => -27.0,
         'longitude' => 133,
     ),
     'AT' =>
@@ -131,14 +125,14 @@ array (
     array (
         'cid' => 18,
         'name' => __('Bahrain', self::slug),
-        'latitude' => 26,
+        'latitude' => 26.0,
         'longitude' => 50.55,
     ),
     'BD' =>
     array (
         'cid' => 19,
         'name' => __('Bangladesh', self::slug),
-        'latitude' => 24,
+        'latitude' => 24.0,
         'longitude' => 90,
     ),
     'BB' =>
@@ -152,7 +146,7 @@ array (
     array (
         'cid' => 21,
         'name' => __('Belarus', self::slug),
-        'latitude' => 53,
+        'latitude' => 53.0,
         'longitude' => 28,
     ),
     'BE' =>
@@ -194,7 +188,7 @@ array (
     array (
         'cid' => 27,
         'name' => __('Bolivia', self::slug),
-        'latitude' => -17,
+        'latitude' => -17.0,
         'longitude' => -65,
     ),
     'BQ' =>
@@ -208,14 +202,14 @@ array (
     array (
         'cid' => 29,
         'name' => __('Bosnia and Herzegovina', self::slug),
-        'latitude' => 44,
+        'latitude' => 44.0,
         'longitude' => 18,
     ),
     'BW' =>
     array (
         'cid' => 30,
         'name' => __('Botswana', self::slug),
-        'latitude' => -22,
+        'latitude' => -22.0,
         'longitude' => 24,
     ),
     'BV' =>
@@ -229,14 +223,14 @@ array (
     array (
         'cid' => 32,
         'name' => __('Brazil', self::slug),
-        'latitude' => -10,
+        'latitude' => -10.0,
         'longitude' => -55,
     ),
     'IO' =>
     array (
         'cid' => 33,
         'name' => __('British Indian Ocean Territory', self::slug),
-        'latitude' => -6,
+        'latitude' => -6.0,
         'longitude' => 71.5,
     ),
     'BN' =>
@@ -250,14 +244,14 @@ array (
     array (
         'cid' => 35,
         'name' => __('Bulgaria', self::slug),
-        'latitude' => 43,
+        'latitude' => 43.0,
         'longitude' => 25,
     ),
     'BF' =>
     array (
         'cid' => 36,
         'name' => __('Burkina Faso', self::slug),
-        'latitude' => 13,
+        'latitude' => 13.0,
         'longitude' => -2,
     ),
     'BI' =>
@@ -271,28 +265,28 @@ array (
     array (
         'cid' => 38,
         'name' => __('Cambodia', self::slug),
-        'latitude' => 13,
+        'latitude' => 13.0,
         'longitude' => 105,
     ),
     'CM' =>
     array (
         'cid' => 39,
         'name' => __('Cameroon', self::slug),
-        'latitude' => 6,
+        'latitude' => 6.0,
         'longitude' => 12,
     ),
     'CA' =>
     array (
         'cid' => 40,
         'name' => __('Canada', self::slug),
-        'latitude' => 60,
+        'latitude' => 60.0,
         'longitude' => -95,
     ),
     'CV' =>
     array (
         'cid' => 41,
-        'name' => __('Cape Verde', self::slug),
-        'latitude' => 16,
+        'name' => __('Cabo Verde', self::slug),
+        'latitude' => 16.0,
         'longitude' => -24,
     ),
     'KY' =>
@@ -306,28 +300,28 @@ array (
     array (
         'cid' => 43,
         'name' => __('Central African Republic', self::slug),
-        'latitude' => 7,
+        'latitude' => 7.0,
         'longitude' => 21,
     ),
     'TD' =>
     array (
         'cid' => 44,
         'name' => __('Chad', self::slug),
-        'latitude' => 15,
+        'latitude' => 15.0,
         'longitude' => 19,
     ),
     'CL' =>
     array (
         'cid' => 45,
         'name' => __('Chile', self::slug),
-        'latitude' => -30,
+        'latitude' => -30.0,
         'longitude' => -71,
     ),
     'CN' =>
     array (
         'cid' => 46,
         'name' => __('China', self::slug),
-        'latitude' => 35,
+        'latitude' => 35.0,
         'longitude' => 105,
     ),
     'CX' =>
@@ -348,7 +342,7 @@ array (
     array (
         'cid' => 49,
         'name' => __('Colombia', self::slug),
-        'latitude' => 4,
+        'latitude' => 4.0,
         'longitude' => -72,
     ),
     'KM' =>
@@ -362,14 +356,14 @@ array (
     array (
         'cid' => 51,
         'name' => __('The Democratic Republic of the Congo', self::slug),
-        'latitude' => 0,
+        'latitude' => 0.0,
         'longitude' => 25,
     ),
     'CG' =>
     array (
         'cid' => 52,
         'name' => __('Congo', self::slug),
-        'latitude' => -1,
+        'latitude' => -1.0,
         'longitude' => 15,
     ),
     'CK' =>
@@ -383,14 +377,14 @@ array (
     array (
         'cid' => 54,
         'name' => __('Costa Rica', self::slug),
-        'latitude' => 10,
+        'latitude' => 10.0,
         'longitude' => -84,
     ),
     'CI' =>
     array (
         'cid' => 55,
-        'name' => __('Cote d\'Ivoire', self::slug),
-        'latitude' => 8,
+        'name' => __('Cote dIvoire', self::slug),
+        'latitude' => 8.0,
         'longitude' => -5,
     ),
     'HR' =>
@@ -410,7 +404,7 @@ array (
     'CW' =>
     array (
         'cid' => 58,
-        'name' => __('Curaçao', self::slug),
+        'name' => __('Curacao', self::slug),
         'latitude' => 12.1167,
         'longitude' => 68.9333,
     ),
@@ -418,13 +412,13 @@ array (
     array (
         'cid' => 59,
         'name' => __('Cyprus', self::slug),
-        'latitude' => 35,
+        'latitude' => 35.0,
         'longitude' => 33,
     ),
     'CZ' =>
     array (
         'cid' => 60,
-        'name' => __('Czech Republic', self::slug),
+        'name' => __('Czechia', self::slug),
         'latitude' => 49.75,
         'longitude' => 15.5,
     ),
@@ -432,7 +426,7 @@ array (
     array (
         'cid' => 61,
         'name' => __('Denmark', self::slug),
-        'latitude' => 56,
+        'latitude' => 56.0,
         'longitude' => 10,
     ),
     'DJ' =>
@@ -453,21 +447,21 @@ array (
     array (
         'cid' => 64,
         'name' => __('Dominican Republic', self::slug),
-        'latitude' => 19,
+        'latitude' => 19.0,
         'longitude' => -70.6667,
     ),
     'EC' =>
     array (
         'cid' => 65,
         'name' => __('Ecuador', self::slug),
-        'latitude' => -2,
+        'latitude' => -2.0,
         'longitude' => -77.5,
     ),
     'EG' =>
     array (
         'cid' => 66,
         'name' => __('Egypt', self::slug),
-        'latitude' => 27,
+        'latitude' => 27.0,
         'longitude' => 30,
     ),
     'SV' =>
@@ -481,28 +475,28 @@ array (
     array (
         'cid' => 68,
         'name' => __('Equatorial Guinea', self::slug),
-        'latitude' => 2,
+        'latitude' => 2.0,
         'longitude' => 10,
     ),
     'ER' =>
     array (
         'cid' => 69,
         'name' => __('Eritrea', self::slug),
-        'latitude' => 15,
+        'latitude' => 15.0,
         'longitude' => 39,
     ),
     'EE' =>
     array (
         'cid' => 70,
         'name' => __('Estonia', self::slug),
-        'latitude' => 59,
+        'latitude' => 59.0,
         'longitude' => 26,
     ),
     'ET' =>
     array (
         'cid' => 71,
         'name' => __('Ethiopia', self::slug),
-        'latitude' => 8,
+        'latitude' => 8.0,
         'longitude' => 38,
     ),
     'FK' =>
@@ -516,56 +510,56 @@ array (
     array (
         'cid' => 73,
         'name' => __('Faroe Islands', self::slug),
-        'latitude' => 62,
+        'latitude' => 62.0,
         'longitude' => -7,
     ),
     'FJ' =>
     array (
         'cid' => 74,
         'name' => __('Fiji', self::slug),
-        'latitude' => -18,
+        'latitude' => -18.0,
         'longitude' => 175,
     ),
     'FI' =>
     array (
         'cid' => 75,
         'name' => __('Finland', self::slug),
-        'latitude' => 64,
+        'latitude' => 64.0,
         'longitude' => 26,
     ),
     'FR' =>
     array (
         'cid' => 76,
         'name' => __('France', self::slug),
-        'latitude' => 46,
+        'latitude' => 46.0,
         'longitude' => 2,
     ),
     'GF' =>
     array (
         'cid' => 77,
         'name' => __('French Guiana', self::slug),
-        'latitude' => 4,
+        'latitude' => 4.0,
         'longitude' => -53,
     ),
     'PF' =>
     array (
         'cid' => 78,
         'name' => __('French Polynesia', self::slug),
-        'latitude' => -15,
+        'latitude' => -15.0,
         'longitude' => -140,
     ),
     'TF' =>
     array (
         'cid' => 79,
         'name' => __('French Southern Territories', self::slug),
-        'latitude' => -43,
+        'latitude' => -43.0,
         'longitude' => 67,
     ),
     'GA' =>
     array (
         'cid' => 80,
         'name' => __('Gabon', self::slug),
-        'latitude' => -1,
+        'latitude' => -1.0,
         'longitude' => 11.75,
     ),
     'GM' =>
@@ -579,21 +573,21 @@ array (
     array (
         'cid' => 82,
         'name' => __('Georgia', self::slug),
-        'latitude' => 42,
+        'latitude' => 42.0,
         'longitude' => 43.5,
     ),
     'DE' =>
     array (
         'cid' => 83,
         'name' => __('Germany', self::slug),
-        'latitude' => 51,
+        'latitude' => 51.0,
         'longitude' => 9,
     ),
     'GH' =>
     array (
         'cid' => 84,
         'name' => __('Ghana', self::slug),
-        'latitude' => 8,
+        'latitude' => 8.0,
         'longitude' => -2,
     ),
     'GI' =>
@@ -607,14 +601,14 @@ array (
     array (
         'cid' => 86,
         'name' => __('Greece', self::slug),
-        'latitude' => 39,
+        'latitude' => 39.0,
         'longitude' => 22,
     ),
     'GL' =>
     array (
         'cid' => 87,
         'name' => __('Greenland', self::slug),
-        'latitude' => 72,
+        'latitude' => 72.0,
         'longitude' => -40,
     ),
     'GD' =>
@@ -656,28 +650,28 @@ array (
     array (
         'cid' => 93,
         'name' => __('Guinea', self::slug),
-        'latitude' => 11,
+        'latitude' => 11.0,
         'longitude' => -10,
     ),
     'GW' =>
     array (
         'cid' => 94,
         'name' => __('Guinea-Bissau', self::slug),
-        'latitude' => 12,
+        'latitude' => 12.0,
         'longitude' => -15,
     ),
     'GY' =>
     array (
         'cid' => 95,
         'name' => __('Guyana', self::slug),
-        'latitude' => 5,
+        'latitude' => 5.0,
         'longitude' => -59,
     ),
     'HT' =>
     array (
         'cid' => 96,
         'name' => __('Haiti', self::slug),
-        'latitude' => 19,
+        'latitude' => 19.0,
         'longitude' => -72.4167,
     ),
     'HM' =>
@@ -698,7 +692,7 @@ array (
     array (
         'cid' => 99,
         'name' => __('Honduras', self::slug),
-        'latitude' => 15,
+        'latitude' => 15.0,
         'longitude' => -86.5,
     ),
     'HK' =>
@@ -712,49 +706,49 @@ array (
     array (
         'cid' => 101,
         'name' => __('Hungary', self::slug),
-        'latitude' => 47,
+        'latitude' => 47.0,
         'longitude' => 20,
     ),
     'IS' =>
     array (
         'cid' => 102,
         'name' => __('Iceland', self::slug),
-        'latitude' => 65,
+        'latitude' => 65.0,
         'longitude' => -18,
     ),
     'IN' =>
     array (
         'cid' => 103,
         'name' => __('India', self::slug),
-        'latitude' => 20,
+        'latitude' => 20.0,
         'longitude' => 77,
     ),
     'ID' =>
     array (
         'cid' => 104,
         'name' => __('Indonesia', self::slug),
-        'latitude' => -5,
+        'latitude' => -5.0,
         'longitude' => 120,
     ),
     'IR' =>
     array (
         'cid' => 105,
         'name' => __('Iran', self::slug),
-        'latitude' => 32,
+        'latitude' => 32.0,
         'longitude' => 53,
     ),
     'IQ' =>
     array (
         'cid' => 106,
         'name' => __('Iraq', self::slug),
-        'latitude' => 33,
+        'latitude' => 33.0,
         'longitude' => 44,
     ),
     'IE' =>
     array (
         'cid' => 107,
         'name' => __('Ireland', self::slug),
-        'latitude' => 53,
+        'latitude' => 53.0,
         'longitude' => -8,
     ),
     'IM' =>
@@ -789,7 +783,7 @@ array (
     array (
         'cid' => 112,
         'name' => __('Japan', self::slug),
-        'latitude' => 36,
+        'latitude' => 36.0,
         'longitude' => 138,
     ),
     'JE' =>
@@ -803,21 +797,21 @@ array (
     array (
         'cid' => 114,
         'name' => __('Jordan', self::slug),
-        'latitude' => 31,
+        'latitude' => 31.0,
         'longitude' => 36,
     ),
     'KZ' =>
     array (
         'cid' => 115,
         'name' => __('Kazakhstan', self::slug),
-        'latitude' => 48,
+        'latitude' => 48.0,
         'longitude' => 68,
     ),
     'KE' =>
     array (
         'cid' => 116,
         'name' => __('Kenya', self::slug),
-        'latitude' => 1,
+        'latitude' => 1.0,
         'longitude' => 38,
     ),
     'KI' =>
@@ -831,14 +825,14 @@ array (
     array (
         'cid' => 118,
         'name' => __('North Korea', self::slug),
-        'latitude' => 40,
+        'latitude' => 40.0,
         'longitude' => 127,
     ),
     'KR' =>
     array (
         'cid' => 119,
         'name' => __('South Korea', self::slug),
-        'latitude' => 37,
+        'latitude' => 37.0,
         'longitude' => 127.5,
     ),
     'KW' =>
@@ -852,21 +846,21 @@ array (
     array (
         'cid' => 121,
         'name' => __('Kyrgyzstan', self::slug),
-        'latitude' => 41,
+        'latitude' => 41.0,
         'longitude' => 75,
     ),
     'LA' =>
     array (
         'cid' => 122,
         'name' => __('Lao', self::slug),
-        'latitude' => 18,
+        'latitude' => 18.0,
         'longitude' => 105,
     ),
     'LV' =>
     array (
         'cid' => 123,
         'name' => __('Latvia', self::slug),
-        'latitude' => 57,
+        'latitude' => 57.0,
         'longitude' => 25,
     ),
     'LB' =>
@@ -893,8 +887,8 @@ array (
     'LY' =>
     array (
         'cid' => 127,
-        'name' => __('Libyan Arab Jamahiriya', self::slug),
-        'latitude' => 25,
+        'name' => __('Libya', self::slug),
+        'latitude' => 25.0,
         'longitude' => 17,
     ),
     'LI' =>
@@ -908,7 +902,7 @@ array (
     array (
         'cid' => 129,
         'name' => __('Lithuania', self::slug),
-        'latitude' => 56,
+        'latitude' => 56.0,
         'longitude' => 24,
     ),
     'LU' =>
@@ -928,7 +922,7 @@ array (
     'MK' =>
     array (
         'cid' => 132,
-        'name' => __('Macedonia', self::slug),
+        'name' => __('North Macedonia', self::slug),
         'latitude' => 41.8333,
         'longitude' => 22,
     ),
@@ -936,7 +930,7 @@ array (
     array (
         'cid' => 133,
         'name' => __('Madagascar', self::slug),
-        'latitude' => -20,
+        'latitude' => -20.0,
         'longitude' => 47,
     ),
     'MW' =>
@@ -964,7 +958,7 @@ array (
     array (
         'cid' => 137,
         'name' => __('Mali', self::slug),
-        'latitude' => 17,
+        'latitude' => 17.0,
         'longitude' => -4,
     ),
     'MT' =>
@@ -978,7 +972,7 @@ array (
     array (
         'cid' => 139,
         'name' => __('Marshall Islands', self::slug),
-        'latitude' => 9,
+        'latitude' => 9.0,
         'longitude' => 168,
     ),
     'MQ' =>
@@ -992,7 +986,7 @@ array (
     array (
         'cid' => 141,
         'name' => __('Mauritania', self::slug),
-        'latitude' => 20,
+        'latitude' => 20.0,
         'longitude' => -12,
     ),
     'MU' =>
@@ -1013,7 +1007,7 @@ array (
     array (
         'cid' => 144,
         'name' => __('Mexico', self::slug),
-        'latitude' => 23,
+        'latitude' => 23.0,
         'longitude' => -102,
     ),
     'FM' =>
@@ -1027,7 +1021,7 @@ array (
     array (
         'cid' => 146,
         'name' => __('Moldova', self::slug),
-        'latitude' => 47,
+        'latitude' => 47.0,
         'longitude' => 29,
     ),
     'MC' =>
@@ -1041,14 +1035,14 @@ array (
     array (
         'cid' => 148,
         'name' => __('Mongolia', self::slug),
-        'latitude' => 46,
+        'latitude' => 46.0,
         'longitude' => 105,
     ),
     'ME' =>
     array (
         'cid' => 149,
         'name' => __('Montenegro', self::slug),
-        'latitude' => 42,
+        'latitude' => 42.0,
         'longitude' => 19,
     ),
     'MS' =>
@@ -1062,7 +1056,7 @@ array (
     array (
         'cid' => 151,
         'name' => __('Morocco', self::slug),
-        'latitude' => 32,
+        'latitude' => 32.0,
         'longitude' => -5,
     ),
     'MZ' =>
@@ -1076,14 +1070,14 @@ array (
     array (
         'cid' => 153,
         'name' => __('Myanmar', self::slug),
-        'latitude' => 22,
+        'latitude' => 22.0,
         'longitude' => 98,
     ),
     'NA' =>
     array (
         'cid' => 154,
         'name' => __('Namibia', self::slug),
-        'latitude' => -22,
+        'latitude' => -22.0,
         'longitude' => 17,
     ),
     'NR' =>
@@ -1097,7 +1091,7 @@ array (
     array (
         'cid' => 156,
         'name' => __('Nepal', self::slug),
-        'latitude' => 28,
+        'latitude' => 28.0,
         'longitude' => 84,
     ),
     'NL' =>
@@ -1118,28 +1112,28 @@ array (
     array (
         'cid' => 159,
         'name' => __('New Zealand', self::slug),
-        'latitude' => -41,
+        'latitude' => -41.0,
         'longitude' => 174,
     ),
     'NI' =>
     array (
         'cid' => 160,
         'name' => __('Nicaragua', self::slug),
-        'latitude' => 13,
+        'latitude' => 13.0,
         'longitude' => -85,
     ),
     'NE' =>
     array (
         'cid' => 161,
         'name' => __('Niger', self::slug),
-        'latitude' => 16,
+        'latitude' => 16.0,
         'longitude' => 8,
     ),
     'NG' =>
     array (
         'cid' => 162,
         'name' => __('Nigeria', self::slug),
-        'latitude' => 10,
+        'latitude' => 10.0,
         'longitude' => 8,
     ),
     'NU' =>
@@ -1167,21 +1161,21 @@ array (
     array (
         'cid' => 166,
         'name' => __('Norway', self::slug),
-        'latitude' => 62,
+        'latitude' => 62.0,
         'longitude' => 10,
     ),
     'OM' =>
     array (
         'cid' => 167,
         'name' => __('Oman', self::slug),
-        'latitude' => 21,
+        'latitude' => 21.0,
         'longitude' => 57,
     ),
     'PK' =>
     array (
         'cid' => 168,
         'name' => __('Pakistan', self::slug),
-        'latitude' => 30,
+        'latitude' => 30.0,
         'longitude' => 70,
     ),
     'PW' =>
@@ -1194,43 +1188,43 @@ array (
     'PS' =>
     array (
         'cid' => 170,
-        'name' => __('Palestinian Territory', self::slug),
-        'latitude' => 32,
+        'name' => __('Palestine', self::slug),
+        'latitude' => 32.0,
         'longitude' => 35.25,
     ),
     'PA' =>
     array (
         'cid' => 171,
         'name' => __('Panama', self::slug),
-        'latitude' => 9,
+        'latitude' => 9.0,
         'longitude' => -80,
     ),
     'PG' =>
     array (
         'cid' => 172,
         'name' => __('Papua New Guinea', self::slug),
-        'latitude' => -6,
+        'latitude' => -6.0,
         'longitude' => 147,
     ),
     'PY' =>
     array (
         'cid' => 173,
         'name' => __('Paraguay', self::slug),
-        'latitude' => -23,
+        'latitude' => -23.0,
         'longitude' => -58,
     ),
     'PE' =>
     array (
         'cid' => 174,
         'name' => __('Peru', self::slug),
-        'latitude' => -10,
+        'latitude' => -10.0,
         'longitude' => -76,
     ),
     'PH' =>
     array (
         'cid' => 175,
         'name' => __('Philippines', self::slug),
-        'latitude' => 13,
+        'latitude' => 13.0,
         'longitude' => 122,
     ),
     'PN' =>
@@ -1244,7 +1238,7 @@ array (
     array (
         'cid' => 177,
         'name' => __('Poland', self::slug),
-        'latitude' => 52,
+        'latitude' => 52.0,
         'longitude' => 20,
     ),
     'PT' =>
@@ -1279,21 +1273,21 @@ array (
     array (
         'cid' => 182,
         'name' => __('Romania', self::slug),
-        'latitude' => 46,
+        'latitude' => 46.0,
         'longitude' => 25,
     ),
     'RU' =>
     array (
         'cid' => 183,
         'name' => __('Russian Federation', self::slug),
-        'latitude' => 60,
+        'latitude' => 60.0,
         'longitude' => 100,
     ),
     'RW' =>
     array (
         'cid' => 184,
         'name' => __('Rwanda', self::slug),
-        'latitude' => -2,
+        'latitude' => -2.0,
         'longitude' => 30,
     ),
     'BL' =>
@@ -1363,28 +1357,28 @@ array (
     array (
         'cid' => 194,
         'name' => __('Sao Tome and Principe', self::slug),
-        'latitude' => 1,
+        'latitude' => 1.0,
         'longitude' => 7,
     ),
     'SA' =>
     array (
         'cid' => 195,
         'name' => __('Saudi Arabia', self::slug),
-        'latitude' => 25,
+        'latitude' => 25.0,
         'longitude' => 45,
     ),
     'SN' =>
     array (
         'cid' => 196,
         'name' => __('Senegal', self::slug),
-        'latitude' => 14,
+        'latitude' => 14.0,
         'longitude' => -14,
     ),
     'RS' =>
     array (
         'cid' => 197,
         'name' => __('Serbia', self::slug),
-        'latitude' => 44,
+        'latitude' => 44.0,
         'longitude' => 21,
     ),
     'SC' =>
@@ -1426,28 +1420,28 @@ array (
     array (
         'cid' => 203,
         'name' => __('Slovenia', self::slug),
-        'latitude' => 46,
+        'latitude' => 46.0,
         'longitude' => 15,
     ),
     'SB' =>
     array (
         'cid' => 204,
         'name' => __('Solomon Islands', self::slug),
-        'latitude' => -8,
+        'latitude' => -8.0,
         'longitude' => 159,
     ),
     'SO' =>
     array (
         'cid' => 205,
         'name' => __('Somalia', self::slug),
-        'latitude' => 10,
+        'latitude' => 10.0,
         'longitude' => 49,
     ),
     'ZA' =>
     array (
         'cid' => 206,
         'name' => __('South Africa', self::slug),
-        'latitude' => -29,
+        'latitude' => -29.0,
         'longitude' => 24,
     ),
     'GS' =>
@@ -1468,41 +1462,41 @@ array (
     array (
         'cid' => 209,
         'name' => __('Spain', self::slug),
-        'latitude' => 40,
+        'latitude' => 40.0,
         'longitude' => -4,
     ),
     'LK' =>
     array (
         'cid' => 210,
         'name' => __('Sri Lanka', self::slug),
-        'latitude' => 7,
+        'latitude' => 7.0,
         'longitude' => 81,
     ),
     'SD' =>
     array (
         'cid' => 211,
         'name' => __('Sudan', self::slug),
-        'latitude' => 15,
+        'latitude' => 15.0,
         'longitude' => 30,
     ),
     'SR' =>
     array (
         'cid' => 212,
         'name' => __('Suriname', self::slug),
-        'latitude' => 4,
+        'latitude' => 4.0,
         'longitude' => -56,
     ),
     'SJ' =>
     array (
         'cid' => 213,
         'name' => __('Svalbard and Jan Mayen', self::slug),
-        'latitude' => 78,
+        'latitude' => 78.0,
         'longitude' => 20,
     ),
     'SZ' =>
     array (
         'cid' => 214,
-        'name' => __('Swaziland', self::slug),
+        'name' => __('Eswatini', self::slug),
         'latitude' => -26.5,
         'longitude' => 31.5,
     ),
@@ -1510,21 +1504,21 @@ array (
     array (
         'cid' => 215,
         'name' => __('Sweden', self::slug),
-        'latitude' => 62,
+        'latitude' => 62.0,
         'longitude' => 15,
     ),
     'CH' =>
     array (
         'cid' => 216,
         'name' => __('Switzerland', self::slug),
-        'latitude' => 47,
+        'latitude' => 47.0,
         'longitude' => 8,
     ),
     'SY' =>
     array (
         'cid' => 217,
         'name' => __('Syria', self::slug),
-        'latitude' => 35,
+        'latitude' => 35.0,
         'longitude' => 38,
     ),
     'TW' =>
@@ -1538,21 +1532,21 @@ array (
     array (
         'cid' => 219,
         'name' => __('Tajikistan', self::slug),
-        'latitude' => 39,
+        'latitude' => 39.0,
         'longitude' => 71,
     ),
     'TZ' =>
     array (
         'cid' => 220,
         'name' => __('Tanzania', self::slug),
-        'latitude' => -6,
+        'latitude' => -6.0,
         'longitude' => 35,
     ),
     'TH' =>
     array (
         'cid' => 221,
         'name' => __('Thailand', self::slug),
-        'latitude' => 15,
+        'latitude' => 15.0,
         'longitude' => 100,
     ),
     'TL' =>
@@ -1566,49 +1560,49 @@ array (
     array (
         'cid' => 223,
         'name' => __('Togo', self::slug),
-        'latitude' => 8,
+        'latitude' => 8.0,
         'longitude' => 1.1667,
     ),
     'TK' =>
     array (
         'cid' => 224,
         'name' => __('Tokelau', self::slug),
-        'latitude' => -9,
+        'latitude' => -9.0,
         'longitude' => -172,
     ),
     'TO' =>
     array (
         'cid' => 225,
         'name' => __('Tonga', self::slug),
-        'latitude' => -20,
+        'latitude' => -20.0,
         'longitude' => -175,
     ),
     'TT' =>
     array (
         'cid' => 226,
         'name' => __('Trinidad and Tobago', self::slug),
-        'latitude' => 11,
+        'latitude' => 11.0,
         'longitude' => -61,
     ),
     'TN' =>
     array (
         'cid' => 227,
         'name' => __('Tunisia', self::slug),
-        'latitude' => 34,
+        'latitude' => 34.0,
         'longitude' => 9,
     ),
     'TR' =>
     array (
         'cid' => 228,
         'name' => __('Turkey', self::slug),
-        'latitude' => 39,
+        'latitude' => 39.0,
         'longitude' => 35,
     ),
     'TM' =>
     array (
         'cid' => 229,
         'name' => __('Turkmenistan', self::slug),
-        'latitude' => 40,
+        'latitude' => 40.0,
         'longitude' => 60,
     ),
     'TC' =>
@@ -1622,42 +1616,42 @@ array (
     array (
         'cid' => 231,
         'name' => __('Tuvalu', self::slug),
-        'latitude' => -8,
+        'latitude' => -8.0,
         'longitude' => 178,
     ),
     'UG' =>
     array (
         'cid' => 232,
         'name' => __('Uganda', self::slug),
-        'latitude' => 1,
+        'latitude' => 1.0,
         'longitude' => 32,
     ),
     'UA' =>
     array (
         'cid' => 233,
         'name' => __('Ukraine', self::slug),
-        'latitude' => 49,
+        'latitude' => 49.0,
         'longitude' => 32,
     ),
     'AE' =>
     array (
         'cid' => 234,
         'name' => __('United Arab Emirates', self::slug),
-        'latitude' => 24,
+        'latitude' => 24.0,
         'longitude' => 54,
     ),
     'GB' =>
     array (
         'cid' => 235,
         'name' => __('United Kingdom', self::slug),
-        'latitude' => 54,
+        'latitude' => 54.0,
         'longitude' => -2,
     ),
     'US' =>
     array (
         'cid' => 236,
         'name' => __('United States of America', self::slug),
-        'latitude' => 38,
+        'latitude' => 38.0,
         'longitude' => -97,
     ),
     'UM' =>
@@ -1671,35 +1665,35 @@ array (
     array (
         'cid' => 238,
         'name' => __('Uruguay', self::slug),
-        'latitude' => -33,
+        'latitude' => -33.0,
         'longitude' => -56,
     ),
     'UZ' =>
     array (
         'cid' => 239,
         'name' => __('Uzbekistan', self::slug),
-        'latitude' => 41,
+        'latitude' => 41.0,
         'longitude' => 64,
     ),
     'VU' =>
     array (
         'cid' => 240,
         'name' => __('Vanuatu', self::slug),
-        'latitude' => -16,
+        'latitude' => -16.0,
         'longitude' => 167,
     ),
     'VE' =>
     array (
         'cid' => 241,
         'name' => __('Venezuela', self::slug),
-        'latitude' => 8,
+        'latitude' => 8.0,
         'longitude' => -66,
     ),
     'VN' =>
     array (
         'cid' => 242,
         'name' => __('Vietnam', self::slug),
-        'latitude' => 16,
+        'latitude' => 16.0,
         'longitude' => 106,
     ),
     'VG' =>
@@ -1734,22 +1728,21 @@ array (
     array (
         'cid' => 247,
         'name' => __('Yemen', self::slug),
-        'latitude' => 15,
+        'latitude' => 15.0,
         'longitude' => 48,
     ),
     'ZM' =>
     array (
         'cid' => 248,
         'name' => __('Zambia', self::slug),
-        'latitude' => -15,
+        'latitude' => -15.0,
         'longitude' => 30,
     ),
     'ZW' =>
     array (
         'cid' => 249,
         'name' => __('Zimbabwe', self::slug),
-        'latitude' => -20,
+        'latitude' => -20.0,
         'longitude' => 30,
-    )
+    ),
 );
-?>
