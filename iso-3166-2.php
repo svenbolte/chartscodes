@@ -1745,4 +1745,18 @@ $country_data = array (
         'latitude' => -20.0,
         'longitude' => 30,
     ),
+    'XK' =>
+    array (
+        'cid' => 250,
+        'name' => __('Kosovo', self::slug),
+        'latitude' => 42.52,
+        'longitude' => 21,
+    ),
+    'ZZ' =>
+    array (
+        'cid' => 251,
+        'name' => __('unknown/private', self::slug),
+        'latitude' => 52.0,
+        'longitude' => 8,
+    ),
 );
