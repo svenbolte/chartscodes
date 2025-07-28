@@ -910,7 +910,7 @@ class ipflag {
 
     public function schedule_update(){
         if(!wp_next_scheduled(self::safe_slug.'_update')){
-            wp_schedule_event(time(), self::safe_slug.'_weekly', self::safe_slug.'_update');
+            wp_schedule_event(time(), self::safe_slug.'_monthly', self::safe_slug.'_update');
         }
     }
 
@@ -922,12 +922,12 @@ class ipflag {
 
     public function custom_schedule($schedules){
         /* Please do not configure cron to interval
-         * less than 604800 (7 days) because GitHub might
+         * less than 2419900 (7 days) because GitHub might
          * disable our db update repository due to server load
          */
-        $schedules[self::safe_slug.'_weekly'] = array(
-            'interval'=> 604800,
-            'display'=>  __('every week', 'pb-chartscodes')
+        $schedules[self::safe_slug.'_monthly'] = array(
+            'interval'=> 2419800,
+            'display'=>  __('every month', 'pb-chartscodes')
         );
         return $schedules;
     }
@@ -2302,10 +2302,13 @@ class ipflag {
     }
 
     public function settings_init(){
-        register_setting(self::safe_slug.'_options', self::safe_slug.'_options', array($this, 'options_validate'));
+
+		//  delete_option('pb_ipflag_offset');     // auskommentieren, wenn wieder bei chunk 0 angefangen werden soll
+		
+		register_setting(self::safe_slug.'_options', self::safe_slug.'_options', array($this, 'options_validate'));
         add_settings_section('database_section', __('ipflag database options', 'pb-chartscodes'), array($this, 'settings_section_database'), __FILE__);
         add_settings_field(self::safe_slug.'_webcounterkeepdays', __('delete webhits older than (days):', 'pb-chartscodes'), array($this, 'settings_field_webcounterkeepdays'), __FILE__, 'database_section');
-        add_settings_field(self::safe_slug.'_auto_update', __('Enable automatic weekly database update check:', 'pb-chartscodes'), array($this, 'settings_field_auto_update'), __FILE__, 'database_section');
+        add_settings_field(self::safe_slug.'_auto_update', __('Enable automatic monthly database update check:', 'pb-chartscodes'), array($this, 'settings_field_auto_update'), __FILE__, 'database_section');
         add_settings_field(self::safe_slug.'_db_status', __('Current database status:', 'pb-chartscodes'), array($this, 'settings_field_db_status'), __FILE__, 'database_section');
         add_settings_field(self::safe_slug.'_db_update', '', array($this, 'settings_field_db_update'), __FILE__, 'database_section');
     }
@@ -2330,7 +2333,18 @@ class ipflag {
         echo '/>';
     }
 
-	public function settings_field_db_status() {
+
+	// -----------   IP DB Update Anfang ---------------------
+
+	public static function get_chunk_size() {
+		$site_url = get_site_url();
+		if (strpos($site_url, 'wp.pbcs.de') !== false) {
+			return 80000;
+		}
+		return 500000;  // Wenn 500000, dann keine chunks bilden und kein Endimport knopf
+	}
+	
+    public function settings_field_db_status() {
         $version_option = 'pb_ipflag_db_version';
         $last_version = get_option($version_option);
 
@@ -2338,34 +2352,58 @@ class ipflag {
             $gmt_offset = get_option('gmt_offset');
             $date_format = get_option('date_format');
             $time_format = get_option('time_format');
-            $timestamp = strtotime($last_version . '01'); // Version ist YYYYMM → Tag 01
-            $h_time = date_i18n($date_format . ' ' . $time_format, $timestamp + ($gmt_offset * 3600)) . ' '. ago($timestamp);
+
+            $timestamp = strtotime($last_version . '01');
+            $h_time = date_i18n($date_format . ' @ ' . $time_format, $timestamp + ($gmt_offset * 3600));
+
             echo esc_html($h_time);
         } else {
             echo __('Database missing or corrupted, please update', 'pb-chartscodes');
         }
     }
 
-    public function settings_field_db_update(){
-        echo '<input id="'.self::safe_slug.'_db_update" name="'.self::safe_slug.'_options[db_update]" class="button-secondary" type="submit" value="'.__('Update', 'pb-chartscodes').'" />';
+    public function settings_field_db_update() {
+        echo '<input id="' . self::safe_slug . '_db_update" name="' . self::safe_slug . '_options[db_update]" class="button-secondary" type="submit" value="' . __('Update', 'pb-chartscodes') . ' ' . self::get_chunk_size() . '" />';
+
+        // Ergänzter Button für Chunk-Import
+        if (get_option('pb_ipflag_offset')) {
+            $next_offset = (int)get_option('pb_ipflag_offset');
+			echo " &nbsp; " . esc_attr__('Import fortsetzen ab Zeile ' . $next_offset, 'pb-chartscodes');
+        }
     }
 
+    public function render_import_button() {
+        $nonce = wp_create_nonce('pb_ipflag_import');
+        echo '<div class="wrap">';
+        echo '<h2>' . esc_html__('DB-IP Import', 'pb-chartscodes') . '</h2>';
+        echo '<form method="post">';
+        echo '<input type="hidden" name="pb_ipflag_action" value="import" />';
+        echo '<input type="hidden" name="_wpnonce" value="' . esc_attr($nonce) . '" />';
+        echo '<p><input type="submit" class="button button-primary" value="' . esc_attr__('Import fortsetzen', 'pb-chartscodes') . '" /></p>';
+        echo '</form>';
+        echo '</div>';
+    }
 
-	// -----------   IP DB Update Anfang ---------------------
-
+    public function handle_manual_import() {
+        if ((isset($_POST['pb_ipflag_action']) && $_POST['pb_ipflag_action'] === 'import' && check_admin_referer('pb_ipflag_import')) || isset($_POST['pb_ipflag_continue'])) {
+            try {
+                $this->import_dbip_data();
+                echo '<div class="updated"><p>' . esc_html__('Import erfolgreich ausgeführt.', 'pb-chartscodes') . '</p></div>';
+            } catch (Exception $e) {
+                echo '<div class="error"><p>' . esc_html($e->getMessage()) . '</p></div>';
+            }
+        }
+    }
+	
     public function import_dbip_data() {
-		set_time_limit(1200);
         global $wpdb;
-
-        // Versionsprüfung
         $current_version = date('Ym');
         $version_option = 'pb_ipflag_db_version';
         $last_version = get_option($version_option);
-        if ($last_version === $current_version) {
-			// throw new Exception(__('Die IP-Datenbank ist bereits auf dem neuesten Stand.', 'pb-chartscodes'), 1);
+        if ($last_version === $current_version && !isset($_GET['force'])) {
+            throw new Exception(__('Die IP-Datenbank ist bereits auf dem neuesten Stand.', 'pb-chartscodes'), 1);  // hier auskommentieren, wenn Update force
         }
 
-        // Aktuellstes Release ermitteln
         $year = date('Y');
         $month = date('m');
         $url_base = "https://download.db-ip.com/free";
@@ -2382,7 +2420,6 @@ class ipflag {
             $current_version = date('Ym', $timestamp);
         }
 
-        // Zielpfade
         $upload_dir = wp_upload_dir();
         $base_path = trailingslashit($upload_dir['basedir']) . 'pb-ipflag/';
         if (!file_exists($base_path)) {
@@ -2391,95 +2428,105 @@ class ipflag {
         $gz_file = $base_path . 'dbip.csv.gz';
         $csv_file = $base_path . 'dbip.csv';
 
-        // CSV-Datei laden und entpacken
-        file_put_contents($gz_file, fopen($csv_url, 'r'));
-        $gz = gzopen($gz_file, 'rb');
-        $out = fopen($csv_file, 'wb');
-        while (!gzeof($gz)) fwrite($out, gzread($gz, 4096));
-        fclose($out); gzclose($gz); unlink($gz_file);
+        if (!file_exists($csv_file)) {
+            file_put_contents($gz_file, fopen($csv_url, 'r'));
+            $gz = gzopen($gz_file, 'rb');
+            $out = fopen($csv_file, 'wb');
+            while (!gzeof($gz)) fwrite($out, gzread($gz, 4096));
+            fclose($out); gzclose($gz); unlink($gz_file);
+        }
 
-        // Tabellennamen
         $ip_table = $wpdb->prefix . 'pb_ipflag_ranges';
         $country_table = $wpdb->prefix . 'pb_ipflag_countries';
 
-        // Tabellen neu erstellen
-		$wpdb->query("DROP TABLE IF EXISTS `$ip_table`;");
-		$wpdb->query("DROP TABLE IF EXISTS `$country_table`;");
-		$wpdb->query("SET @autoid := 0;");
+        if (!get_option('pb_ipflag_offset')) {
+            $wpdb->query("DROP TABLE IF EXISTS `$ip_table`;");
+            $wpdb->query("DROP TABLE IF EXISTS `$country_table`;");
 
-        $sql_country = "CREATE TABLE $country_table (
-            cid INT(4) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            code CHAR(2) NOT NULL,
-            name VARCHAR(150) NOT NULL,
-            latitude FLOAT NOT NULL,
-            longitude FLOAT NOT NULL
-        ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
+            $sql_country = "CREATE TABLE $country_table (
+                cid INT(4) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                code CHAR(2) NOT NULL,
+                name VARCHAR(150) NOT NULL,
+                latitude FLOAT NOT NULL,
+                longitude FLOAT NOT NULL
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;";
 
-        $sql_ip = "CREATE TABLE $ip_table (
-            id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            fromip INT(10) UNSIGNED NOT NULL,
-            toip INT(10) UNSIGNED NOT NULL,
-            cid INT(4) UNSIGNED NOT NULL,
-            iso CHAR(2) NOT NULL,
-            INDEX (fromip ASC, toip ASC, cid ASC)
-        ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;";
+            $sql_ip = "CREATE TABLE $ip_table (
+                id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                fromip INT(10) UNSIGNED NOT NULL,
+                toip INT(10) UNSIGNED NOT NULL,
+                cid INT(4) UNSIGNED NOT NULL,
+                INDEX (fromip ASC, toip ASC, cid ASC)
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;";
 
-        require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-        dbDelta($sql_country);
-        dbDelta($sql_ip);
-		$wpdb->query("ALTER TABLE `$country_table` AUTO_INCREMENT = 1;");
-		$wpdb->query("ALTER TABLE `$ip_table` AUTO_INCREMENT = 1;");
+            require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+            dbDelta($sql_country);
+            dbDelta($sql_ip);
 
-        // ISO-Daten einbinden und in Tabelle einfügen
-        require_once dirname(__FILE__) . '/iso-3166-2.php';
-        foreach ($country_data as $code => $c) {
-            $wpdb->insert($country_table, [
-                'code' => $code,
-                'name' => $c['name'],
-                'latitude' => $c['latitude'],
-                'longitude' => $c['longitude']
-            ]);
-        }
-
-        // CSV verarbeiten
-        if (($input = fopen($csv_file, 'r')) !== false) {
-            while (($data = fgetcsv($input, 0, ",", '"', "\\")) !== false) {
-                $startip = ip2long($data[0]);
-                $endip = ip2long($data[1]);
-
-                // Nur IPv4-Adressen verarbeiten (ip2long liefert false bei IPv6)
-                if ($startip === false || $endip === false) continue;
-                $code = strtoupper(trim($data[2]));
-                $country_row = $wpdb->get_row($wpdb->prepare("SELECT cid FROM $country_table WHERE code = '%s' LIMIT 1", $code));
-                if (!$country_row) {
-                    // echo("Unbekannter Country-Code: $code bei IP-Range {$data[0]} - {$data[1]}");
-                    continue;
-                }
-                $cid = $country_row->cid;
-
-                // Einzel-INSERT statt Sammel-Query
-                $wpdb->insert($ip_table, [
-                    'fromip' => $startip,
-                    'toip'   => $endip,
-                    'cid'    => $cid,
-                    'iso'    => $code
+            require_once dirname(__FILE__) . '/iso-3166-2.php';
+            foreach ($country_data as $code => $c) {
+                $wpdb->insert($country_table, [
+                    'code' => $code,
+                    'name' => $c['name'],
+                    'latitude' => $c['latitude'],
+                    'longitude' => $c['longitude']
                 ]);
             }
-            fclose($input);
-            unlink($csv_file);
-        } else {
-            throw new Exception(__('Konnte CSV nicht öffnen.', 'pb-chartscodes'), 6);
         }
-		
-		
-        // Version speichern
-        update_option($version_option, $current_version);
+
+		$offset = (int) get_option('pb_ipflag_offset', 0);
+
+		$line = 0;
+		$count = 0;
+		$chunksize = self::get_chunk_size();
+
+		// Country-Mapping vorbereiten (einmalig)
+		$country_map = [];
+		$results = $wpdb->get_results("SELECT cid, code FROM $country_table", OBJECT);
+		foreach ($results as $row) {
+			$country_map[strtoupper(trim($row->code))] = $row->cid;
+		}
+
+		if (($input = fopen($csv_file, 'r')) !== false) {
+			while (($data = fgetcsv($input, 0, ",", '"', "\\")) !== false) {
+				$line++;
+				if ($line <= $offset) continue;
+				if ($count >= $chunksize) break;
+
+				// IPs parsen
+				$startip = ip2long($data[0] ?? '');
+				$endip   = ip2long($data[1] ?? '');
+				if ($startip === false || $endip === false) continue;
+
+				// Country-Code prüfen und cid ermitteln
+				$code = isset($data[2]) ? strtoupper(trim($data[2])) : '';
+				$cid = $country_map[$code] ?? null;
+				if (!$cid) continue;
+
+				// Insert
+				$wpdb->insert($ip_table, [
+					'fromip' => $startip,
+					'toip'   => $endip,
+					'cid'    => $cid
+				]);
+				$count++;
+			}
+			fclose($input);
+		}
+
+		if ($count > 0 && $chunksize != 500000 ) {
+            update_option('pb_ipflag_offset', $offset + $count);
+        } else {
+            unlink($csv_file);
+            delete_option('pb_ipflag_offset');
+            update_option($version_option, $current_version);
+        }
     }
 
+	// -----------   IP DB Update ende ---------------------
 
-// -----------   IP DB Update ende ---------------------
-
-
+	
+	
     protected function remote_timestamp(){
         $response = wp_remote_get($this->remote_ts_url, array('timeout' => self::http_timeout));
         if (!is_wp_error($response) || isset($response['body']) || $response['body'] !== '0000-00-00-00-00-00'){
