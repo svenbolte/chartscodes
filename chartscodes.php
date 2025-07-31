@@ -898,24 +898,24 @@ class ipflag {
         add_shortcode('ipflag', array($this, 'shortcode'));
 		add_shortcode( 'webcounter', array($this, 'writevisitortodatabase') );
 
-        if(isset($this->options['auto_update'])){
+        if (isset($this->options['auto_update'])) {
             add_action(self::safe_slug.'_update', array($this, 'do_auto_update'));
             add_filter('cron_schedules', array($this, 'custom_schedule'));
             register_deactivation_hook(__FILE__, array($this, 'deschedule_update'));
             $this->schedule_update();
-        }else{
+        } else {
             $this->deschedule_update();
         }
     }
 
     public function schedule_update(){
-        if(!wp_next_scheduled(self::safe_slug.'_update')){
+        if (!wp_next_scheduled(self::safe_slug.'_update')) {
             wp_schedule_event(time(), self::safe_slug.'_monthly', self::safe_slug.'_update');
         }
     }
 
     public function deschedule_update(){
-        if(wp_next_scheduled(self::safe_slug.'_update')){
+        if (wp_next_scheduled(self::safe_slug.'_update')) {
             wp_clear_scheduled_hook(self::safe_slug.'_update');
         }
     }
@@ -933,61 +933,50 @@ class ipflag {
     }
 
 
-public function get_info($ip = null){
-    global $wpdb;
-    $ip_ranges_table_name = $wpdb->prefix . self::ip_ranges_table_suffix;
-    $countries_table_name = $wpdb->prefix . self::countries_table_suffix;
+	public function get_info($ip = null){
+		global $wpdb;
+		$ip_ranges_table_name = $wpdb->prefix . self::ip_ranges_table_suffix;
+		$countries_table_name = $wpdb->prefix . self::countries_table_suffix;
 
-    if ($ip === null) {
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
-        } else {
-            $ip = $_SERVER['REMOTE_ADDR'];
-        }
-    }
-
-    // IP-Version ermitteln
-    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
-        $ip_version = 4;
-        $ip_type_label = 'IPv4';
-    } elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
-        $ip_version = 6;
-        $ip_type_label = 'IPv6';
-    } else {
-        return false;
-    }
-
-    // Binär konvertieren
-    $ip_bin = inet_pton($ip);
-    if ($ip_bin === false) return false;
-
-    // SQL-Query
-    $sql = $wpdb->prepare(
-        "SELECT
-            %s AS ip,
-            r.code,
-            c.name,
-            c.latitude,
-            c.longitude
-         FROM $ip_ranges_table_name r
-         INNER JOIN $countries_table_name c
-             ON r.code = c.code
-         WHERE r.ip_version = %d
-           AND r.fromip <= %s
-           AND r.toip >= %s
-         LIMIT 1",
-        $ip, $ip_version, $ip_bin, $ip_bin
-    );
-
-    $info = $wpdb->get_row($sql);
-    if (!$info) return false;
-
-    // IP-Typ ergänzen
-    $info->ip_type = $ip_type_label;
-    $info->ip = "{$info->ip} ({$info->ip_type})";
-
-    return $info;
-}
+		if ($ip === null) {
+			if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+				$ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
+			} else {
+				$ip = $_SERVER['REMOTE_ADDR'];
+			}
+		}
+		// IP-Version ermitteln
+		if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+			$ip_version = 4;
+			$ip_type_label = 'IPv4';
+		} elseif (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+			$ip_version = 6;
+			$ip_type_label = 'IPv6';
+		} else {
+			return false;
+		}
+		// Binär konvertieren
+		$ip_bin = inet_pton($ip);
+		if ($ip_bin === false) return false;
+		// SQL-Query
+		$sql = $wpdb->prepare(
+			"SELECT %s AS ip, r.code, c.name, c.latitude, c.longitude
+			 FROM $ip_ranges_table_name r
+			 INNER JOIN $countries_table_name c
+				 ON r.code = c.code
+			 WHERE r.ip_version = %d
+			   AND r.fromip <= %s
+			   AND r.toip >= %s
+			 LIMIT 1",
+			$ip, $ip_version, $ip_bin, $ip_bin
+		);
+		$info = $wpdb->get_row($sql);
+		if (!$info) return false;
+		// IP-Typ ergänzen
+		$info->ip_type = $ip_type_label;
+		$info->ip = "{$info->ip} ({$info->ip_type})";
+		return $info;
+	}
 
 
     public function get_isofromland($land = null){
@@ -1000,531 +989,12 @@ public function get_info($ip = null){
     }
 	
 	
+	// ------------------ Array aus iso-3166-2.php array bzw. von ssl.pbcs.de -------------------------
 	public function country_code ($lang = null , $code = null) {
-	// Array aus isolaender.csv von ssl.pbcs.de
-	if (empty ($countries)) $countries = array (
-		'en' => array (
-	'AD' => 'Andorra',
-	'AE' => 'United Arab Emirates',
-	'AF' => 'Afghanistan',
-	'AG' => 'Antigua and Barbuda',
-	'AI' => 'Anguilla',
-	'AL' => 'Albania',
-	'AM' => 'Armenia',
-	'AO' => 'Angola',
-	'AQ' => 'Antarctica',
-	'AQ' => 'Antarctica',
-	'AR' => 'Argentina',
-	'AS' => 'American Samoa',
-	'AT' => 'Austria',
-	'AU' => 'Australia',
-	'AW' => 'Aruba',
-	'AX' => 'Aland Islands',
-	'AZ' => 'Azerbaijan',
-	'BA' => 'Bosnia and Herzegovina',
-	'BB' => 'Barbados',
-	'BD' => 'Bangladesh',
-	'BE' => 'Belgium',
-	'BF' => 'Burkina Faso',
-	'BG' => 'Bulgaria',
-	'BH' => 'Bahrain',
-	'BI' => 'Burundi',
-	'BJ' => 'Benin',
-	'BL' => 'Saint Barthelemy',
-	'BM' => 'Bermuda',
-	'BN' => 'Brunei Darussalam',
-	'BO' => 'Bolivia (Plurinational State of)',
-	'BQ' => 'Bonaire  Sint Eustatius and Saba',
-	'BR' => 'Brazil',
-	'BS' => 'Bahamas',
-	'BT' => 'Bhutan',
-	'BV' => 'Bouvet Island',
-	'BW' => 'Botswana',
-	'BY' => 'Belarus',
-	'BZ' => 'Belize',
-	'CA' => 'Canada',
-	'CC' => 'Cocos (Keeling) Islands',
-	'CD' => 'Congo  Democratic Republic of the',
-	'CF' => 'Central African Republic',
-	'CG' => 'Congo',
-	'CH' => 'Switzerland',
-	'CI' => 'Cote de Ivoire',
-	'CK' => 'Cook Islands',
-	'CL' => 'Chile',
-	'CM' => 'Cameroon',
-	'CN' => 'China',
-	'CO' => 'Colombia',
-	'CR' => 'Costa Rica',
-	'CS' => 'Czechoslovakia (former)',
-	'CU' => 'Cuba',
-	'CV' => 'Cabo Verde',
-	'CW' => 'Curacao',
-	'CX' => 'Christmas Island',
-	'CY' => 'Cyprus',
-	'CZ' => 'Czechia',
-	'DD' => 'german dem. Rep (GDR former)',
-	'DE' => 'Germany',
-	'DJ' => 'Djibouti',
-	'DK' => 'Denmark',
-	'DM' => 'Dominica',
-	'DO' => 'Dominican Republic',
-	'DZ' => 'Algeria',
-	'EC' => 'Ecuador',
-	'EE' => 'Estonia',
-	'EG' => 'Egypt',
-	'EH' => 'Western Sahara',
-	'ER' => 'Eritrea',
-	'ES' => 'Spain',
-	'ET' => 'Ethiopia',
-	'EU' => 'European Union',
-	'FI' => 'Finland',
-	'FJ' => 'Fiji',
-	'FK' => 'Falkland Islands (Malvinas)',
-	'FM' => 'Micronesia (Federated States of)',
-	'FO' => 'Faroe Islands',
-	'FR' => 'France',
-	'GA' => 'Gabon',
-	'GB' => 'United Kingdom of Great Britain and Northern Ireland',
-	'GD' => 'Grenada',
-	'GE' => 'Georgia',
-	'GF' => 'French Guiana',
-	'GG' => 'Guernsey',
-	'GH' => 'Ghana',
-	'GI' => 'Gibraltar',
-	'GL' => 'Greenland',
-	'GM' => 'Gambia',
-	'GN' => 'Guinea',
-	'GP' => 'Guadeloupe',
-	'GQ' => 'Equatorial Guinea',
-	'GR' => 'Greece',
-	'GS' => 'South Georgia and the South Sandwich Islands',
-	'GT' => 'Guatemala',
-	'GU' => 'Guam',
-	'GW' => 'Guinea-Bissau',
-	'GY' => 'Guyana',
-	'HK' => 'Hong Kong',
-	'HM' => 'Heard Island and McDonald Islands',
-	'HN' => 'Honduras',
-	'HR' => 'Croatia',
-	'HT' => 'Haiti',
-	'HU' => 'Hungary',
-	'ID' => 'Indonesia',
-	'IE' => 'Ireland',
-	'IL' => 'Israel',
-	'IM' => 'Isle of Man',
-	'IN' => 'India',
-	'IO' => 'British Indian Ocean Territory',
-	'IQ' => 'Iraq',
-	'IR' => 'Iran (Islamic Republic of)',
-	'IS' => 'Iceland',
-	'IT' => 'Italy',
-	'JE' => 'Jersey',
-	'JM' => 'Jamaica',
-	'JO' => 'Jordan',
-	'JP' => 'Japan',
-	'KE' => 'Kenya',
-	'KG' => 'Kyrgyzstan',
-	'KH' => 'Cambodia',
-	'KI' => 'Kiribati',
-	'KM' => 'Comoros',
-	'KN' => 'Saint Kitts and Nevis',
-	'KP' => 'Korea (Democratic Peoples Republic of)',
-	'KR' => 'Korea  Republic of',
-	'KW' => 'Kuwait',
-	'KY' => 'Cayman Islands',
-	'KZ' => 'Kazakhstan',
-	'LA' => 'Lao People s Democratic Republic',
-	'LB' => 'Lebanon',
-	'LC' => 'Saint Lucia',
-	'LI' => 'Liechtenstein',
-	'LK' => 'Sri Lanka',
-	'LR' => 'Liberia',
-	'LS' => 'Lesotho',
-	'LT' => 'Lithuania',
-	'LU' => 'Luxembourg',
-	'LV' => 'Latvia',
-	'LY' => 'Libya',
-	'MA' => 'Morocco',
-	'MC' => 'Monaco',
-	'MD' => 'Moldova  Republic of',
-	'ME' => 'Montenegro',
-	'MF' => 'Saint Martin (French part)',
-	'MG' => 'Madagascar',
-	'MH' => 'Marshall Islands',
-	'MK' => 'North Macedonia',
-	'ML' => 'Mali',
-	'MM' => 'Myanmar',
-	'MN' => 'Mongolia',
-	'MO' => 'Macao',
-	'MP' => 'Northern Mariana Islands',
-	'MQ' => 'Martinique',
-	'MR' => 'Mauritania',
-	'MS' => 'Montserrat',
-	'MT' => 'Malta',
-	'MU' => 'Mauritius',
-	'MV' => 'Maldives',
-	'MW' => 'Malawi',
-	'MX' => 'Mexico',
-	'MY' => 'Malaysia',
-	'MZ' => 'Mozambique',
-	'NA' => 'Namibia',
-	'NC' => 'New Caledonia',
-	'NE' => 'Niger',
-	'NF' => 'Norfolk Island',
-	'NG' => 'Nigeria',
-	'NI' => 'Nicaragua',
-	'NL' => 'Netherlands',
-	'NO' => 'Norway',
-	'NP' => 'Nepal',
-	'NR' => 'Nauru',
-	'NU' => 'Niue',
-	'NZ' => 'New Zealand',
-	'OM' => 'Oman',
-	'PA' => 'Panama',
-	'PE' => 'Peru',
-	'PF' => 'French Polynesia',
-	'PG' => 'Papua New Guinea',
-	'PH' => 'Philippines',
-	'PK' => 'Pakistan',
-	'PL' => 'Poland',
-	'PM' => 'Saint Pierre and Miquelon',
-	'PN' => 'Pitcairn',
-	'PR' => 'Puerto Rico',
-	'PS' => 'Palestine  State of',
-	'PT' => 'Portugal',
-	'PW' => 'Palau',
-	'PY' => 'Paraguay',
-	'QA' => 'Qatar',
-	'RE' => 'Reunion',
-	'RO' => 'Romania',
-	'RS' => 'Serbia',
-	'RU' => 'Russian Federation',
-	'RW' => 'Rwanda',
-	'SA' => 'Saudi Arabia',
-	'SB' => 'Solomon Islands',
-	'SC' => 'Seychelles',
-	'SD' => 'Sudan',
-	'SE' => 'Sweden',
-	'SG' => 'Singapore',
-	'SH' => 'Saint Helena  Ascension and Tristan da Cunha',
-	'SI' => 'Slovenia',
-	'SJ' => 'Svalbard and Jan Mayen',
-	'SK' => 'Slovakia',
-	'SL' => 'Sierra Leone',
-	'SM' => 'San Marino',
-	'SN' => 'Senegal',
-	'SO' => 'Somalia',
-	'SR' => 'Suriname',
-	'SS' => 'South Sudan',
-	'ST' => 'Sao Tome and Principe',
-	'SV' => 'El Salvador',
-	'SX' => 'Sint Maarten (Dutch part)',
-	'SY' => 'Syrian Arab Republic',
-	'SZ' => 'Eswatini',
-	'TC' => 'Turks and Caicos Islands',
-	'TD' => 'Chad',
-	'TF' => 'French Southern Territories',
-	'TG' => 'Togo',
-	'TH' => 'Thailand',
-	'TJ' => 'Tajikistan',
-	'TK' => 'Tokelau',
-	'TL' => 'Timor-Leste',
-	'TM' => 'Turkmenistan',
-	'TN' => 'Tunisia',
-	'TO' => 'Tonga',
-	'TR' => 'Tuerkiye',
-	'TT' => 'Trinidad and Tobago',
-	'TV' => 'Tuvalu',
-	'TW' => 'Taiwan (Republic)',
-	'TZ' => 'Tanzania  United Republic of',
-	'UA' => 'Ukraine',
-	'UG' => 'Uganda',
-	'UM' => 'United States Minor Outlying Islands',
-	'UN' => 'United Nations',
-	'US' => 'United States of America',
-	'UY' => 'Uruguay',
-	'UZ' => 'Uzbekistan',
-	'VA' => 'Vatican',
-	'VC' => 'Saint Vincent and the Grenadines',
-	'VE' => 'Venezuela (Bolivarian Republic of)',
-	'VG' => 'Virgin Islands (British)',
-	'VI' => 'Virgin Islands (U.S.)',
-	'VN' => 'Viet Nam',
-	'VU' => 'Vanuatu',
-	'WF' => 'Wallis and Futuna',
-	'WS' => 'Samoa',
-	'YE' => 'Yemen',
-	'YT' => 'Mayotte',
-	'YU' => 'Yugoslavia (former)',
-	'ZA' => 'South Africa',
-	'ZM' => 'Zambia',
-	'ZW' => 'Zimbabwe',
-	'ZZ' => 'international worldwide',
-	),
-		'de' => array (
-	'AD' => 'Andorra',
-	'AE' => 'Vereinigte Arabische Emirate',
-	'AF' => 'Afghanistan',
-	'AG' => 'Antigua und Barbuda',
-	'AI' => 'Anguilla',
-	'AL' => 'Albanien',
-	'AM' => 'Armenien',
-	'AO' => 'Angola',
-	'AQ' => 'Antarktis (Sonderstatus durch Antarktisvertrag)',
-	'AQ' => 'Antarktis',
-	'AR' => 'Argentinien',
-	'AS' => 'Amerikanisch-Samoa',
-	'AT' => 'Österreich',
-	'AU' => 'Australien',
-	'AW' => 'Aruba',
-	'AX' => 'Aland',
-	'AZ' => 'Aserbaidschan',
-	'BA' => 'Bosnien und Herzegowina',
-	'BB' => 'Barbados',
-	'BD' => 'Bangladesch',
-	'BE' => 'Belgien',
-	'BF' => 'Burkina Faso',
-	'BG' => 'Bulgarien',
-	'BH' => 'Bahrain',
-	'BI' => 'Burundi',
-	'BJ' => 'Benin',
-	'BL' => 'Saint-Barthelemy',
-	'BM' => 'Bermuda',
-	'BN' => 'Brunei',
-	'BO' => 'Bolivien',
-	'BQ' => 'Bonaire  Saba  Sint Eustatius',
-	'BR' => 'Brasilien',
-	'BS' => 'Bahamas',
-	'BT' => 'Bhutan',
-	'BV' => 'Bouvetinsel',
-	'BW' => 'Botswana',
-	'BY' => 'Belarus',
-	'BZ' => 'Belize',
-	'CA' => 'Kanada',
-	'CC' => 'Kokosinseln',
-	'CD' => 'Kongo  Demokratische Republik',
-	'CF' => 'Zentralafrikanische Republik',
-	'CG' => 'Kongo  Republik',
-	'CH' => 'Schweiz',
-	'CI' => 'Elfenbeinküste',
-	'CK' => 'Cookinseln',
-	'CL' => 'Chile',
-	'CM' => 'Kamerun',
-	'CN' => 'China  Volksrepublik',
-	'CO' => 'Kolumbien',
-	'CR' => 'Costa Rica',
-	'CS' => 'Tschechoslowakei (ehemals)',
-	'CU' => 'Kuba',
-	'CV' => 'Kap Verde',
-	'CW' => 'Curacao',
-	'CX' => 'Weihnachtsinsel',
-	'CY' => 'Zypern',
-	'CZ' => 'Tschechien',
-	'DD' => 'DDR (ehemals)',
-	'DE' => 'Deutschland',
-	'DJ' => 'Dschibuti',
-	'DK' => 'Dänemark',
-	'DM' => 'Dominica',
-	'DO' => 'Dominikanische Republik',
-	'DZ' => 'Algerien',
-	'EC' => 'Ecuador',
-	'EE' => 'Estland',
-	'EG' => 'Ägypten',
-	'EH' => 'Westsahara',
-	'ER' => 'Eritrea',
-	'ES' => 'Spanien',
-	'ET' => 'Äthiopien',
-	'EU' => 'Europäische Union',
-	'FI' => 'Finnland',
-	'FJ' => 'Fidschi',
-	'FK' => 'Falklandinseln',
-	'FM' => 'Mikronesien',
-	'FO' => 'Färöer',
-	'FR' => 'Frankreich',
-	'GA' => 'Gabun',
-	'GB' => 'Vereinigtes Königreich',
-	'GD' => 'Grenada',
-	'GE' => 'Georgien',
-	'GF' => 'Französisch-Guayana',
-	'GG' => 'Guernsey (Kanalinsel)',
-	'GH' => 'Ghana',
-	'GI' => 'Gibraltar',
-	'GL' => 'Grönland',
-	'GM' => 'Gambia',
-	'GN' => 'Guinea',
-	'GP' => 'Guadeloupe',
-	'GQ' => 'Äquatorialguinea',
-	'GR' => 'Griechenland',
-	'GS' => 'Südgeorgien und die Südlichen Sandwichinseln',
-	'GT' => 'Guatemala',
-	'GU' => 'Guam',
-	'GW' => 'Guinea-Bissau',
-	'GY' => 'Guyana',
-	'HK' => 'Hongkong',
-	'HM' => 'Heard und McDonaldinseln',
-	'HN' => 'Honduras',
-	'HR' => 'Kroatien',
-	'HT' => 'Haiti',
-	'HU' => 'Ungarn',
-	'ID' => 'Indonesien',
-	'IE' => 'Irland',
-	'IL' => 'Israel',
-	'IM' => 'Insel Man',
-	'IN' => 'Indien',
-	'IO' => 'Britisches Territorium im Indischen Ozean',
-	'IQ' => 'Irak',
-	'IR' => 'Iran',
-	'IS' => 'Island',
-	'IT' => 'Italien',
-	'JE' => 'Jersey (Kanalinsel)',
-	'JM' => 'Jamaika',
-	'JO' => 'Jordanien',
-	'JP' => 'Japan',
-	'KE' => 'Kenia',
-	'KG' => 'Kirgisistan',
-	'KH' => 'Kambodscha',
-	'KI' => 'Kiribati',
-	'KM' => 'Komoren',
-	'KN' => 'St. Kitts und Nevis',
-	'KP' => 'Nordkorea',
-	'KR' => 'Südkorea',
-	'KW' => 'Kuwait',
-	'KY' => 'Kaimaninseln',
-	'KZ' => 'Kasachstan',
-	'LA' => 'Laos',
-	'LB' => 'Libanon',
-	'LC' => 'St. Lucia',
-	'LI' => 'Liechtenstein',
-	'LK' => 'Sri Lanka',
-	'LR' => 'Liberia',
-	'LS' => 'Lesotho',
-	'LT' => 'Litauen',
-	'LU' => 'Luxemburg',
-	'LV' => 'Lettland',
-	'LY' => 'Libyen',
-	'MA' => 'Marokko',
-	'MC' => 'Monaco',
-	'MD' => 'Moldau',
-	'ME' => 'Montenegro',
-	'MF' => 'Saint-Martin (französischer Teil)',
-	'MG' => 'Madagaskar',
-	'MH' => 'Marshallinseln',
-	'MK' => 'Nordmazedonien',
-	'ML' => 'Mali',
-	'MM' => 'Myanmar',
-	'MN' => 'Mongolei',
-	'MO' => 'Macau',
-	'MP' => 'Nördliche Marianen',
-	'MQ' => 'Martinique',
-	'MR' => 'Mauretanien',
-	'MS' => 'Montserrat',
-	'MT' => 'Malta',
-	'MU' => 'Mauritius',
-	'MV' => 'Malediven',
-	'MW' => 'Malawi',
-	'MX' => 'Mexiko',
-	'MY' => 'Malaysia',
-	'MZ' => 'Mosambik',
-	'NA' => 'Namibia',
-	'NC' => 'Neukaledonien',
-	'NE' => 'Niger',
-	'NF' => 'Norfolkinsel',
-	'NG' => 'Nigeria',
-	'NI' => 'Nicaragua',
-	'NL' => 'Niederlande',
-	'NO' => 'Norwegen',
-	'NP' => 'Nepal',
-	'NR' => 'Nauru',
-	'NU' => 'Niue',
-	'NZ' => 'Neuseeland',
-	'OM' => 'Oman',
-	'PA' => 'Panama',
-	'PE' => 'Peru',
-	'PF' => 'Französisch-Polynesien',
-	'PG' => 'Papua-Neuguinea',
-	'PH' => 'Philippinen',
-	'PK' => 'Pakistan',
-	'PL' => 'Polen',
-	'PM' => 'Saint-Pierre und Miquelon',
-	'PN' => 'Pitcairninseln',
-	'PR' => 'Puerto Rico',
-	'PS' => 'Palästina',
-	'PT' => 'Portugal',
-	'PW' => 'Palau',
-	'PY' => 'Paraguay',
-	'QA' => 'Katar',
-	'RE' => 'Reunion',
-	'RO' => 'Rumänien',
-	'RS' => 'Serbien',
-	'RU' => 'Russland',
-	'RW' => 'Ruanda',
-	'SA' => 'Saudi-Arabien',
-	'SB' => 'Salomonen',
-	'SC' => 'Seychellen',
-	'SD' => 'Sudan',
-	'SE' => 'Schweden',
-	'SG' => 'Singapur',
-	'SH' => 'St. Helena  Ascension und Tristan da Cunha',
-	'SI' => 'Slowenien',
-	'SJ' => 'Spitzbergen und Jan Mayen',
-	'SK' => 'Slowakei',
-	'SL' => 'Sierra Leone',
-	'SM' => 'San Marino',
-	'SN' => 'Senegal',
-	'SO' => 'Somalia',
-	'SR' => 'Suriname',
-	'SS' => 'Südsudan',
-	'ST' => 'Sao Tome und Principe',
-	'SV' => 'El Salvador',
-	'SX' => 'Sint Maarten',
-	'SY' => 'Syrien',
-	'SZ' => 'Eswatini',
-	'TC' => 'Turks- und Caicosinseln',
-	'TD' => 'Tschad',
-	'TF' => 'Französische Süd- und Antarktisgebiete',
-	'TG' => 'Togo',
-	'TH' => 'Thailand',
-	'TJ' => 'Tadschikistan',
-	'TK' => 'Tokelau',
-	'TL' => 'Osttimor',
-	'TM' => 'Turkmenistan',
-	'TN' => 'Tunesien',
-	'TO' => 'Tonga',
-	'TR' => 'Türkei',
-	'TT' => 'Trinidad und Tobago',
-	'TV' => 'Tuvalu',
-	'TW' => 'Taiwan',
-	'TZ' => 'Tansania',
-	'UA' => 'Ukraine',
-	'UG' => 'Uganda',
-	'UM' => 'United States Minor Outlying Islands',
-	'UN' => 'Vereinte Nationen',
-	'US' => 'Vereinigte Staaten',
-	'UY' => 'Uruguay',
-	'UZ' => 'Usbekistan',
-	'VA' => 'Vatikanstadt',
-	'VC' => 'St. Vincent und die Grenadinen',
-	'VE' => 'Venezuela',
-	'VG' => 'Britische Jungferninseln',
-	'VI' => 'Amerikanische Jungferninseln',
-	'VN' => 'Vietnam',
-	'VU' => 'Vanuatu',
-	'WF' => 'Wallis und Futuna',
-	'WS' => 'Samoa',
-	'YE' => 'Jemen',
-	'YT' => 'Mayotte',
-	'YU' => 'Jugoslawien (ehemals)',
-	'ZA' => 'Südafrika',
-	'ZM' => 'Sambia',
-	'ZW' => 'Simbabwe',
-	'ZZ' => 'International',
-	),);
-	// Array Ende
-	  if (null == $lang) { return ($countries); }
-	  $lang = strtolower ($lang);
-	  if (null == $code) { return (isset ($countries[$lang]) ? $countries[$lang] : false); }
-	  $code = strtoupper ($code);
-	  return (isset ($countries[$lang][$code]) ? $countries[$lang][$code] : false);
+		global $wpdb;
+		$table = $wpdb->prefix . self::countries_table_suffix;
+		$isoland = $wpdb->get_var( $wpdb->prepare( "SELECT name FROM $table WHERE code = %s LIMIT 1", strtoupper(trim($code)) ));
+		return (isset ($isoland) ? $isoland : false);
 	}
 
     public function get_flag($info){
@@ -2454,16 +1924,44 @@ public function get_info($ip = null){
         $current_version = date('Ym');
         $version_option = 'pb_ipflag_db_version';
         $last_version = get_option($version_option);
-        // **************************************************** Debug mode, nächste Zeile auskommentieren importiert immer *****************************************
-		if ($last_version === $current_version && !isset($_GET['force'])) {
-            throw new Exception(__('Die IP-Datenbank ist bereits auf dem neuesten Stand.', 'pb-chartscodes'), 1);
-        }
+        // Tabellennamen für countries und ip ranges
+		$ip_table = $wpdb->prefix . 'pb_ipflag_ranges';
+        $country_table = $wpdb->prefix . 'pb_ipflag_countries';
 
         $year = date('Y');
         $month = date('m');
         $url_base = "https://download.db-ip.com/free";
         $filename = "dbip-country-lite-$year-$month.csv.gz";
         $csv_url = "$url_base/$filename";
+		// **************************************************** Debug mode, nächste Zeile auskommentieren importiert immer *****************************************
+		if ($last_version === $current_version && !isset($_GET['force'])) {
+            throw new Exception(__('Die IP-Datenbank ist bereits auf dem neuesten Stand.', 'pb-chartscodes'), 1);
+        }
+
+		// Ländertabelle neu erstellen
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		$wpdb->query("DROP TABLE IF EXISTS `$country_table`;");
+            $sql_country = "CREATE TABLE $country_table (
+                cid INT(4) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                code CHAR(2) NOT NULL,
+                name VARCHAR(150) NOT NULL,
+                nameeng VARCHAR(150) NOT NULL,
+                latitude FLOAT NOT NULL,
+                longitude FLOAT NOT NULL
+            ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;";
+            dbDelta($sql_country);
+		require_once dirname(__FILE__) . '/iso-3166-2.php';
+		foreach ($country_data as $c) {
+			$wpdb->insert($country_table, [
+				'code'      => $c['code'],
+				'name'      => $c['name'],
+				'nameeng'   => $c['nameeng'],
+				'latitude'  => $c['latitude'],
+				'longitude' => $c['longitude']
+			]);
+		}
+
+		// Ranges Tabelle aus dem Internet laden
 
         $headers = @get_headers($csv_url);
         if (!$headers || strpos($headers[0], '200') === false) {
@@ -2491,43 +1989,18 @@ public function get_info($ip = null){
             fclose($out); gzclose($gz); unlink($gz_file);
         }
 
-        $ip_table = $wpdb->prefix . 'pb_ipflag_ranges';
-        $country_table = $wpdb->prefix . 'pb_ipflag_countries';
-
-        if (!get_option('pb_ipflag_offset')) {
+		// Ip Ranges neu erstellen
+		if (!get_option('pb_ipflag_offset')) {
             $wpdb->query("DROP TABLE IF EXISTS `$ip_table`;");
-            $wpdb->query("DROP TABLE IF EXISTS `$country_table`;");
-
-            $sql_country = "CREATE TABLE $country_table (
-                cid INT(4) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                code CHAR(2) NOT NULL,
-                name VARCHAR(150) NOT NULL,
-                latitude FLOAT NOT NULL,
-                longitude FLOAT NOT NULL
-            ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;";
-
-            $sql_ip = "CREATE TABLE $ip_table (
-                id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                ip_version TINYINT(1) NOT NULL,
-                fromip VARBINARY(16) NOT NULL,
-                toip   VARBINARY(16) NOT NULL,
-                code CHAR(2) NOT NULL,
-                INDEX (ip_version, fromip, toip, code)
-            ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;";
-
-            require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-            dbDelta($sql_country);
-            dbDelta($sql_ip);
-
-            require_once dirname(__FILE__) . '/iso-3166-2.php';
-            foreach ($country_data as $code => $c) {
-                $wpdb->insert($country_table, [
-                    'code' => $code,
-                    'name' => $c['name'],
-                    'latitude' => $c['latitude'],
-                    'longitude' => $c['longitude']
-                ]);
-            }
+			$sql_ip = "CREATE TABLE $ip_table (
+				id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+				ip_version TINYINT(1) NOT NULL,
+				fromip VARBINARY(16) NOT NULL,
+				toip   VARBINARY(16) NOT NULL,
+				code CHAR(2) NOT NULL,
+				INDEX (ip_version, fromip, toip, code)
+			) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci AUTO_INCREMENT=1;";
+			dbDelta($sql_ip);
         }
 
         $offset = (int) get_option('pb_ipflag_offset', 0);

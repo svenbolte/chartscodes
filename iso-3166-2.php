@@ -1,1762 +1,266 @@
 <?php
 // ISO-3166-2 von 2025-07-28 updated by chatgpt
 
-$country_data = array (
-    'AF' =>
-    array (
-        'cid' => 1,
-        'name' => __('Afghanistan', self::slug),
-        'latitude' => 33.0,
-        'longitude' => 65,
-    ),
-    'AX' =>
-    array (
-        'cid' => 2,
-        'name' => __('Aland Islands', self::slug),
-        'latitude' => 60.1166,
-        'longitude' => 19.9,
-    ),
-    'AL' =>
-    array (
-        'cid' => 3,
-        'name' => __('Albania', self::slug),
-        'latitude' => 41.0,
-        'longitude' => 20,
-    ),
-    'DZ' =>
-    array (
-        'cid' => 4,
-        'name' => __('Algeria', self::slug),
-        'latitude' => 28.0,
-        'longitude' => 3,
-    ),
-    'AS' =>
-    array (
-        'cid' => 5,
-        'name' => __('American Samoa', self::slug),
-        'latitude' => -14.3333,
-        'longitude' => -170,
-    ),
-    'AD' =>
-    array (
-        'cid' => 6,
-        'name' => __('Andorra', self::slug),
-        'latitude' => 42.5,
-        'longitude' => 1.5,
-    ),
-    'AO' =>
-    array (
-        'cid' => 7,
-        'name' => __('Angola', self::slug),
-        'latitude' => -12.5,
-        'longitude' => 18.5,
-    ),
-    'AI' =>
-    array (
-        'cid' => 8,
-        'name' => __('Anguilla', self::slug),
-        'latitude' => 18.25,
-        'longitude' => -63.1667,
-    ),
-    'AQ' =>
-    array (
-        'cid' => 9,
-        'name' => __('Antarctica', self::slug),
-        'latitude' => -90.0,
-        'longitude' => 0,
-    ),
-    'AG' =>
-    array (
-        'cid' => 10,
-        'name' => __('Antigua and Barbuda', self::slug),
-        'latitude' => 17.05,
-        'longitude' => -61.8,
-    ),
-    'AR' =>
-    array (
-        'cid' => 11,
-        'name' => __('Argentina', self::slug),
-        'latitude' => -34.0,
-        'longitude' => -64,
-    ),
-    'AM' =>
-    array (
-        'cid' => 12,
-        'name' => __('Armenia', self::slug),
-        'latitude' => 40.0,
-        'longitude' => 45,
-    ),
-    'AW' =>
-    array (
-        'cid' => 13,
-        'name' => __('Aruba', self::slug),
-        'latitude' => 12.5,
-        'longitude' => -69.9667,
-    ),
-    'AU' =>
-    array (
-        'cid' => 14,
-        'name' => __('Australia', self::slug),
-        'latitude' => -27.0,
-        'longitude' => 133,
-    ),
-    'AT' =>
-    array (
-        'cid' => 15,
-        'name' => __('Austria', self::slug),
-        'latitude' => 47.3333,
-        'longitude' => 13.3333,
-    ),
-    'AZ' =>
-    array (
-        'cid' => 16,
-        'name' => __('Azerbaijan', self::slug),
-        'latitude' => 40.5,
-        'longitude' => 47.5,
-    ),
-    'BS' =>
-    array (
-        'cid' => 17,
-        'name' => __('Bahamas', self::slug),
-        'latitude' => 24.25,
-        'longitude' => -76,
-    ),
-    'BH' =>
-    array (
-        'cid' => 18,
-        'name' => __('Bahrain', self::slug),
-        'latitude' => 26.0,
-        'longitude' => 50.55,
-    ),
-    'BD' =>
-    array (
-        'cid' => 19,
-        'name' => __('Bangladesh', self::slug),
-        'latitude' => 24.0,
-        'longitude' => 90,
-    ),
-    'BB' =>
-    array (
-        'cid' => 20,
-        'name' => __('Barbados', self::slug),
-        'latitude' => 13.1667,
-        'longitude' => -59.5333,
-    ),
-    'BY' =>
-    array (
-        'cid' => 21,
-        'name' => __('Belarus', self::slug),
-        'latitude' => 53.0,
-        'longitude' => 28,
-    ),
-    'BE' =>
-    array (
-        'cid' => 22,
-        'name' => __('Belgium', self::slug),
-        'latitude' => 50.8333,
-        'longitude' => 4,
-    ),
-    'BZ' =>
-    array (
-        'cid' => 23,
-        'name' => __('Belize', self::slug),
-        'latitude' => 17.25,
-        'longitude' => -88.75,
-    ),
-    'BJ' =>
-    array (
-        'cid' => 24,
-        'name' => __('Benin', self::slug),
-        'latitude' => 9.5,
-        'longitude' => 2.25,
-    ),
-    'BM' =>
-    array (
-        'cid' => 25,
-        'name' => __('Bermuda', self::slug),
-        'latitude' => 32.3333,
-        'longitude' => -64.75,
-    ),
-    'BT' =>
-    array (
-        'cid' => 26,
-        'name' => __('Bhutan', self::slug),
-        'latitude' => 27.5,
-        'longitude' => 90.5,
-    ),
-    'BO' =>
-    array (
-        'cid' => 27,
-        'name' => __('Bolivia', self::slug),
-        'latitude' => -17.0,
-        'longitude' => -65,
-    ),
-    'BQ' =>
-    array (
-        'cid' => 28,
-        'name' => __('Bonaire, Sint Eustatius and Saba', self::slug),
-        'latitude' => 12.25,
-        'longitude' => 68.4667,
-    ),
-    'BA' =>
-    array (
-        'cid' => 29,
-        'name' => __('Bosnia and Herzegovina', self::slug),
-        'latitude' => 44.0,
-        'longitude' => 18,
-    ),
-    'BW' =>
-    array (
-        'cid' => 30,
-        'name' => __('Botswana', self::slug),
-        'latitude' => -22.0,
-        'longitude' => 24,
-    ),
-    'BV' =>
-    array (
-        'cid' => 31,
-        'name' => __('Bouvet Island', self::slug),
-        'latitude' => -54.4333,
-        'longitude' => 3.4,
-    ),
-    'BR' =>
-    array (
-        'cid' => 32,
-        'name' => __('Brazil', self::slug),
-        'latitude' => -10.0,
-        'longitude' => -55,
-    ),
-    'IO' =>
-    array (
-        'cid' => 33,
-        'name' => __('British Indian Ocean Territory', self::slug),
-        'latitude' => -6.0,
-        'longitude' => 71.5,
-    ),
-    'BN' =>
-    array (
-        'cid' => 34,
-        'name' => __('Brunei Darussalam', self::slug),
-        'latitude' => 4.5,
-        'longitude' => 114.6667,
-    ),
-    'BG' =>
-    array (
-        'cid' => 35,
-        'name' => __('Bulgaria', self::slug),
-        'latitude' => 43.0,
-        'longitude' => 25,
-    ),
-    'BF' =>
-    array (
-        'cid' => 36,
-        'name' => __('Burkina Faso', self::slug),
-        'latitude' => 13.0,
-        'longitude' => -2,
-    ),
-    'BI' =>
-    array (
-        'cid' => 37,
-        'name' => __('Burundi', self::slug),
-        'latitude' => -3.5,
-        'longitude' => 30,
-    ),
-    'KH' =>
-    array (
-        'cid' => 38,
-        'name' => __('Cambodia', self::slug),
-        'latitude' => 13.0,
-        'longitude' => 105,
-    ),
-    'CM' =>
-    array (
-        'cid' => 39,
-        'name' => __('Cameroon', self::slug),
-        'latitude' => 6.0,
-        'longitude' => 12,
-    ),
-    'CA' =>
-    array (
-        'cid' => 40,
-        'name' => __('Canada', self::slug),
-        'latitude' => 60.0,
-        'longitude' => -95,
-    ),
-    'CV' =>
-    array (
-        'cid' => 41,
-        'name' => __('Cabo Verde', self::slug),
-        'latitude' => 16.0,
-        'longitude' => -24,
-    ),
-    'KY' =>
-    array (
-        'cid' => 42,
-        'name' => __('Cayman Islands', self::slug),
-        'latitude' => 19.5,
-        'longitude' => -80.5,
-    ),
-    'CF' =>
-    array (
-        'cid' => 43,
-        'name' => __('Central African Republic', self::slug),
-        'latitude' => 7.0,
-        'longitude' => 21,
-    ),
-    'TD' =>
-    array (
-        'cid' => 44,
-        'name' => __('Chad', self::slug),
-        'latitude' => 15.0,
-        'longitude' => 19,
-    ),
-    'CL' =>
-    array (
-        'cid' => 45,
-        'name' => __('Chile', self::slug),
-        'latitude' => -30.0,
-        'longitude' => -71,
-    ),
-    'CN' =>
-    array (
-        'cid' => 46,
-        'name' => __('China', self::slug),
-        'latitude' => 35.0,
-        'longitude' => 105,
-    ),
-    'CX' =>
-    array (
-        'cid' => 47,
-        'name' => __('Christmas Island', self::slug),
-        'latitude' => -10.5,
-        'longitude' => 105.6667,
-    ),
-    'CC' =>
-    array (
-        'cid' => 48,
-        'name' => __('Cocos (Keeling) Islands', self::slug),
-        'latitude' => -12.5,
-        'longitude' => 96.8333,
-    ),
-    'CO' =>
-    array (
-        'cid' => 49,
-        'name' => __('Colombia', self::slug),
-        'latitude' => 4.0,
-        'longitude' => -72,
-    ),
-    'KM' =>
-    array (
-        'cid' => 50,
-        'name' => __('Comoros', self::slug),
-        'latitude' => -12.1667,
-        'longitude' => 44.25,
-    ),
-    'CD' =>
-    array (
-        'cid' => 51,
-        'name' => __('The Democratic Republic of the Congo', self::slug),
-        'latitude' => 0.0,
-        'longitude' => 25,
-    ),
-    'CG' =>
-    array (
-        'cid' => 52,
-        'name' => __('Congo', self::slug),
-        'latitude' => -1.0,
-        'longitude' => 15,
-    ),
-    'CK' =>
-    array (
-        'cid' => 53,
-        'name' => __('Cook Islands', self::slug),
-        'latitude' => -21.2333,
-        'longitude' => -159.7667,
-    ),
-    'CR' =>
-    array (
-        'cid' => 54,
-        'name' => __('Costa Rica', self::slug),
-        'latitude' => 10.0,
-        'longitude' => -84,
-    ),
-    'CI' =>
-    array (
-        'cid' => 55,
-        'name' => __('Cote dIvoire', self::slug),
-        'latitude' => 8.0,
-        'longitude' => -5,
-    ),
-    'HR' =>
-    array (
-        'cid' => 56,
-        'name' => __('Croatia', self::slug),
-        'latitude' => 45.1667,
-        'longitude' => 15.5,
-    ),
-    'CU' =>
-    array (
-        'cid' => 57,
-        'name' => __('Cuba', self::slug),
-        'latitude' => 21.5,
-        'longitude' => -80,
-    ),
-    'CW' =>
-    array (
-        'cid' => 58,
-        'name' => __('Curacao', self::slug),
-        'latitude' => 12.1167,
-        'longitude' => 68.9333,
-    ),
-    'CY' =>
-    array (
-        'cid' => 59,
-        'name' => __('Cyprus', self::slug),
-        'latitude' => 35.0,
-        'longitude' => 33,
-    ),
-    'CZ' =>
-    array (
-        'cid' => 60,
-        'name' => __('Czechia', self::slug),
-        'latitude' => 49.75,
-        'longitude' => 15.5,
-    ),
-    'DK' =>
-    array (
-        'cid' => 61,
-        'name' => __('Denmark', self::slug),
-        'latitude' => 56.0,
-        'longitude' => 10,
-    ),
-    'DJ' =>
-    array (
-        'cid' => 62,
-        'name' => __('Djibouti', self::slug),
-        'latitude' => 11.5,
-        'longitude' => 43,
-    ),
-    'DM' =>
-    array (
-        'cid' => 63,
-        'name' => __('Dominica', self::slug),
-        'latitude' => 15.4167,
-        'longitude' => -61.3333,
-    ),
-    'DO' =>
-    array (
-        'cid' => 64,
-        'name' => __('Dominican Republic', self::slug),
-        'latitude' => 19.0,
-        'longitude' => -70.6667,
-    ),
-    'EC' =>
-    array (
-        'cid' => 65,
-        'name' => __('Ecuador', self::slug),
-        'latitude' => -2.0,
-        'longitude' => -77.5,
-    ),
-    'EG' =>
-    array (
-        'cid' => 66,
-        'name' => __('Egypt', self::slug),
-        'latitude' => 27.0,
-        'longitude' => 30,
-    ),
-    'SV' =>
-    array (
-        'cid' => 67,
-        'name' => __('El Salvador', self::slug),
-        'latitude' => 13.8333,
-        'longitude' => -88.9167,
-    ),
-    'GQ' =>
-    array (
-        'cid' => 68,
-        'name' => __('Equatorial Guinea', self::slug),
-        'latitude' => 2.0,
-        'longitude' => 10,
-    ),
-    'ER' =>
-    array (
-        'cid' => 69,
-        'name' => __('Eritrea', self::slug),
-        'latitude' => 15.0,
-        'longitude' => 39,
-    ),
-    'EE' =>
-    array (
-        'cid' => 70,
-        'name' => __('Estonia', self::slug),
-        'latitude' => 59.0,
-        'longitude' => 26,
-    ),
-    'ET' =>
-    array (
-        'cid' => 71,
-        'name' => __('Ethiopia', self::slug),
-        'latitude' => 8.0,
-        'longitude' => 38,
-    ),
-    'FK' =>
-    array (
-        'cid' => 72,
-        'name' => __('Falkland Islands (Malvinas)', self::slug),
-        'latitude' => -51.75,
-        'longitude' => -59,
-    ),
-    'FO' =>
-    array (
-        'cid' => 73,
-        'name' => __('Faroe Islands', self::slug),
-        'latitude' => 62.0,
-        'longitude' => -7,
-    ),
-    'FJ' =>
-    array (
-        'cid' => 74,
-        'name' => __('Fiji', self::slug),
-        'latitude' => -18.0,
-        'longitude' => 175,
-    ),
-    'FI' =>
-    array (
-        'cid' => 75,
-        'name' => __('Finland', self::slug),
-        'latitude' => 64.0,
-        'longitude' => 26,
-    ),
-    'FR' =>
-    array (
-        'cid' => 76,
-        'name' => __('France', self::slug),
-        'latitude' => 46.0,
-        'longitude' => 2,
-    ),
-    'GF' =>
-    array (
-        'cid' => 77,
-        'name' => __('French Guiana', self::slug),
-        'latitude' => 4.0,
-        'longitude' => -53,
-    ),
-    'PF' =>
-    array (
-        'cid' => 78,
-        'name' => __('French Polynesia', self::slug),
-        'latitude' => -15.0,
-        'longitude' => -140,
-    ),
-    'TF' =>
-    array (
-        'cid' => 79,
-        'name' => __('French Southern Territories', self::slug),
-        'latitude' => -43.0,
-        'longitude' => 67,
-    ),
-    'GA' =>
-    array (
-        'cid' => 80,
-        'name' => __('Gabon', self::slug),
-        'latitude' => -1.0,
-        'longitude' => 11.75,
-    ),
-    'GM' =>
-    array (
-        'cid' => 81,
-        'name' => __('Gambia', self::slug),
-        'latitude' => 13.4667,
-        'longitude' => -16.5667,
-    ),
-    'GE' =>
-    array (
-        'cid' => 82,
-        'name' => __('Georgia', self::slug),
-        'latitude' => 42.0,
-        'longitude' => 43.5,
-    ),
-    'DE' =>
-    array (
-        'cid' => 83,
-        'name' => __('Germany', self::slug),
-        'latitude' => 51.0,
-        'longitude' => 9,
-    ),
-    'GH' =>
-    array (
-        'cid' => 84,
-        'name' => __('Ghana', self::slug),
-        'latitude' => 8.0,
-        'longitude' => -2,
-    ),
-    'GI' =>
-    array (
-        'cid' => 85,
-        'name' => __('Gibraltar', self::slug),
-        'latitude' => 36.1833,
-        'longitude' => -5.3667,
-    ),
-    'GR' =>
-    array (
-        'cid' => 86,
-        'name' => __('Greece', self::slug),
-        'latitude' => 39.0,
-        'longitude' => 22,
-    ),
-    'GL' =>
-    array (
-        'cid' => 87,
-        'name' => __('Greenland', self::slug),
-        'latitude' => 72.0,
-        'longitude' => -40,
-    ),
-    'GD' =>
-    array (
-        'cid' => 88,
-        'name' => __('Grenada', self::slug),
-        'latitude' => 12.1167,
-        'longitude' => -61.6667,
-    ),
-    'GP' =>
-    array (
-        'cid' => 89,
-        'name' => __('Guadeloupe', self::slug),
-        'latitude' => 16.25,
-        'longitude' => -61.5833,
-    ),
-    'GU' =>
-    array (
-        'cid' => 90,
-        'name' => __('Guam', self::slug),
-        'latitude' => 13.4667,
-        'longitude' => 144.7833,
-    ),
-    'GT' =>
-    array (
-        'cid' => 91,
-        'name' => __('Guatemala', self::slug),
-        'latitude' => 15.5,
-        'longitude' => -90.25,
-    ),
-    'GG' =>
-    array (
-        'cid' => 92,
-        'name' => __('Guernsey', self::slug),
-        'latitude' => 49.45,
-        'longitude' => -2.5333,
-    ),
-    'GN' =>
-    array (
-        'cid' => 93,
-        'name' => __('Guinea', self::slug),
-        'latitude' => 11.0,
-        'longitude' => -10,
-    ),
-    'GW' =>
-    array (
-        'cid' => 94,
-        'name' => __('Guinea-Bissau', self::slug),
-        'latitude' => 12.0,
-        'longitude' => -15,
-    ),
-    'GY' =>
-    array (
-        'cid' => 95,
-        'name' => __('Guyana', self::slug),
-        'latitude' => 5.0,
-        'longitude' => -59,
-    ),
-    'HT' =>
-    array (
-        'cid' => 96,
-        'name' => __('Haiti', self::slug),
-        'latitude' => 19.0,
-        'longitude' => -72.4167,
-    ),
-    'HM' =>
-    array (
-        'cid' => 97,
-        'name' => __('Heard Island and McDonald Islands', self::slug),
-        'latitude' => -53.1,
-        'longitude' => 72.5167,
-    ),
-    'VA' =>
-    array (
-        'cid' => 98,
-        'name' => __('Holy See (Vatican City State)', self::slug),
-        'latitude' => 41.9,
-        'longitude' => 12.45,
-    ),
-    'HN' =>
-    array (
-        'cid' => 99,
-        'name' => __('Honduras', self::slug),
-        'latitude' => 15.0,
-        'longitude' => -86.5,
-    ),
-    'HK' =>
-    array (
-        'cid' => 100,
-        'name' => __('Hong Kong', self::slug),
-        'latitude' => 22.25,
-        'longitude' => 114.1667,
-    ),
-    'HU' =>
-    array (
-        'cid' => 101,
-        'name' => __('Hungary', self::slug),
-        'latitude' => 47.0,
-        'longitude' => 20,
-    ),
-    'IS' =>
-    array (
-        'cid' => 102,
-        'name' => __('Iceland', self::slug),
-        'latitude' => 65.0,
-        'longitude' => -18,
-    ),
-    'IN' =>
-    array (
-        'cid' => 103,
-        'name' => __('India', self::slug),
-        'latitude' => 20.0,
-        'longitude' => 77,
-    ),
-    'ID' =>
-    array (
-        'cid' => 104,
-        'name' => __('Indonesia', self::slug),
-        'latitude' => -5.0,
-        'longitude' => 120,
-    ),
-    'IR' =>
-    array (
-        'cid' => 105,
-        'name' => __('Iran', self::slug),
-        'latitude' => 32.0,
-        'longitude' => 53,
-    ),
-    'IQ' =>
-    array (
-        'cid' => 106,
-        'name' => __('Iraq', self::slug),
-        'latitude' => 33.0,
-        'longitude' => 44,
-    ),
-    'IE' =>
-    array (
-        'cid' => 107,
-        'name' => __('Ireland', self::slug),
-        'latitude' => 53.0,
-        'longitude' => -8,
-    ),
-    'IM' =>
-    array (
-        'cid' => 108,
-        'name' => __('Isle of Man', self::slug),
-        'latitude' => 54.15,
-        'longitude' => -4.4833,
-    ),
-    'IL' =>
-    array (
-        'cid' => 109,
-        'name' => __('Israel', self::slug),
-        'latitude' => 31.5,
-        'longitude' => 34.75,
-    ),
-    'IT' =>
-    array (
-        'cid' => 110,
-        'name' => __('Italy', self::slug),
-        'latitude' => 42.8333,
-        'longitude' => 12.8333,
-    ),
-    'JM' =>
-    array (
-        'cid' => 111,
-        'name' => __('Jamaica', self::slug),
-        'latitude' => 18.25,
-        'longitude' => -77.5,
-    ),
-    'JP' =>
-    array (
-        'cid' => 112,
-        'name' => __('Japan', self::slug),
-        'latitude' => 36.0,
-        'longitude' => 138,
-    ),
-    'JE' =>
-    array (
-        'cid' => 113,
-        'name' => __('Jersey', self::slug),
-        'latitude' => 49.19,
-        'longitude' => -2.11,
-    ),
-    'JO' =>
-    array (
-        'cid' => 114,
-        'name' => __('Jordan', self::slug),
-        'latitude' => 31.0,
-        'longitude' => 36,
-    ),
-    'KZ' =>
-    array (
-        'cid' => 115,
-        'name' => __('Kazakhstan', self::slug),
-        'latitude' => 48.0,
-        'longitude' => 68,
-    ),
-    'KE' =>
-    array (
-        'cid' => 116,
-        'name' => __('Kenya', self::slug),
-        'latitude' => 1.0,
-        'longitude' => 38,
-    ),
-    'KI' =>
-    array (
-        'cid' => 117,
-        'name' => __('Kiribati', self::slug),
-        'latitude' => 1.4167,
-        'longitude' => 173,
-    ),
-    'KP' =>
-    array (
-        'cid' => 118,
-        'name' => __('North Korea', self::slug),
-        'latitude' => 40.0,
-        'longitude' => 127,
-    ),
-    'KR' =>
-    array (
-        'cid' => 119,
-        'name' => __('South Korea', self::slug),
-        'latitude' => 37.0,
-        'longitude' => 127.5,
-    ),
-    'KW' =>
-    array (
-        'cid' => 120,
-        'name' => __('Kuwait', self::slug),
-        'latitude' => 29.3375,
-        'longitude' => 47.6581,
-    ),
-    'KG' =>
-    array (
-        'cid' => 121,
-        'name' => __('Kyrgyzstan', self::slug),
-        'latitude' => 41.0,
-        'longitude' => 75,
-    ),
-    'LA' =>
-    array (
-        'cid' => 122,
-        'name' => __('Lao', self::slug),
-        'latitude' => 18.0,
-        'longitude' => 105,
-    ),
-    'LV' =>
-    array (
-        'cid' => 123,
-        'name' => __('Latvia', self::slug),
-        'latitude' => 57.0,
-        'longitude' => 25,
-    ),
-    'LB' =>
-    array (
-        'cid' => 124,
-        'name' => __('Lebanon', self::slug),
-        'latitude' => 33.8333,
-        'longitude' => 35.8333,
-    ),
-    'LS' =>
-    array (
-        'cid' => 125,
-        'name' => __('Lesotho', self::slug),
-        'latitude' => -29.5,
-        'longitude' => 28.5,
-    ),
-    'LR' =>
-    array (
-        'cid' => 126,
-        'name' => __('Liberia', self::slug),
-        'latitude' => 6.5,
-        'longitude' => -9.5,
-    ),
-    'LY' =>
-    array (
-        'cid' => 127,
-        'name' => __('Libya', self::slug),
-        'latitude' => 25.0,
-        'longitude' => 17,
-    ),
-    'LI' =>
-    array (
-        'cid' => 128,
-        'name' => __('Liechtenstein', self::slug),
-        'latitude' => 47.1667,
-        'longitude' => 9.5333,
-    ),
-    'LT' =>
-    array (
-        'cid' => 129,
-        'name' => __('Lithuania', self::slug),
-        'latitude' => 56.0,
-        'longitude' => 24,
-    ),
-    'LU' =>
-    array (
-        'cid' => 130,
-        'name' => __('Luxembourg', self::slug),
-        'latitude' => 49.75,
-        'longitude' => 6.1667,
-    ),
-    'MO' =>
-    array (
-        'cid' => 131,
-        'name' => __('Macao', self::slug),
-        'latitude' => 22.1667,
-        'longitude' => 113.55,
-    ),
-    'MK' =>
-    array (
-        'cid' => 132,
-        'name' => __('North Macedonia', self::slug),
-        'latitude' => 41.8333,
-        'longitude' => 22,
-    ),
-    'MG' =>
-    array (
-        'cid' => 133,
-        'name' => __('Madagascar', self::slug),
-        'latitude' => -20.0,
-        'longitude' => 47,
-    ),
-    'MW' =>
-    array (
-        'cid' => 134,
-        'name' => __('Malawi', self::slug),
-        'latitude' => -13.5,
-        'longitude' => 34,
-    ),
-    'MY' =>
-    array (
-        'cid' => 135,
-        'name' => __('Malaysia', self::slug),
-        'latitude' => 2.5,
-        'longitude' => 112.5,
-    ),
-    'MV' =>
-    array (
-        'cid' => 136,
-        'name' => __('Maldives', self::slug),
-        'latitude' => 3.25,
-        'longitude' => 73,
-    ),
-    'ML' =>
-    array (
-        'cid' => 137,
-        'name' => __('Mali', self::slug),
-        'latitude' => 17.0,
-        'longitude' => -4,
-    ),
-    'MT' =>
-    array (
-        'cid' => 138,
-        'name' => __('Malta', self::slug),
-        'latitude' => 35.8333,
-        'longitude' => 14.5833,
-    ),
-    'MH' =>
-    array (
-        'cid' => 139,
-        'name' => __('Marshall Islands', self::slug),
-        'latitude' => 9.0,
-        'longitude' => 168,
-    ),
-    'MQ' =>
-    array (
-        'cid' => 140,
-        'name' => __('Martinique', self::slug),
-        'latitude' => 14.6667,
-        'longitude' => -61,
-    ),
-    'MR' =>
-    array (
-        'cid' => 141,
-        'name' => __('Mauritania', self::slug),
-        'latitude' => 20.0,
-        'longitude' => -12,
-    ),
-    'MU' =>
-    array (
-        'cid' => 142,
-        'name' => __('Mauritius', self::slug),
-        'latitude' => -20.2833,
-        'longitude' => 57.55,
-    ),
-    'YT' =>
-    array (
-        'cid' => 143,
-        'name' => __('Mayotte', self::slug),
-        'latitude' => -12.8333,
-        'longitude' => 45.1667,
-    ),
-    'MX' =>
-    array (
-        'cid' => 144,
-        'name' => __('Mexico', self::slug),
-        'latitude' => 23.0,
-        'longitude' => -102,
-    ),
-    'FM' =>
-    array (
-        'cid' => 145,
-        'name' => __('Micronesia', self::slug),
-        'latitude' => 6.9167,
-        'longitude' => 158.25,
-    ),
-    'MD' =>
-    array (
-        'cid' => 146,
-        'name' => __('Moldova', self::slug),
-        'latitude' => 47.0,
-        'longitude' => 29,
-    ),
-    'MC' =>
-    array (
-        'cid' => 147,
-        'name' => __('Monaco', self::slug),
-        'latitude' => 43.7333,
-        'longitude' => 7.4,
-    ),
-    'MN' =>
-    array (
-        'cid' => 148,
-        'name' => __('Mongolia', self::slug),
-        'latitude' => 46.0,
-        'longitude' => 105,
-    ),
-    'ME' =>
-    array (
-        'cid' => 149,
-        'name' => __('Montenegro', self::slug),
-        'latitude' => 42.0,
-        'longitude' => 19,
-    ),
-    'MS' =>
-    array (
-        'cid' => 150,
-        'name' => __('Montserrat', self::slug),
-        'latitude' => 16.75,
-        'longitude' => -62.2,
-    ),
-    'MA' =>
-    array (
-        'cid' => 151,
-        'name' => __('Morocco', self::slug),
-        'latitude' => 32.0,
-        'longitude' => -5,
-    ),
-    'MZ' =>
-    array (
-        'cid' => 152,
-        'name' => __('Mozambique', self::slug),
-        'latitude' => -18.25,
-        'longitude' => 35,
-    ),
-    'MM' =>
-    array (
-        'cid' => 153,
-        'name' => __('Myanmar', self::slug),
-        'latitude' => 22.0,
-        'longitude' => 98,
-    ),
-    'NA' =>
-    array (
-        'cid' => 154,
-        'name' => __('Namibia', self::slug),
-        'latitude' => -22.0,
-        'longitude' => 17,
-    ),
-    'NR' =>
-    array (
-        'cid' => 155,
-        'name' => __('Nauru', self::slug),
-        'latitude' => -0.5333,
-        'longitude' => 166.9167,
-    ),
-    'NP' =>
-    array (
-        'cid' => 156,
-        'name' => __('Nepal', self::slug),
-        'latitude' => 28.0,
-        'longitude' => 84,
-    ),
-    'NL' =>
-    array (
-        'cid' => 157,
-        'name' => __('Netherlands', self::slug),
-        'latitude' => 52.5,
-        'longitude' => 5.75,
-    ),
-    'NC' =>
-    array (
-        'cid' => 158,
-        'name' => __('New Caledonia', self::slug),
-        'latitude' => -21.5,
-        'longitude' => 165.5,
-    ),
-    'NZ' =>
-    array (
-        'cid' => 159,
-        'name' => __('New Zealand', self::slug),
-        'latitude' => -41.0,
-        'longitude' => 174,
-    ),
-    'NI' =>
-    array (
-        'cid' => 160,
-        'name' => __('Nicaragua', self::slug),
-        'latitude' => 13.0,
-        'longitude' => -85,
-    ),
-    'NE' =>
-    array (
-        'cid' => 161,
-        'name' => __('Niger', self::slug),
-        'latitude' => 16.0,
-        'longitude' => 8,
-    ),
-    'NG' =>
-    array (
-        'cid' => 162,
-        'name' => __('Nigeria', self::slug),
-        'latitude' => 10.0,
-        'longitude' => 8,
-    ),
-    'NU' =>
-    array (
-        'cid' => 163,
-        'name' => __('Niue', self::slug),
-        'latitude' => -19.0333,
-        'longitude' => -169.8667,
-    ),
-    'NF' =>
-    array (
-        'cid' => 164,
-        'name' => __('Norfolk Island', self::slug),
-        'latitude' => -29.0333,
-        'longitude' => 167.95,
-    ),
-    'MP' =>
-    array (
-        'cid' => 165,
-        'name' => __('Northern Mariana Islands', self::slug),
-        'latitude' => 15.2,
-        'longitude' => 145.75,
-    ),
-    'NO' =>
-    array (
-        'cid' => 166,
-        'name' => __('Norway', self::slug),
-        'latitude' => 62.0,
-        'longitude' => 10,
-    ),
-    'OM' =>
-    array (
-        'cid' => 167,
-        'name' => __('Oman', self::slug),
-        'latitude' => 21.0,
-        'longitude' => 57,
-    ),
-    'PK' =>
-    array (
-        'cid' => 168,
-        'name' => __('Pakistan', self::slug),
-        'latitude' => 30.0,
-        'longitude' => 70,
-    ),
-    'PW' =>
-    array (
-        'cid' => 169,
-        'name' => __('Palau', self::slug),
-        'latitude' => 7.5,
-        'longitude' => 134.5,
-    ),
-    'PS' =>
-    array (
-        'cid' => 170,
-        'name' => __('Palestine', self::slug),
-        'latitude' => 32.0,
-        'longitude' => 35.25,
-    ),
-    'PA' =>
-    array (
-        'cid' => 171,
-        'name' => __('Panama', self::slug),
-        'latitude' => 9.0,
-        'longitude' => -80,
-    ),
-    'PG' =>
-    array (
-        'cid' => 172,
-        'name' => __('Papua New Guinea', self::slug),
-        'latitude' => -6.0,
-        'longitude' => 147,
-    ),
-    'PY' =>
-    array (
-        'cid' => 173,
-        'name' => __('Paraguay', self::slug),
-        'latitude' => -23.0,
-        'longitude' => -58,
-    ),
-    'PE' =>
-    array (
-        'cid' => 174,
-        'name' => __('Peru', self::slug),
-        'latitude' => -10.0,
-        'longitude' => -76,
-    ),
-    'PH' =>
-    array (
-        'cid' => 175,
-        'name' => __('Philippines', self::slug),
-        'latitude' => 13.0,
-        'longitude' => 122,
-    ),
-    'PN' =>
-    array (
-        'cid' => 176,
-        'name' => __('Pitcairn Islands', self::slug),
-        'latitude' => -25.0666,
-        'longitude' => -130.1,
-    ),
-    'PL' =>
-    array (
-        'cid' => 177,
-        'name' => __('Poland', self::slug),
-        'latitude' => 52.0,
-        'longitude' => 20,
-    ),
-    'PT' =>
-    array (
-        'cid' => 178,
-        'name' => __('Portugal', self::slug),
-        'latitude' => 39.5,
-        'longitude' => -8,
-    ),
-    'PR' =>
-    array (
-        'cid' => 179,
-        'name' => __('Puerto Rico', self::slug),
-        'latitude' => 18.25,
-        'longitude' => -66.5,
-    ),
-    'QA' =>
-    array (
-        'cid' => 180,
-        'name' => __('Qatar', self::slug),
-        'latitude' => 25.5,
-        'longitude' => 51.25,
-    ),
-    'RE' =>
-    array (
-        'cid' => 181,
-        'name' => __('Reunion', self::slug),
-        'latitude' => -21.1,
-        'longitude' => 55.6,
-    ),
-    'RO' =>
-    array (
-        'cid' => 182,
-        'name' => __('Romania', self::slug),
-        'latitude' => 46.0,
-        'longitude' => 25,
-    ),
-    'RU' =>
-    array (
-        'cid' => 183,
-        'name' => __('Russian Federation', self::slug),
-        'latitude' => 60.0,
-        'longitude' => 100,
-    ),
-    'RW' =>
-    array (
-        'cid' => 184,
-        'name' => __('Rwanda', self::slug),
-        'latitude' => -2.0,
-        'longitude' => 30,
-    ),
-    'BL' =>
-    array (
-        'cid' => 185,
-        'name' => __('Saint Barthelemy', self::slug),
-        'latitude' => 17.8979,
-        'longitude' => -62.8505,
-    ),
-    'SH' =>
-    array (
-        'cid' => 186,
-        'name' => __('Saint Helena', self::slug),
-        'latitude' => -15.9333,
-        'longitude' => -5.7,
-    ),
-    'KN' =>
-    array (
-        'cid' => 187,
-        'name' => __('Saint Kitts and Nevis', self::slug),
-        'latitude' => 17.3333,
-        'longitude' => -62.75,
-    ),
-    'LC' =>
-    array (
-        'cid' => 188,
-        'name' => __('Saint Lucia', self::slug),
-        'latitude' => 13.8833,
-        'longitude' => -61.1333,
-    ),
-    'MF' =>
-    array (
-        'cid' => 189,
-        'name' => __('Saint Martin', self::slug),
-        'latitude' => 18.0731,
-        'longitude' => -63.0822,
-    ),
-    'PM' =>
-    array (
-        'cid' => 190,
-        'name' => __('Saint Pierre and Miquelon', self::slug),
-        'latitude' => 46.8333,
-        'longitude' => -56.3333,
-    ),
-    'VC' =>
-    array (
-        'cid' => 191,
-        'name' => __('Saint Vincent and the Grenadines', self::slug),
-        'latitude' => 13.25,
-        'longitude' => -61.2,
-    ),
-    'WS' =>
-    array (
-        'cid' => 192,
-        'name' => __('Samoa', self::slug),
-        'latitude' => -13.5833,
-        'longitude' => -172.3333,
-    ),
-    'SM' =>
-    array (
-        'cid' => 193,
-        'name' => __('San Marino', self::slug),
-        'latitude' => 43.7667,
-        'longitude' => 12.4167,
-    ),
-    'ST' =>
-    array (
-        'cid' => 194,
-        'name' => __('Sao Tome and Principe', self::slug),
-        'latitude' => 1.0,
-        'longitude' => 7,
-    ),
-    'SA' =>
-    array (
-        'cid' => 195,
-        'name' => __('Saudi Arabia', self::slug),
-        'latitude' => 25.0,
-        'longitude' => 45,
-    ),
-    'SN' =>
-    array (
-        'cid' => 196,
-        'name' => __('Senegal', self::slug),
-        'latitude' => 14.0,
-        'longitude' => -14,
-    ),
-    'RS' =>
-    array (
-        'cid' => 197,
-        'name' => __('Serbia', self::slug),
-        'latitude' => 44.0,
-        'longitude' => 21,
-    ),
-    'SC' =>
-    array (
-        'cid' => 198,
-        'name' => __('Seychelles', self::slug),
-        'latitude' => -4.5833,
-        'longitude' => 55.6667,
-    ),
-    'SL' =>
-    array (
-        'cid' => 199,
-        'name' => __('Sierra Leone', self::slug),
-        'latitude' => 8.5,
-        'longitude' => -11.5,
-    ),
-    'SG' =>
-    array (
-        'cid' => 200,
-        'name' => __('Singapore', self::slug),
-        'latitude' => 1.3667,
-        'longitude' => 103.8,
-    ),
-    'SX' =>
-    array (
-        'cid' => 201,
-        'name' => __('Sint Maarten', self::slug),
-        'latitude' => 18.0167,
-        'longitude' => 63.05,
-    ),
-    'SK' =>
-    array (
-        'cid' => 202,
-        'name' => __('Slovakia (Slovak Republic)', self::slug),
-        'latitude' => 48.6667,
-        'longitude' => 19.5,
-    ),
-    'SI' =>
-    array (
-        'cid' => 203,
-        'name' => __('Slovenia', self::slug),
-        'latitude' => 46.0,
-        'longitude' => 15,
-    ),
-    'SB' =>
-    array (
-        'cid' => 204,
-        'name' => __('Solomon Islands', self::slug),
-        'latitude' => -8.0,
-        'longitude' => 159,
-    ),
-    'SO' =>
-    array (
-        'cid' => 205,
-        'name' => __('Somalia', self::slug),
-        'latitude' => 10.0,
-        'longitude' => 49,
-    ),
-    'ZA' =>
-    array (
-        'cid' => 206,
-        'name' => __('South Africa', self::slug),
-        'latitude' => -29.0,
-        'longitude' => 24,
-    ),
-    'GS' =>
-    array (
-        'cid' => 207,
-        'name' => __('South Georgia and the South Sandwich Islands', self::slug),
-        'latitude' => -54.5,
-        'longitude' => -37,
-    ),
-    'SS' =>
-    array (
-        'cid' => 208,
-        'name' => __('South Sudan', self::slug),
-        'latitude' => 4.85,
-        'longitude' => 31.6,
-    ),
-    'ES' =>
-    array (
-        'cid' => 209,
-        'name' => __('Spain', self::slug),
-        'latitude' => 40.0,
-        'longitude' => -4,
-    ),
-    'LK' =>
-    array (
-        'cid' => 210,
-        'name' => __('Sri Lanka', self::slug),
-        'latitude' => 7.0,
-        'longitude' => 81,
-    ),
-    'SD' =>
-    array (
-        'cid' => 211,
-        'name' => __('Sudan', self::slug),
-        'latitude' => 15.0,
-        'longitude' => 30,
-    ),
-    'SR' =>
-    array (
-        'cid' => 212,
-        'name' => __('Suriname', self::slug),
-        'latitude' => 4.0,
-        'longitude' => -56,
-    ),
-    'SJ' =>
-    array (
-        'cid' => 213,
-        'name' => __('Svalbard and Jan Mayen', self::slug),
-        'latitude' => 78.0,
-        'longitude' => 20,
-    ),
-    'SZ' =>
-    array (
-        'cid' => 214,
-        'name' => __('Eswatini', self::slug),
-        'latitude' => -26.5,
-        'longitude' => 31.5,
-    ),
-    'SE' =>
-    array (
-        'cid' => 215,
-        'name' => __('Sweden', self::slug),
-        'latitude' => 62.0,
-        'longitude' => 15,
-    ),
-    'CH' =>
-    array (
-        'cid' => 216,
-        'name' => __('Switzerland', self::slug),
-        'latitude' => 47.0,
-        'longitude' => 8,
-    ),
-    'SY' =>
-    array (
-        'cid' => 217,
-        'name' => __('Syria', self::slug),
-        'latitude' => 35.0,
-        'longitude' => 38,
-    ),
-    'TW' =>
-    array (
-        'cid' => 218,
-        'name' => __('Taiwan', self::slug),
-        'latitude' => 23.5,
-        'longitude' => 121,
-    ),
-    'TJ' =>
-    array (
-        'cid' => 219,
-        'name' => __('Tajikistan', self::slug),
-        'latitude' => 39.0,
-        'longitude' => 71,
-    ),
-    'TZ' =>
-    array (
-        'cid' => 220,
-        'name' => __('Tanzania', self::slug),
-        'latitude' => -6.0,
-        'longitude' => 35,
-    ),
-    'TH' =>
-    array (
-        'cid' => 221,
-        'name' => __('Thailand', self::slug),
-        'latitude' => 15.0,
-        'longitude' => 100,
-    ),
-    'TL' =>
-    array (
-        'cid' => 222,
-        'name' => __('Timor-Leste', self::slug),
-        'latitude' => -8.5666,
-        'longitude' => 125.5666,
-    ),
-    'TG' =>
-    array (
-        'cid' => 223,
-        'name' => __('Togo', self::slug),
-        'latitude' => 8.0,
-        'longitude' => 1.1667,
-    ),
-    'TK' =>
-    array (
-        'cid' => 224,
-        'name' => __('Tokelau', self::slug),
-        'latitude' => -9.0,
-        'longitude' => -172,
-    ),
-    'TO' =>
-    array (
-        'cid' => 225,
-        'name' => __('Tonga', self::slug),
-        'latitude' => -20.0,
-        'longitude' => -175,
-    ),
-    'TT' =>
-    array (
-        'cid' => 226,
-        'name' => __('Trinidad and Tobago', self::slug),
-        'latitude' => 11.0,
-        'longitude' => -61,
-    ),
-    'TN' =>
-    array (
-        'cid' => 227,
-        'name' => __('Tunisia', self::slug),
-        'latitude' => 34.0,
-        'longitude' => 9,
-    ),
-    'TR' =>
-    array (
-        'cid' => 228,
-        'name' => __('Turkey', self::slug),
-        'latitude' => 39.0,
-        'longitude' => 35,
-    ),
-    'TM' =>
-    array (
-        'cid' => 229,
-        'name' => __('Turkmenistan', self::slug),
-        'latitude' => 40.0,
-        'longitude' => 60,
-    ),
-    'TC' =>
-    array (
-        'cid' => 230,
-        'name' => __('Turks and Caicos Islands', self::slug),
-        'latitude' => 21.75,
-        'longitude' => -71.5833,
-    ),
-    'TV' =>
-    array (
-        'cid' => 231,
-        'name' => __('Tuvalu', self::slug),
-        'latitude' => -8.0,
-        'longitude' => 178,
-    ),
-    'UG' =>
-    array (
-        'cid' => 232,
-        'name' => __('Uganda', self::slug),
-        'latitude' => 1.0,
-        'longitude' => 32,
-    ),
-    'UA' =>
-    array (
-        'cid' => 233,
-        'name' => __('Ukraine', self::slug),
-        'latitude' => 49.0,
-        'longitude' => 32,
-    ),
-    'AE' =>
-    array (
-        'cid' => 234,
-        'name' => __('United Arab Emirates', self::slug),
-        'latitude' => 24.0,
-        'longitude' => 54,
-    ),
-    'GB' =>
-    array (
-        'cid' => 235,
-        'name' => __('United Kingdom', self::slug),
-        'latitude' => 54.0,
-        'longitude' => -2,
-    ),
-    'US' =>
-    array (
-        'cid' => 236,
-        'name' => __('United States of America', self::slug),
-        'latitude' => 38.0,
-        'longitude' => -97,
-    ),
-    'UM' =>
-    array (
-        'cid' => 237,
-        'name' => __('United States Minor Outlying Islands', self::slug),
-        'latitude' => 19.2833,
-        'longitude' => 166.6,
-    ),
-    'UY' =>
-    array (
-        'cid' => 238,
-        'name' => __('Uruguay', self::slug),
-        'latitude' => -33.0,
-        'longitude' => -56,
-    ),
-    'UZ' =>
-    array (
-        'cid' => 239,
-        'name' => __('Uzbekistan', self::slug),
-        'latitude' => 41.0,
-        'longitude' => 64,
-    ),
-    'VU' =>
-    array (
-        'cid' => 240,
-        'name' => __('Vanuatu', self::slug),
-        'latitude' => -16.0,
-        'longitude' => 167,
-    ),
-    'VE' =>
-    array (
-        'cid' => 241,
-        'name' => __('Venezuela', self::slug),
-        'latitude' => 8.0,
-        'longitude' => -66,
-    ),
-    'VN' =>
-    array (
-        'cid' => 242,
-        'name' => __('Vietnam', self::slug),
-        'latitude' => 16.0,
-        'longitude' => 106,
-    ),
-    'VG' =>
-    array (
-        'cid' => 243,
-        'name' => __('British Virgin Islands', self::slug),
-        'latitude' => 18.5,
-        'longitude' => -64.5,
-    ),
-    'VI' =>
-    array (
-        'cid' => 244,
-        'name' => __('United States Virgin Islands', self::slug),
-        'latitude' => 18.3333,
-        'longitude' => -64.8333,
-    ),
-    'WF' =>
-    array (
-        'cid' => 245,
-        'name' => __('Wallis and Futuna', self::slug),
-        'latitude' => -13.3,
-        'longitude' => -176.2,
-    ),
-    'EH' =>
-    array (
-        'cid' => 246,
-        'name' => __('Western Sahara', self::slug),
-        'latitude' => 24.5,
-        'longitude' => -13,
-    ),
-    'YE' =>
-    array (
-        'cid' => 247,
-        'name' => __('Yemen', self::slug),
-        'latitude' => 15.0,
-        'longitude' => 48,
-    ),
-    'ZM' =>
-    array (
-        'cid' => 248,
-        'name' => __('Zambia', self::slug),
-        'latitude' => -15.0,
-        'longitude' => 30,
-    ),
-    'ZW' =>
-    array (
-        'cid' => 249,
-        'name' => __('Zimbabwe', self::slug),
-        'latitude' => -20.0,
-        'longitude' => 30,
-    ),
-    'XK' =>
-    array (
-        'cid' => 250,
-        'name' => __('Kosovo', self::slug),
-        'latitude' => 42.52,
-        'longitude' => 21,
-    ),
-    'ZZ' =>
-    array (
-        'cid' => 251,
-        'name' => __('unknown/private', self::slug),
-        'latitude' => 52.0,
-        'longitude' => 8,
-    ),
-);
+$country_data = [
+    ['code' => 'AF', 'name' => 'Afghanistan', 'nameeng' => 'Afghanistan', 'latitude' => 33.0, 'longitude' => 65],
+    ['code' => 'AX', 'name' => 'Alandinseln', 'nameeng' => 'Aland Islands', 'latitude' => 60.1166, 'longitude' => 19.9],
+    ['code' => 'AL', 'name' => 'Albanien', 'nameeng' => 'Albania', 'latitude' => 41.0, 'longitude' => 20],
+    ['code' => 'DZ', 'name' => 'Algerien', 'nameeng' => 'Algeria', 'latitude' => 28.0, 'longitude' => 3],
+    ['code' => 'AS', 'name' => 'Amerikanisch-Samoa', 'nameeng' => 'American Samoa', 'latitude' => -14.3333, 'longitude' => -170],
+    ['code' => 'AD', 'name' => 'Andorra', 'nameeng' => 'Andorra', 'latitude' => 42.5, 'longitude' => 1.5],
+    ['code' => 'AO', 'name' => 'Angola', 'nameeng' => 'Angola', 'latitude' => -12.5, 'longitude' => 18.5],
+    ['code' => 'AI', 'name' => 'Anguilla', 'nameeng' => 'Anguilla', 'latitude' => 18.25, 'longitude' => -63.1667],
+    ['code' => 'AQ', 'name' => 'Antarktis', 'nameeng' => 'Antarctica', 'latitude' => -90.0, 'longitude' => 0],
+    ['code' => 'AG', 'name' => 'Antigua und Barbuda', 'nameeng' => 'Antigua and Barbuda', 'latitude' => 17.05, 'longitude' => -61.8],
+    ['code' => 'AR', 'name' => 'Argentinien', 'nameeng' => 'Argentina', 'latitude' => -34.0, 'longitude' => -64],
+    ['code' => 'AM', 'name' => 'Armenien', 'nameeng' => 'Armenia', 'latitude' => 40.0, 'longitude' => 45],
+    ['code' => 'AW', 'name' => 'Aruba', 'nameeng' => 'Aruba', 'latitude' => 12.5, 'longitude' => -69.9667],
+    ['code' => 'AU', 'name' => 'Australien', 'nameeng' => 'Australia', 'latitude' => -27.0, 'longitude' => 133],
+    ['code' => 'AT', 'name' => 'Österreich', 'nameeng' => 'Austria', 'latitude' => 47.3333, 'longitude' => 13.3333],
+    ['code' => 'AZ', 'name' => 'Aserbaidschan', 'nameeng' => 'Azerbaijan', 'latitude' => 40.5, 'longitude' => 47.5],
+    ['code' => 'BS', 'name' => 'Bahamas', 'nameeng' => 'Bahamas', 'latitude' => 24.25, 'longitude' => -76],
+    ['code' => 'BH', 'name' => 'Bahrain', 'nameeng' => 'Bahrain', 'latitude' => 26.0, 'longitude' => 50.55],
+    ['code' => 'BD', 'name' => 'Bangladesch', 'nameeng' => 'Bangladesh', 'latitude' => 24.0, 'longitude' => 90],
+    ['code' => 'BB', 'name' => 'Barbados', 'nameeng' => 'Barbados', 'latitude' => 13.1667, 'longitude' => -59.5333],
+    ['code' => 'BY', 'name' => 'Belarus', 'nameeng' => 'Belarus', 'latitude' => 53.0, 'longitude' => 28],
+    ['code' => 'BE', 'name' => 'Belgien', 'nameeng' => 'Belgium', 'latitude' => 50.8333, 'longitude' => 4],
+    ['code' => 'BZ', 'name' => 'Belize', 'nameeng' => 'Belize', 'latitude' => 17.25, 'longitude' => -88.75],
+    ['code' => 'BJ', 'name' => 'Benin', 'nameeng' => 'Benin', 'latitude' => 9.5, 'longitude' => 2.25],
+    ['code' => 'BM', 'name' => 'Bermuda', 'nameeng' => 'Bermuda', 'latitude' => 32.3333, 'longitude' => -64.75],
+    ['code' => 'BT', 'name' => 'Bhutan', 'nameeng' => 'Bhutan', 'latitude' => 27.5, 'longitude' => 90.5],
+    ['code' => 'BO', 'name' => 'Bolivien', 'nameeng' => 'Bolivia', 'latitude' => -17.0, 'longitude' => -65],
+    ['code' => 'BQ', 'name' => 'Bonaire, Sint Eustatius und Saba', 'nameeng' => 'Bonaire, Sint Eustatius and Saba', 'latitude' => 12.25, 'longitude' => 68.4667],
+    ['code' => 'BA', 'name' => 'Bosnien und Herzegowina', 'nameeng' => 'Bosnia and Herzegovina', 'latitude' => 44.0, 'longitude' => 18],
+    ['code' => 'BW', 'name' => 'Botswana', 'nameeng' => 'Botswana', 'latitude' => -22.0, 'longitude' => 24],
+    ['code' => 'BV', 'name' => 'Bouvetinsel', 'nameeng' => 'Bouvet Island', 'latitude' => -54.4333, 'longitude' => 3.4],
+    ['code' => 'BR', 'name' => 'Brasilien', 'nameeng' => 'Brazil', 'latitude' => -10.0, 'longitude' => -55],
+    ['code' => 'IO', 'name' => 'Britisches Territorium im Indischen Ozean', 'nameeng' => 'British Indian Ocean Territory', 'latitude' => -6.0, 'longitude' => 71.5],
+    ['code' => 'BN', 'name' => 'Brunei', 'nameeng' => 'Brunei Darussalam', 'latitude' => 4.5, 'longitude' => 114.6667],
+    ['code' => 'BG', 'name' => 'Bulgarien', 'nameeng' => 'Bulgaria', 'latitude' => 43.0, 'longitude' => 25],
+    ['code' => 'BF', 'name' => 'Burkina Faso', 'nameeng' => 'Burkina Faso', 'latitude' => 13.0, 'longitude' => -2],
+    ['code' => 'BI', 'name' => 'Burundi', 'nameeng' => 'Burundi', 'latitude' => -3.5, 'longitude' => 30],
+    ['code' => 'KH', 'name' => 'Kambodscha', 'nameeng' => 'Cambodia', 'latitude' => 13.0, 'longitude' => 105],
+    ['code' => 'CM', 'name' => 'Kamerun', 'nameeng' => 'Cameroon', 'latitude' => 6.0, 'longitude' => 12],
+    ['code' => 'CA', 'name' => 'Kanada', 'nameeng' => 'Canada', 'latitude' => 60.0, 'longitude' => -95],
+    ['code' => 'CV', 'name' => 'Kap Verde', 'nameeng' => 'Cabo Verde', 'latitude' => 16.0, 'longitude' => -24],
+    ['code' => 'KY', 'name' => 'Kaimaninseln', 'nameeng' => 'Cayman Islands', 'latitude' => 19.5, 'longitude' => -80.5],
+    ['code' => 'CF', 'name' => 'Zentralafrikanische Republik', 'nameeng' => 'Central African Republic', 'latitude' => 7.0, 'longitude' => 21],
+    ['code' => 'TD', 'name' => 'Tschad', 'nameeng' => 'Chad', 'latitude' => 15.0, 'longitude' => 19],
+    ['code' => 'CL', 'name' => 'Chile', 'nameeng' => 'Chile', 'latitude' => -30.0, 'longitude' => -71],
+    ['code' => 'CN', 'name' => 'China', 'nameeng' => 'China', 'latitude' => 35.0, 'longitude' => 105],
+    ['code' => 'CX', 'name' => 'Weihnachtsinsel', 'nameeng' => 'Christmas Island', 'latitude' => -10.5, 'longitude' => 105.6667],
+    ['code' => 'CC', 'name' => 'Kokosinseln', 'nameeng' => 'Cocos (Keeling) Islands', 'latitude' => -12.5, 'longitude' => 96.8333],
+    ['code' => 'CO', 'name' => 'Kolumbien', 'nameeng' => 'Colombia', 'latitude' => 4.0, 'longitude' => -72],
+    ['code' => 'KM', 'name' => 'Komoren', 'nameeng' => 'Comoros', 'latitude' => -12.1667, 'longitude' => 44.25],
+    ['code' => 'CD', 'name' => 'Demokratische Republik Kongo', 'nameeng' => 'The Democratic Republic of the Congo', 'latitude' => 0.0, 'longitude' => 25],
+    ['code' => 'CG', 'name' => 'Republik Kongo', 'nameeng' => 'Congo', 'latitude' => -1.0, 'longitude' => 15],
+    ['code' => 'CK', 'name' => 'Cookinseln', 'nameeng' => 'Cook Islands', 'latitude' => -21.2333, 'longitude' => -159.7667],
+    ['code' => 'CR', 'name' => 'Costa Rica', 'nameeng' => 'Costa Rica', 'latitude' => 10.0, 'longitude' => -84],
+    ['code' => 'CI', 'name' => 'Cote d’Ivoire', 'nameeng' => 'Cote dIvoire', 'latitude' => 8.0, 'longitude' => -5],
+    ['code' => 'HR', 'name' => 'Kroatien', 'nameeng' => 'Croatia', 'latitude' => 45.1667, 'longitude' => 15.5],
+    ['code' => 'CU', 'name' => 'Kuba', 'nameeng' => 'Cuba', 'latitude' => 21.5, 'longitude' => -80],
+    ['code' => 'CW', 'name' => 'Curacao', 'nameeng' => 'Curacao', 'latitude' => 12.1167, 'longitude' => 68.9333],
+    ['code' => 'CY', 'name' => 'Zypern', 'nameeng' => 'Cyprus', 'latitude' => 35.0, 'longitude' => 33],
+    ['code' => 'CZ', 'name' => 'Tschechien', 'nameeng' => 'Czechia', 'latitude' => 49.75, 'longitude' => 15.5],
+    ['code' => 'DK', 'name' => 'Dänemark', 'nameeng' => 'Denmark', 'latitude' => 56.0, 'longitude' => 10],
+    ['code' => 'DJ', 'name' => 'Dschibuti', 'nameeng' => 'Djibouti', 'latitude' => 11.5, 'longitude' => 43],
+    ['code' => 'DM', 'name' => 'Dominica', 'nameeng' => 'Dominica', 'latitude' => 15.4167, 'longitude' => -61.3333],
+    ['code' => 'DO', 'name' => 'Dominikanische Republik', 'nameeng' => 'Dominican Republic', 'latitude' => 19.0, 'longitude' => -70.6667],
+    ['code' => 'EC', 'name' => 'Ecuador', 'nameeng' => 'Ecuador', 'latitude' => -2.0, 'longitude' => -77.5],
+    ['code' => 'EG', 'name' => 'Ägypten', 'nameeng' => 'Egypt', 'latitude' => 27.0, 'longitude' => 30],
+    ['code' => 'SV', 'name' => 'El Salvador', 'nameeng' => 'El Salvador', 'latitude' => 13.8333, 'longitude' => -88.9167],
+    ['code' => 'GQ', 'name' => 'Äquatorial Guinea', 'nameeng' => 'Equatorial Guinea', 'latitude' => 2.0, 'longitude' => 10],
+    ['code' => 'ER', 'name' => 'Eritrea', 'nameeng' => 'Eritrea', 'latitude' => 15.0, 'longitude' => 39],
+    ['code' => 'EE', 'name' => 'Estland', 'nameeng' => 'Estonia', 'latitude' => 59.0, 'longitude' => 26],
+    ['code' => 'ET', 'name' => 'Äthiopien', 'nameeng' => 'Ethiopia', 'latitude' => 8.0, 'longitude' => 38],
+    ['code' => 'FK', 'name' => 'Falklandinseln', 'nameeng' => 'Falkland Islands (Malvinas)', 'latitude' => -51.75, 'longitude' => -59],
+    ['code' => 'FO', 'name' => 'Färöer', 'nameeng' => 'Faroe Islands', 'latitude' => 62.0, 'longitude' => -7],
+    ['code' => 'FJ', 'name' => 'Fidschi', 'nameeng' => 'Fiji', 'latitude' => -18.0, 'longitude' => 175],
+    ['code' => 'FI', 'name' => 'Finnland', 'nameeng' => 'Finland', 'latitude' => 64.0, 'longitude' => 26],
+    ['code' => 'FR', 'name' => 'Frankreich', 'nameeng' => 'France', 'latitude' => 46.0, 'longitude' => 2],
+    ['code' => 'GF', 'name' => 'Französisch-Guayana', 'nameeng' => 'French Guiana', 'latitude' => 4.0, 'longitude' => -53],
+    ['code' => 'PF', 'name' => 'Französisch-Polynesien', 'nameeng' => 'French Polynesia', 'latitude' => -15.0, 'longitude' => -140],
+    ['code' => 'TF', 'name' => 'Französische Süd- und Antarktisgebiete', 'nameeng' => 'French Southern Territories', 'latitude' => -43.0, 'longitude' => 67],
+    ['code' => 'GA', 'name' => 'Gabun', 'nameeng' => 'Gabon', 'latitude' => -1.0, 'longitude' => 11.75],
+    ['code' => 'GM', 'name' => 'Gambia', 'nameeng' => 'Gambia', 'latitude' => 13.4667, 'longitude' => -16.5667],
+    ['code' => 'GE', 'name' => 'Georgien', 'nameeng' => 'Georgia', 'latitude' => 42.0, 'longitude' => 43.5],
+    ['code' => 'DE', 'name' => 'Deutschland', 'nameeng' => 'Germany', 'latitude' => 51.0, 'longitude' => 9],
+    ['code' => 'GH', 'name' => 'Ghana', 'nameeng' => 'Ghana', 'latitude' => 8.0, 'longitude' => -2],
+    ['code' => 'GI', 'name' => 'Gibraltar', 'nameeng' => 'Gibraltar', 'latitude' => 36.1833, 'longitude' => -5.3667],
+    ['code' => 'GR', 'name' => 'Griechenland', 'nameeng' => 'Greece', 'latitude' => 39.0, 'longitude' => 22],
+    ['code' => 'GL', 'name' => 'Grönland', 'nameeng' => 'Greenland', 'latitude' => 72.0, 'longitude' => -40],
+    ['code' => 'GD', 'name' => 'Grenada', 'nameeng' => 'Grenada', 'latitude' => 12.1167, 'longitude' => -61.6667],
+    ['code' => 'GP', 'name' => 'Guadeloupe', 'nameeng' => 'Guadeloupe', 'latitude' => 16.25, 'longitude' => -61.5833],
+    ['code' => 'GU', 'name' => 'Guam', 'nameeng' => 'Guam', 'latitude' => 13.4667, 'longitude' => 144.7833],
+    ['code' => 'GT', 'name' => 'Guatemala', 'nameeng' => 'Guatemala', 'latitude' => 15.5, 'longitude' => -90.25],
+    ['code' => 'GG', 'name' => 'Guernsey', 'nameeng' => 'Guernsey', 'latitude' => 49.45, 'longitude' => -2.5333],
+    ['code' => 'GN', 'name' => 'Guinea', 'nameeng' => 'Guinea', 'latitude' => 11.0, 'longitude' => -10],
+    ['code' => 'GW', 'name' => 'Guinea-Bissau', 'nameeng' => 'Guinea-Bissau', 'latitude' => 12.0, 'longitude' => -15],
+    ['code' => 'GY', 'name' => 'Guyana', 'nameeng' => 'Guyana', 'latitude' => 5.0, 'longitude' => -59],
+    ['code' => 'HT', 'name' => 'Haiti', 'nameeng' => 'Haiti', 'latitude' => 19.0, 'longitude' => -72.4167],
+    ['code' => 'HM', 'name' => 'Heard und McDonaldinseln', 'nameeng' => 'Heard Island and McDonald Islands', 'latitude' => -53.1, 'longitude' => 72.5167],
+    ['code' => 'VA', 'name' => 'Heiliger Stuhl (Vatikanstadt)', 'nameeng' => 'Holy See (Vatican City State)', 'latitude' => 41.9, 'longitude' => 12.45],
+    ['code' => 'HN', 'name' => 'Honduras', 'nameeng' => 'Honduras', 'latitude' => 15.0, 'longitude' => -86.5],
+    ['code' => 'HK', 'name' => 'Hongkong', 'nameeng' => 'Hong Kong', 'latitude' => 22.25, 'longitude' => 114.1667],
+    ['code' => 'HU', 'name' => 'Ungarn', 'nameeng' => 'Hungary', 'latitude' => 47.0, 'longitude' => 20],
+    ['code' => 'IS', 'name' => 'Island', 'nameeng' => 'Iceland', 'latitude' => 65.0, 'longitude' => -18],
+    ['code' => 'IN', 'name' => 'Indien', 'nameeng' => 'India', 'latitude' => 20.0, 'longitude' => 77],
+    ['code' => 'ID', 'name' => 'Indonesien', 'nameeng' => 'Indonesia', 'latitude' => -5.0, 'longitude' => 120],
+    ['code' => 'IR', 'name' => 'Iran', 'nameeng' => 'Iran', 'latitude' => 32.0, 'longitude' => 53],
+    ['code' => 'IQ', 'name' => 'Irak', 'nameeng' => 'Iraq', 'latitude' => 33.0, 'longitude' => 44],
+    ['code' => 'IE', 'name' => 'Irland', 'nameeng' => 'Ireland', 'latitude' => 53.0, 'longitude' => -8],
+    ['code' => 'IM', 'name' => 'Isle of Man', 'nameeng' => 'Isle of Man', 'latitude' => 54.15, 'longitude' => -4.4833],
+    ['code' => 'IL', 'name' => 'Israel', 'nameeng' => 'Israel', 'latitude' => 31.5, 'longitude' => 34.75],
+    ['code' => 'IT', 'name' => 'Italien', 'nameeng' => 'Italy', 'latitude' => 42.8333, 'longitude' => 12.8333],
+    ['code' => 'JM', 'name' => 'Jamaika', 'nameeng' => 'Jamaica', 'latitude' => 18.25, 'longitude' => -77.5],
+    ['code' => 'JP', 'name' => 'Japan', 'nameeng' => 'Japan', 'latitude' => 36.0, 'longitude' => 138],
+    ['code' => 'JE', 'name' => 'Jersey', 'nameeng' => 'Jersey', 'latitude' => 49.19, 'longitude' => -2.11],
+    ['code' => 'JO', 'name' => 'Jordanien', 'nameeng' => 'Jordan', 'latitude' => 31.0, 'longitude' => 36],
+    ['code' => 'KZ', 'name' => 'Kasachstan', 'nameeng' => 'Kazakhstan', 'latitude' => 48.0, 'longitude' => 68],
+    ['code' => 'KE', 'name' => 'Kenia', 'nameeng' => 'Kenya', 'latitude' => 1.0, 'longitude' => 38],
+    ['code' => 'KI', 'name' => 'Kiribati', 'nameeng' => 'Kiribati', 'latitude' => 1.4167, 'longitude' => 173],
+    ['code' => 'KP', 'name' => 'North Korea', 'nameeng' => 'North Korea', 'latitude' => 40.0, 'longitude' => 127],
+    ['code' => 'KR', 'name' => 'South Korea', 'nameeng' => 'South Korea', 'latitude' => 37.0, 'longitude' => 127.5],
+    ['code' => 'KW', 'name' => 'Kuwait', 'nameeng' => 'Kuwait', 'latitude' => 29.3375, 'longitude' => 47.6581],
+    ['code' => 'KG', 'name' => 'Kirgisistan', 'nameeng' => 'Kyrgyzstan', 'latitude' => 41.0, 'longitude' => 75],
+    ['code' => 'LA', 'name' => 'Lao', 'nameeng' => 'Lao', 'latitude' => 18.0, 'longitude' => 105],
+    ['code' => 'LV', 'name' => 'Lettland', 'nameeng' => 'Latvia', 'latitude' => 57.0, 'longitude' => 25],
+    ['code' => 'LB', 'name' => 'Libanon', 'nameeng' => 'Lebanon', 'latitude' => 33.8333, 'longitude' => 35.8333],
+    ['code' => 'LS', 'name' => 'Lesotho', 'nameeng' => 'Lesotho', 'latitude' => -29.5, 'longitude' => 28.5],
+    ['code' => 'LR', 'name' => 'Liberia', 'nameeng' => 'Liberia', 'latitude' => 6.5, 'longitude' => -9.5],
+    ['code' => 'LY', 'name' => 'Libyen', 'nameeng' => 'Libya', 'latitude' => 25.0, 'longitude' => 17],
+    ['code' => 'LI', 'name' => 'Liechtenstein', 'nameeng' => 'Liechtenstein', 'latitude' => 47.1667, 'longitude' => 9.5333],
+    ['code' => 'LT', 'name' => 'Litauen', 'nameeng' => 'Lithuania', 'latitude' => 56.0, 'longitude' => 24],
+    ['code' => 'LU', 'name' => 'Luxemburg', 'nameeng' => 'Luxembourg', 'latitude' => 49.75, 'longitude' => 6.1667],
+    ['code' => 'MO', 'name' => 'Macao', 'nameeng' => 'Macao', 'latitude' => 22.1667, 'longitude' => 113.55],
+    ['code' => 'MK', 'name' => 'Nordmazedonien', 'nameeng' => 'North Macedonia', 'latitude' => 41.8333, 'longitude' => 22],
+    ['code' => 'MG', 'name' => 'Madagaskar', 'nameeng' => 'Madagascar', 'latitude' => -20.0, 'longitude' => 47],
+    ['code' => 'MW', 'name' => 'Malawi', 'nameeng' => 'Malawi', 'latitude' => -13.5, 'longitude' => 34],
+    ['code' => 'MY', 'name' => 'Malaysia', 'nameeng' => 'Malaysia', 'latitude' => 2.5, 'longitude' => 112.5],
+    ['code' => 'MV', 'name' => 'Malediven', 'nameeng' => 'Maldives', 'latitude' => 3.25, 'longitude' => 73],
+    ['code' => 'ML', 'name' => 'Mali', 'nameeng' => 'Mali', 'latitude' => 17.0, 'longitude' => -4],
+    ['code' => 'MT', 'name' => 'Malta', 'nameeng' => 'Malta', 'latitude' => 35.8333, 'longitude' => 14.5833],
+    ['code' => 'MH', 'name' => 'Marshallinseln', 'nameeng' => 'Marshall Islands', 'latitude' => 9.0, 'longitude' => 168],
+    ['code' => 'MQ', 'name' => 'Martinique', 'nameeng' => 'Martinique', 'latitude' => 14.6667, 'longitude' => -61],
+    ['code' => 'MR', 'name' => 'Mauretanien', 'nameeng' => 'Mauritania', 'latitude' => 20.0, 'longitude' => -12],
+    ['code' => 'MU', 'name' => 'Mauritius', 'nameeng' => 'Mauritius', 'latitude' => -20.2833, 'longitude' => 57.55],
+    ['code' => 'YT', 'name' => 'Mayotte', 'nameeng' => 'Mayotte', 'latitude' => -12.8333, 'longitude' => 45.1667],
+    ['code' => 'MX', 'name' => 'Mexiko', 'nameeng' => 'Mexico', 'latitude' => 23.0, 'longitude' => -102],
+    ['code' => 'FM', 'name' => 'Micronesia', 'nameeng' => 'Micronesia', 'latitude' => 6.9167, 'longitude' => 158.25],
+    ['code' => 'MD', 'name' => 'Moldova', 'nameeng' => 'Moldova', 'latitude' => 47.0, 'longitude' => 29],
+    ['code' => 'MC', 'name' => 'Monaco', 'nameeng' => 'Monaco', 'latitude' => 43.7333, 'longitude' => 7.4],
+    ['code' => 'MN', 'name' => 'Mongolei', 'nameeng' => 'Mongolia', 'latitude' => 46.0, 'longitude' => 105],
+    ['code' => 'ME', 'name' => 'Montenegro', 'nameeng' => 'Montenegro', 'latitude' => 42.0, 'longitude' => 19],
+    ['code' => 'MS', 'name' => 'Montserrat', 'nameeng' => 'Montserrat', 'latitude' => 16.75, 'longitude' => -62.2],
+    ['code' => 'MA', 'name' => 'Marokko', 'nameeng' => 'Morocco', 'latitude' => 32.0, 'longitude' => -5],
+    ['code' => 'MZ', 'name' => 'Mosambik', 'nameeng' => 'Mozambique', 'latitude' => -18.25, 'longitude' => 35],
+    ['code' => 'MM', 'name' => 'Myanmar', 'nameeng' => 'Myanmar', 'latitude' => 22.0, 'longitude' => 98],
+    ['code' => 'NA', 'name' => 'Namibia', 'nameeng' => 'Namibia', 'latitude' => -22.0, 'longitude' => 17],
+    ['code' => 'NR', 'name' => 'Nauru', 'nameeng' => 'Nauru', 'latitude' => -0.5333, 'longitude' => 166.9167],
+    ['code' => 'NP', 'name' => 'Nepal', 'nameeng' => 'Nepal', 'latitude' => 28.0, 'longitude' => 84],
+    ['code' => 'NL', 'name' => 'Niederlande', 'nameeng' => 'Netherlands', 'latitude' => 52.5, 'longitude' => 5.75],
+    ['code' => 'NC', 'name' => 'Neukaledonien', 'nameeng' => 'New Caledonia', 'latitude' => -21.5, 'longitude' => 165.5],
+    ['code' => 'NZ', 'name' => 'Neuseeland', 'nameeng' => 'New Zealand', 'latitude' => -41.0, 'longitude' => 174],
+    ['code' => 'NI', 'name' => 'Nicaragua', 'nameeng' => 'Nicaragua', 'latitude' => 13.0, 'longitude' => -85],
+    ['code' => 'NE', 'name' => 'Niger', 'nameeng' => 'Niger', 'latitude' => 16.0, 'longitude' => 8],
+    ['code' => 'NG', 'name' => 'Nigeria', 'nameeng' => 'Nigeria', 'latitude' => 10.0, 'longitude' => 8],
+    ['code' => 'NU', 'name' => 'Niue', 'nameeng' => 'Niue', 'latitude' => -19.0333, 'longitude' => -169.8667],
+    ['code' => 'NF', 'name' => 'Norfolkinsel', 'nameeng' => 'Norfolk Island', 'latitude' => -29.0333, 'longitude' => 167.95],
+    ['code' => 'MP', 'name' => 'Nördliche Marianen', 'nameeng' => 'Northern Mariana Islands', 'latitude' => 15.2, 'longitude' => 145.75],
+    ['code' => 'NO', 'name' => 'Norwegen', 'nameeng' => 'Norway', 'latitude' => 62.0, 'longitude' => 10],
+    ['code' => 'OM', 'name' => 'Oman', 'nameeng' => 'Oman', 'latitude' => 21.0, 'longitude' => 57],
+    ['code' => 'PK', 'name' => 'Pakistan', 'nameeng' => 'Pakistan', 'latitude' => 30.0, 'longitude' => 70],
+    ['code' => 'PW', 'name' => 'Palau', 'nameeng' => 'Palau', 'latitude' => 7.5, 'longitude' => 134.5],
+    ['code' => 'PS', 'name' => 'Palestine', 'nameeng' => 'Palestine', 'latitude' => 32.0, 'longitude' => 35.25],
+    ['code' => 'PA', 'name' => 'Panama', 'nameeng' => 'Panama', 'latitude' => 9.0, 'longitude' => -80],
+    ['code' => 'PG', 'name' => 'Papua-Neuguinea', 'nameeng' => 'Papua New Guinea', 'latitude' => -6.0, 'longitude' => 147],
+    ['code' => 'PY', 'name' => 'Paraguay', 'nameeng' => 'Paraguay', 'latitude' => -23.0, 'longitude' => -58],
+    ['code' => 'PE', 'name' => 'Peru', 'nameeng' => 'Peru', 'latitude' => -10.0, 'longitude' => -76],
+    ['code' => 'PH', 'name' => 'Philippinen', 'nameeng' => 'Philippines', 'latitude' => 13.0, 'longitude' => 122],
+    ['code' => 'PN', 'name' => 'Pitcairninseln', 'nameeng' => 'Pitcairn Islands', 'latitude' => -25.0666, 'longitude' => -130.1],
+    ['code' => 'PL', 'name' => 'Polen', 'nameeng' => 'Poland', 'latitude' => 52.0, 'longitude' => 20],
+    ['code' => 'PT', 'name' => 'Portugal', 'nameeng' => 'Portugal', 'latitude' => 39.5, 'longitude' => -8],
+    ['code' => 'PR', 'name' => 'Puerto Rico', 'nameeng' => 'Puerto Rico', 'latitude' => 18.25, 'longitude' => -66.5],
+    ['code' => 'QA', 'name' => 'Katar', 'nameeng' => 'Qatar', 'latitude' => 25.5, 'longitude' => 51.25],
+    ['code' => 'RE', 'name' => 'Reunion', 'nameeng' => 'Reunion', 'latitude' => -21.1, 'longitude' => 55.6],
+    ['code' => 'RO', 'name' => 'Rumänien', 'nameeng' => 'Romania', 'latitude' => 46.0, 'longitude' => 25],
+    ['code' => 'RU', 'name' => 'Russland', 'nameeng' => 'Russian Federation', 'latitude' => 60.0, 'longitude' => 100],
+    ['code' => 'RW', 'name' => 'Ruanda', 'nameeng' => 'Rwanda', 'latitude' => -2.0, 'longitude' => 30],
+    ['code' => 'BL', 'name' => 'Saint-Barthelemy', 'nameeng' => 'Saint Barthelemy', 'latitude' => 17.8979, 'longitude' => -62.8505],
+    ['code' => 'SH', 'name' => 'St. Helena', 'nameeng' => 'Saint Helena', 'latitude' => -15.9333, 'longitude' => -5.7],
+    ['code' => 'KN', 'name' => 'St. Kitts und Nevis', 'nameeng' => 'Saint Kitts and Nevis', 'latitude' => 17.3333, 'longitude' => -62.75],
+    ['code' => 'LC', 'name' => 'St. Lucia', 'nameeng' => 'Saint Lucia', 'latitude' => 13.8833, 'longitude' => -61.1333],
+    ['code' => 'MF', 'name' => 'St. Martin (franz. Teil)', 'nameeng' => 'Saint Martin', 'latitude' => 18.0731, 'longitude' => -63.0822],
+    ['code' => 'PM', 'name' => 'St. Pierre und Miquelon', 'nameeng' => 'Saint Pierre and Miquelon', 'latitude' => 46.8333, 'longitude' => -56.3333],
+    ['code' => 'VC', 'name' => 'St. Vincent und die Grenadinen', 'nameeng' => 'Saint Vincent and the Grenadines', 'latitude' => 13.25, 'longitude' => -61.2],
+    ['code' => 'WS', 'name' => 'Samoa', 'nameeng' => 'Samoa', 'latitude' => -13.5833, 'longitude' => -172.3333],
+    ['code' => 'SM', 'name' => 'San Marino', 'nameeng' => 'San Marino', 'latitude' => 43.7667, 'longitude' => 12.4167],
+    ['code' => 'ST', 'name' => 'Sao Tome und Principe', 'nameeng' => 'Sao Tome and Principe', 'latitude' => 1.0, 'longitude' => 7],
+    ['code' => 'SA', 'name' => 'Saudi-Arabien', 'nameeng' => 'Saudi Arabia', 'latitude' => 25.0, 'longitude' => 45],
+    ['code' => 'SN', 'name' => 'Senegal', 'nameeng' => 'Senegal', 'latitude' => 14.0, 'longitude' => -14],
+    ['code' => 'RS', 'name' => 'Serbien', 'nameeng' => 'Serbia', 'latitude' => 44.0, 'longitude' => 21],
+    ['code' => 'SC', 'name' => 'Seychellen', 'nameeng' => 'Seychelles', 'latitude' => -4.5833, 'longitude' => 55.6667],
+    ['code' => 'SL', 'name' => 'Sierra Leone', 'nameeng' => 'Sierra Leone', 'latitude' => 8.5, 'longitude' => -11.5],
+    ['code' => 'SG', 'name' => 'Singapur', 'nameeng' => 'Singapore', 'latitude' => 1.3667, 'longitude' => 103.8],
+    ['code' => 'SX', 'name' => 'Sint Maarten', 'nameeng' => 'Sint Maarten', 'latitude' => 18.0167, 'longitude' => 63.05],
+    ['code' => 'SK', 'name' => 'Slovakia (Slovak Republic)', 'nameeng' => 'Slovakia (Slovak Republic)', 'latitude' => 48.6667, 'longitude' => 19.5],
+    ['code' => 'SI', 'name' => 'Slowenien', 'nameeng' => 'Slovenia', 'latitude' => 46.0, 'longitude' => 15],
+    ['code' => 'SB', 'name' => 'Salomonen', 'nameeng' => 'Solomon Islands', 'latitude' => -8.0, 'longitude' => 159],
+    ['code' => 'SO', 'name' => 'Somalia', 'nameeng' => 'Somalia', 'latitude' => 10.0, 'longitude' => 49],
+    ['code' => 'ZA', 'name' => 'Südafrika', 'nameeng' => 'South Africa', 'latitude' => -29.0, 'longitude' => 24],
+    ['code' => 'GS', 'name' => 'Südgeorgien und die Südlichen Sandwichinseln', 'nameeng' => 'South Georgia and the South Sandwich Islands', 'latitude' => -54.5, 'longitude' => -37],
+    ['code' => 'SS', 'name' => 'Südsudan', 'nameeng' => 'South Sudan', 'latitude' => 4.85, 'longitude' => 31.6],
+    ['code' => 'ES', 'name' => 'Spanien', 'nameeng' => 'Spain', 'latitude' => 40.0, 'longitude' => -4],
+    ['code' => 'LK', 'name' => 'Sri Lanka', 'nameeng' => 'Sri Lanka', 'latitude' => 7.0, 'longitude' => 81],
+    ['code' => 'SD', 'name' => 'Sudan', 'nameeng' => 'Sudan', 'latitude' => 15.0, 'longitude' => 30],
+    ['code' => 'SR', 'name' => 'Surinam', 'nameeng' => 'Suriname', 'latitude' => 4.0, 'longitude' => -56],
+    ['code' => 'SJ', 'name' => 'Spitzbergen und Jan Mayen', 'nameeng' => 'Svalbard and Jan Mayen', 'latitude' => 78.0, 'longitude' => 20],
+    ['code' => 'SZ', 'name' => 'Eswatini', 'nameeng' => 'Eswatini', 'latitude' => -26.5, 'longitude' => 31.5],
+    ['code' => 'SE', 'name' => 'Schweden', 'nameeng' => 'Sweden', 'latitude' => 62.0, 'longitude' => 15],
+    ['code' => 'CH', 'name' => 'Schweiz', 'nameeng' => 'Switzerland', 'latitude' => 47.0, 'longitude' => 8],
+    ['code' => 'SY', 'name' => 'Syrien', 'nameeng' => 'Syria', 'latitude' => 35.0, 'longitude' => 38],
+    ['code' => 'TW', 'name' => 'Taiwan', 'nameeng' => 'Taiwan', 'latitude' => 23.5, 'longitude' => 121],
+    ['code' => 'TJ', 'name' => 'Tadschikistan', 'nameeng' => 'Tajikistan', 'latitude' => 39.0, 'longitude' => 71],
+    ['code' => 'TZ', 'name' => 'Tansania', 'nameeng' => 'Tanzania', 'latitude' => -6.0, 'longitude' => 35],
+    ['code' => 'TH', 'name' => 'Thailand', 'nameeng' => 'Thailand', 'latitude' => 15.0, 'longitude' => 100],
+    ['code' => 'TL', 'name' => 'Osttimor', 'nameeng' => 'Timor-Leste', 'latitude' => -8.5666, 'longitude' => 125.5666],
+    ['code' => 'TG', 'name' => 'Togo', 'nameeng' => 'Togo', 'latitude' => 8.0, 'longitude' => 1.1667],
+    ['code' => 'TK', 'name' => 'Tokelau', 'nameeng' => 'Tokelau', 'latitude' => -9.0, 'longitude' => -172],
+    ['code' => 'TO', 'name' => 'Tonga', 'nameeng' => 'Tonga', 'latitude' => -20.0, 'longitude' => -175],
+    ['code' => 'TT', 'name' => 'Trinidad und Tobago', 'nameeng' => 'Trinidad and Tobago', 'latitude' => 11.0, 'longitude' => -61],
+    ['code' => 'TN', 'name' => 'Tunesien', 'nameeng' => 'Tunisia', 'latitude' => 34.0, 'longitude' => 9],
+    ['code' => 'TR', 'name' => 'Türkei', 'nameeng' => 'Turkey', 'latitude' => 39.0, 'longitude' => 35],
+    ['code' => 'TM', 'name' => 'Turkmenistan', 'nameeng' => 'Turkmenistan', 'latitude' => 40.0, 'longitude' => 60],
+    ['code' => 'TC', 'name' => 'Turks and Caicos Islands', 'nameeng' => 'Turks and Caicos Islands', 'latitude' => 21.75, 'longitude' => -71.5833],
+    ['code' => 'TV', 'name' => 'Tuvalu', 'nameeng' => 'Tuvalu', 'latitude' => -8.0, 'longitude' => 178],
+    ['code' => 'UG', 'name' => 'Uganda', 'nameeng' => 'Uganda', 'latitude' => 1.0, 'longitude' => 32],
+    ['code' => 'UA', 'name' => 'Ukraine', 'nameeng' => 'Ukraine', 'latitude' => 49.0, 'longitude' => 32],
+    ['code' => 'AE', 'name' => 'Vereinigte Arabische Emirate', 'nameeng' => 'United Arab Emirates', 'latitude' => 24.0, 'longitude' => 54],
+    ['code' => 'GB', 'name' => 'United Kingdom', 'nameeng' => 'United Kingdom', 'latitude' => 54.0, 'longitude' => -2],
+    ['code' => 'US', 'name' => 'Vereinigte Staaten', 'nameeng' => 'United States of America', 'latitude' => 38.0, 'longitude' => -97],
+    ['code' => 'UM', 'name' => 'United States Minor Outlying Islands', 'nameeng' => 'United States Minor Outlying Islands', 'latitude' => 19.2833, 'longitude' => 166.6],
+    ['code' => 'UY', 'name' => 'Uruguay', 'nameeng' => 'Uruguay', 'latitude' => -33.0, 'longitude' => -56],
+    ['code' => 'UZ', 'name' => 'Usbekistan', 'nameeng' => 'Uzbekistan', 'latitude' => 41.0, 'longitude' => 64],
+    ['code' => 'VU', 'name' => 'Vanuatu', 'nameeng' => 'Vanuatu', 'latitude' => -16.0, 'longitude' => 167],
+    ['code' => 'VE', 'name' => 'Venezuela', 'nameeng' => 'Venezuela', 'latitude' => 8.0, 'longitude' => -66],
+    ['code' => 'VN', 'name' => 'Vietnam', 'nameeng' => 'Vietnam', 'latitude' => 16.0, 'longitude' => 106],
+    ['code' => 'VG', 'name' => 'Britische Jungferninseln', 'nameeng' => 'British Virgin Islands', 'latitude' => 18.5, 'longitude' => -64.5],
+    ['code' => 'VI', 'name' => 'Vereinigte Staaten Virgin Islands', 'nameeng' => 'United States Virgin Islands', 'latitude' => 18.3333, 'longitude' => -64.8333],
+    ['code' => 'WF', 'name' => 'Wallis und Futuna', 'nameeng' => 'Wallis and Futuna', 'latitude' => -13.3, 'longitude' => -176.2],
+    ['code' => 'EH', 'name' => 'West Sahara', 'nameeng' => 'Western Sahara', 'latitude' => 24.5, 'longitude' => -13],
+    ['code' => 'YE', 'name' => 'Jemen', 'nameeng' => 'Yemen', 'latitude' => 15.0, 'longitude' => 48],
+    ['code' => 'ZM', 'name' => 'Sambia', 'nameeng' => 'Zambia', 'latitude' => -15.0, 'longitude' => 30],
+    ['code' => 'ZW', 'name' => 'Simbabwe', 'nameeng' => 'Zimbabwe', 'latitude' => -20.0, 'longitude' => 30],
+    ['code' => 'XK', 'name' => 'Kosovo', 'nameeng' => 'Kosovo', 'latitude' => 42.52, 'longitude' => 21],
+    ['code' => 'ZZ', 'name' => 'International oder privat', 'nameeng' => 'international or private', 'latitude' => 52.0, 'longitude' => 8],
+	['code' => 'DD', 'name' => 'Deutsche Demokratische Republik (ehemals)', 'nameeng' => 'German Democratic Republic (former)', 'latitude' => 52.0, 'longitude' => 13.0],
+    ['code' => 'SU', 'name' => 'Sowjetunion (ehemals)', 'nameeng' => 'Soviet Union (former)', 'latitude' => 55.0, 'longitude' => 37.0],
+    ['code' => 'YU', 'name' => 'Jugoslawien (ehemals)', 'nameeng' => 'Yugoslavia (former)', 'latitude' => 44.0, 'longitude' => 20.0],
+    ['code' => 'CS', 'name' => 'Tschechoslowakei (ehemals)', 'nameeng' => 'Czechoslovakia (former)', 'latitude' => 49.75, 'longitude' => 15.5],
+    ['code' => 'ZR', 'name' => 'Zaire (ehemals)', 'nameeng' => 'Zaire (former)', 'latitude' => 0.0, 'longitude' => 25.0],
+    ['code' => 'NT', 'name' => 'Neutral-Moresnet (historisch)', 'nameeng' => 'Neutral Moresnet (historical)', 'latitude' => 50.7167, 'longitude' => 6.0333],
+    ['code' => 'AN', 'name' => 'Niederländische Antillen (ehemals)', 'nameeng' => 'Netherlands Antilles (former)', 'latitude' => 12.05, 'longitude' => -68.9167],
+    ['code' => 'BU', 'name' => 'Birma (ehemals)', 'nameeng' => 'Burma (former)', 'latitude' => 21.9162, 'longitude' => 95.956],
+    ['code' => 'TP', 'name' => 'Osttimor (ehemals)', 'nameeng' => 'East Timor (former)', 'latitude' => -8.55, 'longitude' => 125.5167],
+	['code' => 'MK', 'name' => 'Mazedonien (ehemals)', 'nameeng' => 'Macedonia (former)', 'latitude' => 41.6, 'longitude' => 21.7],
+];
