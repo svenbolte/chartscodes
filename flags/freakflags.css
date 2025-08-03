@@ -250,13 +250,17 @@ For complete information visit: www.freakflagsprite.com
 .fflag-JR {background-position:center 54.099%}
 .fflag-OLY {background-position:center 54.32%}
 .fflag-UN,.fflag-ZZ {background-position:center 54.54%}
-
 .fflag-ZR {background-position:center 54.76%}
 .fflag-NT {background-position:center 54.98%}
 .fflag-SU {background-position:center 55.20%}
 .fflag-CS {background-position:center 55.44%}
 .fflag-DD {background-position:center 55.66%}
 .fflag-YU {background-position:center 55.88%}
+.fflag-XO {background-position:center 56.09%}
+.fflag-XL {background-position:center 56.30%}
+.fflag-XS {background-position:center 56.49%}
+.fflag-PN {background-position:center 56.69%}
+.fflag-XA {background-position:center 56.92%}
 
 .fflag.ff-xs{height:11px;width:18px}
 .fflag.ff-sm{height:16px;width:26px}
@@ -264,12 +268,6 @@ For complete information visit: www.freakflagsprite.com
 .fflag.ff-lg{height:27px;width:42px}
 .fflag.ff-xl{height:37px;width:60px}
 
-
-.fflag-CH.ff-sm {width: 11.5px;height: 11.5px}
-.fflag-CH.ff-md {width: 17px;height: 17px}
-.fflag-CH.ff-lg {width: 27px;height: 27px}
-.fflag-CH.ff-xl {width: 37px;height: 37px}
-.fflag-CH {background-size: 153% 49494%}
 .fflag-NP.ff-lt {background-color: rgb(220,220,220);clip-path: polygon(-5% -12%, 0 100%, 100% 119%, 49% 61%, 101% 61%)}
 .fflag-NP.ff-dk {background-color: rgb(90,90,90);clip-path: polygon(-5% -12%, 0 100%, 100% 119%, 49% 61%, 101% 61%)}
 .fflag-NP.ff-sm {width: 14px;height: 11.5px}
