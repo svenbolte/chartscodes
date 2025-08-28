@@ -1348,23 +1348,48 @@ class ipflag {
 			$html .='<input type="text" size="20" title="filtern nach Browser, username, usertyp, Einzelbeitrag" placeholder="Suchfilter" id="suchfilter" name="suchfilter" value="'.$suchfilter.'">';
 			$html .= '</select><input type="submit" value="'.__('show items', 'pb-chartscodes').'" /></form></div>';
 
+
+			//	Klicks pro Tag auf Zeitraum DE, IRL, NL
+			$countries = "'DE','IRL','NL','AT','CH'";
+			$labels="";$values='';$label2="";
+			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " WHERE country IN ($countries) ".$sqlsuchfilter." GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $zeitraum);
+			if  ( (int) count($customers)>0) {
+				$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).' '.$countries.'</h6><table>';
+				foreach($customers as $customer){
+					$datum = date_i18n(get_option('date_format'), strtotime($customer->datum) + get_option( 'gmt_offset' ) * 3600 );	
+					if ( count($customers)==1 )	$html .= '<tr><td>' . number_format_i18n($customer->viscount,0) . '</td><td>' . $datum . '</td></tr>';
+					$labels.= $datum .',';
+					$label2.= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2).',';
+					$values.= $customer->viscount.',';
+				}	
+				$labels = rtrim($labels, ",");
+				$label2 = rtrim($label2, ",");
+				$values = rtrim($values, ",");
+				$html .= do_shortcode('[chartscodes_line accentcolor=1 yaxis="Klicks pro Tag" xaxis="Datum rückwärts" values="'.$values.'" labels="'.$label2.'"]');
+				$html .= '</table>';
+			}	
+
+
 			//	Klicks pro Tag auf Zeitraum
 			$labels="";$values='';$label2="";
 			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " WHERE 1=1 ".$sqlsuchfilter." GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $zeitraum);
-			$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h6><table>';
-			foreach($customers as $customer){
-				$datum = date_i18n(get_option('date_format'), strtotime($customer->datum) + get_option( 'gmt_offset' ) * 3600 );	
-				if ( count($customers)==1 )	$html .= '<tr><td>' . number_format_i18n($customer->viscount,0) . '</td><td>' . $datum . '</td></tr>';
-				$labels.= $datum .',';
-				$label2.= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2).',';
-				$values.= $customer->viscount.',';
+			if ( (int) count($customers)>0) {
+				$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h6><table>';
+				foreach($customers as $customer){
+					$datum = date_i18n(get_option('date_format'), strtotime($customer->datum) + get_option( 'gmt_offset' ) * 3600 );	
+					if ( count($customers)==1 )	$html .= '<tr><td>' . number_format_i18n($customer->viscount,0) . '</td><td>' . $datum . '</td></tr>';
+					$labels.= $datum .',';
+					$label2.= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2).',';
+					$values.= $customer->viscount.',';
+				}	
+				$labels = rtrim($labels, ",");
+				$label2 = rtrim($label2, ",");
+				$values = rtrim($values, ",");
+				$html .= do_shortcode('[chartscodes_line accentcolor=1 yaxis="Klicks pro Tag" xaxis="Datum rückwärts" values="'.$values.'" labels="'.$label2.'"]');
+				$html .= do_shortcode('[chartscodes_horizontal_bar absolute="1" accentcolor=1 values="'.$values.'" labels="'.$labels.'"]');
+				$html .= '</table>';
 			}	
-			$labels = rtrim($labels, ",");
-			$label2 = rtrim($label2, ",");
-			$values = rtrim($values, ",");
-			$html .= do_shortcode('[chartscodes_line accentcolor=1 yaxis="Klicks pro Tag" xaxis="Datum rückwärts" values="'.$values.'" labels="'.$label2.'"]');
-			$html .= do_shortcode('[chartscodes_horizontal_bar absolute="1" accentcolor=1 values="'.$values.'" labels="'.$labels.'"]');
-			$html .= '</table>';
+
 
 			if ( empty($suchfilter) ) {
 				
@@ -1601,7 +1626,7 @@ class ipflag {
 					if(($info = $this->get_info($userip)) != false)
 						$country = $info->code;
 					else
-						$country = 'EUROPEANUNION';
+						$country = 'EU';
 				// Wenn Homepage gezählt wird, Pageid als -9999 speichern
 				if ( is_front_page() && is_home() ) { $postid = -9999; } else {	$postid = get_the_ID(); }
 				if (is_feed() ) $postid = -1000;   // ID für Feeds geben
