@@ -27,18 +27,48 @@ daher dieses Projekt, dass die Einzelfunktionen zusammen fasst und um viele neue
 
 [bulawappen land="Bremen/HB" scale="sm/xs"]
 
-[chartscodes absolute="1" title="Pie Chart" values="20, 30, 50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
+## gd_chart Shortcode
 
-[chartscodes_donut title="Donut Pie Chart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
+== Usage ==
 
-[chartscodes_polar title="Polar Chart mit Segmenten" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
+Line chart:
+```
+[gd_chart type="line" title="Visits" data="Jan:120|Feb:180|Mar:150"]
+```
 
-[chartscodes_radar title="Radar Chart" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi"]
+vertical bar:
+```
+[gd_chart type="vbar" title="Visits" data="Jan:120|Feb:180|Mar:150"]
+```
 
-[chartscodes_bar title="Balkenchart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
+horizontal bar:
+```
+[gd_chart type="hbar" title="Visits" data="Jan:120|Feb:180|Mar:150"]
+```
 
-[chartscodes_horizontal_bar title="Balken horizontal" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]
+Polar (radar):
+```
+[gd_chart type="polar" title="Skills" data="Jan:120|Feb:180|Mar:150" table=1 table_pos=only]
+```
 
-[chartscodes_line accentcolor=1 title="Obst Line Chart" xaxis="Obstsorte" yaxis="Umsatz" values="10,20,10,5,30,20,5" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi,Cranberry,Mango"]
+Pie:
+```
+[gd_chart type="pie" title="Browsers" data="Chrome:62|Safari:20|Firefox:10|Edge:8"]
+```
 
-[posts_per_month_last months=x]
+Table:
+add : table=1 parameter and table_pos=only   oder table_pos=above (zusätzlich). Wenn nur table=1 wird sie unter dem Bild gezeigt.
+
+== Shortcode Attributes ==
+- `type` (string): `line|pie|vbar|hbar|polar` (default `line`)
+- `data` (string): `Label:Value|Label2:Value2`  
+- `title` (string): Chart title (optional)
+- `legend` (`true|false`): show legend (default `true`)
+- `width` (int): render width in px (default `640`)
+- `height` (int): render height in px (default `360`)
+- `bg`, `fg`, `grid` (hex): colors like `#ffffff`
+- `colors` (csv hex): series colors, e.g. `#1e88e5,#e53935,#43a047`
+- `max` (float): axis max (ignored for pie/polar; for 100% stacked also ignored)
+- `dpi` (1..3): render scaling for HiDPI (server-side); combine with responsive display
+- `responsive` (`true|false`): outputs `<img>` without width/height and with `srcset` (default `true`)
+- `class`, `style`, `alt`: passed to `<img>`

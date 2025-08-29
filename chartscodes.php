@@ -33,540 +33,7 @@ function ccode_enqueue_scripts( $page ) {
 }
 add_action( 'wp_enqueue_scripts', 'ccode_enqueue_scripts' );
 
-
-/**
-* Charts Shortcodes
-* 	'chartscodes', 'chartscodes_radar', 'chartscodes_donut' 'chartscodes_polar'
-*	'chartscodes_bar', 'chartscodes_horizontal_bar','posts_per_month_last'
-*	'pb_last_months_chart', 'chartscodes_line'
-*/
-
-class PB_ChartsCodes_Shortcode {
-
-	public function __construct() {	$this->PB_ChartsCodes_create_shortcode(); }
-	
-	// Für die Akzentfarbe Nunancen errechnen
-	public function color_luminance( $hex, $percent ) {
-		// validate hex string
-		$hex = preg_replace( '/[^0-9a-f]/i', '', $hex );
-		$new_hex = '#';
-		if ( strlen( $hex ) < 6 ) {
-			$hex = $hex[0] + $hex[0] + $hex[1] + $hex[1] + $hex[2] + $hex[2];
-		}
-		// convert to decimal and change luminosity
-		for ($i = 0; $i < 3; $i++) {
-			$dec = hexdec( substr( $hex, $i*2, 2 ) );
-			$dec = min( max( 0, $dec + $dec * $percent ), 255 ); 
-			$new_hex .= str_pad( dechex( (int) $dec ) , 2, 0, STR_PAD_LEFT );
-		}		
-		return $new_hex;
-	}
-
-	public function farbpalette ($accolor) {
-		$colorl = '';
-		if ( $accolor == '1' ) {
-			// Palette in Akzentfarbe
-			$colort = get_theme_mod( 'link-color' ) ?:'#666666';
-			for ($row = 0; $row < 200; ++$row) {
-				$randd = mt_rand(1,100) /100;
-				$colorl .= $this->color_luminance( $colort, $randd ) . ',';
-			}
-		} else {
-			// Bunte Palette
-			$colorli = '';
-			for ($row = 0; $row < 200; ++$row) {
-				$colorl .= sprintf('#%06X', mt_rand(0xAAAAAA, 0xEEEEEE)) . ',';
-			}
-		}
-	return rtrim($colorl,",");
-	}
-
-	//	
-	//	Default Pie Chart Shortcode Function
-	//	
-	public function PB_ChartsCodes_shortcode_function( $atts ) 	{
-		ob_start();
-		$input = shortcode_atts( array(
-				'title'		=> '',
-				'absolute' => '',
-				'values' 	=> '',
-				'labels'	=> '',
-				'fontfamily' => 'Arial, sans-serif',
-				'fontstyle' => 'normal',
-			    'accentcolor' => false, 
-				'colors'	=>  $this->farbpalette('0'),
-			), $atts );
-		$colorli= $input['colors'];
-		$accentcolor=$input['accentcolor'];
-		if ( $accentcolor ) { $colorli= $this->farbpalette(1); }
-		$pvalues = array();
-		$quotes = array( "\"", "'" );
-		$absolute 		= $input['absolute']; 
-		$title 			= $input['title']; 
-		$fontfamily 	= esc_attr( $input['fontfamily'] ); 
-		$fontstyle 		= esc_attr( $input['fontstyle'] ); 
-		$percentages 	= explode( ',', str_replace( $quotes, '', $input['values'] ) );
-		$labels 		= explode( ',', str_replace( "\"", '', $input['labels'] ) );
-		$colors 		= explode( ',', str_replace( $quotes, '', $colorli ) );
-		$radius			= array( 120, 120, 120, 120, 120, 120, 120, 120, 120, 120,120 );
-		$id 			= uniqid( 'tp_pie_', false ); 
-		?>
-		<div class="tp-piebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
-			<h6 class="pie-title"><?php echo esc_html( $title ); ?></h6>
-			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="400" style="max-width:100vw;max-height:400px;object-fit:contain">
-			</canvas>
-		</div>
-		<?php  
-		$sumperc = array_sum( $percentages );
-		if (intval($sumperc) > 0) {
-			if ( $absolute == '1' ){ 
-				for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
-					$pvalues[$i] = $percentages[$i];
-					$percentages[$i] = round($percentages[$i]/ $sumperc * 100);
-				}
-			} else { $pvalues = array ('','','','','','','','','','','','','','','','','');}
-			$tp_pie_data = array(
-				'canvas_id'	=> $id,
-				'percent'	=> $percentages,
-				'percvalues'   => $pvalues,
-				'label'		=> $labels,
-				'color'		=> $colors,
-				'circle'	=> 0,
-				'radius'	=> $radius,
-				'fontstyle'	=> $fontstyle,
-				'fontfamily' => $fontfamily,
-				);
-
-			wp_localize_script( 'pb-chartscodes-initialize', 'tp_pie_data_'.$id, $tp_pie_data );
-			// enqueue bar js
-			wp_enqueue_script( 'pb-chartscodes-initialize' );
-		}
-		return ob_get_clean();
-	}
-
-	//
-	//  Donut Pie Chart Shortcode Function
-	//
-	public function PB_ChartsCodes_doughnut_shortcode_function( $atts ) {
-		ob_start();
-		$input = shortcode_atts( array(
-				'title'		=> '',
-				'absolute' => '',
-				'values' 	=> '',
-				'labels'	=> '',
-				'fontfamily' => 'Arial, sans-serif',
-				'fontstyle' => 'normal',
-			    'accentcolor' => false, 
-				'colors'	=>  $this->farbpalette('0'),
-			), $atts );
-		$colorli= $input['colors'];
-		$accentcolor=$input['accentcolor'];
-		if ( $accentcolor ) { $colorli= $this->farbpalette(1); }
-		$quotes = array( "\"", "'" );
-		$title 			= $input['title']; 
-		$absolute 		= $input['absolute']; 
-		$fontfamily 	= esc_attr( $input['fontfamily'] ); 
-		$fontstyle 		= esc_attr( $input['fontstyle'] ); 
-		$percentages 	= explode( ',', str_replace( $quotes, '', $input['values'] ) );
-		$labels 		= explode( ',', str_replace( "\"", '', $input['labels'] ) );
-		$colors 		= explode( ',', str_replace( $quotes, '', $colorli ) );
-		$radius			= array( 120, 120, 120, 120, 120, 120, 120, 120, 120, 120, 120 );
-		$id 			= uniqid( 'tp_doughnut_', false ); 
-		?>
-		<div class="tp-piebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
-			<?php if ( ! empty( $title ) ) : ?>
-				<h6 class="pie-title"><?php echo esc_html( $title ); ?></h6>
-			<?php endif; ?>
-			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="400" style="max-width:100vw;max-height:400px;object-fit:contain">
-			</canvas>
-		</div>
-		<?php  
-		$sumperc = array_sum( $percentages );
-		if (intval($sumperc) > 0) {
-			if ( $absolute == '1' ){ 
-				for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
-					$pvalues[$i] = $percentages[$i];
-					$percentages[$i] = round($percentages[$i]/ $sumperc * 100);
-				}
-			}
-			$tp_pie_data = array(
-				'canvas_id'	=> $id,
-				'percent'	=> $percentages,
-				'percvalues'   => $pvalues,
-				'label'		=> $labels,
-				'color'		=> $colors,
-				'circle'	=> 45,
-				'radius'	=> $radius,
-				'fontstyle'	=> $fontstyle,
-				'fontfamily' => $fontfamily,
-				);
-
-			wp_localize_script( 'pb-chartscodes-initialize', 'tp_pie_data_'.$id, $tp_pie_data );
-			// enqueue bar js
-			wp_enqueue_script( 'pb-chartscodes-initialize' );
-		}
-		return ob_get_clean();
-	}
-
-	//
-	//  Polar Pie Chart Shortcode Function
-	//
-	public function PB_ChartsCodes_polar_shortcode_function( $atts ) {
-		ob_start();
-		$input = shortcode_atts( array(
-				'title'		=> '',
-				'absolute' => '',
-				'values' 	=> '',
-				'labels'	=> '',
-				'fontfamily' => 'Arial, sans-serif',
-				'fontstyle' => 'normal',
-			    'accentcolor' => false, 
-				'colors'	=>  $this->farbpalette('0'),
-			), $atts );
-		$colorli= $input['colors'];
-		$accentcolor=$input['accentcolor'];
-		if ( $accentcolor ) { $colorli= $this->farbpalette(1); }
-		$quotes = array( "\"", "'" );
-		$title 			= $input['title']; 
-		$absolute 		= $input['absolute']; 
-		$fontfamily 	= esc_attr( $input['fontfamily'] ); 
-		$fontstyle 		= esc_attr( $input['fontstyle'] ); 
-		$percentages 	= explode( ',', str_replace( $quotes, '', $input['values'] ) );
-		$labels 		= explode( ',', str_replace( "\"", '', $input['labels'] ) );
-		$colors 		= explode( ',', str_replace( $quotes, '', $colorli ) );
-		$radius			= array( 125, 135, 130, 140, 135, 130, 120, 130, 140, 130 );
-		$id 			= uniqid( 'tp_polar_', false ); 
-		?>
-		<div class="tp-piebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
-			<?php if ( ! empty( $title ) ) : ?>
-				<h6 class="pie-title"><?php echo esc_html( $title ); ?></h6>
-			<?php endif; ?>
-			<canvas id="<?php echo esc_attr( $id ); ?>" width="900" height="400" style="max-width:100vw;max-height:400px;object-fit:contain">
-			</canvas>
-		</div>
-		<?php  
-		$sumperc = array_sum( $percentages );
-		if (intval($sumperc) > 0) {
-			if ( $absolute == '1' ){ 
-				for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
-					$pvalues[$i] = $percentages[$i];
-					$percentages[$i] = round($percentages[$i]/ $sumperc * 100);
-				}
-			}
-			$tp_pie_data = array(
-				'canvas_id'	=> $id,
-				'percent'	=> $percentages,
-				'percvalues'   => $pvalues,
-				'label'		=> $labels,
-				'color'		=> $colors,
-				'circle'	=> 15,
-				'radius'	=> $radius,
-				'fontstyle'	=> $fontstyle,
-				'fontfamily' => $fontfamily,
-				);
-
-			wp_localize_script( 'pb-chartscodes-initialize', 'tp_pie_data_'.$id, $tp_pie_data );
-			// enqueue bar js
-			wp_enqueue_script( 'pb-chartscodes-initialize' );
-		}	
-		return ob_get_clean();
-	}
-
-	//	
-	//	Radar Chart Shortcode Function (absolute values given)
-	//	
-	public function PB_ChartsCodes_radar_shortcode_function( $atts ) 	{
-		ob_start();
-		$input = shortcode_atts( array(
-				'title'		=> '',
-				'absolute' => '',
-				'values' 	=> '',
-				'labels'	=> '',
-				'legend'	=> true,
-				'fontfamily' => 'Arial, sans-serif',
-				'fontstyle' => 'normal',
-			    'accentcolor' => false, 
-				'colors'	=>  $this->farbpalette('0'),
-			), $atts );
-		$colorli= $input['colors'];
-		$accentcolor=$input['accentcolor'];
-		if ( $accentcolor ) { $colorli= $this->farbpalette(1); }
-		$pvalues = array();
-		$quotes = array( "\"", "'" );
-		$title 			= $input['title']; 
-		$fontfamily 	= esc_attr( $input['fontfamily'] ); 
-		$fontstyle 		= esc_attr( $input['fontstyle'] ); 
-		$percentages 	= explode( ',', str_replace( $quotes, '', $input['values'] ) );
-		$labels 		= explode( ',', str_replace( "\"", '', $input['labels'] ) );
-		$colors 		= explode( ',', str_replace( $quotes, '', $colorli ) );
-		$id 			= uniqid( 'tp_pie_', false ); 
-		$legend			= esc_attr( $input['legend'] );
-		echo '<div class="tp-RadarbuilderWrapper"'.$id.' style="max-width:100vw;max-height:500px;object-fit:contain">';
-		$sumperc = array_sum( $percentages );
-		if (intval($sumperc) > 0) {
-			$radarlegende = '';
-			$radarval = 'values: {';
-			for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
-				$pvalues[$i] = $percentages[$i];
-				$percentages[$i] = round($percentages[$i]/ $sumperc * 100);
-				$radarval .= '"'.$labels[$i].'": '.$percentages[$i].',';
-				$radarlegende  .= $labels[$i].': '.$pvalues[$i].' &nbsp; ';
-			}
-			$radarval .= '}, ';
-			$colort = get_theme_mod( 'link-color' ) ?:'#666666';
-			list($r, $g, $b) = sscanf($colort, "#%02x%02x%02x");
-			$radcolor = "$r, $g, $b";
-			// Load radar js
-			//wp_enqueue_script( 'pb-chartscodes-radar-script', PB_ChartsCodes_URL_PATH . 'js/radar2.js', array(), '1.9', true  );
-			wp_enqueue_script( 'pb-chartscodes-radar' );
-			// pass values to radar
-			$radaris = '	jQuery(function($){
-				var radardata ={color: ['.$radcolor.'], size: [900, 500], step: 1, title: "'.esc_html( $title ).'",'.$radarval.'showAxisLabels: true };
-				$(".tp-RadarbuilderWrapper").radarChart(radardata);	});';
-			wp_add_inline_script('pb-chartscodes-radar',$radaris);
-			echo '</div>';
-			if ( $legend ) echo '<div style="border:1px solid #eee;border-radius:3px;padding:3px;font-size:0.8em;text-align:center">'.$radarlegende.' TOTAL: '.number_format($sumperc,0,'.',',').'</div>';
-		}
-		return ob_get_clean();
-	}
-
-	//
-	//  vertical Bar Graph Shortcode Function
-	//
-	public function PB_ChartsCodes_bar_shortcode_function( $atts ) {
-		ob_start();
-		$input = shortcode_atts( array(
-				'title'		=> '',
-			    'absolute' => '',
-			    'values' 	=> '',
-			    'labels'	=> '',
-			    'accentcolor' => false, 
-				'colors'	=>  $this->farbpalette('0'),
-			), $atts );
-		$colorli= $input['colors'];
-		$accentcolor=$input['accentcolor'];
-		if ( $accentcolor ) { $colorli= $this->farbpalette(1); }
-		$quotes = array( "\"", "'" );
-		$title 			= $input['title']; 
-		$absolute 		= $input['absolute']; 
-		$percentages 	= explode( ',', str_replace( $quotes, '', $input['values'] ) );;
-		$labels 		= explode( ',', str_replace( "\"", '', $input['labels'] ) );
-		$colors 		= explode( ',', str_replace( $quotes, '', $colorli ) );
-		$count 			= count( $labels )-1;
-		$id 			= uniqid( 'tp_bar_', false ); 
-		if ( $count > 12 ) { $barbreite = ' style="min-width:24px;max-width:'.intval(100/($count+3)).'%"'; } else { $barbreite=''; }
-		?>
-		<div class="tp-bar" data-id="tp_bar_data_<?php echo esc_attr( $id ); ?>">
-			<?php if ( ! empty( $title ) ) : ?>
-			<h6 class="pie-title"><?php echo esc_html( $title ); ?></h6>
-			<?php endif; ?>
-			<div class="tp-skills-bar">
-				<?php if ( $count > 0 ) :
-				$hundproz = max($percentages);
-				for ( $i = 0; $i <= $count; $i++ ) : 
-				if ( $absolute == '1' ){
-					$balkenanzeige = absint( $percentages[$i] / $hundproz * 100 );
-					$balkhoehe = absint( $percentages[$i] / $hundproz * 100 );
-					if ( absint( $percentages[$i]) > 0 ) { $balkenanzeige .= '% '.absint( $percentages[$i]); }
-				} else {
-					$balkenanzeige = absint( $percentages[$i] );
-					$balkhoehe = absint( $percentages[$i] );
-				}
-				?>
-				<div class="outer-box" <?php echo $barbreite ?> >
-					<span class="percent-value"><?php echo $balkenanzeige; ?></span>
-					<div id="<?php echo esc_attr( $id ) . '_' . $i; ?>" class="inner-fill" style="background-color: <?php echo esc_attr( $colors[$i] ); ?>; height: <?php echo $balkhoehe . '%'; ?>">
-					</div><!-- .inner-fill -->
-					<?php
-					if (strpos($labels[$i], '<a href') !== false ) {
-						echo '<span class="tp-axislabels">'.( substr($labels[$i],0,100) ).' </span>';
-					} else {
-						echo '<span class="tp-axislabels">'.esc_html( substr($labels[$i],0,15) ).' </span>';
-					}
-					?>
-				</div><!-- .outer-box -->
-				<?php 
-				endfor;  
-				endif; ?>
-			</div><!-- .skills-bar -->
-		</div>
-		<?php 
-		return ob_get_clean();
-	}
-
-	//
-	//  Horizontal Bar Graph Shortcode Function
-	//
-	public function PB_ChartsCodes_horizontal_bar_shortcode_function( $atts ) {
-		ob_start();
-		$input = shortcode_atts( array(
-				'title'		=> '',
-				'absolute' => '',
-				'values' 	=> '',
-				'labels'	=> '',
-			    'accentcolor' => false, 
-				'colors'	=>  $this->farbpalette('0'),
-			), $atts );
-		$colorli= $input['colors'];
-		$accentcolor=$input['accentcolor'];
-		if ( $accentcolor ) { $colorli= $this->farbpalette(1); }
-		$quotes = array( "\"", "'" );
-		$title 			= $input['title']; 
-		$absolute 		= $input['absolute']; 
-		$percentages 	= explode( ',', str_replace( $quotes, '', $input['values'] ) );;
-		$labels 		= explode( ',', str_replace( "\"", '', $input['labels'] ) );
-		$colors 		= explode( ',', str_replace( $quotes, '', $colorli ) );
-		$count 			= count( $labels )-1;
-		$id 			= uniqid( 'tp_horizontalbar_', false ); 
-		$balksum = 0;
-		?>
-		<div class="tp-horizontalbar" data-id="tp_horizontalbar_data_<?php echo esc_attr( $id ); ?>">
-			<?php if ( ! empty( $title ) ) : ?>
-				<h6 class="pie-title"><?php echo esc_html( $title ); ?></h6>
-			<?php endif; ?>
-			<div class="tp-skills-horizontalbar">
-				<?php if ( $count > 0 ) :
-					$hundproz = max($percentages);
-					for ( $i = 0; $i <= $count; $i++ ) : 
-						if ( $absolute == '1' ){
-							$balkenanzeige = @absint( $percentages[$i] / $hundproz * 100 );
-							$balkhoehe = @absint( $percentages[$i] / $hundproz * 100 );
-							$balksum += @absint($percentages[$i]);
-							if ( @absint( $percentages[$i]) > 0 ) { $balkenanzeige .= '% &nbsp; '.@absint( $percentages[$i]); }
-						} else {
-							$balkenanzeige = absint( $percentages[$i] );
-							$balkhoehe = absint( $percentages[$i] );
-							$balksum += $balkhoehe;
-						}
-					?>
-					<div class="outer-box">
-						<div id="<?php echo esc_attr( $id ) . '_' . $i; ?>" class="inner-fill" style="background-color: <?php echo esc_attr( $colors[$i] ); ?>; width: <?php echo $balkhoehe . '%'; ?>">
-							<span class="skill-name"><?php echo esc_html( $labels[$i] . ' &nbsp; &nbsp;  &nbsp; ' . $balkenanzeige ); ?></span><!-- .inner-fill -->
-						</div>
-					</div><!-- .outer-box -->
-					<?php 
-					endfor;  
-					echo sprintf(__('<strong>%1s</strong> values, <strong>%2s</strong> sum of values', 'pb-chartscodes'),number_format_i18n(($count+1),0),number_format_i18n($balksum,0)).', &Oslash; <strong>'.number_format_i18n( ($balksum/($count+1)), 2 ).'</strong>';
-				endif; ?>
-			</div><!-- .skills-bar -->
-		</div>
-		<?php 
-		return ob_get_clean();
-	}
-
-	//
-	//  Neu erstellte Posts und Pages pro Monat für letzte xx Monate als Bar Chart (ruft Bar chart shortcode auf)
-	//
-	function pb_last_months_chart($atts) {
-		$input = shortcode_atts( array(	
-			'months' => 15,
-		    'accentcolor' => false, 
-		), $atts );
-		$accentcolor=$input['accentcolor'];
-		$monate = $input['months']; 
-		$pmod = 'post_date';
-		// if ( 1 === get_theme_mod( 'homesortbymoddate' ) ) {	$pmod = 'post_modified'; } else { $pmod = 'post_date'; }	
-		global $wpdb;
-		$res = $wpdb->get_results("SELECT DISTINCT MONTH( post_date ) AS month, YEAR( post_date ) AS year, COUNT( id ) as post_count FROM $wpdb->posts WHERE post_status = 'publish' and post_type = 'post' GROUP BY month, year ORDER BY post_date DESC LIMIT ".$monate);
-		$valu="";
-		$labl="";
-		$out = '[chartscodes_bar accentcolor='.$accentcolor.' absolute="1" title="Beiträge/Seiten letzte '.$monate.' Monate" ';
-		foreach($res as $r) {
-			$valu .= isset($r->month) ? floor($r->post_count) : 0;
-			$valu .= ',';
-			$axislink=get_home_url( '/' ).'/'.$r->year.'/'.$r->month;
-			$labl .= '<a href='.$axislink.'>'.date_i18n("M y", mktime(2, 0, 0, $r->month, 1, $r->year)).'</a>,';
-		}
-		$labl = rtrim($labl,",");
-		$valu = rtrim($valu,",");
-		$out .= ' values="'.$valu.'" labels="'.$labl.'"]';
-		return do_shortcode($out);
-	}
-
-	//	
-	//	Chartscodes Line Chart Shortcode Function
-	//	
-	public function PB_ChartsCodes_line_shortcode_function( $atts ) 	{
-		ob_start();
-		$input = shortcode_atts( array(
-				'title'		=> '',
-				'xaxis' => 'Einheit',
-				'yaxis' => 'Wert',
-				'height' 	=> '350',
-				'values' 	=> '',
-				'labels'	=> '',
-				'fontfamily' => 'Arial, sans-serif',
-				'fontstyle' => 'normal',
-			    'accentcolor' => false, 
-				'colors'	=>  $this->farbpalette('0'),
-			), $atts );
-		$colorli= $input['colors'];
-		$accentcolor=$input['accentcolor'];
-		if ( $accentcolor ) { $colorli= $this->farbpalette(1); }
-		$quotes = array( "\"", "'" );
-		$title 			= $input['title']; 
-		$height 			= $input['height']; 
-		$fontfamily 	= esc_attr( $input['fontfamily'] ); 
-		$fontstyle 		= esc_attr( $input['fontstyle'] ); 
-		$percentages 	= explode( ',', str_replace( $quotes, '', $input['values'] ) );
-		$labels 		= explode( ',', str_replace( "\"", '', $input['labels'] ) );
-		$colors 		= explode( ',', str_replace( $quotes, '', $colorli ) );
-		$id 			= uniqid( 'tp_line_', false ); 
-		?>
-		<div class="tp-linebuilderWrapper" data-id="tp_pie_data_<?php echo esc_attr( $id ); ?>">
-			<h6 class="pie-title"><?php echo esc_html( $title ); ?></h6>
-			<canvas id="<?php echo esc_attr( $id ); ?>" style="width:100%;height:<?php echo $height; ?>px" >
-			</canvas>
-			<script>
-			var canvas =  document.getElementById("<?php echo esc_attr( $id ); ?>");
-			canvas.width = canvas.clientWidth;
-			canvas.height = canvas.clientHeight;
-			var context = canvas.getContext("2d");
-			</script>
-		</div>
-		<?php  
-		$datapts='[ ';
-		for ( $i = 0; $i <= count($percentages)-1; $i++ ) {
-			$datapts .= "{ x:'".$labels[$i]."', y:".$percentages[$i]."}, ";
-		}
-		$datapts .= ' ]';
-		$tp_pie_data = array(
-			'xaxis'	=> $input['xaxis'], 
-			'yaxis'	=> $input['yaxis'], 
-			'canvas_id'	=> $id,
-			'color'		=> $colors,
-			'datapts'	=> $datapts,
-			'fontfamily' => $fontfamily,
-			);
-		// Load Charts QRCodes Barcodes line js
-		wp_enqueue_script( 'pb-chartscodes-line-script', PB_ChartsCodes_URL_PATH . 'js/canvaschart.min.js', array(), '1.8', true  );
-		// Load Charts QRCodes Barcodes custom line js
-		wp_register_script( 'pb-chartscodes-line-initialize', PB_ChartsCodes_URL_PATH . 'js/line-initialize.js', array( 'jquery', 'pb-chartscodes-script' ) );
-		// Fill data
-		wp_localize_script( 'pb-chartscodes-line-initialize', 'tp_pie_data_'.$id, $tp_pie_data );
-		// enqueue bar js
-		wp_enqueue_script( 'pb-chartscodes-line-initialize' );
-		return ob_get_clean();
-	}
-
-	//
-	// Create Shortcodes  für Charts und für die Post per Month Statistik
-	//
-	public function PB_ChartsCodes_create_shortcode() {
-		add_shortcode( 'chartscodes', array( $this, 'PB_ChartsCodes_shortcode_function' ) );
-		add_shortcode( 'chartscodes_radar', array( $this, 'PB_ChartsCodes_radar_shortcode_function' ) );
-		add_shortcode( 'chartscodes_donut', array( $this, 'PB_ChartsCodes_doughnut_shortcode_function' ) );
-		add_shortcode( 'chartscodes_polar', array( $this, 'PB_ChartsCodes_polar_shortcode_function' ) );
-		add_shortcode( 'chartscodes_bar', array( $this, 'PB_ChartsCodes_bar_shortcode_function' ) );
-		add_shortcode( 'chartscodes_horizontal_bar', array( $this, 'PB_ChartsCodes_horizontal_bar_shortcode_function' ) );
-		add_shortcode( 'posts_per_month_last', array( $this, 'pb_last_months_chart' ) );
-		add_shortcode( 'chartscodes_line', array( $this, 'PB_ChartsCodes_line_shortcode_function' ) );
-	}
-}
-new PB_ChartsCodes_Shortcode();
-
-// Functions outside the shortcode chartcode class
-
+// ---------------- page für den Webcounter Adminbereich  erzeugen-------------------------------
 function cc_page_by_title($pagetitle) {
 	$query = new WP_Query(
 		array(
@@ -615,8 +82,9 @@ function create_webcounter() {
 		}
 	}
 }
+// ----------------------------------------------------------------------------------------
 
-
+// Plugin, Webcounter initialisieren und Consstants setzen
 if ( ! class_exists( 'PB_ChartsCodes' ) ) :
 	final class PB_ChartsCodes {
 		public function __construct() {
@@ -638,16 +106,546 @@ if ( ! class_exists( 'PB_ChartsCodes' ) ) :
 		public function PB_ChartsCodes_enqueue() {
             // Load chartcodes style
             wp_enqueue_style( 'pb-chartscodes-style', PB_ChartsCodes_URL_PATH . 'ccstyle.min.css' );
-	        // Load Charts custom pie js and radar JS
-			wp_register_script( 'pb-chartscodes-script', PB_ChartsCodes_URL_PATH . 'js/pie.min.js', array( 'jquery' ), null, true );
-	        wp_register_script( 'pb-chartscodes-initialize', PB_ChartsCodes_URL_PATH . 'js/pie-initialize.min.js', array( 'jquery', 'pb-chartscodes-script' ) );
-	        wp_register_script( 'pb-chartscodes-radar', PB_ChartsCodes_URL_PATH . 'js/radar2.min.js', array( 'jquery' ) );
 		}
 	}
 	new PB_ChartsCodes();
 endif;
 
-// -------------------------- Jetzt den QRCode Generator noch -----------------------------------------------
+// ------------------------- Class für Chart-Diagramme und Shortcode gd_charts ----------------------------------------------- 
+
+class WPGDCharts {
+
+    public function __construct() {
+        $this->register_shortcode();
+    }
+
+    public function register_shortcode() { add_shortcode('gd_chart', [$this, 'shortcode']); }
+
+    private function default_atts() {
+        return [
+            'type' => 'line', // line|pie|hbar|vbar|polar
+            'width' => 900,    // render width in px (server side)
+            'height' => 400,   // render height in px (server side)
+            'bg' => '#ffffff',
+            'fg' => '#333333',
+            'grid' => '#dddddd',
+            'colors' => '',
+            'title' => ' ',
+            'legend' => 'true',
+            // Data
+            // Single series:  Label:Value|Label2:Value2
+            'data' => 'A:10|B:20|C:30',
+            'max' => '',              // axis max; for bars auto=column sums
+            'dpi' => 1,               // 1..3 render scale
+            'responsive' => 'true',   // responsive <img> with srcset
+            'cache' => 'true',
+            'class' => 'gd-chart',
+            'style' => '',
+            'alt' => '',
+        
+            // Table options
+            'table' => 'false',
+            'table_pos' => 'below',
+            'table_class' => 'gd-chart-table',
+            'table_style' => 'margin-top:8px;',
+            'table_caption' => '',
+            'decimals' => '0',
+            // Color palette generation
+            'base' => get_theme_mod('link-color', '#006060'),
+            'palette' => 'accent',
+            'ncolors' => '',
+];
+    }
+
+    /** Shortcode → renders <img> with server-side PNG and optional srcset for HiDPI. */
+    public function shortcode($atts) {
+
+    $atts = shortcode_atts($this->default_atts(), $atts, 'gd_chart');
+    $parsed = $this->parse_data($atts['data']);
+    $colors = $this->parse_colors($atts['colors']);
+    if (empty($colors)) {
+        $need = $this->compute_needed_colors($parsed, strtolower($atts['type']));
+        $base = trim((string)($atts['base'] ?? ''));
+        if ($base !== '') {
+            $colors = ($atts['palette']==='mono') ? $this->palette_mono($base, $need) : $this->palette_accent($base, $need);
+        }
+    }
+    if (empty($colors)) {
+        $colors = ['#1e88e5','#e53935','#43a047','#fb8c00','#8e24aa','#00acc1','#6d4c41','#fdd835'];
+    }
+
+    ob_start();
+    $this->render_chart($atts, $parsed, $colors);
+    $img_data = ob_get_clean();
+    $base64 = base64_encode($img_data);
+    $alt = esc_attr($atts['alt'] ?: ($atts['title'] ?: 'Chart'));
+    $class = esc_attr(trim(($atts['class'] ?? '') . ' gd-chart--inline'));
+    $style = esc_attr(trim((string)($atts['style'] ?? 'max-width:100%;height:auto;')));
+    $img_html = sprintf('<img decoding="async" loading="lazy" class="%s" style="%s" src="data:image/png;base64,%s" alt="%s" />',
+        $class, $style, $base64, $alt);
+
+    $table_html = '';
+    $want_table = strtolower($atts['table']) === 'true' || strtolower($atts['table']) === '1';
+    if ($want_table) {
+        $table_html = $this->build_table_html($parsed, $atts, $colors);
+    }
+
+    $pos = strtolower($atts['table_pos']);
+    if (!$want_table) return $img_html;
+    if ($pos === 'only') return $table_html;
+    if ($pos === 'above') return $table_html . $img_html;
+    return $img_html . $table_html;
+}
+
+    public function render_chart($atts, $parsed, $colors) {
+    $type = strtolower($atts['type']);
+    $w = max(100, min(4096, (int)$atts['width']));
+    $h = max(100, min(4096, (int)$atts['height']));
+    $dpi = max(1, min(3, (int)$atts['dpi']));
+    $bg = $this->sanitize_hex($atts['bg']);
+    $fg = $this->sanitize_hex($atts['fg']);
+    $grid = $this->sanitize_hex($atts['grid']);
+    $colors = $colors;
+    $base = $this->sanitize_hex($atts['base']);
+    $palette = strtolower($atts['palette']);
+    $title = $atts['title'];
+    $legend = strtolower($atts['legend']) !== 'false';
+    // Force: no legend for line charts
+    if ($type === 'line') {
+	$legend = false; }
+    $max = isset($atts['max']) && $atts['max'] !== '' ? floatval($atts['max']) : null;
+
+    $parsed = $parsed;
+    if ($parsed['mode'] === 'empty') return;
+
+    if (!function_exists('imagecreatetruecolor')) return;
+
+    $img_w = $w * $dpi; $img_h = $h * $dpi;
+    $im = imagecreatetruecolor($img_w, $img_h);
+    imagesavealpha($im,true); imagealphablending($im,true);
+
+    $col_bg = $this->alloc_color($im,$bg); imagefilledrectangle($im,0,0,$img_w,$img_h,$col_bg);
+    $col_fg = $this->alloc_color($im,$fg); $col_grid = $this->alloc_color($im,$grid);
+    $col_white = imagecolorallocate($im, 255, 255, 255);
+    $series_colors = array_map(fn($hex)=>$this->alloc_color($im,$hex), $colors);
+
+    $legend_pad = (int)round(5 * $dpi);
+    $labels = [];
+	if (in_array($type, ['pie','hbar','vbar','line'], true)) {
+        $labels = array_keys($parsed['data']);
+    }
+
+    $longest_label_len = 0;
+    foreach ($labels as $label) {
+        $longest_label_len = max($longest_label_len, strlen($label));
+    }
+
+    $pad = (int)round(12*$dpi);
+    $title_h = $title ? (int)round(20*$dpi) : 0;
+    $legend_w = $legend ? ($this->get_text_width($longest_label_len, 3) + $this->get_legend_swatch_width() + $pad*2) : 0;
+
+    $plot_x = $pad;
+    $plot_y = $pad + $title_h;
+    $plot_w = $img_w - $pad*2;
+    // --- Reserve left margin for Y-axis labels on line charts ---
+    if ($type === 'line') {
+        // determine data min/max
+        $data_min = null; $data_max = null;
+            foreach ($parsed['data'] as $k=>$v) {
+                $v = (float)$v;
+                if ($data_min === null || $v < $data_min) $data_min = $v;
+                if ($data_max === null || $v > $data_max) $data_max = $v;
+            }
+        if ($data_min === null) { $data_min = 0; }
+        if ($data_max === null) { $data_max = 0; }
+        if ($data_max === $data_min) { $data_max = $data_min + 1; }
+
+        // estimate widest label among min, max, and intermediate steps (6)
+        $steps = 6;
+        $max_len = 0;
+        for ($s = 0; $s <= $steps; $s++) {
+            $val = $data_min + ($data_max - $data_min) * ($s / $steps);
+            $label = number_format($val, 0, ',', '.');
+            $max_len = max($max_len, strlen($label));
+        }
+        $label_w = $this->get_text_width($max_len, 3);
+        $left_pad = $label_w + (int)round(10*$dpi);
+        $plot_x += $left_pad;
+        $plot_w -= $left_pad;
+    }
+    // --- end reserve left margin ---
+
+    $plot_h = $img_h - $pad*2 - $title_h;
+
+    $x_label_h = (int)round(44*$dpi);
+    if (!in_array($type,['pie','polar'],true)) { $plot_h -= $x_label_h; }
+
+    if (in_array($type,['pie'],true)) {
+        if ($legend && $type !== 'line') { $plot_w -= $legend_w; }
+    } else {
+        if ($legend && $type !== 'line') { $plot_w -= $legend_w + $legend_pad; } else { $plot_w = $img_w - $pad*2; }
+    }
+
+    if ($title) { $this->draw_text($im, $title, $pad, (int)round(8*$dpi), $col_fg, 5, true); }
+    // Ensure full-width plot for LINE charts when legend is disabled
+    if ($type === 'line' && !$legend) {
+        $plot_w = $img_w - $pad*2 - 20;
+    }
+
+    if ($type === 'pie') {
+        $labels=[]; $values=[];
+        $data_single = $parsed['data'];
+        $labels = array_keys($data_single);
+        $this->draw_pie($im,$data_single,$plot_x,$plot_y,$plot_w,$plot_h,$series_colors,$col_fg,$col_white);
+        if ($legend && $type !== 'line') $this->draw_legend($im,$labels,$series_colors,$plot_x+$plot_w,$plot_y,$legend_w,$plot_h, $legend_pad);
+    }
+    elseif ($type === 'polar') {
+		$labels = array_keys($parsed['data']);
+		$series = [[ 'name' => 'Series', 'points' => $parsed['data'] ]];
+		$this->draw_polar($im,$series,$labels,$plot_x,$plot_y,$plot_w,$plot_h,$series_colors,$col_fg,$col_grid,$max,$col_white);
+    }
+    else {
+            if ($type === 'line') {
+                
+                // === Y-axis tick labels for line charts ===
+                // derive min/max from actual data (not $max override) and draw 6 steps between
+                $data_min = null; $data_max = null;
+                    foreach ($parsed['data'] as $k=>$v) {
+                        $v = (float)$v;
+                        if ($data_min === null || $v < $data_min) $data_min = $v;
+                        if ($data_max === null || $v > $data_max) $data_max = $v;
+                    }
+                if ($data_min === null) { $data_min = 0; }
+                if ($data_max === null) { $data_max = 0; }
+                if ($data_max === $data_min) { $data_max = $data_min + 1; } // avoid div by zero
+                $steps = 6;
+                for ($s = 0; $s <= $steps; $s++) {
+                    $val = $data_min + ($data_max - $data_min) * ($s / $steps);
+                    $yy = (int)round($plot_y + $plot_h - (($val - $data_min) / ($data_max - $data_min) * $plot_h));
+                    $label = number_format($val, 0, ',', '.');
+                    $txt_w = $this->get_text_width(strlen($label), 3);
+                    $tx = max(0, $plot_x - $txt_w - (int)round(6*$dpi));
+                    $this->draw_text($im, $label, $tx, $yy-6, $col_fg, 3, false);
+                }
+                // === end y-axis tick labels ===
+                $this->draw_line_single($im,$parsed['data'],$plot_x,$plot_y,$plot_w,$plot_h,$series_colors[0],$col_fg,$col_grid,$max,$col_white);
+			} else {
+                $this->draw_bar_single($im,$parsed['data'],$plot_x,$plot_y,$plot_w,$plot_h,$series_colors,$col_fg,$col_grid, ($type==='hbar'), $max, $col_white);
+                if ($legend && $type !== 'line') $this->draw_legend($im,array_keys($parsed['data']),$series_colors,$plot_x+$plot_w,$plot_y,$legend_w,$plot_h, $legend_pad);
+            }
+    }
+
+    imagepng($im);
+    imagedestroy($im);
+    
+}
+
+    private function render_error($code,$msg){ status_header($code); header('Content-Type: image/svg+xml'); $msg = esc_html($msg); echo "<svg xmlns='http://www.w3.org/2000/svg' width='640' height='200'><rect width='100%' height='100%' fill='#fff'/><text x='10' y='40' font-family='monospace' font-size='18' fill='#c00'>GD Chart Error: {$msg}</text></svg>"; exit; }
+
+    // ========= Parsing =========
+    private function parse_data($raw) {
+        $raw = trim((string)$raw); if ($raw==='') return ['mode'=>'empty'];
+        $parts = array_filter(array_map('trim', explode('|', $raw)), fn($p)=>$p!=='');
+        $out = [];
+        foreach ($parts as $p) { $pos = strpos($p, ':'); $label = $pos!==false ? trim(substr($p,0,$pos)) : trim($p); $val = $pos!==false ? trim(substr($p,$pos+1)) : '0'; $label = $label!=='' ? $label : (string)(count($out)+1); $out[$label] = (float)str_replace(',', '.', $val); }
+        return ['mode'=>'single', 'data'=>$out];
+    }
+
+    
+ private function build_table_html($parsed, $atts, $hexColors){
+    $decimals = max(0, (int)$atts['decimals']);
+    $caption = trim((string)$atts['table_caption']);
+    $class = esc_attr($atts['table_class']);
+    $style = esc_attr($atts['table_style']);
+    $td_l = 'style="text-align:left"';
+    $td_r = 'style="text-align:right"';
+    $swatch = function($hex){ $hex = esc_attr($hex); return '<span style="display:inline-block;width:10px;height:10px;background:'.$hex.';border:1px solid #999;margin-right:6px;vertical-align:middle"></span>'; };
+
+	// Find the maximum value in the data set
+	$maxValue = 0;
+	$sumValue = 0;
+	$avgValue = 0;
+
+	if (!empty($parsed['data'])) {
+		$maxValue = max(array_values($parsed['data']));
+		$sumValue = array_sum($parsed['data']);
+		$numrows  = count($parsed['data']);
+		$avgValue = $numrows > 0 ? $sumValue / $numrows : 0;
+	} else {
+		$numrows = 0;
+	}
+
+	$html = '<table class="'.$class.'" style="'.$style.'">';
+	if ($caption !== '') { 
+		$html .= '<caption>'.esc_html($caption).'</caption>'; 
+	}
+	$html .= '<thead><tr><th>Label</th><th>Wert</th><th>Prozent</th><th>Graph</th></tr></thead><tbody>';
+	foreach ($parsed['data'] as $label=>$v){
+		// Calculate the percentage
+		$percentage = ($maxValue > 0) ? ($v / $maxValue * 100) : 0;
+		
+		$tablabel = esc_html($label);
+		if ((bool) preg_match('/^(
+				\d{4}-\d{2}-\d{2}      # yyyy-mm-dd
+				|\d{2}-\d{2}-\d{2}     # yy-mm-dd
+				|\d{2}\.\d{2}\.\d{4}   # dd.mm.yyyy
+			)(?:\s+\d{2}:\d{2}(?::\d{2})?)?$/x', $tablabel)) {
+			$tablabel = colordatebox(strtotime($tablabel), NULL, NULL, 1);
+		}
+
+		$html .= '<tr><td '.$td_l.'>'.$tablabel.'</td>';
+		$html .= '<td '.$td_r.'>'.$this->fmt_num((float)$v,$decimals,NULL).'</td>';
+		$html .= '<td '.$td_r.'>'.number_format($percentage, 2, ',', '.') . '%</td>';
+		$html .= '<td width="65%" '.$td_r.'>
+			 <progress style="width:100%" max="100" value="'.number_format($percentage, 0, ',', '.').'"></progress>
+			  </td></tr>';
+	}
+	$html .= '</tbody><tfoot><tr><td colspan="4">'.
+		  $numrows.' Werte | '. $maxValue.' max &nbsp; ∑ '.
+		  $this->fmt_num($sumValue,$decimals,NULL).' &nbsp; Ø '.
+		  $this->fmt_num($avgValue,2 ,NULL).' </td></tr></tfoot></table>';
+    return $html;
+}
+
+
+    private function fmt_num($v,$decimals,$percent){ if($percent){ return number_format($v, max(0,$decimals)) . '%'; } return number_format($v, max(0,$decimals), ',', '.'); }
+
+    
+    private function palette_mono($base_hex, $n){
+        $base_hex = $this->sanitize_hex($base_hex);
+        list($r,$g,$b) = $this->hex_to_rgb($base_hex);
+        list($h,$s,$v) = $this->rgb_to_hsv($r,$g,$b);
+        if($s < 0.25) $s = 0.35;
+        if($v < 0.35) $v = 0.45;
+        $out=[]; $steps = max(1,(int)$n);
+        // keep hue fixed; vary saturation/value in gentle steps
+        $variants = [
+            [-0.10, +0.10], [-0.05, +0.05], [0.0, 0.0], [+0.05, -0.05], [+0.10, -0.10],
+            [-0.15, +0.15], [+0.15, -0.15]
+        ];
+        $i=0;
+        while(count($out) < $steps){
+            $sv = $variants[$i % count($variants)];
+            $ss = max(0.20, min(0.98, $s + $sv[0]));
+            $vv = max(0.20, min(0.98, $v + $sv[1]));
+            list($rr,$gg,$bb) = $this->hsv_to_rgb($h,$ss,$vv);
+            $out[] = $this->rgb_to_hex($rr,$gg,$bb);
+            $i++;
+        }
+        return $out;
+    }
+// ========= Color utilities & palette generation =========
+    private function compute_needed_colors($parsed, $type){
+		if (($type === 'pie') || ($type === 'hbar') || ($type === 'vbar')) { return max(1, count($parsed['data'] ?? [])); }
+        return 8;
+    }
+    private function hex_to_rgb($hex){ $hex=ltrim($hex,'#'); return [hexdec(substr($hex,0,2)),hexdec(substr($hex,2,2)),hexdec(substr($hex,4,2))]; }
+    private function rgb_to_hex($r,$g,$b){ $r=max(0,min(255,(int)$r)); $g=max(0,min(255,(int)$g)); $b=max(0,min(255,(int)$b)); return sprintf('#%02X%02X%02X',$r,$g,$b); }
+    private function rgb_to_hsv($r,$g,$b){
+        $r/=255; $g/=255; $b/=255;
+        $max=max($r,$g,$b); $min=min($r,$g,$b); $d=$max-$min;
+        $h=0.0;
+        if($d==0){ $h=0; }
+        else if($max==$r){ $h=fmod((($g-$b)/$d),6.0); }
+        else if($max==$g){ $h=(($b-$r)/$d)+2.0; }
+        else { $h=(($r-$g)/$d)+4.0; }
+        $h*=60.0; if($h<0) $h+=360.0;
+        $s = $max==0 ? 0.0 : $d/$max;
+        $v = $max;
+        return [$h,$s,$v];
+    }
+    private function hsv_to_rgb($h,$s,$v){
+        $h=fmod($h,360.0); if($h<0)$h+=360.0;
+        $c=$v*$s; $x=$c*(1-abs(fmod($h/60.0,2)-1)); $m=$v-$c;
+        $r=$g=$b=0.0;
+        if($h<60){ $r=$c;$g=$x;$b=0; }
+        elseif($h<120){ $r=$x;$g=$c;$b=0; }
+        elseif($h<180){ $r=0;$g=$c;$b=$x; }
+        elseif($h<240){ $r=0;$g=$x;$b=$c; }
+        elseif($h<300){ $r=$x;$g=0;$b=$c; }
+        else { $r=$c;$g=0;$b=$x; }
+        return [($r+$m)*255,($g+$m)*255,($b+$m)*255];
+    }
+
+
+
+private function palette_accent($base_hex, $n){
+    $base_hex = $this->sanitize_hex($base_hex);
+    list($r,$g,$b) = $this->hex_to_rgb($base_hex);
+    list($h,$s,$v) = $this->rgb_to_hsv($r,$g,$b);
+
+    // Make sure the saturation is not too low and value is not too high.
+    // This helps in generating visible variations.
+    if ($s < 0.25) $s = 0.35;
+    if ($v > 0.85) $v = 0.75; // Starting point should not be too bright
+
+    $out = [];
+    $steps = max(1, (int)$n);
+
+    // Calculate value (brightness) steps to ensure they are all brighter than the base.
+    // We add to the base value.
+    $v_step = (0.95 - $v) / $steps;
+    
+    for ($i = 0; $i < $steps; $i++) {
+        $vv = min(0.95, $v + ($i + 1) * $v_step);
+        
+        list($rr,$gg,$bb) = $this->hsv_to_rgb($h, $s, $vv);
+        $out[] = $this->rgb_to_hex($rr, $gg, $bb);
+    }
+    
+    return $out;
+}
+
+
+    // ========= Polar (Radar) =========
+    private function draw_polar($im,$series,$categories,$x,$y,$w,$h,$series_colors,$fg,$grid,$max=null,$white_color=null){
+        $n=max(3,count($categories));
+        $vals=[]; foreach($series as $s){ foreach($categories as $c){ $vals[]=(float)($s['points'][$c]??0); } }
+        if(empty($vals)) return;
+        $maxVal=($max!==null)?$max:max(1,max($vals));
+        $diam=min($w,$h)-10; $cx=(int)($x+$w/2); $cy=(int)($y+$h/2); $r=(int)($diam/2);
+        $rings=5; for($i=1;$i<=$rings;$i++){ $rr=(int)round($r*$i/$rings); imageellipse($im,$cx,$cy,$rr*2,$rr*2,$grid); }
+        for($i=0;$i<$n;$i++){ $ang=(2*M_PI*$i/$n)-M_PI/2; $tx=(int)round($cx+cos($ang)*$r); $ty=(int)round($cy+sin($ang)*$r); imageline($im,$cx,$cy,$tx,$ty,$grid); }
+        for($i=0;$i<$n;$i++){ $ang=(2*M_PI*$i/$n)-M_PI/2; $tx=(int)round($cx+cos($ang)*($r+10)); $ty=(int)round($cy+sin($ang)*($r+10)); $this->draw_text($im,(string)$categories[$i],$tx-10,$ty-6,$fg,2); }
+        imagesetthickness($im,2);
+        foreach($series as $si=>$s){
+            $col=$series_colors[$si%count($series_colors)]; $pts=[];
+            for($i=0;$i<$n;$i++){
+                $v=(float)($s['points'][$categories[$i]]??0); $ratio=max(0,$v/$maxVal);
+                $ang=(2*M_PI*$i/$n)-M_PI/2;
+                $px=(int)round($cx+cos($ang)*$r*$ratio); $py=(int)round($cy+sin($ang)*$r*$ratio);
+                $pts[]=[$px,$py];
+                $this->draw_text_with_bg($im, number_format($v, 0, ',', '.'), (int)($px - 10), (int)($py - 10), $fg, $white_color);
+            }
+            for($i=0;$i<$n;$i++){ $j=($i+1)%$n; imageline($im,$pts[$i][0],$pts[$i][1],$pts[$j][0],$pts[$j][1],$col); imagefilledellipse($im,$pts[$i][0],$pts[$i][1],6,6,$col); }
+        }
+    }
+// ========= Drawing helpers =========
+    private function sanitize_hex($hex){ $hex = trim((string)$hex); if (!preg_match('/^#?[0-9A-Fa-f]{6}$/',$hex)) return '#000000'; return '#'.ltrim($hex,'#'); }
+    private function parse_colors($csv){ $arr = array_filter(array_map('trim', explode(',', (string)$csv))); $out=[]; foreach($arr as $h){ $out[] = $this->sanitize_hex($h);} return $out; }
+    private function alloc_color($im,$hex){ $hex=ltrim($hex,'#'); $r=hexdec(substr($hex,0,2)); $g=hexdec(substr($hex,2,2)); $b=hexdec(substr($hex,4,2)); return imagecolorallocate($im,$r,$g,$b); }
+    private function get_text_width($len, $size){ return $len * 6; }
+    private function get_legend_swatch_width(){ return 12 + 8; } // box + pad
+
+    private function draw_text($im,$text,$x,$y,$color,$size=4,$bold=false){ imagestring($im, min(5,max(1,$size)), (int)$x, (int)$y, (string)$text, $color); if ($bold) imagestring($im, min(5,max(1,$size)), (int)$x+1, (int)$y, (string)$text, $color); }
+
+    private function draw_text_with_bg($im, $text, $x, $y, $fg_color, $bg_color, $size=2){
+        $char_w = 6;
+        $char_h = 13;
+        $text_w = strlen((string)$text) * $char_w;
+        $text_h = $char_h;
+        $pad = 2; // Padding
+        imagefilledrectangle($im, (int)$x - $pad, (int)$y - $pad, (int)($x + $text_w + $pad), (int)($y + $text_h + $pad), $bg_color);
+        imagestring($im, min(5,max(1,$size)), (int)$x, (int)$y, (string)$text, $fg_color);
+    }
+    
+    private function draw_legend($im,$labels,$colors,$x,$y,$w,$h,$legend_pad){ 
+        $pad=8;
+        $box=12;
+        $line_h=$box+8;
+        $yy=(int)$y;
+        $font_w = 6;
+        $font_size = 3;
+
+        foreach(array_values($labels) as $idx=>$label){
+            if($yy>$y+$h-$line_h) break;
+
+            // Draw color swatch
+            $swatch_x = $x + $legend_pad;
+            imagefilledrectangle($im,(int)$swatch_x,$yy,(int)($swatch_x+$box),$yy+$box,$colors[$idx%count($colors)]);
+            imagerectangle($im,(int)$swatch_x,$yy,(int)($swatch_x+$box),$yy+$box,imagecolorallocate($im,0,0,0));
+
+            // Draw text
+            $text_x = $swatch_x + $box + $pad;
+            $this->draw_text($im,(string)$label,$text_x,$yy,imagecolorallocate($im,30,30,30),$font_size);
+            
+            $yy+=$line_h;
+        }
+    }
+    private function draw_grid($im,$x,$y,$w,$h,$color,$countX=5,$countY=5){ for($i=0;$i<=$countX;$i++){ $xx=(int)round($x+$i*$w/$countX); imageline($im,$xx,$y,$xx,$y+$h,$color);} for($j=0;$j<=$countY;$j++){ $yy=(int)round($y+$j*$h/$countY); imageline($im,$x,$yy,$x+$w,$yy,$color);} }
+    private function draw_axes($im,$x,$y,$w,$h,$color){ imageline($im,$x,$y+$h,$x+$w,$y+$h,$color); imageline($im,$x,$y,$x,$y+$h,$color); }
+
+    // Single-series
+    private function draw_line_single($im,$data,$x,$y,$w,$h,$series_color,$fg,$grid,$max=null,$white_color=null){ $values=array_values($data); $labels=array_keys($data); $n=count($values);
+        // --- Right inset & safe X step for line chart ---
+        $right_inset = 5; // px; adjust if needed; DPI-neutral
+        $x_eff_w     = max(1, $w - $right_inset);
+        $x_step      = ($n > 1) ? ($x_eff_w / ($n - 1)) : 0;
+        $max_x       = (int)($x + $x_eff_w);
+ $maxVal=($max!==null)?$max:max(1,max($values)); $minVal=min(0,min($values)); $this->draw_grid($im,$x,$y,$w,$h,$grid,min(10,max(3,$n-1)),5); $this->draw_axes($im,$x,$y,$w,$h,$fg); 
+		imagesetthickness($im,2); for($i=0;$i<$n-1;$i++){ $x1 = min((int)round($x + $x_step * $i), $max_x); $x2 = min((int)round($x + $x_step * ($i+1)), $max_x); $y1=(int)round($y+$h-($values[$i]-$minVal)/($maxVal-$minVal)*$h); $y2=(int)round($y+$h-($values[$i+1]-$minVal)/($maxVal-$minVal)*$h); imageline($im,$x1,$y1,$x2,$y2,$series_color); imagefilledellipse($im,$x1,$y1,6,6,$series_color);} if($n>0){ $xl = $max_x; $yl=(int)round($y+$h-($values[$n-1]-$minVal)/($maxVal-$minVal)*$h); imagefilledellipse($im,$xl,$yl,6,6,$series_color);} $step=max(1,(int)floor($n/8)); for($i=0;$i<$n;$i+=$step){ $xx = min((int)round($x + $x_step * $i), $max_x); $this->draw_text_with_bg($im,(string)$labels[$i],max($x,$xx-20),$y+$h+10,$fg,$white_color,3);
+    // Draw value at the point when an x-axis label is drawn
+    if (($maxVal - $minVal) != 0) {
+        $val = isset($values[$i]) ? $values[$i] : 0;
+        $yy = (int)round($y + $h - (($val - $minVal) / ($maxVal - $minVal) * $h));
+        $val_label = number_format($val, 0, ',', '.');
+        $this->draw_text_with_bg($im, $val_label, max($x, $xx - 10), $yy - 18, $fg, $white_color, 2);
+    } else {
+        // Edge case: flat line (all values equal)
+        $val = isset($values[$i]) ? $values[$i] : 0;
+        $yy = (int)round($y + $h/2);
+        $val_label = number_format($val, 0, ',', '.');
+        $this->draw_text_with_bg($im, $val_label, max($x, $xx - 10), $yy - 18, $fg, $white_color, 2);
+    }
+    } }
+    private function draw_bar_single($im,$data,$x,$y,$w,$h,$colors,$fg,$grid,$horizontal=false,$max=null,$white_color=null){ $values=array_values($data); $labels=array_keys($data); $n=count($values); $maxVal=($max!==null)?$max:max(1,max($values)); $this->draw_grid($im,$x,$y,$w,$h,$grid,5,5); $this->draw_axes($im,$x,$y,$w,$h,$fg); $gap=8; if($horizontal){ $bar_h=max(6,(int)floor(($h-$gap*($n+1))/$n)); for($i=0;$i<$n;$i++){ $yy=(int)($y+$gap+$i*($bar_h+$gap)); $len=$values[$i]/$maxVal*$w; $col=$colors[$i%count($colors)]; imagefilledrectangle($im,$x+1,$yy,(int)($x+$len),$yy+$bar_h,$col); imagerectangle($im,$x,$yy,(int)($x+$len),$yy+$bar_h,$fg); $this->draw_text_with_bg($im, (string)$labels[$i],$x+5,$yy+(int)($bar_h/2)-6,$fg,$white_color,2); $this->draw_text_with_bg($im,(string)$values[$i],(int)($x+$len+4),$yy+(int)($bar_h/2)-6,$fg,$white_color,2);} } else { $bar_w=max(6,(int)floor(($w-$gap*($n+1))/$n)); for($i=0;$i<$n;$i++){ $xx=(int)($x+$gap+$i*($bar_w+$gap)); $h_px=$values[$i]/$maxVal*$h; $col=$colors[$i%count($colors)]; imagefilledrectangle($im,$xx,(int)($y+$h-$h_px),$xx+$bar_w,$y+$h-1,$col); imagerectangle($im,$xx,(int)($y+$h-$h_px),$xx+$bar_w,$y+$h-1,$fg); $this->draw_text_with_bg($im,(string)$labels[$i],$xx,$y+$h+10,$fg,$white_color,3); $this->draw_text_with_bg($im,(string)$values[$i],$xx,(int)($y+$h-$h_px)-14,$fg,$white_color,2);} } }
+
+    // Pie
+
+	private function draw_pie($im,$data_single,$x,$y,$w,$h,$series_colors,$col_fg,$col_white){
+		// Sicherstellen, dass die Daten ein Array sind
+		$data_values = is_array($data_single) ? array_values($data_single) : [];
+		$data_labels = is_array($data_single) ? array_keys($data_single) : [];
+		
+		// Summe der Werte berechnen
+		$total_value = array_sum($data_values);
+		if ($total_value == 0) {
+			$total_value = 1; 
+		}
+
+		$center_x = $x + $w / 2;
+		$center_y = $y + $h / 2;
+
+		// Radius für die ovale Form
+		// Der Wert wurde auf 0.7 verringert, um das Diagramm wieder in das Bild zu passen.
+		$radius_x = min($w, $h) * 0.7;
+		$radius_y = $radius_x * 0.7; 
+
+		$start_angle = 0;
+		$depth = 10; // Tiefe für den 3D-Effekt
+
+		// 1. Zeichne die "Seiten" des 3D-Ovals (dunklerer Schatteneffekt)
+		foreach ($data_values as $index => $value) {
+			$sweep_angle = ($value / $total_value) * 360;
+			// $darker_color = $this->alloc_color($im, $this->adjust_brightness($series_colors[$index % count($series_colors)], -30));
+			$darker_color = $this->alloc_color($im, '#444444');
+
+			for ($i = $depth; $i > 0; $i--) {
+				imagefilledarc($im, (int)$center_x, (int)($center_y + $i), (int)($radius_x * 2), (int)($radius_y * 2), (int)$start_angle, (int)($start_angle + $sweep_angle), $darker_color, IMG_ARC_PIE);
+			}
+			$start_angle += $sweep_angle;
+		}
+		$start_angle = 0; // Reset für das Zeichnen der oberen Fläche
+		// 2. Zeichne die obere Fläche des Ovals
+		foreach ($data_values as $index => $value) {
+			$sweep_angle = ($value / $total_value) * 360;
+			$color = $series_colors[$index % count($series_colors)];
+			imagefilledarc($im, (int)$center_x, (int)$center_y, (int)($radius_x * 2), (int)($radius_y * 2), (int)$start_angle, (int)($start_angle + $sweep_angle), $color, IMG_ARC_PIE);
+			// 3. Labels mit Prozentangabe hinzufügen
+			$mid_angle = deg2rad($start_angle + ($sweep_angle / 2));
+			$label_x = (int)round($center_x + ($radius_x * 0.7) * cos($mid_angle));
+			$label_y = (int)round($center_y + ($radius_y * 0.7) * sin($mid_angle));
+			$pct = round(($value / $total_value) * 100);
+			$label_text = $data_labels[$index] . ' (' . $pct . '%)';
+			$this->draw_text_with_bg($im, $label_text, $label_x - 20, $label_y - 6, $col_fg, $col_white, 2);
+			$start_angle += $sweep_angle;
+		}
+	}
+}
+new WPGDCharts();
+
+
+// -------------------------- Jetzt den QRCode Generator als Klasse -----------------------------------------------
 
 if ( defined( 'DOQRCODE_V' ) ) { return; }
 define( 'DOQRCODE_V', '1.2.1' ) ;
@@ -999,7 +997,7 @@ class ipflag {
 
     public function get_flag($info){
 		// Load flag freaky style for flags
-		wp_enqueue_style( 'pb-chartscodes-flagstyle', PB_ChartsCodes_URL_PATH . 'flags/freakflags.min.css' );
+		wp_enqueue_style( 'pb-chartscodes-flagstyle', plugin_dir_url( __FILE__ ) . '/flags/freakflags.min.css' );
 		$flag = '';
         if($info != null)
 			$flag = '<div class="fflag fflag-'.strtoupper($info->code).' ff-sm" title="'.$this->country_code('de',$info->code) . ' '.$info->code.'"></div>';
@@ -1348,46 +1346,34 @@ class ipflag {
 			$html .='<input type="text" size="20" title="filtern nach Browser, username, usertyp, Einzelbeitrag" placeholder="Suchfilter" id="suchfilter" name="suchfilter" value="'.$suchfilter.'">';
 			$html .= '</select><input type="submit" value="'.__('show items', 'pb-chartscodes').'" /></form></div>';
 
-
 			//	Klicks pro Tag auf Zeitraum DE, IRL, NL
-			$countries = "'DE','IRL','NL','AT','CH'";
-			$labels="";$values='';$label2="";
+			$countries = "'DE','IRL','NL','AT','CH','EU'";
 			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " WHERE country IN ($countries) ".$sqlsuchfilter." GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $zeitraum);
 			if  ( (int) count($customers)>0) {
-				$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).' '.$countries.'</h6><table>';
+				$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).' '.$countries.'</h6>';
+				$linedata=''; $linetable='';
 				foreach($customers as $customer){
-					$datum = date_i18n(get_option('date_format'), strtotime($customer->datum) + get_option( 'gmt_offset' ) * 3600 );	
-					if ( count($customers)==1 )	$html .= '<tr><td>' . number_format_i18n($customer->viscount,0) . '</td><td>' . $datum . '</td></tr>';
-					$labels.= $datum .',';
-					$label2.= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2).',';
-					$values.= $customer->viscount.',';
+					$linedata .= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2) . ':' . $customer->viscount.'|';
+					$linetable .= substr($customer->datum,0,10) . ':' . $customer->viscount.'|';
 				}	
-				$labels = rtrim($labels, ",");
-				$label2 = rtrim($label2, ",");
-				$values = rtrim($values, ",");
-				$html .= do_shortcode('[chartscodes_line accentcolor=1 yaxis="Klicks pro Tag" xaxis="Datum rückwärts" values="'.$values.'" labels="'.$label2.'"]');
-				$html .= '</table>';
+				// Neue GD Charts
+				$html .= do_shortcode('[gd_chart width="1360" type="line" data="'.$linedata.'"]');
+				// $html .= do_shortcode('[gd_chart width="1360" type="line" table=1 table_pos="only" data="'.$linetable.'"]');
 			}	
 
 
 			//	Klicks pro Tag auf Zeitraum
-			$labels="";$values='';$label2="";
 			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " WHERE 1=1 ".$sqlsuchfilter." GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $zeitraum);
 			if ( (int) count($customers)>0) {
-				$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h6><table>';
+				$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).'</h6>';
+				$linedata=''; $linetable='';
 				foreach($customers as $customer){
-					$datum = date_i18n(get_option('date_format'), strtotime($customer->datum) + get_option( 'gmt_offset' ) * 3600 );	
-					if ( count($customers)==1 )	$html .= '<tr><td>' . number_format_i18n($customer->viscount,0) . '</td><td>' . $datum . '</td></tr>';
-					$labels.= $datum .',';
-					$label2.= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2).',';
-					$values.= $customer->viscount.',';
+					$linedata .= substr($customer->datum,8,2).'.'.substr($customer->datum,5,2) . ':' . $customer->viscount.'|';
+					$linetable .= substr($customer->datum,0,10) . ':' . $customer->viscount.'|';
 				}	
-				$labels = rtrim($labels, ",");
-				$label2 = rtrim($label2, ",");
-				$values = rtrim($values, ",");
-				$html .= do_shortcode('[chartscodes_line accentcolor=1 yaxis="Klicks pro Tag" xaxis="Datum rückwärts" values="'.$values.'" labels="'.$label2.'"]');
-				$html .= do_shortcode('[chartscodes_horizontal_bar absolute="1" accentcolor=1 values="'.$values.'" labels="'.$labels.'"]');
-				$html .= '</table>';
+				// Neue GD Charts
+				$html .= do_shortcode('[gd_chart width="1360" type="line" data="'.$linedata.'"]');
+				$html .= do_shortcode('[gd_chart width="1360" type="line" table=1 table_pos="only" data="'.$linetable.'"]');
 			}	
 
 
@@ -1398,35 +1384,34 @@ class ipflag {
 				$labels="";$values='';
 				$customers = $wpdb->get_results("SELECT postid, COUNT(*) AS pidcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY postid ORDER BY pidcount desc LIMIT ".$items );
 				$html .='<h6>'.sprintf(__('top %1s pages last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h6><table>';
+				if (!empty($customers)) $toppid = $customers[0]->pidcount; else $toppid=1;
 				foreach($customers as $customer){
 					if ( get_post_meta( $customer->postid, 'post_views_count', true ) > 0 ) {
-						$labels.= get_the_title($customer->postid).',';
-						$values.= $customer->pidcount.',';
 						$xsum += absint($customer->pidcount);
-						$html .= '<tr><td>' . $customer->pidcount . '</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a></td><td>';
+						$html .= '<tr><td><progress style="width:400px" max="100" value="'.round($customer->pidcount / $toppid * 100).'"></progress>
+						' . $customer->pidcount . '</td><td>
+						</td><td><a title="Post aufrufen" href="'.get_the_permalink($customer->postid).'">' . get_the_title($customer->postid) . '</a></td><td>';
 						$html .= colordatebox( get_the_date('U', $customer->postid) ,NULL ,NULL,1);
 						$html .= '</td><td><i class="fa fa-eye"></i>'.sprintf(__(', visitors alltime: %s', 'pb-chartscodes'),number_format_i18n( (float) get_post_meta( $customer->postid, 'post_views_count', true ),0) ) . '</td></tr>';
 					}	
 				}	
-				$html .= '<tfoot><tr><td colspan=4>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
-				$labels = rtrim($labels, ",");
-				$values = rtrim($values, ",");
+				$html .= '<tfoot><tr><td colspan=5>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
 				$html .= '</table>';
-				$html .= do_shortcode('[chartscodes_horizontal_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
 
 				//	Top x Herkunftsseiten auf Zeitraum
 				$xsum=0;
 				$customers = $wpdb->get_results("SELECT referer, COUNT(*) AS refcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY referer ORDER BY refcount desc LIMIT ".$items );
 				$html .='<h6>'.sprintf(__('top %1s referers last %2s days', 'pb-chartscodes'),$items,$zeitraum).$startday.'</h6><table>';
-				if (!empty($customers)) $toprefer = $customers[0]->refcount; else $toprefer=0;
+				if (!empty($customers)) $toprefer = $customers[0]->refcount; else $toprefer=1;
 				foreach($customers as $customer){
 					$xsum += absint($customer->refcount);
 					$html .= '<tr><td><nobr>';
-					$html .= '<progress style="width:400px" max="100" value="'.round($customer->refcount / $toprefer *100).'"></progress> ';
+					$html .= '<progress style="width:400px" max="100" value="'.round($customer->refcount / $toprefer * 100).'"></progress> ';
 					$html .= number_format_i18n($customer->refcount,0) . '</nobr></td><td>' . $customer->referer . '</td></tr>';
 				}	
-				$html .= '<tr><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</td></tr></table>';
+				$html .= '<tfoot><tr><td colspan=3>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).'<b> &Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</b></td></tr></tfoot></table>';
 			}	
+
 
 			// Filter-Anzeige
 			if (!empty($suchfilter)) $filtertitle='<i class="fa fa-filter"></i> '.$suchfilter; else $filtertitle=''; 
@@ -1459,37 +1444,30 @@ class ipflag {
 			}	
 			$html .= '</table>';
 
+
 			//	Besucher nach Stunde auf Zeitraum
-			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT SUBSTRING(datum,12,2) AS stunde, COUNT(SUBSTRING(datum,12,2)) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." GROUP BY SUBSTRING(datum,12,2) ORDER BY SUBSTRING(datum,12,2) ");
-			$html .='<h6>'.sprintf(__('clicks by hour %1s last %2s days', 'pb-chartscodes'),$filtertitle,$zeitraum).$startday.'</h6><table>';
+			$html .='<h6>'.sprintf(__('clicks by hour %1s last %2s days', 'pb-chartscodes'),$filtertitle,$zeitraum).$startday.'</h6>';
+			$linedata=''; $linetable='';
 			foreach($customers as $customer){
-				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
-				$labels.= $customer->stunde.',';
-				$values.= $customer->viscount.',';
+				$linedata .= $customer->stunde . ':' . $customer->viscount.'|';
 			}	
-			$labels = rtrim($labels, ",");
-			$values = rtrim($values, ",");
-			$html .= do_shortcode('[chartscodes_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
-			$html .= '</table>';
+			// Neue GD Charts
+			$html .= do_shortcode('[gd_chart width="1360" type="vbar" data="'.$linedata.'"]');
+
 
 			//	Besucher nach Wochentag auf Zeitraum
-			$labels="";$values='';
 			$customers = $wpdb->get_results("SELECT WEEKDAY(SUBSTRING(datum,1,10)) AS wotag, COUNT(WEEKDAY(SUBSTRING(datum,1,10))) AS viscount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." GROUP BY WEEKDAY(SUBSTRING(datum,1,10)) ORDER BY SUBSTRING(datum,1,10) ");
-			$html .='<h6>'.sprintf(__('clicks by weekday %2s last %1s days', 'pb-chartscodes'),$filtertitle,$zeitraum) . $startday . '</h6><table>';
+			$html .='<h6>'.sprintf(__('clicks by weekday %2s last %1s days', 'pb-chartscodes'),$filtertitle,$zeitraum) . $startday . '</h6>';
+			$linedata=''; $linetable='';
 			foreach($customers as $customer){
-				if ( count($customers)==1 ) $html .= '<tr><td>' . $customer->viscount . '</td><td>' . $datum . '</td></tr>';
-				$labels.= $tage[$customer->wotag].',';
-				$values.= $customer->viscount.',';
+				$linedata .= $tage[$customer->wotag] . ':' . $customer->viscount.'|';
 			}	
-			$labels = rtrim($labels, ",");
-			$values = rtrim($values, ",");
-			$html .= do_shortcode('[chartscodes_bar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
-			$html .= '</table>';
+			// Neue GD Charts
+			$html .= do_shortcode('[gd_chart width="1360" type="hbar" data="'.$linedata.'"]');
+
 
 			//	Top x calendarweeks last recorded days (180)
-			$labels = "";
-			$values = "";
 			$customers = $wpdb->get_results("
 				SELECT YEARWEEK(SUBSTRING(datum,1,10), 3) AS kw, COUNT(*) AS viscount 
 				FROM " . $table . " 
@@ -1497,84 +1475,69 @@ class ipflag {
 				GROUP BY YEARWEEK(SUBSTRING(datum,1,10), 3) 
 				ORDER BY YEARWEEK(SUBSTRING(datum,1,10), 3)
 			");
-			$html .= '<h6>' . sprintf(__('clicks by calendar week %2s last %1s days', 'pb-chartscodes'), $filtertitle, $zeitraum) . $startday . '</h6><table>';
-			foreach ($customers as $customer) {
-				$labels .= 'KW ' . $customer->kw . ',';
-				$values .= $customer->viscount . ',';
-			}
-			$labels = rtrim($labels, ",");
-			$values = rtrim($values, ",");
-			$html .= do_shortcode('[chartscodes_bar accentcolor=1 absolute="1" values="' . $values . '" labels="' . $labels . '"]');
-			$html .= '</table>';
+			$html .= '<h6>' . sprintf(__('clicks by calendar week %2s last %1s days', 'pb-chartscodes'), $filtertitle, $zeitraum) . $startday . '</h6>';
+			$linedata=''; $linetable='';
+			foreach($customers as $customer){
+				$linedata .= $customer->kw . ':' . $customer->viscount.'|';
+			}	
+			// Neue GD Charts
+			$html .= do_shortcode('[gd_chart width="1360" type="vbar" legend="false" data="'.$linedata.'"]');
+
 
 			//	Top x Browser auf Zeitraum
-			$xsum=0;
-			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT COUNT(browser) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." ORDER BY bcount desc LIMIT ".$items);
-			$totalsum = $customers[0]->bcount ?? 1;
-			if ($totalsum==0) $totalsum=1;
 			$customers = $wpdb->get_results("SELECT browser, COUNT(browser) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." GROUP BY browser ORDER BY bcount desc LIMIT ".$items);
-			$html .='<h6>'.sprintf(__('Top %1s Browsers %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).'</h6><table>';
+			$html .='<h6>'.sprintf(__('Top %1s Browsers %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).'</h6>';
+			$linedata=''; $linetable='';
 			foreach($customers as $customer){
-				$xsum += absint($customer->bcount);
-				if ( count($customers)>=1 ) $html .= '<tr><td>' . $customer->bcount . '</td><td>' . number_format_i18n( ($customer->bcount/$totalsum*100), 2 ). ' %</td><td>'. $customer->browser . '</td></tr>';
-				$labels.= $customer->browser.',';
-				$values.= $customer->bcount.',';
+				$linedata .= $customer->browser . ':' . $customer->bcount . '|';
 			}	
-			$labels = rtrim($labels, ",");
-			$values = rtrim($values, ",");
-			if (count($customers)>=1) $html .= '<tfoot><tr><td>'.count($customers).'</td><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
-			$html .= do_shortcode('[chartscodes_polar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
-			$html .= '</table>';
+			// Neue GD Charts
+			$html .= do_shortcode('[gd_chart width="1360" type="vbar" table=1 data="'.$linedata.'"]');
+			
 
 			//	Top x Platform (Betriebssysteme) auf Zeitraum
-			$xsum=0;
-			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT COUNT(platform) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." ORDER BY bcount desc LIMIT ".$items);
-			$totalsum = $customers[0]->bcount ?? 1;
-			if ($totalsum==0) $totalsum=1;
 			$customers = $wpdb->get_results("SELECT platform, COUNT(platform) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." GROUP BY platform ORDER BY bcount desc LIMIT ".$items);
-			$html .='<h6>'.sprintf(__('Top %1s operating systems %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).'</h6><table>';
+			$html .='<h6>'.sprintf(__('Top %1s operating systems %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).'</h6>';
+			$linedata=''; $linetable='';
 			foreach($customers as $customer){
-				$xsum += absint($customer->bcount);
-				if ( count($customers)>=1 ) $html .= '<tr><td>' . $customer->bcount . '</td><td>'. number_format_i18n( ($customer->bcount/$totalsum*100), 2 ). ' %</td><td>'.$customer->platform . '</td></tr>';
-				$labels.= $customer->platform.',';
-				$values.= $customer->bcount.',';
+				$linedata .= $customer->platform . ':' . $customer->bcount . '|';
 			}	
-			$labels = rtrim($labels, ",");
-			$values = rtrim($values, ",");
-			if (count($customers)>=1) $html .= '<tfoot><tr><td>'.count($customers).'</td><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
-			$html .= do_shortcode('[chartscodes_polar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
-			$html .= '</table>';
+			// Neue GD Charts
+			$html .= do_shortcode('[gd_chart width="1360" type="vbar" table=1 data="'.$linedata.'"]');
+
 
 			//	Top x Länder auf Zeitraum
-			$xsum=0;
-			$labels="";$values='';
-			$customers = $wpdb->get_results("SELECT COUNT(country) AS bcount FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) ".$sqlsuchfilter." ORDER BY bcount desc LIMIT ".$items);
-			$totalsum = $customers[0]->bcount ?? 1;
-			if ($totalsum==0) $totalsum=1;
 			$customers = $wpdb->get_results("SELECT country, COUNT(country) AS ccount, datum FROM " . $table . " WHERE datum >= DATE_ADD( NOW(), INTERVAL -".$zeitraum." DAY ) GROUP BY country ORDER BY ccount desc LIMIT ".$items);
 			$html .='<h6>'.sprintf(__('Top %1s countries %2s last %3s days', 'pb-chartscodes'),$items,$filtertitle,$zeitraum).'</h6><table>';
+			$linedata=''; $linetable='';
 			foreach($customers as $customer){
-				$xsum += absint($customer->ccount);
-				if ( count($customers)>=1 ) $html .= '<tr><td>' . $customer->ccount . '</td><td>' . number_format_i18n( ($customer->ccount/$totalsum*100), 2 ). ' %</td><td>'. $this->country_code('de',$customer->country) . '</td></tr>';
-				$labels.= $this->country_code('de',$customer->country) . ',';
-				$values.= $customer->ccount . ',';
+				$linedata .= $this->country_code('de',$customer->country) . ':' . $customer->ccount . '|';
 			}	
-			$labels = rtrim($labels, ",");
-			$values = rtrim($values, ",");
-			if (count($customers)>=1) $html .= '<tfoot><tr><td>'.count($customers).'</td><td colspan=2>'.sprintf(__('<strong>%s</strong> sum of values', 'pb-chartscodes'),number_format_i18n($xsum,0)).' <strong>&Oslash; '.number_format_i18n( ($xsum/count($customers)), 2 ).'</strong></td></tr></tfoot>';
-			$html .= do_shortcode('[chartscodes_polar accentcolor=1 absolute="1" values="'.$values.'" labels="'.$labels.'"]');
-			$html .= '</table>';
+			// Neue GD Charts
+			$html .= do_shortcode('[gd_chart width="1360" type="vbar" table=1 data="'.$linedata.'"]');
+
 
 			//	Archive: Beiträge pro Monat letzte 36 Monate
 			if ( empty($suchfilter) ) {
-				$html .= do_shortcode('[posts_per_month_last accentcolor=1 months=44]');
-				$html .= '</table>';
+
+				//	Top x Länder auf Zeitraum
+				$customers = $wpdb->get_results("SELECT DISTINCT MONTH( post_date ) AS month, YEAR( post_date ) AS year, COUNT( id ) as post_count FROM $wpdb->posts WHERE post_status = 'publish' and post_type = 'post' GROUP BY month, year ORDER BY post_date DESC LIMIT 44");
+				$html .='<h6>'.sprintf(__('posts %1s last %2s months', 'pb-chartscodes'),$items,44).'</h6><table>';
+				$linedata=''; $linetable='';
+				foreach($customers as $customer){
+					$valu = isset($customer->month) ? floor($customer->post_count) : 0;
+					$labl = date_i18n("M y", mktime(2, 0, 0, $customer->month, 1, $customer->year));
+					$linedata .= $labl . ':' . $valu . '|';
+				}	
+				// Neue GD Charts
+				$html .= do_shortcode('[gd_chart width="1360" type="line" table=1 data="'.$linedata.'"]');
+
 			}	
 
 			return $html;
+
 		} else {
+		
 			// creates visitors in database if not exists
 			$charset_collate = $wpdb->get_charset_collate();
 			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -1798,53 +1761,9 @@ class ipflag {
 			<div class="img-wrap">
 				<h2><?php esc_html_e( 'Bar and Piecharts', 'pb-chartscodes' ); ?></h2>
 				<div class="wrap">
-				<p>Shortcode Parameter: absolute="1" wenn keine Prozentwerte mitgegeben werden, sondern absolute Werte<br>
-					fontfamily="Arial" fontstyle="bold". Für die PieCharts sollten maximal 20 Werte angegeben werden, bei den Bar Charts bis zu 50, beim horizontal Bar 200 und beim Linechart 50<br>
-					Bar Charts: bei absoluten Werten wird größter Wert in der Folge 100%, Werte werden angezeigt wenn >0<br> 
-					Bleibt der Parameter "colors" leer, werden bei "accentcolor=0" zufällige bunte helle Farben gewählt, bei "accentcolor=1" Akzentfarben aus der Linkfarbe des Themes bezogen
-					<br> accentcolor=0/1 kann auch für die post per month Statistik und als HTML Widget angewendet werden
+				<p>siehe readme.txt<br>
 					</p>
 				</div></div>
-			<div class="img-wrap postbox">
-				<img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-1.png' ?>"  alt="<?php esc_attr_e( 'Default Pie Chart', 'pb-chartscodes' ); ?>">
-                <p><code>[chartscodes accentcolor=false absolute="1" title="Pie Chart" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
-				<?php esc_attr_e( 'Default Pie Chart', 'pb-chartscodes' ); ?> </p>                    
-            </div>
-            <div class="img-wrap postbox">
-                <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-2.png' ?>"  alt="<?php esc_attr_e( 'Doughnut Pie Chart', 'pb-chartscodes' ); ?>">
-                <p><code>[chartscodes_donut title="Donut Pie Chart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
-				<?php esc_attr_e( 'Doughnut Pie Chart', 'pb-chartscodes' ); ?> </p>
-			</div>
-            <div class="img-wrap postbox">
-                <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-3.png' ?>"  alt="<?php esc_attr_e( 'Polar Pie Chart', 'pb-chartscodes' ); ?>">
-                <p><code>[chartscodes_polar title="Polar Chart mit Segmenten" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
-				<?php esc_attr_e( 'Polar Pie Chart', 'pb-chartscodes' ); ?></p>                    
-            </div>
-            <div class="img-wrap postbox">
-                <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-8.png' ?>"  alt="<?php esc_attr_e( 'Radar Chart', 'pb-chartscodes' ); ?>">
-                <p><code>[chartscodes_radar title="Radar Chart" values="10,20,22,8,33,21" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi,Erdbeeren"]</code>
-				<?php esc_attr_e( 'Radar Chart', 'pb-chartscodes' ); ?> </p>                    
-            </div>
-			<div class="img-wrap postbox">
-                <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-4.png' ?>"  alt="<?php esc_attr_e( 'Bar Graph Chart', 'pb-chartscodes' ); ?>">
-                <p><code>[chartscodes_bar title="Balkenchart" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
-				<?php esc_attr_e( 'Bar Graph Chart', 'pb-chartscodes' ); ?> </p>                    
-            </div>
-            <div class="img-wrap postbox">
-                <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-5.png' ?>"  alt="<?php esc_attr_e( 'Horizontal Bar Graph Chart', 'pb-chartscodes' ); ?>">
-                <p><code>[chartscodes_horizontal_bar title="Balken horizontal" absolute="1" values="20,30,50,60,70" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi" colors="#003030,#006060,#009090,#00aaaa,#00cccc"]</code>
-				<?php esc_attr_e( 'Horizontal Bar Graph Chart', 'pb-chartscodes' ); ?></p>
-            </div>
-			<div class="img-wrap postbox">
-				<img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-7.png' ?>"  alt="<?php esc_attr_e( 'Default Line Chart', 'pb-chartscodes' ); ?>">
-                <p><code>[chartscodes_line accentcolor=1 title="Obst Line Chart" xaxis="Obstsorte" yaxis="Umsatz" height="350" values="10,20,10,5,30,20,5" labels="Bananen,Ananas,Kirschen,Birnen,Kiwi,Cranberry,Mango"]</code>
-				<?php esc_attr_e( 'Default Line Chart', 'pb-chartscodes' ); ?> </p>                    
-            </div>
-			<div class="img-wrap postbox">
-                <img src="<?php echo PB_ChartsCodes_URL_PATH . 'assets/screenshot-6.png' ?>"  alt="<?php esc_attr_e( 'Horizontal Bar Graph Chart', 'pb-chartscodes' ); ?>">
-				<p><code>[posts_per_month_last months=x]</code> zeigt die letzen 1-12 Monate Posts per Month als Bargraph an, wenn Months nicht angegeben für 12 Monate
-                </p>                    
-            </div>
         </div> <?php
     }
 
