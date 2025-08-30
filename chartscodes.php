@@ -102,8 +102,6 @@ endif;
 
 // ------------------------- Class für Chart-Diagramme und Shortcode gd_charts ----------------------------------------------- 
 
-
-
 if (!class_exists('WPGDCharts')) {
     class WPGDCharts {
 
@@ -124,7 +122,7 @@ if (!class_exists('WPGDCharts')) {
                 'type' => 'line', // line|pie|hbar|vbar|polar
                 'width' => 900,
                 'height' => 400,
-                'bg' => '#ffffff',
+                'bg' => '#ffffff',  // 'transparent' also possible
                 'fg' => '#333333',
                 'grid' => '#dddddd',
                 'colors' => '',
@@ -172,7 +170,7 @@ if (!class_exists('WPGDCharts')) {
             $class = esc_attr(trim(($atts['class'] ?? '') . ' gd-chart--inline'));
             $style = esc_attr(trim((string)($atts['style'] ?? 'max-width:100%;height:auto;')));
             $img_html = sprintf('<img decoding="async" loading="lazy" class="%s" style="%s" src="data:image/png;base64,%s" alt="%s" />', $class, $style, $base64, $alt);
-$table_html = '';
+			$table_html = '';
             $want_table = strtolower($atts['table']) === 'true' || strtolower($atts['table']) === '1';
             if ($want_table) {
                 $table_html = $this->build_table_html($parsed, $atts, $colors);
@@ -206,12 +204,17 @@ $table_html = '';
             $img_w = $w * $dpi;
             $img_h = $h * $dpi;
             $im = imagecreatetruecolor($img_w, $img_h);
-imageantialias($im, true);
+			imageantialias($im, true);
             imagesavealpha($im, true);
             imagealphablending($im, true);
 
             $col_bg = $this->alloc_color($im, $bg);
-            imagefilledrectangle($im, 0, 0, $img_w, $img_h, $col_bg);
+			if ( $bg == 'transparent') {
+				imagealphablending($im, false);
+				$transparency = imagecolorallocatealpha($im, 0,0,0,127);
+				imagefill($im, 0, 0, $transparency);
+				imagesavealpha($im, true);
+			} else imagefilledrectangle($im, 0, 0, $img_w, $img_h, $col_bg);
             $col_fg = $this->alloc_color($im, $fg);
             $col_grid = $this->alloc_color($im, $grid);
             $col_white = imagecolorallocate($im, 255, 255, 255);
@@ -334,14 +337,6 @@ imageantialias($im, true);
             
             imagepng($im);
             imagedestroy($im);
-        }
-
-        private function render_error($code, $msg) {
-            status_header($code);
-            header('Content-Type: image/svg+xml');
-            $msg = esc_html($msg);
-            echo "<svg xmlns='http://www.w3.org/2000/svg' width='640' height='200'><rect width='100%' height='100%' fill='#fff'/><text x='10' y='40' font-family='monospace' font-size='18' fill='#c00'>GD Chart Error: {$msg}</text></svg>";
-            exit;
         }
 
         private function parse_data($raw) {
@@ -726,7 +721,7 @@ imageantialias($im, true);
                     $col = $colors[$i % count($colors)];
                     imagefilledrectangle($im, $x + 1, $yy, (int)($x + $len), $yy + $bar_h, $col);
                     imagerectangle($im, $x, $yy, (int)($x + $len), $yy + $bar_h, $fg);
-                    $this->draw_text_with_bg($im, (string)$labels[$i], $x + 5, $yy + (int)($bar_h / 2) - 6, $fg, $white_color, 2);
+                    $this->draw_text_with_bg($im, (string)$labels[$i], $x + 5, $yy + (int)($bar_h / 2) - 6, $fg, $white_color, 3);
                     $this->draw_text_with_bg($im, (string)$values[$i], (int)($x + $len + 4), $yy + (int)($bar_h / 2) - 6, $fg, $white_color, 2);
                 }
             } else {
@@ -831,36 +826,34 @@ imageantialias($im, true);
             }
             // --- Ende Normalisierung ---
 
-$total_value = array_sum($data_values);
-            if ($total_value == 0) {
-                $total_value = 1;
-            }
-            $center_x = $x + $w / 2;
-            $center_y = $y + $h / 2;
-            $radius_x = min($w, $h) * 0.7;
-            $radius_y = $radius_x * 0.7;
-            $start_angle = 0;
-            
-            
-            $queued_labels = [];
-$queued_labels = [];
-$depth = 10;
-            foreach ($data_values as $index => $value) {
-                $sweep_angle = ($value / $total_value) * 360;
-                $darker_color = $this->alloc_color($im, '#444444');
-                for ($i = $depth; $i > 0; $i--) {
-                    imagefilledarc($im, (int)$center_x, (int)($center_y + $i), (int)($radius_x * 2), (int)($radius_y * 2), (int)$start_angle, (int)($start_angle + $sweep_angle), $darker_color, IMG_ARC_PIE);
-                }
-                $start_angle += $sweep_angle;
-            }
-$start_angle = 0;
-            
-$used_label_rects = [];
-$font_for_labels = 2;
-$fw_lbl = function_exists('imagefontwidth') ? imagefontwidth($font_for_labels) : 6;
-$fh_lbl = function_exists('imagefontheight') ? imagefontheight($font_for_labels) : 13;
-$label_angle_step = 6; // Grad pro Versuch
-$min_sep_px = 4;       // Mindestabstand in Pixeln zwischen Label-Rechtecken
+			$total_value = array_sum($data_values);
+			if ($total_value == 0) {
+				$total_value = 1;
+			}
+			$center_x = $x + $w / 2;
+			$center_y = $y + $h / 2;
+			$radius_x = min($w, $h) * 0.7;
+			$radius_y = $radius_x * 0.7;
+			$start_angle = 0;
+			$queued_labels = [];
+			$queued_labels = [];
+			$depth = 10;
+			foreach ($data_values as $index => $value) {
+				$sweep_angle = ($value / $total_value) * 360;
+				$darker_color = $this->alloc_color($im, '#444444');
+				for ($i = $depth; $i > 0; $i--) {
+					imagefilledarc($im, (int)$center_x, (int)($center_y + $i), (int)($radius_x * 2), (int)($radius_y * 2), (int)$start_angle, (int)($start_angle + $sweep_angle), $darker_color, IMG_ARC_PIE);
+				}
+				$start_angle += $sweep_angle;
+			}
+			$start_angle = 0;
+			$used_label_rects = [];
+			$font_for_labels = 2;
+			$fw_lbl = function_exists('imagefontwidth') ? imagefontwidth($font_for_labels) : 6;
+			$fh_lbl = function_exists('imagefontheight') ? imagefontheight($font_for_labels) : 13;
+			$label_angle_step = 6; // Grad pro Versuch
+			$min_sep_px = 4;       // Mindestabstand in Pixeln zwischen Label-Rechtecken
+
             foreach ($data_values as $index => $value) {
                 $sweep_angle = ($value / $total_value) * 360;
                 $color = $series_colors[$index % count($series_colors)];
@@ -902,8 +895,6 @@ $min_sep_px = 4;       // Mindestabstand in Pixeln zwischen Label-Rechtecken
                     foreach ($used_label_rects as $ur) {
                         if (!((($rect[2]) < $ur[0]) || (($ur[2]) < $rect[0]) || (($rect[3]) < $ur[1]) || (($ur[3]) < $rect[1]))) { $ok = false; break; }
                     }
-
-
                     if ($ok) break;
 
                     // Korrektur: alternierend Winkel verschieben und Radius leicht erhöhen
@@ -915,21 +906,21 @@ $min_sep_px = 4;       // Mindestabstand in Pixeln zwischen Label-Rechtecken
                 } while ($attempt < $max_attempts);
 
                 // --- Clamp Label-Rechteck in Bildgrenzen ---
-$minX = $x + 2; $minY = $y + 2; $maxX = $x + $w - 2; $maxY = $y + $h - 2;
-$dx = 0; $dy = 0;
-if ($rx1 < $minX) { $dx += ($minX - $rx1); }
-if ($rx2 > $maxX) { $dx -= ($rx2 - $maxX); }
-if ($ry1 < $minY) { $dy += ($minY - $ry1); }
-if ($ry2 > $maxY) { $dy -= ($ry2 - $maxY); }
-if ($dx != 0 || $dy != 0) {
-    $lx += $dx; $ly += $dy;
-    $rx1 = $lx - 20 - 2; $ry1 = $ly - 6 - 2;
-    $rx2 = $rx1 + $tw + 4; $ry2 = $ry1 + $th + 4;
-    $rect = [$rx1, $ry1, $rx2, $ry2];
-}
-// --- Ende Clamp ---
+				$minX = $x + 2; $minY = $y + 2; $maxX = $x + $w - 2; $maxY = $y + $h - 2;
+				$dx = 0; $dy = 0;
+				if ($rx1 < $minX) { $dx += ($minX - $rx1); }
+				if ($rx2 > $maxX) { $dx -= ($rx2 - $maxX); }
+				if ($ry1 < $minY) { $dy += ($minY - $ry1); }
+				if ($ry2 > $maxY) { $dy -= ($ry2 - $maxY); }
+				if ($dx != 0 || $dy != 0) {
+					$lx += $dx; $ly += $dy;
+					$rx1 = $lx - 20 - 2; $ry1 = $ly - 6 - 2;
+					$rx2 = $rx1 + $tw + 4; $ry2 = $ry1 + $th + 4;
+					$rect = [$rx1, $ry1, $rx2, $ry2];
+				}
+				// --- Ende Clamp ---
 
-$used_label_rects[] = $rect;
+				$used_label_rects[] = $rect;
                 $queued_labels[] = [$label_text, $lx - 20, $ly - 6];
                 $start_angle += $sweep_angle;
 
@@ -941,13 +932,11 @@ $used_label_rects[] = $rect;
                     $this->draw_text_with_bg($im, $lbl[0], $lbl[1], $lbl[2], $col_fg, $col_white, 2);
                 }
             }
-
-}
+		}
 
 
 		/**
-		 * Wrap text into multiple lines for vbar x-axis labels.
-		 * Bitmap metrics: 6x13 per char for GD font size 3.
+		 * Wrap text into multiple lines for vbar x-axis labels.  Bitmap metrics: 6x13 per char for GD font size 3.
 		 */
 		private function gd_wrap_label_lines($text, $max_px, $font_w = 6) {
 		$max_px = (int)$max_px; $font_w = max(1, (int)$font_w);
@@ -988,18 +977,16 @@ $used_label_rects[] = $rect;
 				}
 			}
 		}
-
 		if ($current_line !== '') { $lines[] = $current_line; }
-
 		return $lines;
 		}
 
 
-			private function gd_text_width($text, $font_w) {
-		$font_w = max(1, (int)$font_w);
-		$s = $this->gd_utf8((string)$text);
-		if (!is_string($s)) { $s = (string)$text; }
-		return strlen($s) * $font_w;
+		private function gd_text_width($text, $font_w) {
+			$font_w = max(1, (int)$font_w);
+			$s = $this->gd_utf8((string)$text);
+			if (!is_string($s)) { $s = (string)$text; }
+			return strlen($s) * $font_w;
 		}
 
 
@@ -1037,8 +1024,6 @@ $used_label_rects[] = $rect;
 			$y += $font_h + $line_spacing;
 		}
 	}
-
-		
 		
         private function gd_utf8($s) {
             if ($s === null) return '';
