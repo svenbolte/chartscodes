@@ -9,8 +9,8 @@ License: GPLv3
 Tags: QRCode, Shortcode, Horizontal Barchart,Linechart, Piechart, Barchart, Donutchart, IPflag, Visitorinfo
 Text Domain: pb-chartscodes
 Domain Path: /languages/
-Version: 11.1.114
-Stable tag: 11.1.114
+Version: 11.2.120
+Stable tag: 11.2.120
 Requires at least: 6.0
 Tested up to: 6.8.2
 Requires PHP: 8.2
@@ -89,560 +89,992 @@ if ( ! class_exists( 'PB_ChartsCodes' ) ) :
 	final class PB_ChartsCodes {
 		public function __construct() {
 			$this->PB_ChartsCodes_constant();
-			$this->PB_ChartsCodes_hooks();
 		}
-
 		public function PB_ChartsCodes_constant() {
 			define( 'PB_ChartsCodes_BASE_PATH', dirname(__FILE__ ) );
-			define( 'PB_ChartsCodes_URL_PATH', plugin_dir_url(__FILE__ ) );
+			define( 'plugin_dir_url(__FILE__ )', plugin_dir_url(__FILE__ ) );
 			define( 'PB_ChartsCodes_PLUGIN_BASE_PATH', plugin_basename(__FILE__) );
-		}
-
-		public function PB_ChartsCodes_hooks() {
-			// enqueue admin scripts
-			add_action( 'wp_enqueue_scripts', array( $this, 'PB_ChartsCodes_enqueue' ) );
-		}
-
-		public function PB_ChartsCodes_enqueue() {
-            // Load chartcodes style
-            wp_enqueue_style( 'pb-chartscodes-style', PB_ChartsCodes_URL_PATH . 'ccstyle.min.css' );
 		}
 	}
 	new PB_ChartsCodes();
 endif;
 
+
 // ------------------------- Class für Chart-Diagramme und Shortcode gd_charts ----------------------------------------------- 
 
-class WPGDCharts {
 
-    public function __construct() {
-        $this->register_shortcode();
-    }
 
-    public function register_shortcode() { add_shortcode('gd_chart', [$this, 'shortcode']); }
+if (!class_exists('WPGDCharts')) {
+    class WPGDCharts {
 
-    private function default_atts() {
-        return [
-            'type' => 'line', // line|pie|hbar|vbar|polar
-            'width' => 900,    // render width in px (server side)
-            'height' => 400,   // render height in px (server side)
-            'bg' => '#ffffff',
-            'fg' => '#333333',
-            'grid' => '#dddddd',
-            'colors' => '',
-            'title' => ' ',
-            'legend' => 'true',
-            // Data
-            // Single series:  Label:Value|Label2:Value2
-            'data' => 'A:10|B:20|C:30',
-            'max' => '',              // axis max; for bars auto=column sums
-            'dpi' => 1,               // 1..3 render scale
-            'responsive' => 'true',   // responsive <img> with srcset
-            'cache' => 'true',
-            'class' => 'gd-chart',
-            'style' => '',
-            'alt' => '',
-        
-            // Table options
-            'table' => 'false',
-            'table_pos' => 'below',
-            'table_class' => 'gd-chart-table',
-            'table_style' => 'margin-top:8px;',
-            'table_caption' => '',
-            'decimals' => '0',
-            // Color palette generation
-            'base' => get_theme_mod('link-color', '#006060'),
-            'palette' => 'accent',
-            'ncolors' => '',
-];
-    }
-
-    /** Shortcode → renders <img> with server-side PNG and optional srcset for HiDPI. */
-    public function shortcode($atts) {
-
-    $atts = shortcode_atts($this->default_atts(), $atts, 'gd_chart');
-    $parsed = $this->parse_data($atts['data']);
-    $colors = $this->parse_colors($atts['colors']);
-    if (empty($colors)) {
-        $need = $this->compute_needed_colors($parsed, strtolower($atts['type']));
-        $base = trim((string)($atts['base'] ?? ''));
-        if ($base !== '') {
-            $colors = ($atts['palette']==='mono') ? $this->palette_mono($base, $need) : $this->palette_accent($base, $need);
+        public function __construct() {
+            add_action('init', [$this, 'init_hooks']);
         }
-    }
-    if (empty($colors)) {
-        $colors = ['#1e88e5','#e53935','#43a047','#fb8c00','#8e24aa','#00acc1','#6d4c41','#fdd835'];
-    }
 
-    ob_start();
-    $this->render_chart($atts, $parsed, $colors);
-    $img_data = ob_get_clean();
-    $base64 = base64_encode($img_data);
-    $alt = esc_attr($atts['alt'] ?: ($atts['title'] ?: 'Chart'));
-    $class = esc_attr(trim(($atts['class'] ?? '') . ' gd-chart--inline'));
-    $style = esc_attr(trim((string)($atts['style'] ?? 'max-width:100%;height:auto;')));
-    $img_html = sprintf('<img decoding="async" loading="lazy" class="%s" style="%s" src="data:image/png;base64,%s" alt="%s" />',
-        $class, $style, $base64, $alt);
+        public function init_hooks() {
+            $this->register_shortcode();
+        }
 
-    $table_html = '';
-    $want_table = strtolower($atts['table']) === 'true' || strtolower($atts['table']) === '1';
-    if ($want_table) {
-        $table_html = $this->build_table_html($parsed, $atts, $colors);
-    }
+        public function register_shortcode() {
+            add_shortcode('gd_chart', [$this, 'shortcode']);
+        }
 
-    $pos = strtolower($atts['table_pos']);
-    if (!$want_table) return $img_html;
-    if ($pos === 'only') return $table_html;
-    if ($pos === 'above') return $table_html . $img_html;
-    return $img_html . $table_html;
-}
+        private function default_atts() {
+            return [
+                'type' => 'line', // line|pie|hbar|vbar|polar
+                'width' => 900,
+                'height' => 400,
+                'bg' => '#ffffff',
+                'fg' => '#333333',
+                'grid' => '#dddddd',
+                'colors' => '',
+                'title' => ' ',
+                'legend' => 'true',
+                'data' => 'A:10|B:20|C:30',
+                'max' => '',
+                'dpi' => 1,
+                'responsive' => 'true',
+                'cache' => 'true',
+                'class' => 'gd-chart',
+                'style' => '',
+                'alt' => '',
+                'table' => 'false',
+                'table_pos' => 'below',
+                'table_class' => 'gd-chart-table',
+                'table_style' => 'margin-top:8px;',
+                'table_caption' => '',
+                'decimals' => '0',
+                'base' => get_theme_mod('link-color', '#006060'), // Standardfarbe aus Theme oder fallback
+                'palette' => 'accent',
+                'ncolors' => '',
+            ];
+        }
 
-    public function render_chart($atts, $parsed, $colors) {
-    $type = strtolower($atts['type']);
-    $w = max(100, min(4096, (int)$atts['width']));
-    $h = max(100, min(4096, (int)$atts['height']));
-    $dpi = max(1, min(3, (int)$atts['dpi']));
-    $bg = $this->sanitize_hex($atts['bg']);
-    $fg = $this->sanitize_hex($atts['fg']);
-    $grid = $this->sanitize_hex($atts['grid']);
-    $colors = $colors;
-    $base = $this->sanitize_hex($atts['base']);
-    $palette = strtolower($atts['palette']);
-    $title = $atts['title'];
-    $legend = strtolower($atts['legend']) !== 'false';
-    // Force: no legend for line charts
-    if ($type === 'line') {
-	$legend = false; }
-    $max = isset($atts['max']) && $atts['max'] !== '' ? floatval($atts['max']) : null;
-
-    $parsed = $parsed;
-    if ($parsed['mode'] === 'empty') return;
-
-    if (!function_exists('imagecreatetruecolor')) return;
-
-    $img_w = $w * $dpi; $img_h = $h * $dpi;
-    $im = imagecreatetruecolor($img_w, $img_h);
-    imagesavealpha($im,true); imagealphablending($im,true);
-
-    $col_bg = $this->alloc_color($im,$bg); imagefilledrectangle($im,0,0,$img_w,$img_h,$col_bg);
-    $col_fg = $this->alloc_color($im,$fg); $col_grid = $this->alloc_color($im,$grid);
-    $col_white = imagecolorallocate($im, 255, 255, 255);
-    $series_colors = array_map(fn($hex)=>$this->alloc_color($im,$hex), $colors);
-
-    $legend_pad = (int)round(5 * $dpi);
-    $labels = [];
-	if (in_array($type, ['pie','hbar','vbar','line'], true)) {
-        $labels = array_keys($parsed['data']);
-    }
-
-    $longest_label_len = 0;
-    foreach ($labels as $label) {
-        $longest_label_len = max($longest_label_len, strlen($label));
-    }
-
-    $pad = (int)round(12*$dpi);
-    $title_h = $title ? (int)round(20*$dpi) : 0;
-    $legend_w = $legend ? ($this->get_text_width($longest_label_len, 3) + $this->get_legend_swatch_width() + $pad*2) : 0;
-
-    $plot_x = $pad;
-    $plot_y = $pad + $title_h;
-    $plot_w = $img_w - $pad*2;
-    // --- Reserve left margin for Y-axis labels on line charts ---
-    if ($type === 'line') {
-        // determine data min/max
-        $data_min = null; $data_max = null;
-            foreach ($parsed['data'] as $k=>$v) {
-                $v = (float)$v;
-                if ($data_min === null || $v < $data_min) $data_min = $v;
-                if ($data_max === null || $v > $data_max) $data_max = $v;
+        public function shortcode($atts) {
+            $atts = shortcode_atts($this->default_atts(), $atts, 'gd_chart');
+            $parsed = $this->parse_data($atts['data']);
+            $colors = $this->parse_colors($atts['colors']);
+            if (empty($colors)) {
+                $need = $this->compute_needed_colors($parsed, strtolower($atts['type']));
+                $base = trim((string)($atts['base'] ?? ''));
+                if ($base !== '') {
+                    $colors = ($atts['palette']==='mono') ? $this->palette_mono($base, $need) : $this->palette_accent($base, $need);
+                }
             }
-        if ($data_min === null) { $data_min = 0; }
-        if ($data_max === null) { $data_max = 0; }
-        if ($data_max === $data_min) { $data_max = $data_min + 1; }
+            if (empty($colors)) {
+                $colors = ['#1e88e5','#e53935','#43a047','#fb8c00','#8e24aa','#00acc1','#6d4c41','#fdd835'];
+            }
+            ob_start();
+            $this->render_chart($atts, $parsed, $colors);
+            $img_data = ob_get_clean();
+            $base64 = base64_encode($img_data);
+            $alt = esc_attr($atts['alt'] ?: ($atts['title'] ?: 'Chart'));
+            $class = esc_attr(trim(($atts['class'] ?? '') . ' gd-chart--inline'));
+            $style = esc_attr(trim((string)($atts['style'] ?? 'max-width:100%;height:auto;')));
+            $img_html = sprintf('<img decoding="async" loading="lazy" class="%s" style="%s" src="data:image/png;base64,%s" alt="%s" />', $class, $style, $base64, $alt);
+$table_html = '';
+            $want_table = strtolower($atts['table']) === 'true' || strtolower($atts['table']) === '1';
+            if ($want_table) {
+                $table_html = $this->build_table_html($parsed, $atts, $colors);
+            }
 
-        // estimate widest label among min, max, and intermediate steps (6)
-        $steps = 6;
-        $max_len = 0;
-        for ($s = 0; $s <= $steps; $s++) {
-            $val = $data_min + ($data_max - $data_min) * ($s / $steps);
-            $label = number_format($val, 0, ',', '.');
-            $max_len = max($max_len, strlen($label));
+            $pos = strtolower($atts['table_pos']);
+            if (!$want_table) return $img_html;
+            if ($pos === 'only') return $table_html;
+            if ($pos === 'above') return $table_html . $img_html;
+            return $img_html . $table_html;
         }
-        $label_w = $this->get_text_width($max_len, 3);
-        $left_pad = $label_w + (int)round(10*$dpi);
-        $plot_x += $left_pad;
-        $plot_w -= $left_pad;
-    }
-    // --- end reserve left margin ---
 
-    $plot_h = $img_h - $pad*2 - $title_h;
-
-    $x_label_h = (int)round(44*$dpi);
-    if (!in_array($type,['pie','polar'],true)) { $plot_h -= $x_label_h; }
-
-    if (in_array($type,['pie'],true)) {
-        if ($legend && $type !== 'line') { $plot_w -= $legend_w; }
-    } else {
-        if ($legend && $type !== 'line') { $plot_w -= $legend_w + $legend_pad; } else { $plot_w = $img_w - $pad*2; }
-    }
-
-    if ($title) { $this->draw_text($im, $title, $pad, (int)round(8*$dpi), $col_fg, 5, true); }
-    // Ensure full-width plot for LINE charts when legend is disabled
-    if ($type === 'line' && !$legend) {
-        $plot_w = $img_w - $pad*2 - 20;
-    }
-
-    if ($type === 'pie') {
-        $labels=[]; $values=[];
-        $data_single = $parsed['data'];
-        $labels = array_keys($data_single);
-        $this->draw_pie($im,$data_single,$plot_x,$plot_y,$plot_w,$plot_h,$series_colors,$col_fg,$col_white);
-        if ($legend && $type !== 'line') $this->draw_legend($im,$labels,$series_colors,$plot_x+$plot_w,$plot_y,$legend_w,$plot_h, $legend_pad);
-    }
-    elseif ($type === 'polar') {
-		$labels = array_keys($parsed['data']);
-		$series = [[ 'name' => 'Series', 'points' => $parsed['data'] ]];
-		$this->draw_polar($im,$series,$labels,$plot_x,$plot_y,$plot_w,$plot_h,$series_colors,$col_fg,$col_grid,$max,$col_white);
-    }
-    else {
+        public function render_chart($atts, $parsed, $colors) {
+            $type = strtolower($atts['type']);
+            $w = max(100, min(4096, (int)$atts['width']));
+            $h = max(100, min(4096, (int)$atts['height']));
+            $dpi = max(1, min(3, (int)$atts['dpi']));
+            $bg = $this->sanitize_hex($atts['bg']);
+            $fg = $this->sanitize_hex($atts['fg']);
+            $grid = $this->sanitize_hex($atts['grid']);
+            $colors = $colors;
+            $title = $atts['title'];
+            $legend = strtolower($atts['legend']) !== 'false';
             if ($type === 'line') {
-                
-                // === Y-axis tick labels for line charts ===
-                // derive min/max from actual data (not $max override) and draw 6 steps between
-                $data_min = null; $data_max = null;
-                    foreach ($parsed['data'] as $k=>$v) {
+                $legend = false;
+            }
+            $max = isset($atts['max']) && $atts['max'] !== '' ? floatval($atts['max']) : null;
+            if ($parsed['mode'] === 'empty') return;
+            if (!function_exists('imagecreatetruecolor')) return;
+
+            $img_w = $w * $dpi;
+            $img_h = $h * $dpi;
+            $im = imagecreatetruecolor($img_w, $img_h);
+imageantialias($im, true);
+            imagesavealpha($im, true);
+            imagealphablending($im, true);
+
+            $col_bg = $this->alloc_color($im, $bg);
+            imagefilledrectangle($im, 0, 0, $img_w, $img_h, $col_bg);
+            $col_fg = $this->alloc_color($im, $fg);
+            $col_grid = $this->alloc_color($im, $grid);
+            $col_white = imagecolorallocate($im, 255, 255, 255);
+            $series_colors = array_map(fn($hex) => $this->alloc_color($im, $hex), $colors);
+
+            $legend_pad = (int)round(5 * $dpi);
+            $labels = [];
+            if (in_array($type, ['pie', 'hbar', 'vbar', 'line'], true)) {
+                $labels = array_keys($parsed['data']);
+            }
+            $longest_label_len = 0;
+            foreach ($labels as $label) {
+                $longest_label_len = max($longest_label_len, strlen($label));
+            }
+            $pad = (int)round(12 * $dpi);
+            $title_h = $title ? (int)round(20 * $dpi) : 0;
+            $legend_w = $legend ? ($this->get_text_width($longest_label_len, 3) + $this->get_legend_swatch_width() + $pad * 2) : 0;
+            $plot_x = $pad;
+            $plot_y = $pad + $title_h;
+            $plot_w = $img_w - $pad * 2;
+            if ($type === 'line') {
+                $data_min = null;
+                $data_max = null;
+                foreach ($parsed['data'] as $k => $v) {
+                    $v = (float)$v;
+                    if ($data_min === null || $v < $data_min) $data_min = $v;
+                    if ($data_max === null || $v > $data_max) $data_max = $v;
+                }
+                if ($data_min === null) {
+                    $data_min = 0;
+                }
+                if ($data_max === null) {
+                    $data_max = 0;
+                }
+                if ($data_max === $data_min) {
+                    $data_max = $data_min + 1;
+                }
+                $steps = 6;
+                $max_len = 0;
+                for ($s = 0; $s <= $steps; $s++) {
+                    $val = $data_min + ($data_max - $data_min) * ($s / $steps);
+                    $label = number_format($val, 0, ',', '.');
+                    $max_len = max($max_len, strlen($label));
+                }
+                $label_w = $this->get_text_width($max_len, 3);
+                $left_pad = $label_w + (int)round(10 * $dpi);
+                $plot_x += $left_pad;
+                $plot_w -= $left_pad;
+            }
+
+            $plot_h = $img_h - $pad * 2 - $title_h;
+            $x_label_h = (int)round(44 * $dpi);
+            if (!in_array($type, ['pie', 'polar'], true)) {
+                $plot_h -= $x_label_h;
+            }
+
+            if (in_array($type, ['pie'], true)) {
+                if ($legend && $type !== 'line') {
+                    $plot_w -= $legend_w;
+                }
+            } else {
+                if ($legend && $type !== 'line') {
+                    $plot_w -= $legend_w + $legend_pad;
+                } else {
+                    $plot_w = $img_w - $pad * 2;
+                }
+            }
+
+            if ($title) {
+                $this->draw_text($im, $title, $pad, (int)round(8 * $dpi), $col_fg, 5, true);
+            }
+            if ($type === 'line' && !$legend) {
+                $plot_w = $img_w - $pad * 2 - 20;
+            }
+
+            if ($type === 'pie') {
+                $labels = [];
+                $values = [];
+                $data_single = $parsed['data'];
+                $labels = array_keys($data_single);
+                $this->draw_pie($im, $data_single, $plot_x, $plot_y, $plot_w, $plot_h, $series_colors, $col_fg, $col_white);
+                if ($legend && $type !== 'line') $this->draw_legend($im, $labels, $series_colors, $plot_x + $plot_w, $plot_y, $legend_w, $plot_h, $legend_pad);
+            } elseif ($type === 'polar') {
+                $labels = array_keys($parsed['data']);
+                $series = [['name' => 'Series', 'points' => $parsed['data']]];
+                $this->draw_polar($im, $series, $labels, $plot_x, $plot_y, $plot_w, $plot_h, $series_colors, $col_fg, $col_grid, $max, $col_white);
+            } else {
+                if ($type === 'line') {
+                    $data_min = null;
+                    $data_max = null;
+                    foreach ($parsed['data'] as $k => $v) {
                         $v = (float)$v;
                         if ($data_min === null || $v < $data_min) $data_min = $v;
                         if ($data_max === null || $v > $data_max) $data_max = $v;
                     }
-                if ($data_min === null) { $data_min = 0; }
-                if ($data_max === null) { $data_max = 0; }
-                if ($data_max === $data_min) { $data_max = $data_min + 1; } // avoid div by zero
-                $steps = 6;
-                for ($s = 0; $s <= $steps; $s++) {
-                    $val = $data_min + ($data_max - $data_min) * ($s / $steps);
-                    $yy = (int)round($plot_y + $plot_h - (($val - $data_min) / ($data_max - $data_min) * $plot_h));
-                    $label = number_format($val, 0, ',', '.');
-                    $txt_w = $this->get_text_width(strlen($label), 3);
-                    $tx = max(0, $plot_x - $txt_w - (int)round(6*$dpi));
-                    $this->draw_text($im, $label, $tx, $yy-6, $col_fg, 3, false);
+                    if ($data_min === null) {
+                        $data_min = 0;
+                    }
+                    if ($data_max === null) {
+                        $data_max = 0;
+                    }
+                    if ($data_max === $data_min) {
+                        $data_max = $data_min + 1;
+                    }
+                    $steps = 6;
+                    for ($s = 0; $s <= $steps; $s++) {
+                        $val = $data_min + ($data_max - $data_min) * ($s / $steps);
+                        $yy = (int)round($plot_y + $plot_h - (($val - $data_min) / ($data_max - $data_min) * $plot_h));
+                        $label = number_format($val, 0, ',', '.');
+                        $txt_w = $this->get_text_width(strlen($label), 3);
+                        $tx = max(0, $plot_x - $txt_w - (int)round(6 * $dpi));
+                        $this->draw_text($im, $label, $tx, $yy - 6, $col_fg, 3, false);
+                    }
+                    $this->draw_line_single($im, $parsed['data'], $plot_x, $plot_y, $plot_w, $plot_h, $series_colors[0], $col_fg, $col_grid, $max, $col_white);
+                } else {
+                    $this->draw_bar_single($im, $parsed['data'], $plot_x, $plot_y, $plot_w, $plot_h, $series_colors, $col_fg, $col_grid, ($type === 'hbar'), $max, $col_white);
+                    if ($legend && $type !== 'line') $this->draw_legend($im, array_keys($parsed['data']), $series_colors, $plot_x + $plot_w, $plot_y, $legend_w, $plot_h, $legend_pad);
                 }
-                // === end y-axis tick labels ===
-                $this->draw_line_single($im,$parsed['data'],$plot_x,$plot_y,$plot_w,$plot_h,$series_colors[0],$col_fg,$col_grid,$max,$col_white);
-			} else {
-                $this->draw_bar_single($im,$parsed['data'],$plot_x,$plot_y,$plot_w,$plot_h,$series_colors,$col_fg,$col_grid, ($type==='hbar'), $max, $col_white);
-                if ($legend && $type !== 'line') $this->draw_legend($im,array_keys($parsed['data']),$series_colors,$plot_x+$plot_w,$plot_y,$legend_w,$plot_h, $legend_pad);
             }
-    }
-
-    imagepng($im);
-    imagedestroy($im);
-    
-}
-
-    private function render_error($code,$msg){ status_header($code); header('Content-Type: image/svg+xml'); $msg = esc_html($msg); echo "<svg xmlns='http://www.w3.org/2000/svg' width='640' height='200'><rect width='100%' height='100%' fill='#fff'/><text x='10' y='40' font-family='monospace' font-size='18' fill='#c00'>GD Chart Error: {$msg}</text></svg>"; exit; }
-
-    // ========= Parsing =========
-    private function parse_data($raw) {
-        $raw = trim((string)$raw); if ($raw==='') return ['mode'=>'empty'];
-        $parts = array_filter(array_map('trim', explode('|', $raw)), fn($p)=>$p!=='');
-        $out = [];
-        foreach ($parts as $p) { $pos = strpos($p, ':'); $label = $pos!==false ? trim(substr($p,0,$pos)) : trim($p); $val = $pos!==false ? trim(substr($p,$pos+1)) : '0'; $label = $label!=='' ? $label : (string)(count($out)+1); $out[$label] = (float)str_replace(',', '.', $val); }
-        return ['mode'=>'single', 'data'=>$out];
-    }
-
-    
- private function build_table_html($parsed, $atts, $hexColors){
-    $decimals = max(0, (int)$atts['decimals']);
-    $caption = trim((string)$atts['table_caption']);
-    $class = esc_attr($atts['table_class']);
-    $style = esc_attr($atts['table_style']);
-    $td_l = 'style="text-align:left"';
-    $td_r = 'style="text-align:right"';
-    $swatch = function($hex){ $hex = esc_attr($hex); return '<span style="display:inline-block;width:10px;height:10px;background:'.$hex.';border:1px solid #999;margin-right:6px;vertical-align:middle"></span>'; };
-
-	// Find the maximum value in the data set
-	$maxValue = 0;
-	$sumValue = 0;
-	$avgValue = 0;
-
-	if (!empty($parsed['data'])) {
-		$maxValue = max(array_values($parsed['data']));
-		$sumValue = array_sum($parsed['data']);
-		$numrows  = count($parsed['data']);
-		$avgValue = $numrows > 0 ? $sumValue / $numrows : 0;
-	} else {
-		$numrows = 0;
-	}
-
-	$html = '<table class="'.$class.'" style="'.$style.'">';
-	if ($caption !== '') { 
-		$html .= '<caption>'.esc_html($caption).'</caption>'; 
-	}
-	$html .= '<thead><tr><th>Label</th><th>Wert</th><th>Prozent</th><th>Graph</th></tr></thead><tbody>';
-	foreach ($parsed['data'] as $label=>$v){
-		// Calculate the percentage
-		$percentage = ($maxValue > 0) ? ($v / $maxValue * 100) : 0;
-		
-		$tablabel = esc_html($label);
-		if ((bool) preg_match('/^(
-				\d{4}-\d{2}-\d{2}      # yyyy-mm-dd
-				|\d{2}-\d{2}-\d{2}     # yy-mm-dd
-				|\d{2}\.\d{2}\.\d{4}   # dd.mm.yyyy
-			)(?:\s+\d{2}:\d{2}(?::\d{2})?)?$/x', $tablabel)) {
-			$tablabel = colordatebox(strtotime($tablabel), NULL, NULL, 1);
-		}
-
-		$html .= '<tr><td '.$td_l.'>'.$tablabel.'</td>';
-		$html .= '<td '.$td_r.'>'.$this->fmt_num((float)$v,$decimals,NULL).'</td>';
-		$html .= '<td '.$td_r.'>'.number_format($percentage, 2, ',', '.') . '%</td>';
-		$html .= '<td width="65%" '.$td_r.'>
-			 <progress style="width:100%" max="100" value="'.number_format($percentage, 0, ',', '.').'"></progress>
-			  </td></tr>';
-	}
-	$html .= '</tbody><tfoot><tr><td colspan="4">'.
-		  $numrows.' Werte | '. $maxValue.' max &nbsp; ∑ '.
-		  $this->fmt_num($sumValue,$decimals,NULL).' &nbsp; Ø '.
-		  $this->fmt_num($avgValue,2 ,NULL).' </td></tr></tfoot></table>';
-    return $html;
-}
-
-
-    private function fmt_num($v,$decimals,$percent){ if($percent){ return number_format($v, max(0,$decimals)) . '%'; } return number_format($v, max(0,$decimals), ',', '.'); }
-
-    
-    private function palette_mono($base_hex, $n){
-        $base_hex = $this->sanitize_hex($base_hex);
-        list($r,$g,$b) = $this->hex_to_rgb($base_hex);
-        list($h,$s,$v) = $this->rgb_to_hsv($r,$g,$b);
-        if($s < 0.25) $s = 0.35;
-        if($v < 0.35) $v = 0.45;
-        $out=[]; $steps = max(1,(int)$n);
-        // keep hue fixed; vary saturation/value in gentle steps
-        $variants = [
-            [-0.10, +0.10], [-0.05, +0.05], [0.0, 0.0], [+0.05, -0.05], [+0.10, -0.10],
-            [-0.15, +0.15], [+0.15, -0.15]
-        ];
-        $i=0;
-        while(count($out) < $steps){
-            $sv = $variants[$i % count($variants)];
-            $ss = max(0.20, min(0.98, $s + $sv[0]));
-            $vv = max(0.20, min(0.98, $v + $sv[1]));
-            list($rr,$gg,$bb) = $this->hsv_to_rgb($h,$ss,$vv);
-            $out[] = $this->rgb_to_hex($rr,$gg,$bb);
-            $i++;
-        }
-        return $out;
-    }
-// ========= Color utilities & palette generation =========
-    private function compute_needed_colors($parsed, $type){
-		if (($type === 'pie') || ($type === 'hbar') || ($type === 'vbar')) { return max(1, count($parsed['data'] ?? [])); }
-        return 8;
-    }
-    private function hex_to_rgb($hex){ $hex=ltrim($hex,'#'); return [hexdec(substr($hex,0,2)),hexdec(substr($hex,2,2)),hexdec(substr($hex,4,2))]; }
-    private function rgb_to_hex($r,$g,$b){ $r=max(0,min(255,(int)$r)); $g=max(0,min(255,(int)$g)); $b=max(0,min(255,(int)$b)); return sprintf('#%02X%02X%02X',$r,$g,$b); }
-    private function rgb_to_hsv($r,$g,$b){
-        $r/=255; $g/=255; $b/=255;
-        $max=max($r,$g,$b); $min=min($r,$g,$b); $d=$max-$min;
-        $h=0.0;
-        if($d==0){ $h=0; }
-        else if($max==$r){ $h=fmod((($g-$b)/$d),6.0); }
-        else if($max==$g){ $h=(($b-$r)/$d)+2.0; }
-        else { $h=(($r-$g)/$d)+4.0; }
-        $h*=60.0; if($h<0) $h+=360.0;
-        $s = $max==0 ? 0.0 : $d/$max;
-        $v = $max;
-        return [$h,$s,$v];
-    }
-    private function hsv_to_rgb($h,$s,$v){
-        $h=fmod($h,360.0); if($h<0)$h+=360.0;
-        $c=$v*$s; $x=$c*(1-abs(fmod($h/60.0,2)-1)); $m=$v-$c;
-        $r=$g=$b=0.0;
-        if($h<60){ $r=$c;$g=$x;$b=0; }
-        elseif($h<120){ $r=$x;$g=$c;$b=0; }
-        elseif($h<180){ $r=0;$g=$c;$b=$x; }
-        elseif($h<240){ $r=0;$g=$x;$b=$c; }
-        elseif($h<300){ $r=$x;$g=0;$b=$c; }
-        else { $r=$c;$g=0;$b=$x; }
-        return [($r+$m)*255,($g+$m)*255,($b+$m)*255];
-    }
-
-
-
-private function palette_accent($base_hex, $n){
-    $base_hex = $this->sanitize_hex($base_hex);
-    list($r,$g,$b) = $this->hex_to_rgb($base_hex);
-    list($h,$s,$v) = $this->rgb_to_hsv($r,$g,$b);
-
-    // Make sure the saturation is not too low and value is not too high.
-    // This helps in generating visible variations.
-    if ($s < 0.25) $s = 0.35;
-    if ($v > 0.85) $v = 0.75; // Starting point should not be too bright
-
-    $out = [];
-    $steps = max(1, (int)$n);
-
-    // Calculate value (brightness) steps to ensure they are all brighter than the base.
-    // We add to the base value.
-    $v_step = (0.95 - $v) / $steps;
-    
-    for ($i = 0; $i < $steps; $i++) {
-        $vv = min(0.95, $v + ($i + 1) * $v_step);
-        
-        list($rr,$gg,$bb) = $this->hsv_to_rgb($h, $s, $vv);
-        $out[] = $this->rgb_to_hex($rr, $gg, $bb);
-    }
-    
-    return $out;
-}
-
-
-    // ========= Polar (Radar) =========
-    private function draw_polar($im,$series,$categories,$x,$y,$w,$h,$series_colors,$fg,$grid,$max=null,$white_color=null){
-        $n=max(3,count($categories));
-        $vals=[]; foreach($series as $s){ foreach($categories as $c){ $vals[]=(float)($s['points'][$c]??0); } }
-        if(empty($vals)) return;
-        $maxVal=($max!==null)?$max:max(1,max($vals));
-        $diam=min($w,$h)-10; $cx=(int)($x+$w/2); $cy=(int)($y+$h/2); $r=(int)($diam/2);
-        $rings=5; for($i=1;$i<=$rings;$i++){ $rr=(int)round($r*$i/$rings); imageellipse($im,$cx,$cy,$rr*2,$rr*2,$grid); }
-        for($i=0;$i<$n;$i++){ $ang=(2*M_PI*$i/$n)-M_PI/2; $tx=(int)round($cx+cos($ang)*$r); $ty=(int)round($cy+sin($ang)*$r); imageline($im,$cx,$cy,$tx,$ty,$grid); }
-        for($i=0;$i<$n;$i++){ $ang=(2*M_PI*$i/$n)-M_PI/2; $tx=(int)round($cx+cos($ang)*($r+10)); $ty=(int)round($cy+sin($ang)*($r+10)); $this->draw_text($im,(string)$categories[$i],$tx-10,$ty-6,$fg,2); }
-        imagesetthickness($im,2);
-        foreach($series as $si=>$s){
-            $col=$series_colors[$si%count($series_colors)]; $pts=[];
-            for($i=0;$i<$n;$i++){
-                $v=(float)($s['points'][$categories[$i]]??0); $ratio=max(0,$v/$maxVal);
-                $ang=(2*M_PI*$i/$n)-M_PI/2;
-                $px=(int)round($cx+cos($ang)*$r*$ratio); $py=(int)round($cy+sin($ang)*$r*$ratio);
-                $pts[]=[$px,$py];
-                $this->draw_text_with_bg($im, number_format($v, 0, ',', '.'), (int)($px - 10), (int)($py - 10), $fg, $white_color);
-            }
-            for($i=0;$i<$n;$i++){ $j=($i+1)%$n; imageline($im,$pts[$i][0],$pts[$i][1],$pts[$j][0],$pts[$j][1],$col); imagefilledellipse($im,$pts[$i][0],$pts[$i][1],6,6,$col); }
-        }
-    }
-// ========= Drawing helpers =========
-    private function sanitize_hex($hex){ $hex = trim((string)$hex); if (!preg_match('/^#?[0-9A-Fa-f]{6}$/',$hex)) return '#000000'; return '#'.ltrim($hex,'#'); }
-    private function parse_colors($csv){ $arr = array_filter(array_map('trim', explode(',', (string)$csv))); $out=[]; foreach($arr as $h){ $out[] = $this->sanitize_hex($h);} return $out; }
-    private function alloc_color($im,$hex){ $hex=ltrim($hex,'#'); $r=hexdec(substr($hex,0,2)); $g=hexdec(substr($hex,2,2)); $b=hexdec(substr($hex,4,2)); return imagecolorallocate($im,$r,$g,$b); }
-    private function get_text_width($len, $size){ return $len * 6; }
-    private function get_legend_swatch_width(){ return 12 + 8; } // box + pad
-
-    private function draw_text($im,$text,$x,$y,$color,$size=4,$bold=false){ imagestring($im, min(5,max(1,$size)), (int)$x, (int)$y, (string)$text, $color); if ($bold) imagestring($im, min(5,max(1,$size)), (int)$x+1, (int)$y, (string)$text, $color); }
-
-    private function draw_text_with_bg($im, $text, $x, $y, $fg_color, $bg_color, $size=2){
-        $char_w = 6;
-        $char_h = 13;
-        $text_w = strlen((string)$text) * $char_w;
-        $text_h = $char_h;
-        $pad = 2; // Padding
-        imagefilledrectangle($im, (int)$x - $pad, (int)$y - $pad, (int)($x + $text_w + $pad), (int)($y + $text_h + $pad), $bg_color);
-        imagestring($im, min(5,max(1,$size)), (int)$x, (int)$y, (string)$text, $fg_color);
-    }
-    
-    private function draw_legend($im,$labels,$colors,$x,$y,$w,$h,$legend_pad){ 
-        $pad=8;
-        $box=12;
-        $line_h=$box+8;
-        $yy=(int)$y;
-        $font_w = 6;
-        $font_size = 3;
-
-        foreach(array_values($labels) as $idx=>$label){
-            if($yy>$y+$h-$line_h) break;
-
-            // Draw color swatch
-            $swatch_x = $x + $legend_pad;
-            imagefilledrectangle($im,(int)$swatch_x,$yy,(int)($swatch_x+$box),$yy+$box,$colors[$idx%count($colors)]);
-            imagerectangle($im,(int)$swatch_x,$yy,(int)($swatch_x+$box),$yy+$box,imagecolorallocate($im,0,0,0));
-
-            // Draw text
-            $text_x = $swatch_x + $box + $pad;
-            $this->draw_text($im,(string)$label,$text_x,$yy,imagecolorallocate($im,30,30,30),$font_size);
             
-            $yy+=$line_h;
+            imagepng($im);
+            imagedestroy($im);
         }
-    }
-    private function draw_grid($im,$x,$y,$w,$h,$color,$countX=5,$countY=5){ for($i=0;$i<=$countX;$i++){ $xx=(int)round($x+$i*$w/$countX); imageline($im,$xx,$y,$xx,$y+$h,$color);} for($j=0;$j<=$countY;$j++){ $yy=(int)round($y+$j*$h/$countY); imageline($im,$x,$yy,$x+$w,$yy,$color);} }
-    private function draw_axes($im,$x,$y,$w,$h,$color){ imageline($im,$x,$y+$h,$x+$w,$y+$h,$color); imageline($im,$x,$y,$x,$y+$h,$color); }
 
-    // Single-series
-    private function draw_line_single($im,$data,$x,$y,$w,$h,$series_color,$fg,$grid,$max=null,$white_color=null){ $values=array_values($data); $labels=array_keys($data); $n=count($values);
-        // --- Right inset & safe X step for line chart ---
-        $right_inset = 5; // px; adjust if needed; DPI-neutral
-        $x_eff_w     = max(1, $w - $right_inset);
-        $x_step      = ($n > 1) ? ($x_eff_w / ($n - 1)) : 0;
-        $max_x       = (int)($x + $x_eff_w);
- $maxVal=($max!==null)?$max:max(1,max($values)); $minVal=min(0,min($values)); $this->draw_grid($im,$x,$y,$w,$h,$grid,min(10,max(3,$n-1)),5); $this->draw_axes($im,$x,$y,$w,$h,$fg); 
-		imagesetthickness($im,2); for($i=0;$i<$n-1;$i++){ $x1 = min((int)round($x + $x_step * $i), $max_x); $x2 = min((int)round($x + $x_step * ($i+1)), $max_x); $y1=(int)round($y+$h-($values[$i]-$minVal)/($maxVal-$minVal)*$h); $y2=(int)round($y+$h-($values[$i+1]-$minVal)/($maxVal-$minVal)*$h); imageline($im,$x1,$y1,$x2,$y2,$series_color); imagefilledellipse($im,$x1,$y1,6,6,$series_color);} if($n>0){ $xl = $max_x; $yl=(int)round($y+$h-($values[$n-1]-$minVal)/($maxVal-$minVal)*$h); imagefilledellipse($im,$xl,$yl,6,6,$series_color);} $step=max(1,(int)floor($n/8)); for($i=0;$i<$n;$i+=$step){ $xx = min((int)round($x + $x_step * $i), $max_x); $this->draw_text_with_bg($im,(string)$labels[$i],max($x,$xx-20),$y+$h+10,$fg,$white_color,3);
-    // Draw value at the point when an x-axis label is drawn
-    if (($maxVal - $minVal) != 0) {
-        $val = isset($values[$i]) ? $values[$i] : 0;
-        $yy = (int)round($y + $h - (($val - $minVal) / ($maxVal - $minVal) * $h));
-        $val_label = number_format($val, 0, ',', '.');
-        $this->draw_text_with_bg($im, $val_label, max($x, $xx - 10), $yy - 18, $fg, $white_color, 2);
-    } else {
-        // Edge case: flat line (all values equal)
-        $val = isset($values[$i]) ? $values[$i] : 0;
-        $yy = (int)round($y + $h/2);
-        $val_label = number_format($val, 0, ',', '.');
-        $this->draw_text_with_bg($im, $val_label, max($x, $xx - 10), $yy - 18, $fg, $white_color, 2);
-    }
-    } }
-    private function draw_bar_single($im,$data,$x,$y,$w,$h,$colors,$fg,$grid,$horizontal=false,$max=null,$white_color=null){ $values=array_values($data); $labels=array_keys($data); $n=count($values); $maxVal=($max!==null)?$max:max(1,max($values)); $this->draw_grid($im,$x,$y,$w,$h,$grid,5,5); $this->draw_axes($im,$x,$y,$w,$h,$fg); $gap=8; if($horizontal){ $bar_h=max(6,(int)floor(($h-$gap*($n+1))/$n)); for($i=0;$i<$n;$i++){ $yy=(int)($y+$gap+$i*($bar_h+$gap)); $len=$values[$i]/$maxVal*$w; $col=$colors[$i%count($colors)]; imagefilledrectangle($im,$x+1,$yy,(int)($x+$len),$yy+$bar_h,$col); imagerectangle($im,$x,$yy,(int)($x+$len),$yy+$bar_h,$fg); $this->draw_text_with_bg($im, (string)$labels[$i],$x+5,$yy+(int)($bar_h/2)-6,$fg,$white_color,2); $this->draw_text_with_bg($im,(string)$values[$i],(int)($x+$len+4),$yy+(int)($bar_h/2)-6,$fg,$white_color,2);} } else { $bar_w=max(6,(int)floor(($w-$gap*($n+1))/$n)); for($i=0;$i<$n;$i++){ $xx=(int)($x+$gap+$i*($bar_w+$gap)); $h_px=$values[$i]/$maxVal*$h; $col=$colors[$i%count($colors)]; imagefilledrectangle($im,$xx,(int)($y+$h-$h_px),$xx+$bar_w,$y+$h-1,$col); imagerectangle($im,$xx,(int)($y+$h-$h_px),$xx+$bar_w,$y+$h-1,$fg); $this->draw_text_with_bg($im,(string)$labels[$i],$xx,$y+$h+10,$fg,$white_color,3); $this->draw_text_with_bg($im,(string)$values[$i],$xx,(int)($y+$h-$h_px)-14,$fg,$white_color,2);} } }
+        private function render_error($code, $msg) {
+            status_header($code);
+            header('Content-Type: image/svg+xml');
+            $msg = esc_html($msg);
+            echo "<svg xmlns='http://www.w3.org/2000/svg' width='640' height='200'><rect width='100%' height='100%' fill='#fff'/><text x='10' y='40' font-family='monospace' font-size='18' fill='#c00'>GD Chart Error: {$msg}</text></svg>";
+            exit;
+        }
 
-    // Pie
+        private function parse_data($raw) {
+            $raw = trim((string)$raw);
+            if ($raw === '') return ['mode' => 'empty'];
+            $parts = array_filter(array_map('trim', explode('|', $raw)), fn($p) => $p !== '');
+            $out = [];
+            foreach ($parts as $p) {
+                $pos = strpos($p, ':');
+                $label = $pos !== false ? trim(substr($p, 0, $pos)) : trim($p);
+                $val = $pos !== false ? trim(substr($p, $pos + 1)) : '0';
+                $label = $label !== '' ? $label : (string)(count($out) + 1);
+                $out[$label] = (float)str_replace(',', '.', $val);
+            }
+            return ['mode' => 'single', 'data' => $out];
+        }
 
-	private function draw_pie($im,$data_single,$x,$y,$w,$h,$series_colors,$col_fg,$col_white){
-		// Sicherstellen, dass die Daten ein Array sind
-		$data_values = is_array($data_single) ? array_values($data_single) : [];
-		$data_labels = is_array($data_single) ? array_keys($data_single) : [];
-		
-		// Summe der Werte berechnen
-		$total_value = array_sum($data_values);
-		if ($total_value == 0) {
-			$total_value = 1; 
+        private function build_table_html($parsed, $atts, $hexColors) {
+            $decimals = max(0, (int)$atts['decimals']);
+            $caption = trim((string)$atts['table_caption']);
+            $class = esc_attr($atts['table_class']);
+            $style = esc_attr($atts['table_style']);
+            $td_l = 'style="text-align:left"';
+            $td_r = 'style="text-align:right"';
+            $swatch = function ($hex) {
+                $hex = esc_attr($hex);
+                return '<span style="display:inline-block;width:10px;height:10px;background:' . $hex . ';border:1px solid #999;margin-right:6px;vertical-align:middle"></span>';
+            };
+            $maxValue = 0;
+            $sumValue = 0;
+            $avgValue = 0;
+            if (!empty($parsed['data'])) {
+                $maxValue = max(array_values($parsed['data']));
+                $sumValue = array_sum($parsed['data']);
+                $numrows = count($parsed['data']);
+                $avgValue = $numrows > 0 ? $sumValue / $numrows : 0;
+            } else {
+                $numrows = 0;
+            }
+            $html = '<table class="' . $class . '" style="' . $style . '">';
+            if ($caption !== '') {
+                $html .= '<caption>' . esc_html($caption) . '</caption>';
+            }
+            $html .= '<thead><tr><th>Label</th><th>Wert</th><th>Prozent</th><th>Graph</th></tr></thead><tbody>';
+            foreach ($parsed['data'] as $label => $v) {
+                $percentage = ($maxValue > 0) ? ($v / $maxValue * 100) : 0;
+                $tablabel = esc_html($label);
+                if ((bool)preg_match('/^(\d{4}-\d{2}-\d{2}|\d{2}-\d{2}-\d{2}|\d{2}\.\d{2}\.\d{4})(?:\s+\d{2}:\d{2}(?::\d{2})?)?$/x', $tablabel)) {
+                    $tablabel = colordatebox(strtotime($tablabel), NULL, NULL, 1);
+                }
+                $html .= '<tr><td ' . $td_l . '>' . $tablabel . '</td>';
+                $html .= '<td ' . $td_r . '>' . $this->fmt_num((float)$v, $decimals, NULL) . '</td>';
+                $html .= '<td ' . $td_r . '>' . number_format($percentage, 2, ',', '.') . '%</td>';
+                $html .= '<td width="65%" ' . $td_r . '>
+                    <progress style="width:100%" max="100" value="' . number_format($percentage, 0, ',', '.') . '"></progress>
+                    </td></tr>';
+            }
+            $html .= '</tbody><tfoot><tr><td colspan="4">' .
+                $numrows . ' Werte | ' . $maxValue . ' max &nbsp; ∑ ' .
+                $this->fmt_num($sumValue, $decimals, NULL) . ' &nbsp; Ø ' .
+                $this->fmt_num($avgValue, 2, NULL) . ' </td></tr></tfoot></table>';
+            return $html;
+        }
+
+        private function fmt_num($v, $decimals, $percent) {
+            if ($percent) {
+                return number_format($v, max(0, $decimals)) . '%';
+            }
+            return number_format($v, max(0, $decimals), ',', '.');
+        }
+
+        private function palette_mono($base_hex, $n) {
+            $base_hex = $this->sanitize_hex($base_hex);
+            list($r, $g, $b) = $this->hex_to_rgb($base_hex);
+            list($h, $s, $v) = $this->rgb_to_hsv($r, $g, $b);
+            if ($s < 0.25) $s = 0.35;
+            if ($v < 0.35) $v = 0.45;
+            $out = [];
+            $steps = max(1, (int)$n);
+            $variants = [
+                [-0.10, +0.10], [-0.05, +0.05], [0.0, 0.0], [+0.05, -0.05], [+0.10, -0.10],
+                [-0.15, +0.15], [+0.15, -0.15]
+            ];
+            $i = 0;
+            while (count($out) < $steps) {
+                $sv = $variants[$i % count($variants)];
+                $ss = max(0.20, min(0.98, $s + $sv[0]));
+                $vv = max(0.20, min(0.98, $v + $sv[1]));
+                list($rr, $gg, $bb) = $this->hsv_to_rgb($h, $ss, $vv);
+                $out[] = $this->rgb_to_hex($rr, $gg, $bb);
+                $i++;
+            }
+            return $out;
+        }
+
+        private function compute_needed_colors($parsed, $type) {
+            if (($type === 'pie') || ($type === 'hbar') || ($type === 'vbar')) {
+                return max(1, count($parsed['data'] ?? []));
+            }
+            return 8;
+        }
+
+        private function hex_to_rgb($hex) {
+            $hex = ltrim($hex, '#');
+            return [hexdec(substr($hex, 0, 2)), hexdec(substr($hex, 2, 2)), hexdec(substr($hex, 4, 2))];
+        }
+
+        private function rgb_to_hex($r, $g, $b) {
+            $r = max(0, min(255, (int)$r));
+            $g = max(0, min(255, (int)$g));
+            $b = max(0, min(255, (int)$b));
+            return sprintf('#%02X%02X%02X', $r, $g, $b);
+        }
+
+        private function rgb_to_hsv($r, $g, $b) {
+            $r /= 255;
+            $g /= 255;
+            $b /= 255;
+            $max = max($r, $g, $b);
+            $min = min($r, $g, $b);
+            $d = $max - $min;
+            $h = 0.0;
+            if ($d == 0) {
+                $h = 0;
+            } else if ($max == $r) {
+                $h = fmod((($g - $b) / $d), 6.0);
+            } else if ($max == $g) {
+                $h = (($b - $r) / $d) + 2.0;
+            } else {
+                $h = (($r - $g) / $d) + 4.0;
+            }
+            $h *= 60.0;
+            if ($h < 0) $h += 360.0;
+            $s = $max == 0 ? 0.0 : $d / $max;
+            $v = $max;
+            return [$h, $s, $v];
+        }
+
+        private function hsv_to_rgb($h, $s, $v) {
+            $h = fmod($h, 360.0);
+            if ($h < 0) $h += 360.0;
+            $c = $v * $s;
+            $x = $c * (1 - abs(fmod($h / 60.0, 2) - 1));
+            $m = $v - $c;
+            $r = $g = $b = 0.0;
+            if ($h < 60) {
+                $r = $c;
+                $g = $x;
+                $b = 0;
+            } elseif ($h < 120) {
+                $r = $x;
+                $g = $c;
+                $b = 0;
+            } elseif ($h < 180) {
+                $r = 0;
+                $g = $c;
+                $b = $x;
+            } elseif ($h < 240) {
+                $r = 0;
+                $g = $x;
+                $b = $c;
+            } elseif ($h < 300) {
+                $r = $x;
+                $g = 0;
+                $b = $c;
+            } else {
+                $r = $c;
+                $g = 0;
+                $b = $x;
+            }
+            return [($r + $m) * 255, ($g + $m) * 255, ($b + $m) * 255];
+        }
+
+        private function palette_accent($base_hex, $n) {
+            $base_hex = $this->sanitize_hex($base_hex);
+            list($r, $g, $b) = $this->hex_to_rgb($base_hex);
+            list($h, $s, $v) = $this->rgb_to_hsv($r, $g, $b);
+            if ($s < 0.25) $s = 0.35;
+            if ($v > 0.85) $v = 0.75;
+            $out = [];
+            $steps = max(1, (int)$n);
+            $v_step = (0.95 - $v) / $steps;
+            for ($i = 0; $i < $steps; $i++) {
+                $vv = min(0.95, $v + ($i + 1) * $v_step);
+                list($rr, $gg, $bb) = $this->hsv_to_rgb($h, $s, $vv);
+                $out[] = $this->rgb_to_hex($rr, $gg, $bb);
+            }
+            return $out;
+        }
+
+        private function draw_polar($im, $series, $categories, $x, $y, $w, $h, $series_colors, $fg, $grid, $max = null, $white_color = null) {
+            $n = max(3, count($categories));
+            $vals = [];
+            foreach ($series as $s) {
+                foreach ($categories as $c) {
+                    $vals[] = (float)($s['points'][$c] ?? 0);
+                }
+            }
+            if (empty($vals)) return;
+            $maxVal = ($max !== null) ? $max : max(1, max($vals));
+            $diam = min($w, $h) - 10;
+            $cx = (int)($x + $w / 2);
+            $cy = (int)($y + $h / 2);
+            $r = (int)($diam / 2);
+            $rings = 5;
+            for ($i = 1; $i <= $rings; $i++) {
+                $rr = (int)round($r * $i / $rings);
+                imageellipse($im, $cx, $cy, $rr * 2, $rr * 2, $grid);
+            }
+            for ($i = 0; $i < $n; $i++) {
+                $ang = (2 * M_PI * $i / $n) - M_PI / 2;
+                $tx = (int)round($cx + cos($ang) * $r);
+                $ty = (int)round($cy + sin($ang) * $r);
+                imageline($im, $cx, $cy, $tx, $ty, $grid);
+            }
+            for ($i = 0; $i < $n; $i++) {
+                $ang = (2 * M_PI * $i / $n) - M_PI / 2;
+                $tx = (int)round($cx + cos($ang) * ($r + 10));
+                $ty = (int)round($cy + sin($ang) * ($r + 10));
+                $this->draw_text($im, (string)$categories[$i], $tx - 10, $ty - 6, $fg, 2);
+            }
+            imagesetthickness($im, 2);
+            foreach ($series as $si => $s) {
+                $col = $series_colors[$si % count($series_colors)];
+                $pts = [];
+                for ($i = 0; $i < $n; $i++) {
+                    $v = (float)($s['points'][$categories[$i]] ?? 0);
+                    $ratio = max(0, $v / $maxVal);
+                    $ang = (2 * M_PI * $i / $n) - M_PI / 2;
+                    $px = (int)round($cx + cos($ang) * $r * $ratio);
+                    $py = (int)round($cy + sin($ang) * $r * $ratio);
+                    $pts[] = [$px, $py];
+                    $this->draw_text_with_bg($im, number_format($v, 0, ',', '.'), (int)($px - 10), (int)($py - 10), $fg, $white_color);
+                }
+                for ($i = 0; $i < $n; $i++) {
+                    $j = ($i + 1) % $n;
+                    imageline($im, $pts[$i][0], $pts[$i][1], $pts[$j][0], $pts[$j][1], $col);
+                    imagefilledellipse($im, $pts[$i][0], $pts[$i][1], 6, 6, $col);
+                }
+            }
+        }
+
+        private function sanitize_hex($hex) {
+            $hex = trim((string)$hex);
+            if (!preg_match('/^#?[0-9A-Fa-f]{6}$/', $hex)) return '#000000';
+            return '#' . ltrim($hex, '#');
+        }
+
+        private function parse_colors($csv) {
+            $arr = array_filter(array_map('trim', explode(',', (string)$csv)));
+            $out = [];
+            foreach ($arr as $h) {
+                $out[] = $this->sanitize_hex($h);
+            }
+            return $out;
+        }
+
+        private function alloc_color($im, $hex) {
+            $hex = ltrim($hex, '#');
+            $r = hexdec(substr($hex, 0, 2));
+            $g = hexdec(substr($hex, 2, 2));
+            $b = hexdec(substr($hex, 4, 2));
+            return imagecolorallocate($im, $r, $g, $b);
+        }
+
+        private function get_text_width($len, $size) {
+			$font = min(5, max(1, (int)$size));
+			$fw = function_exists('imagefontwidth') ? (int)imagefontwidth($font) : 6;
+			return ((int)$len) * $fw;
 		}
 
-		$center_x = $x + $w / 2;
-		$center_y = $y + $h / 2;
+        private function get_legend_swatch_width() {
+            return 12 + 8;
+        }
 
-		// Radius für die ovale Form
-		// Der Wert wurde auf 0.7 verringert, um das Diagramm wieder in das Bild zu passen.
-		$radius_x = min($w, $h) * 0.7;
-		$radius_y = $radius_x * 0.7; 
+        private function draw_text($im, $text, $x, $y, $color, $size = 4, $bold = false) {
+            $this->gd_imagestring($im, min(5, max(1, $size)), (int)$x, (int)$y, (string)$text, $color);
+            if ($bold) $this->gd_imagestring($im, min(5, max(1, $size)), (int)$x + 1, (int)$y, (string)$text, $color);
+        }
 
-		$start_angle = 0;
-		$depth = 10; // Tiefe für den 3D-Effekt
+        private function draw_text_with_bg($im, $text, $x, $y, $fg_color, $bg_color, $size = 2) {
+            $char_w = 6;
+            $char_h = 13;
+            $text_w = strlen((string)$text) * $char_w;
+            $text_h = $char_h;
+            $pad = 2;
+            imagefilledrectangle($im, (int)$x - $pad, (int)$y - $pad, (int)($x + $text_w + $pad), (int)($y + $text_h + $pad), $bg_color);
+            $this->gd_imagestring($im, min(5, max(1, $size)), (int)$x, (int)$y, (string)$text, $fg_color);
+        }
 
-		// 1. Zeichne die "Seiten" des 3D-Ovals (dunklerer Schatteneffekt)
-		foreach ($data_values as $index => $value) {
-			$sweep_angle = ($value / $total_value) * 360;
-			// $darker_color = $this->alloc_color($im, $this->adjust_brightness($series_colors[$index % count($series_colors)], -30));
-			$darker_color = $this->alloc_color($im, '#444444');
+        private function draw_legend($im, $labels, $colors, $x, $y, $w, $h, $legend_pad) {
+            $pad = 8;
+            $box = 12;
+            $line_h = $box + 8;
+            $yy = (int)$y;
+            $font_w = 6;
+            $font_size = 3;
+            foreach (array_values($labels) as $idx => $label) {
+                if ($yy > $y + $h - $line_h) break;
+                $swatch_x = $x + $legend_pad;
+                imagefilledrectangle($im, (int)$swatch_x, $yy, (int)($swatch_x + $box), $yy + $box, $colors[$idx % count($colors)]);
+                imagerectangle($im, (int)$swatch_x, $yy, (int)($swatch_x + $box), $yy + $box, imagecolorallocate($im, 0, 0, 0));
+                $text_x = $swatch_x + $box + $pad;
+                $this->draw_text($im, (string)$label, $text_x, $yy, imagecolorallocate($im, 30, 30, 30), $font_size);
+                $yy += $line_h;
+            }
+        }
 
-			for ($i = $depth; $i > 0; $i--) {
-				imagefilledarc($im, (int)$center_x, (int)($center_y + $i), (int)($radius_x * 2), (int)($radius_y * 2), (int)$start_angle, (int)($start_angle + $sweep_angle), $darker_color, IMG_ARC_PIE);
+        private function draw_grid($im, $x, $y, $w, $h, $color, $countX = 5, $countY = 5) {
+            for ($i = 0; $i <= $countX; $i++) {
+                $xx = (int)round($x + $i * $w / $countX);
+                imageline($im, $xx, $y, $xx, $y + $h, $color);
+            }
+            for ($j = 0; $j <= $countY; $j++) {
+                $yy = (int)round($y + $j * $h / $countY);
+                imageline($im, $x, $yy, $x + $w, $yy, $color);
+            }
+        }
+
+        private function draw_axes($im, $x, $y, $w, $h, $color) {
+            imageline($im, $x, $y + $h, $x + $w, $y + $h, $color);
+            imageline($im, $x, $y, $x, $y + $h, $color);
+        }
+
+        private function draw_line_single($im, $data, $x, $y, $w, $h, $series_color, $fg, $grid, $max = null, $white_color = null) {
+            $values = array_values($data);
+            $labels = array_keys($data);
+            $n = count($values);
+            $right_inset = 5;
+            $x_eff_w = max(1, $w - $right_inset);
+            $x_step = ($n > 1) ? ($x_eff_w / ($n - 1)) : 0;
+            $max_x = (int)($x + $x_eff_w);
+            $maxVal = ($max !== null) ? $max : max(1, max($values));
+            $minVal = min(0, min($values));
+            $this->draw_grid($im, $x, $y, $w, $h, $grid, min(10, max(3, $n - 1)), 5);
+            $this->draw_axes($im, $x, $y, $w, $h, $fg);
+            imagesetthickness($im, 2);
+            for ($i = 0; $i < $n - 1; $i++) {
+                $x1 = min((int)round($x + $x_step * $i), $max_x);
+                $x2 = min((int)round($x + $x_step * ($i + 1)), $max_x);
+                $y1 = (int)round($y + $h - ($values[$i] - $minVal) / ($maxVal - $minVal) * $h);
+                $y2 = (int)round($y + $h - ($values[$i + 1] - $minVal) / ($maxVal - $minVal) * $h);
+                imageline($im, $x1, $y1, $x2, $y2, $series_color);
+                imagefilledellipse($im, $x1, $y1, 6, 6, $series_color);
+            }
+            if ($n > 0) {
+                $xl = $max_x;
+                $yl = (int)round($y + $h - ($values[$n - 1] - $minVal) / ($maxVal - $minVal) * $h);
+                imagefilledellipse($im, $xl, $yl, 6, 6, $series_color);
+            }
+            $step = max(1, (int)floor($n / 8));
+            for ($i = 0; $i < $n; $i += $step) {
+                $xx = min((int)round($x + $x_step * $i), $max_x);
+                $this->draw_text_with_bg($im, (string)$labels[$i], max($x, $xx - 20), $y + $h + 10, $fg, $white_color, 3);
+                if (($maxVal - $minVal) != 0) {
+                    $val = isset($values[$i]) ? $values[$i] : 0;
+                    $yy = (int)round($y + $h - (($val - $minVal) / ($maxVal - $minVal) * $h));
+                    $val_label = number_format($val, 0, ',', '.');
+                    $this->draw_text_with_bg($im, $val_label, max($x, $xx - 10), $yy - 18, $fg, $white_color, 2);
+                } else {
+                    $val = isset($values[$i]) ? $values[$i] : 0;
+                    $yy = (int)round($y + $h / 2);
+                    $val_label = number_format($val, 0, ',', '.');
+                    $this->draw_text_with_bg($im, $val_label, max($x, $xx - 10), $yy - 18, $fg, $white_color, 2);
+                }
+            }
+        }
+
+        private function draw_bar_single($im, $data, $x, $y, $w, $h, $colors, $fg, $grid, $horizontal = false, $max = null, $white_color = null) {
+            $values = array_values($data);
+            $labels = array_keys($data);
+            $n = count($values);
+            $maxVal = ($max !== null) ? $max : max(1, max($values));
+            $this->draw_grid($im, $x, $y, $w, $h, $grid, 5, 5);
+            $this->draw_axes($im, $x, $y, $w, $h, $fg);
+            $gap = 8;
+            if ($horizontal) {
+                $bar_h = max(6, (int)floor(($h - $gap * ($n + 1)) / $n));
+                for ($i = 0; $i < $n; $i++) {
+                    $yy = (int)($y + $gap + $i * ($bar_h + $gap));
+                    $len = $values[$i] / $maxVal * $w;
+                    $col = $colors[$i % count($colors)];
+                    imagefilledrectangle($im, $x + 1, $yy, (int)($x + $len), $yy + $bar_h, $col);
+                    imagerectangle($im, $x, $yy, (int)($x + $len), $yy + $bar_h, $fg);
+                    $this->draw_text_with_bg($im, (string)$labels[$i], $x + 5, $yy + (int)($bar_h / 2) - 6, $fg, $white_color, 2);
+                    $this->draw_text_with_bg($im, (string)$values[$i], (int)($x + $len + 4), $yy + (int)($bar_h / 2) - 6, $fg, $white_color, 2);
+                }
+            } else {
+                $bar_w = max(6, (int)floor(($w - $gap * ($n + 1)) / $n));
+                for ($i = 0; $i < $n; $i++) {
+                    $xx = (int)($x + $gap + $i * ($bar_w + $gap));
+                    $h_px = $values[$i] / $maxVal * $h;
+                    $col = $colors[$i % count($colors)];
+                    imagefilledrectangle($im, $xx, (int)($y + $h - $h_px), $xx + $bar_w, $y + $h - 1, $col);
+                    imagerectangle($im, $xx, (int)($y + $h - $h_px), $xx + $bar_w, $y + $h - 1, $fg);
+                    $this->draw_wrapped_centered_label($im, (string)$labels[$i], (int)($xx + $bar_w / 2), $y + $h + 10, $bar_w, $fg, $white_color, 3);
+                    $this->draw_text_with_bg($im, (string)$values[$i], $xx, (int)($y + $h - $h_px) - 14, $fg, $white_color, 2);
+                }
+            }
+        }
+
+		private function draw_pie($im, $data_single, $x, $y, $w, $h, $series_colors, $col_fg, $col_white) {
+			// Guard: avoid division by zero when total is 0
+			if (isset($data_values) && is_array($data_values)) {
+				$total_value = array_sum($data_values);
+				if ($total_value <= 0) { return; }
 			}
-			$start_angle += $sweep_angle;
+
+            $data_values = is_array($data_single) ? array_values($data_single) : [];
+            $data_labels = is_array($data_single) ? array_keys($data_single) : [];
+            
+            // --- Normalisierung & Sichtbarkeit ---
+            $orig_values = $data_values; // Originalwerte für Labelanzeige behalten
+            if (is_array($data_values) && count($data_values) > 1) {
+                $n = count($data_values);
+
+                // 1) Dominante Werte (>2× größte andere) für Darstellung kappen
+                $outliers = [];
+                $max_other_nonzero = 0;
+                for ($i = 0; $i < $n; $i++) {
+                    $max_other = 0;
+                    for ($j = 0; $j < $n; $j++) {
+                        if ($j === $i) continue;
+                        if ($data_values[$j] > $max_other) $max_other = $data_values[$j];
+                    }
+                    if ($max_other > 0) {
+                        if ($data_values[$i] > 2 * $max_other) {
+                            $outliers[$i] = true;
+                            if (isset($data_labels[$i]) && is_string($data_labels[$i]) && strpos($data_labels[$i], 'viel größer') === false) {
+                                $data_labels[$i] .= ' (viel größer)';
+                            }
+                        }
+                        if ($max_other > $max_other_nonzero) $max_other_nonzero = $max_other;
+                    }
+                }
+                if (!empty($outliers) && $max_other_nonzero > 0) {
+                    $cap = 2 * $max_other_nonzero;
+                    for ($i = 0; $i < $n; $i++) {
+                        if (!empty($outliers[$i]) && $data_values[$i] > $cap) {
+                            $data_values[$i] = $cap; // nur Darstellungskap
+                        }
+                    }
+                }
+
+                // 2) Mindestwinkel für sehr kleine Segmente (z. B. 3°)
+                $MIN_DEG = 3.0;
+                $sum_val = array_sum($data_values);
+                if ($sum_val > 0) {
+                    $deg = [];
+                    $extra_needed = 0.0;
+                    $eligible_reduce = [];
+                    for ($i = 0; $i < $n; $i++) {
+                        $deg[$i] = ($data_values[$i] / $sum_val) * 360.0;
+                        if ($data_values[$i] > 0 && $deg[$i] < $MIN_DEG) {
+                            $extra_needed += ($MIN_DEG - $deg[$i]);
+                            $deg[$i] = $MIN_DEG;
+                        } else {
+                            $eligible_reduce[$i] = true;
+                        }
+                    }
+                    if ($extra_needed > 0.0) {
+                        // Reduziere von großen Segmenten proportional
+                        $total_reduce_pool = 0.0;
+                        for ($i = 0; $i < $n; $i++) {
+                            if (!isset($eligible_reduce[$i])) continue;
+                            if ($deg[$i] > $MIN_DEG) {
+                                $total_reduce_pool += ($deg[$i] - $MIN_DEG);
+                            }
+                        }
+                        if ($total_reduce_pool > 0.0) {
+                            $scale = $extra_needed / $total_reduce_pool;
+                            for ($i = 0; $i < $n; $i++) {
+                                if (!isset($eligible_reduce[$i])) continue;
+                                if ($deg[$i] > $MIN_DEG) {
+                                    $deg[$i] -= ($deg[$i] - $MIN_DEG) * $scale;
+                                }
+                            }
+                        }
+                        // Schreibe Winkel zurück in Werte (verhältnistreu zu ursprünglicher Summe)
+                        $new_vals = [];
+                        for ($i = 0; $i < $n; $i++) {
+                            $new_vals[$i] = ($deg[$i] / 360.0) * $sum_val;
+                        }
+                        $data_values = $new_vals;
+                    }
+                }
+            }
+            // --- Ende Normalisierung ---
+
+$total_value = array_sum($data_values);
+            if ($total_value == 0) {
+                $total_value = 1;
+            }
+            $center_x = $x + $w / 2;
+            $center_y = $y + $h / 2;
+            $radius_x = min($w, $h) * 0.7;
+            $radius_y = $radius_x * 0.7;
+            $start_angle = 0;
+            
+            
+            $queued_labels = [];
+$queued_labels = [];
+$depth = 10;
+            foreach ($data_values as $index => $value) {
+                $sweep_angle = ($value / $total_value) * 360;
+                $darker_color = $this->alloc_color($im, '#444444');
+                for ($i = $depth; $i > 0; $i--) {
+                    imagefilledarc($im, (int)$center_x, (int)($center_y + $i), (int)($radius_x * 2), (int)($radius_y * 2), (int)$start_angle, (int)($start_angle + $sweep_angle), $darker_color, IMG_ARC_PIE);
+                }
+                $start_angle += $sweep_angle;
+            }
+$start_angle = 0;
+            
+$used_label_rects = [];
+$font_for_labels = 2;
+$fw_lbl = function_exists('imagefontwidth') ? imagefontwidth($font_for_labels) : 6;
+$fh_lbl = function_exists('imagefontheight') ? imagefontheight($font_for_labels) : 13;
+$label_angle_step = 6; // Grad pro Versuch
+$min_sep_px = 4;       // Mindestabstand in Pixeln zwischen Label-Rechtecken
+            foreach ($data_values as $index => $value) {
+                $sweep_angle = ($value / $total_value) * 360;
+                $color = $series_colors[$index % count($series_colors)];
+                imagefilledarc($im, (int)$center_x, (int)$center_y, (int)($radius_x * 2), (int)($radius_y * 2), (int)$start_angle, (int)($start_angle + $sweep_angle), $color, IMG_ARC_PIE);
+                
+                // Berechne Label-Text: Prozent + Originalwert
+                $pct = ($total_value > 0) ? round(($value / $total_value) * 100) : 0;
+                $orig_val = isset($orig_values[$index]) ? $orig_values[$index] : $value;
+                if (is_numeric($orig_val) && floor($orig_val) == $orig_val) {
+                    $value_str = number_format((int)$orig_val, 0, ',', '.');
+                } else {
+                    $value_str = rtrim(rtrim(number_format((float)$orig_val, 2, ',', '.'), '0'), ',');
+                }
+                $label_text = $data_labels[$index] . ' (' . $pct . '% – ' . $value_str . ')';
+
+                // Zielwinkel (Mitte des Segments), dann Konflikte mit existierenden Label-Rechtecken vermeiden
+                $label_deg = $start_angle + ($sweep_angle / 2.0);
+                $mid_angle = deg2rad($label_deg);
+                $radius_factor = ($sweep_angle < 6) ? 0.9 : 0.75;
+                $attempt = 0;
+                $max_attempts = 60;
+                do {
+                    $lx = (int)round($center_x + ($radius_x * $radius_factor) * cos($mid_angle));
+                    $ly = (int)round($center_y + ($radius_y * $radius_factor) * sin($mid_angle));
+
+                    // Näherungsweise Textbreite/-höhe
+                    $calc = method_exists($this, 'gd_utf8') ? $this->gd_utf8($label_text) : $label_text;
+                    $tw = strlen($calc) * $fw_lbl;
+                    $th = $fh_lbl;
+
+                    // draw_text_with_bg zeichnet von (x, y) aus mit kleinem Padding
+                    $rx1 = $lx - 20 - 2;
+                    $ry1 = $ly -  6 - 2;
+                    $rx2 = $rx1 + $tw + 4;
+                    $ry2 = $ry1 + $th + 4;
+                    $rect = [$rx1, $ry1, $rx2, $ry2];
+
+                    $ok = true;
+                    foreach ($used_label_rects as $ur) {
+                        if (!((($rect[2]) < $ur[0]) || (($ur[2]) < $rect[0]) || (($rect[3]) < $ur[1]) || (($ur[3]) < $rect[1]))) { $ok = false; break; }
+                    }
+
+
+                    if ($ok) break;
+
+                    // Korrektur: alternierend Winkel verschieben und Radius leicht erhöhen
+                    $attempt++;
+                    $delta_deg = ($attempt % 2 ? +1 : -1) * $label_angle_step * intval(($attempt) / 2) + 1;
+                    $label_deg += $delta_deg;
+                    $mid_angle = deg2rad($label_deg);
+                    $radius_factor = min(0.98, $radius_factor + 0.02);
+                } while ($attempt < $max_attempts);
+
+                // --- Clamp Label-Rechteck in Bildgrenzen ---
+$minX = $x + 2; $minY = $y + 2; $maxX = $x + $w - 2; $maxY = $y + $h - 2;
+$dx = 0; $dy = 0;
+if ($rx1 < $minX) { $dx += ($minX - $rx1); }
+if ($rx2 > $maxX) { $dx -= ($rx2 - $maxX); }
+if ($ry1 < $minY) { $dy += ($minY - $ry1); }
+if ($ry2 > $maxY) { $dy -= ($ry2 - $maxY); }
+if ($dx != 0 || $dy != 0) {
+    $lx += $dx; $ly += $dy;
+    $rx1 = $lx - 20 - 2; $ry1 = $ly - 6 - 2;
+    $rx2 = $rx1 + $tw + 4; $ry2 = $ry1 + $th + 4;
+    $rect = [$rx1, $ry1, $rx2, $ry2];
+}
+// --- Ende Clamp ---
+
+$used_label_rects[] = $rect;
+                $queued_labels[] = [$label_text, $lx - 20, $ly - 6];
+                $start_angle += $sweep_angle;
+
+            }
+
+            // Draw queued labels on top (final pass)
+            if (isset($queued_labels) && is_array($queued_labels)) {
+                foreach ($queued_labels as $lbl) {
+                    $this->draw_text_with_bg($im, $lbl[0], $lbl[1], $lbl[2], $col_fg, $col_white, 2);
+                }
+            }
+
+}
+
+
+		/**
+		 * Wrap text into multiple lines for vbar x-axis labels.
+		 * Bitmap metrics: 6x13 per char for GD font size 3.
+		 */
+		private function gd_wrap_label_lines($text, $max_px, $font_w = 6) {
+		$max_px = (int)$max_px; $font_w = max(1, (int)$font_w);
+
+		$tmp = $this->gd_utf8((string)$text);
+		$s = is_string($tmp) ? $tmp : (string)$text;
+
+		$words = preg_split('/\s+/u', $s, -1, PREG_SPLIT_NO_EMPTY);
+		if (!is_array($words)) { $words = strlen($s) ? [$s] : []; }
+
+		$lines = [];
+		$current_line = '';
+
+		foreach ($words as $word) {
+			$word_width = $this->gd_text_width($word, $font_w);
+
+			if ($word_width > $max_px) {
+				if ($current_line !== '') { $lines[] = $current_line; $current_line = ''; }
+				$chars = preg_split('//u', $word, -1, PREG_SPLIT_NO_EMPTY);
+				if (!is_array($chars)) { $chars = str_split((string)$word); }
+				$temp_line = '';
+				foreach ($chars as $char) {
+					if ($this->gd_text_width($temp_line . $char, $font_w) <= $max_px) {
+						$temp_line .= $char;
+					} else {
+						if ($temp_line !== '') { $lines[] = $temp_line; }
+						$temp_line = $char;
+					}
+				}
+				if ($temp_line !== '') { $lines[] = $temp_line; }
+			} else {
+				$candidate = ($current_line === '') ? $word : $current_line . ' ' . $word;
+				if ($this->gd_text_width($candidate, $font_w) <= $max_px) {
+					$current_line = $candidate;
+				} else {
+					if ($current_line !== '') { $lines[] = $current_line; }
+					$current_line = $word;
+				}
+			}
 		}
-		$start_angle = 0; // Reset für das Zeichnen der oberen Fläche
-		// 2. Zeichne die obere Fläche des Ovals
-		foreach ($data_values as $index => $value) {
-			$sweep_angle = ($value / $total_value) * 360;
-			$color = $series_colors[$index % count($series_colors)];
-			imagefilledarc($im, (int)$center_x, (int)$center_y, (int)($radius_x * 2), (int)($radius_y * 2), (int)$start_angle, (int)($start_angle + $sweep_angle), $color, IMG_ARC_PIE);
-			// 3. Labels mit Prozentangabe hinzufügen
-			$mid_angle = deg2rad($start_angle + ($sweep_angle / 2));
-			$label_x = (int)round($center_x + ($radius_x * 0.7) * cos($mid_angle));
-			$label_y = (int)round($center_y + ($radius_y * 0.7) * sin($mid_angle));
-			$pct = round(($value / $total_value) * 100);
-			$label_text = $data_labels[$index] . ' (' . $pct . '%)';
-			$this->draw_text_with_bg($im, $label_text, $label_x - 20, $label_y - 6, $col_fg, $col_white, 2);
-			$start_angle += $sweep_angle;
+
+		if ($current_line !== '') { $lines[] = $current_line; }
+
+		return $lines;
+		}
+
+
+			private function gd_text_width($text, $font_w) {
+		$font_w = max(1, (int)$font_w);
+		$s = $this->gd_utf8((string)$text);
+		if (!is_string($s)) { $s = (string)$text; }
+		return strlen($s) * $font_w;
+		}
+
+
+    /**
+     * Draw wrapped, centered label below a vbar.
+     */
+    private function draw_wrapped_centered_label($im, $text, $center_x, $top_y, $max_width, $fg_color, $bg_color, $font_size = 3, $line_spacing = 2) {
+		// Echte GD-Fontmaße
+		$font = min(5, max(1, (int)$font_size));
+		$font_w = function_exists('imagefontwidth')  ? (int)imagefontwidth($font)  : 6;
+		$font_h = function_exists('imagefontheight') ? (int)imagefontheight($font) : 13;
+
+		// Schmalere Wrap-Breite: 2px Padding je Seite + 1 Zeichen Sicherheitsabstand
+		$wrap_px = max($font_w, (int)floor($max_width - 4 - $font_w));
+
+		// Umbrechen mit realer Zeichenbreite
+		$lines = $this->gd_wrap_label_lines((string)$text, $wrap_px, $font_w);
+		if (!is_array($lines) || !$lines) return;
+
+		// Zeichnen (zentriert)
+		$y = (int)$top_y;
+		foreach ($lines as $ln) {
+			$calc = method_exists($this, 'gd_utf8') ? (string)$this->gd_utf8($ln) : (string)$ln;
+			$w = (int)(strlen($calc) * $font_w);
+			$x = (int)round($center_x - $w / 2);
+
+			if (is_int($bg_color)) {
+				imagefilledrectangle($im, $x - 2, $y - 2, $x + $w + 2, $y + $font_h + 2, $bg_color);
+			}
+			if (method_exists($this, 'gd_imagestring')) {
+				$this->gd_imagestring($im, $font, $x, $y, $ln, $fg_color);
+			} else {
+				imagestring($im, $font, $x, $y, $ln, $fg_color);
+			}
+			$y += $font_h + $line_spacing;
 		}
 	}
+
+		
+		
+        private function gd_utf8($s) {
+            if ($s === null) return '';
+            if (function_exists('mb_detect_encoding') && mb_detect_encoding($s, 'UTF-8', true)) {
+                if (function_exists('iconv')) {
+                    $converted = @iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $s);
+                    if ($converted !== false) return $converted;
+                }
+                return utf8_decode($s);
+            }
+            return $s;
+        }
+
+        private function gd_imagestring($im, $font, $x, $y, $string, $color) {
+            return call_user_func('imagestring', $im, $font, $x, $y, $this->gd_utf8($string), $color);
+        }
+
+        private function gd_imagestringup($im, $font, $x, $y, $string, $color) {
+            return call_user_func('imagestringup', $im, $font, $x, $y, $this->gd_utf8($string), $color);
+        }
+
+        private function gd_imagechar($im, $font, $x, $y, $c, $color) {
+            $s = $this->gd_utf8($c);
+            $byte = $s !== '' ? $s[0] : '';
+            return call_user_func('imagechar', $im, $font, $x, $y, $byte, $color);
+        }
+
+        private function gd_imagecharup($im, $font, $x, $y, $c, $color) {
+            $s = $this->gd_utf8($c);
+            $byte = $s !== '' ? $s[0] : '';
+            return call_user_func('imagecharup', $im, $font, $x, $y, $byte, $color);
+        }
+    }
+    new WPGDCharts();
 }
-new WPGDCharts();
+
 
 
 // -------------------------- Jetzt den QRCode Generator als Klasse -----------------------------------------------
@@ -1492,7 +1924,7 @@ class ipflag {
 				$linedata .= $customer->browser . ':' . $customer->bcount . '|';
 			}	
 			// Neue GD Charts
-			$html .= do_shortcode('[gd_chart width="1360" type="vbar" table=1 data="'.$linedata.'"]');
+			$html .= do_shortcode('[gd_chart width="1360" type="pie" table=1 data="'.$linedata.'"]');
 			
 
 			//	Top x Platform (Betriebssysteme) auf Zeitraum
@@ -1503,7 +1935,7 @@ class ipflag {
 				$linedata .= $customer->platform . ':' . $customer->bcount . '|';
 			}	
 			// Neue GD Charts
-			$html .= do_shortcode('[gd_chart width="1360" type="vbar" table=1 data="'.$linedata.'"]');
+			$html .= do_shortcode('[gd_chart width="1360" type="pie" table=1 data="'.$linedata.'"]');
 
 
 			//	Top x Länder auf Zeitraum
@@ -1514,15 +1946,15 @@ class ipflag {
 				$linedata .= $this->country_code('de',$customer->country) . ':' . $customer->ccount . '|';
 			}	
 			// Neue GD Charts
-			$html .= do_shortcode('[gd_chart width="1360" type="vbar" table=1 data="'.$linedata.'"]');
+			$html .= do_shortcode('[gd_chart width="1360" type="pie" table=1 data="'.$linedata.'"]');
 
 
-			//	Archive: Beiträge pro Monat letzte 36 Monate
+			//	Archive: Beiträge pro Monat letzte 20 = items Monate, verfügbare monate werden angezeigt und können durch items erhöhen gezeigt werden.
 			if ( empty($suchfilter) ) {
-
-				//	Top x Länder auf Zeitraum
 				$customers = $wpdb->get_results("SELECT DISTINCT MONTH( post_date ) AS month, YEAR( post_date ) AS year, COUNT( id ) as post_count FROM $wpdb->posts WHERE post_status = 'publish' and post_type = 'post' GROUP BY month, year ORDER BY post_date DESC LIMIT 44");
-				$html .='<h6>'.sprintf(__('posts %1s last %2s months', 'pb-chartscodes'),$items,44).'</h6><table>';
+				$statmonsori = count($customers); 
+				if ($items < $statmonsori) $statmons = $items; else $statmons = $statmonsori;
+				$html .='<h6>'.sprintf(__('new posts per month last %1s months (%2s available, raise items to show)', 'pb-chartscodes'),$statmons,$statmonsori).'</h6><table>';
 				$linedata=''; $linetable='';
 				foreach($customers as $customer){
 					$valu = isset($customer->month) ? floor($customer->post_count) : 0;
@@ -2227,7 +2659,7 @@ function bulawappen_shortcode($atts){
 	else $buix = array_search($buland, array_values($bundeslaender),true);
 	//    echo $buix.' '. array_keys($bundeslaender)[$buix].' '.array_values($bundeslaender)[$buix];
 	// Load comp freaky style for brands
-	wp_enqueue_style( 'pb-complogo-style', PB_ChartsCodes_URL_PATH . 'flags/bulawappen.min.css' );
+	wp_enqueue_style( 'pb-complogo-style', plugin_dir_url(__FILE__ ) . 'flags/bulawappen.min.css' );
 	$complogo = '<i class="fbula fbula-'.array_values($bundeslaender)[$buix].' fbula-'.$args['scale'].'" title=" Bundesland: '.array_keys($bundeslaender)[$buix].' '.array_values($bundeslaender)[$buix].'"></i>';
 	return $complogo;
 }
@@ -2240,7 +2672,7 @@ function complogo_shortcode($atts){
 		      'brand' => '',  // Herstellermarke
      		), $atts );
 		// Load comp freaky style for brands
-		wp_enqueue_style( 'pb-complogo-style', PB_ChartsCodes_URL_PATH . 'flags/computerbrands.min.css' );
+		wp_enqueue_style( 'pb-complogo-style', plugin_dir_url(__FILE__ ) . 'flags/computerbrands.min.css' );
 		$complogo = '<a target="_blank" href="http://'.strtolower($args['brand']).'.com"><i class="comp comp-'.strtolower($args['brand']).' comp-'.$args['scale'].'" title=" Herstellerseite: '.strtoupper($atts['brand']).' aufrufen"></i></a>';
         return $complogo;
 }
@@ -2249,8 +2681,8 @@ add_shortcode('complogo', 'complogo_shortcode');
 // ==================== Automarkenlogos anzeigen Shortcode ======================================
 function carlogo_shortcode($atts){
 	// Load car freaky style for car
-	wp_enqueue_style( 'pb-autologo-style', PB_ChartsCodes_URL_PATH . 'flags/car-logos.min.css' );
-	wp_enqueue_style( 'pb-chartscodes-flagstyle', PB_ChartsCodes_URL_PATH . 'flags/freakflags.min.css' );
+	wp_enqueue_style( 'pb-autologo-style', plugin_dir_url(__FILE__ ) . 'flags/car-logos.min.css' );
+	wp_enqueue_style( 'pb-chartscodes-flagstyle', plugin_dir_url(__FILE__ ) . 'flags/freakflags.min.css' );
 	$flagland = new ipflag();
 	$args = shortcode_atts( array(
 		      'scale' => '',     		// sm = 32px  xs=21px
