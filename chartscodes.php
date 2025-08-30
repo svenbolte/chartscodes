@@ -1951,9 +1951,10 @@ class ipflag {
 
 			//	Archive: Beiträge pro Monat letzte 20 = items Monate, verfügbare monate werden angezeigt und können durch items erhöhen gezeigt werden.
 			if ( empty($suchfilter) ) {
-				$customers = $wpdb->get_results("SELECT DISTINCT MONTH( post_date ) AS month, YEAR( post_date ) AS year, COUNT( id ) as post_count FROM $wpdb->posts WHERE post_status = 'publish' and post_type = 'post' GROUP BY month, year ORDER BY post_date DESC LIMIT 44");
+				$customers = $wpdb->get_results("SELECT DISTINCT MONTH( post_date ) AS month, YEAR( post_date ) AS year, COUNT( id ) as post_count FROM $wpdb->posts WHERE post_status = 'publish' and post_type = 'post' GROUP BY month, year ORDER BY post_date DESC");
 				$statmonsori = count($customers); 
 				if ($items < $statmonsori) $statmons = $items; else $statmons = $statmonsori;
+				$customers = $wpdb->get_results("SELECT DISTINCT MONTH( post_date ) AS month, YEAR( post_date ) AS year, COUNT( id ) as post_count FROM $wpdb->posts WHERE post_status = 'publish' and post_type = 'post' GROUP BY month, year ORDER BY post_date DESC LIMIT $statmons");
 				$html .='<h6>'.sprintf(__('new posts per month last %1s months (%2s available, raise items to show)', 'pb-chartscodes'),$statmons,$statmonsori).'</h6><table>';
 				$linedata=''; $linetable='';
 				foreach($customers as $customer){
