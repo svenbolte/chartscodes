@@ -1763,8 +1763,8 @@ class ipflag {
 			$html .='<input type="text" size="20" title="filtern nach Browser, username, usertyp, Einzelbeitrag" placeholder="Suchfilter" id="suchfilter" name="suchfilter" value="'.$suchfilter.'">';
 			$html .= '</select><input type="submit" value="'.__('show items', 'pb-chartscodes').'" /></form></div>';
 
-			//	Klicks pro Tag auf Zeitraum DE, IRL, NL
-			$countries = "'DE','IRL','NL','AT','CH','EU'";
+			//	Klicks pro Tag auf Zeitraum DE, IE, NL
+			$countries = "'DE','IE','NL'";   // Deutschland und Azure Amsterdam und Dublin
 			$customers = $wpdb->get_results("SELECT datum, COUNT(SUBSTRING(datum,1,10)) AS viscount, datum FROM " . $table . " WHERE country IN ($countries) ".$sqlsuchfilter." GROUP BY SUBSTRING(datum,1,10) ORDER BY datum desc LIMIT ". $zeitraum);
 			if  ( (int) count($customers)>0) {
 				$html .='<h6>'.sprintf(__('clicks last %s days', 'pb-chartscodes'),$zeitraum).' '.$countries.'</h6>';
