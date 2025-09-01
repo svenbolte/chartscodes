@@ -82,22 +82,6 @@ function create_webcounter() {
 		}
 	}
 }
-// ----------------------------------------------------------------------------------------
-
-// Plugin, Webcounter initialisieren und Consstants setzen
-if ( ! class_exists( 'PB_ChartsCodes' ) ) :
-	final class PB_ChartsCodes {
-		public function __construct() {
-			$this->PB_ChartsCodes_constant();
-		}
-		public function PB_ChartsCodes_constant() {
-			define( 'PB_ChartsCodes_BASE_PATH', dirname(__FILE__ ) );
-			define( 'plugin_dir_url(__FILE__ )', plugin_dir_url(__FILE__ ) );
-			define( 'PB_ChartsCodes_PLUGIN_BASE_PATH', plugin_basename(__FILE__) );
-		}
-	}
-	new PB_ChartsCodes();
-endif;
 
 
 // ------------------------- Class für Chart-Diagramme und Shortcode gd_charts ----------------------------------------------- 
