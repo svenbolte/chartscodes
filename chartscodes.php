@@ -2545,7 +2545,7 @@ if( !function_exists('colordatebox')) {
 		}
 		// Angezeigtes Datum & Icon bestimmen
 		if ($diffmod > 0 && !$unixfile) {
-			$newormod = 'calendar-plus-o';
+			$newormod = '🕰️';
 			if ($showago === 2) {
 				$anzeigedat = $modago;
 			} elseif ($showago === 1) {
@@ -2555,7 +2555,7 @@ if( !function_exists('colordatebox')) {
 			}
 			$cstyles = getColorStyles($modified);
 		} else {
-			$newormod = 'calendar-o';
+			$newormod = '📅';
 			if ($showago === 2) {
 				$anzeigedat = $postago;
 			} elseif ($showago === 1) {
@@ -2568,7 +2568,7 @@ if( !function_exists('colordatebox')) {
 		// HTML-Ausgabe generieren
 		$colordate = '<span class="newlabel" style="background-color:' . $cstyles['background'] . '">';
 		if (!isset($noicon)) {
-			$colordate .= '<i class="fa fa-' . $newormod . '" style="margin-right:4px"></i>';
+			$colordate .= $newormod;
 		}
 		$colordate .= '<span style="color:' . $cstyles['color'] . '" title="' . htmlspecialchars($erstelltitle, ENT_QUOTES) . '">' . $anzeigedat . '</span></span>';
 		return $colordate;
