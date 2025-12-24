@@ -2136,6 +2136,9 @@ class ipflag {
 			<p><code>[bulawappen land="Nordrhein-Westfalen" oder land="nw" scale=xs]</code>
 				liefert das Wappen vom Bundesland in 30x50px, Eingabe Landeskürzel oder Länderbezeichnung mit ue statt ü
 			</p>
+			<p><code>[kfzkennzeichen nr="Kennzeichen bis zum Bindestrich"]</code>
+				liefert den Zulassungsbezirk, das Bundesland und das kleine Wappen vom Bundesland in 21x30px
+			</p>
 			<p><code>[carlogo brand="mercedes" scale="sm"]</code>
 				liefert das Logo und den Link zum Automobilhersteller  Größen (scale): leer 48px, bei sm: 32px und bei xs:21px
 			</p>
@@ -2640,7 +2643,61 @@ function bulawappen_shortcode($atts){
 }
 add_shortcode('bulawappen', 'bulawappen_shortcode');
 
-// ==================== Hardwaremarkenlogos anzeigen Shortcode ======================================
+
+
+// ===================  Shortcode: [kfzkennzeichen nr="ab"]   * Ausgabe: bezeichnung | bundesland | (Wappen via [bulawappen ...]) =========================
+add_shortcode('kfzkennzeichen', function($atts) {
+    $atts = shortcode_atts([ 'nr' => '' ], $atts, 'kennzeichen');
+    $nr = strtoupper(trim((string)$atts['nr']));
+    if ($nr === '') return '';
+    // CSV nur einmal pro Request laden
+    static $map = null;
+    if ($map === null) {
+        $map = [];
+        $upload_dir = wp_upload_dir();
+        $csv_path   = trailingslashit($upload_dir['basedir']) . 'csv/kfzkennzeichen.csv';
+        if (!file_exists($csv_path) || !is_readable($csv_path)) {
+            return '';
+        }
+        $handle = fopen($csv_path, 'r');
+        if (!$handle) return '';
+        // fgetcsv($stream, $length, $separator, $enclosure, $escape)
+        $header = fgetcsv($handle, 0, ';', '"', '\\');
+        if (!is_array($header)) {
+            fclose($handle);
+            return '';
+        }
+        $idx = array_flip($header);
+
+        // Spalten prüfen
+        foreach (['kennzeichen', 'bezeichnung', 'bundesland'] as $k) {
+            if (!isset($idx[$k])) {
+                fclose($handle);
+                return '';
+            }
+        }
+        while (($row = fgetcsv($handle, 0, ';', '"', '\\')) !== false) {
+            if (!is_array($row)) continue;
+            $kz = strtoupper(trim((string)($row[$idx['kennzeichen']] ?? '')));
+            if ($kz === '') continue;
+            $map[$kz] = [
+                'bezeichnung' => trim((string)($row[$idx['bezeichnung']] ?? '')),
+                'bundesland'  => trim((string)($row[$idx['bundesland']] ?? '')),
+            ];
+        }
+        fclose($handle);
+    }
+    if (!isset($map[$nr])) { return ''; }
+    $bezeichnung = $map[$nr]['bezeichnung'];
+    $bundesland  = $map[$nr]['bundesland'];
+    // Bulawappen rendern
+    $wappen = do_shortcode( '[bulawappen land="' . esc_attr($bundesland) . '" scale="xs"]' );
+    return $wappen.' '. esc_html($bezeichnung) . ' | ' . esc_html($bundesland);
+});
+
+
+
+// ==================== Shortcode complogo Hardwaremarkenlogos anzeigen ======================================
 function complogo_shortcode($atts){
 	$args = shortcode_atts( array(
 		      'scale' => '',     		// sm = 32px  xs=21px
