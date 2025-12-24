@@ -2133,7 +2133,7 @@ class ipflag {
 			<p><code>[webcounter admin=0]</code> zählt Seitenzugriffe und füllt Statistikdatenbank, admin=1 zum Auswerten mit Adminrechten<br>
 				Ist die Admin /webcounter-Seite aufgerufen, kann über das Eingabefeld oder den optionalen URL-Parameter ?items=x die Ausgabe-Anzahl einiger Listeneinträge verändert werden.
 			</p>
-			<p><code>[bulawappen land="Nordrhein-Westfalen" oder land="nw"]</code>
+			<p><code>[bulawappen land="Nordrhein-Westfalen" oder land="nw" scale=xs]</code>
 				liefert das Wappen vom Bundesland in 30x50px, Eingabe Landeskürzel oder Länderbezeichnung mit ue statt ü
 			</p>
 			<p><code>[carlogo brand="mercedes" scale="sm"]</code>
