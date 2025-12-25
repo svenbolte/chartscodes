@@ -2644,7 +2644,6 @@ function bulawappen_shortcode($atts){
 add_shortcode('bulawappen', 'bulawappen_shortcode');
 
 
-
 // ===================  Shortcode: [kfzkennzeichen nr="ab"]   * Ausgabe: bezeichnung | bundesland | (Wappen via [bulawappen ...]) =========================
 add_shortcode('kfzkennzeichen', function($atts) {
     $atts = shortcode_atts([ 'nr' => '' ], $atts, 'kennzeichen');

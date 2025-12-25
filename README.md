@@ -23,6 +23,8 @@ daher dieses Projekt, dass die Einzelfunktionen zusammen fasst und um viele neue
 
 [carlogo brand="mercedes" scale="sm/xs"]
 
+[kfzkennzeichen nr="Kennzeichen bis zum Bindestrich" scale=xs]</code>
+
 [complogo brand="lenovo" scale="sm/xs"]
 
 [bulawappen land="Bremen/HB" scale="sm/xs"]

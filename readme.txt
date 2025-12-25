@@ -248,6 +248,16 @@ Use Shortcode: [bulawappen land="Nordrhein-Westfalen" oder land="nw"]
  
 liefert das Wappen vom Bundesland in 30x50px, Eingabe xx Landeskürzel oder Länderbezeichnung mit ue statt ü
 
+
+=========================================== kfzkennzeichen Shortcode ===============================================
+
+Use Shortcode:		[kfzkennzeichen nr="Kennzeichen bis zum Bindestrich"]</code>
+				
+		'scale' => '',     		// sm = 32px  xs=21px
+		'nr' => 'DO',     		// Gibt anhand des Ortscodes deutscher Kennzeichen Name, Herleitung und Bundesland mit Wappen aus
+		
+liefert den Zulassungsbezirk, das Bundesland und das kleine Wappen vom Bundesland in 21x30px
+
 =========================================== Carlogo Shortcode ===============================================
 Use Shortcode: [carlogo brand="mercedes" scale="sm"]
 
