@@ -23,16 +23,6 @@ function chartscodes_textdomain() {
 	load_plugin_textdomain( 'pb-chartscodes', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 }
 
-// Fontawesomeplus laden, wenn nicht penguin style für browsericon und os icons
-function ccode_enqueue_scripts( $page ) {
-	global $post;
-	// load fontawesome 4.7 plus if not penguin theme
-	$wpxtheme = wp_get_theme(); // gets the current theme
-	if ( 'pb-chartscodes' == $wpxtheme->name || 'pb-chartscodes' == $wpxtheme->parent_theme ) { $xpenguin = true;} else { $xpenguin=false; }
-	if (!$xpenguin) wp_enqueue_style('font-awesome', plugin_dir_url( __FILE__ ) . '/assets/fontawesomeplus.min.css', true);
-}
-add_action( 'wp_enqueue_scripts', 'ccode_enqueue_scripts' );
-
 // ---------------- page für den Webcounter Adminbereich  erzeugen-------------------------------
 function cc_page_by_title($pagetitle) {
 	$query = new WP_Query(
