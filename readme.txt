@@ -112,6 +112,7 @@ Shortcode for creating qrcode and barcode images locally hosted. no external sou
 [qrcode type="code-39" text="Hallo Welt" ]
 [qrcode type="ean-13" text="9780201379624" ]
 [qrcode text="tel:+49304030568956834058340" ]
+[qrcode text="Meine Oma ist heute da" size=3 ]
 
 Barcode QRCode library taken from: https://github.com/kreativekorp/barcode
 In order to output barcodes, [qrcode] will be used. Attributes:
